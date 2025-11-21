@@ -3,62 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EuroSafeAI</title>
+    <title>EuroSafeAI - Association for Intelligent Systems</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
+        }
+        .legal-list {
+            list-style-type: none;
+            counter-reset: section;
+        }
+        .legal-list > li::before {
+            counter-increment: section;
+            content: "§" counter(section) " ";
+            color: #64748b;
+            font-weight: 600;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
-<body class="bg-white text-gray-900 antialiased">
-    <!-- Sticky Header -->
-    <header class="sticky top-0 z-10 bg-white border-b border-gray-200">
-        <div class="max-w-4xl mx-auto px-6 py-4">
-            <h1 class="text-2xl font-semibold tracking-tight">EuroSafeAI</h1>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation / Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div class="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <!-- Simple Abstract Logo SVG -->
+                <!-- <svg class="w-6 h-6 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="M12 8v4"></path>
+                    <path d="M12 16h.01"></path>
+                </svg> -->
+
+                <img src="assets/logo2.jpg" alt="EuroSafeAI Logo" class="h-8 w-auto">
+                <span class="font-bold text-lg tracking-tight text-slate-900">EuroSafeAI</span>
+            </div>
+            <!-- Navigation links could go here, but keeping it minimal as requested -->
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-6 py-12">
-        <!-- Coming Soon Section -->
-        <section class="mb-16">
-            <p class="text-lg text-gray-600">Coming soon</p>
-        </section>
+    <main class="flex-grow py-12 px-6">
+        <div class="max-w-3xl mx-auto space-y-12">
 
-        <!-- Legal/Statutory Details -->
-        <section class="space-y-6 text-sm text-gray-700 leading-relaxed">
-            <div>
-                <h2 class="text-base font-semibold text-gray-900 mb-2">Legal Basis</h2>
-                <p>Under the name "EuroSafeAI" there exists an association pursuant to Article 60 et seqq. CC.</p>
-            </div>
 
-            <div>
-                <h2 class="text-base font-semibold text-gray-900 mb-2">Headquarters</h2>
-                <p>Brähenstrasse 4, Uetikon am See.</p>
-            </div>
+            <!-- Hero / Objective Section -->
+            <section class="space-y-6">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+                    Deepening humanity’s understanding of intelligent systems.
+                </h1>
+                <p class="text-lg text-slate-600 leading-relaxed max-w-2xl">
+                    EuroSafeAI promotes the highest standards in the development and deployment of artificial intelligence. We are exclusively non-profit and our bodies act in a voluntary capacity.
+                </p>
+            </section>
 
-            <div>
-                <h2 class="text-base font-semibold text-gray-900 mb-2">Nature</h2>
-                <p>It is politically independent and denominationally neutral. The association is exclusively non-profit and does not pursue any profit-making or self-help purposes. Its bodies act in a voluntary capacity.</p>
-            </div>
+            <hr class="border-slate-200">
 
-            <div>
-                <h2 class="text-base font-semibold text-gray-900 mb-2">Objective and Purpose</h2>
-                <p>The association's purpose is to deepen humanity's understanding of intelligent systems and to promote the highest standards in their development and deployment.</p>
-            </div>
-        </section>
+            <!-- Coming Soon Section -->
+            <section class="mb-8">
+                <p class="text-lg text-slate-600">Coming soon...</p>
+            </section>
+            <hr class="border-slate-200">
+
+            <!-- Statutory / Legal Details -->
+            <section class="bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
+                <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Association Details</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Legal Status -->
+                    <div class="md:col-span-2 space-y-4">
+                        <h3 class="font-semibold text-slate-900">Legal Form & Purpose</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Under the name "EuroSafeAI" there exists an association pursuant to <strong>Article 60 et seqq. of the Swiss Civil Code (CC)</strong>. 
+                        </p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            The association is politically independent and denominationally neutral. It does not pursue any profit-making or self-help purposes.
+                        </p>
+                    </div>
+
+                    <!-- Key Information Column -->
+                    <div class="space-y-6 border-t md:border-t-0 md:border-l border-slate-100 md:pl-6 pt-6 md:pt-0">
+                        <!-- <div>
+                            <h3 class="font-semibold text-slate-900 text-sm mb-1">Headquarters</h3>
+                            <address class="text-sm text-slate-600 not-italic">
+                                Brähenstrasse 4<br>
+                                8706 Uetikon am See<br>
+                                Switzerland
+                            </address>
+                        </div>
+                         -->
+                        <div>
+                            <h3 class="font-semibold text-slate-900 text-sm mb-1">Nature</h3>
+                            <ul class="text-sm text-slate-600 space-y-1">
+                                <li class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Non-profit
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Politically Independent
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Voluntary Bodies
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-16">
-        <div class="max-w-4xl mx-auto px-6 py-6">
-            <p class="text-xs text-gray-500 text-center">© EuroSafeAI</p>
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-3xl mx-auto py-8 px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-slate-400">
+                &copy; <script>document.write(new Date().getFullYear())</script> EuroSafeAI.
+            </p>
+            <div class="text-xs text-slate-400">
+                Zürich, Switzerland
+            </div>
         </div>
     </footer>
+
 </body>
 </html>
-
