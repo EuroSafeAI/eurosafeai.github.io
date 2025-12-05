@@ -5,7 +5,6 @@ import Hero from './components/Hero'
 import Problem from './components/Problem'
 import Solution from './components/Solution'
 import Membership from './components/Membership'
-import Governance from './components/Governance'
 import Footer from './components/Footer'
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
         <Problem />
         <Solution />
         <Membership />
-        <Governance />
       </main>
       <Footer />
     </div>

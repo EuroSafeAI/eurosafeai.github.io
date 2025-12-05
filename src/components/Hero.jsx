@@ -49,13 +49,15 @@ function Hero() {
             for the most powerful technology humanity will ever create.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12 fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <button className="group relative px-8 py-4 bg-electric-cyan text-void font-display font-bold text-lg uppercase tracking-wider overflow-hidden transition-all duration-300 hover:scale-105">
-              <span className="relative z-10">Initialize Membership</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-electric-cyan to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
-            <button className="px-8 py-4 border-2 border-electric-cyan/50 text-electric-cyan font-display font-bold text-lg uppercase tracking-wider hover:bg-electric-cyan/10 transition-all duration-300">
+          {/* CTA Button */}
+          <div className="flex justify-center items-center mt-12 fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <button 
+              onClick={() => {
+                const problemSection = document.getElementById('problem-section')
+                problemSection?.scrollIntoView({ behavior: 'smooth' })
+              }}
+              className="px-8 py-4 border-2 border-electric-cyan/50 text-electric-cyan font-display font-bold text-lg uppercase tracking-wider hover:bg-electric-cyan/10 hover:border-electric-cyan transition-all duration-300"
+            >
               Read the Mission
             </button>
           </div>

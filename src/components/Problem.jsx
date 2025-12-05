@@ -2,16 +2,16 @@ import React from 'react'
 
 function Problem() {
   return (
-    <section className="relative py-32 px-6 bg-black text-white">
+    <section id="problem-section" className="relative py-32 px-6 bg-black text-white">
       <div className="max-w-5xl mx-auto space-y-12">
         <h2 className="text-4xl md:text-6xl font-display font-extrabold text-center fade-in-up">
           The Alignment Gap
         </h2>
 
         <div className="space-y-8 text-xl md:text-2xl leading-relaxed font-light fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <blockquote className="border-l-4 border-signal-orange pl-8 italic text-gray-300">
+          {/* <blockquote className="border-l-4 border-signal-orange pl-8 italic text-gray-300">
             "We are building gods. But we don't know how to pray to them."
-          </blockquote>
+          </blockquote> */}
 
           <div className="space-y-6 text-gray-400">
             <p>
