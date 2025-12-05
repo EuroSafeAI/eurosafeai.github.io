@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import DecryptedText from './DecryptedText'
 
 function Hero() {
   const [glitchActive, setGlitchActive] = useState(false)
+  const [decryptionComplete, setDecryptionComplete] = useState(false)
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-void">
@@ -26,10 +28,10 @@ function Hero() {
             [ PROTOCOL: EURO_SAFE_AI // STATUS: ACTIVE ]
           </div>
 
-          {/* Main headline with glitch effect */}
+          {/* Main headline with decrypted text animation */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold leading-tight fade-in-up">
             <span
-              className="glitch-text inline-block cursor-pointer"
+              className="glitch-text inline-block cursor-pointer text-white"
               data-text="Intelligence"
               onMouseEnter={() => setGlitchActive(true)}
               onMouseLeave={() => setGlitchActive(false)}
@@ -39,7 +41,16 @@ function Hero() {
             {' '}
             <span className="text-white">Without Control</span>
             <br />
-            <span className="text-signal-orange">Is Catastrophe.</span>
+            {!decryptionComplete ? (
+              <DecryptedText 
+                text="Is Catastrophe."
+                className="text-signal-orange"
+                speed={15}
+                onComplete={() => setDecryptionComplete(true)}
+              />
+            ) : (
+              <span className="text-signal-orange">Is Catastrophe.</span>
+            )}
           </h1>
 
           {/* Sub-headline */}
