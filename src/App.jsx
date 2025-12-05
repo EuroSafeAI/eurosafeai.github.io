@@ -1,18 +1,24 @@
 import React from 'react'
+import Particles from './components/Particles'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Mission from './components/Mission'
-import ResourcesEvents from './components/ResourcesEvents'
+import Problem from './components/Problem'
+import Solution from './components/Solution'
+import Membership from './components/Membership'
+import Governance from './components/Governance'
 import Footer from './components/Footer'
 
 function App() {
   return (
-    <div className="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+    <div className="bg-void text-white antialiased flex flex-col min-h-screen relative">
+      <Particles />
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow relative z-10">
         <Hero />
-        <Mission />
-        <ResourcesEvents />
+        <Problem />
+        <Solution />
+        <Membership />
+        <Governance />
       </main>
       <Footer />
     </div>

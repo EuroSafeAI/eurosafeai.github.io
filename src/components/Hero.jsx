@@ -1,90 +1,93 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function Hero() {
+  const [glitchActive, setGlitchActive] = useState(false)
+
   return (
-    <section className="bg-gradient-to-b from-white to-slate-50 py-20 md:py-32 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
-                Deepening Understanding.<br />
-                Ensuring Safety.
-              </h1>
-              <p className="text-lg md:text-xl text-slate-600 font-medium">
-                Closing the Gap Between AI Capability and Human Safety.
-              </p>
-            </div>
-            <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
-              The development of intelligent systems is outpacing our understanding of them. 
-              EuroSafeAI unites experts to research, regulate, and steer AI deployment for 
-              the benefit of humanity.
-            </p>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-void">
+      {/* Data streams background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="data-stream"
+            style={{
+              left: `${20 + i * 20}%`,
+              animationDelay: `${i * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-32">
+        <div className="text-center space-y-8">
+          {/* Pre-header */}
+          <div className="font-mono text-sm text-electric-cyan/80 mb-8 fade-in-up">
+            [ PROTOCOL: EURO_SAFE_AI // STATUS: ACTIVE ]
           </div>
-          <div className="flex items-center justify-center">
-            <div className="w-full max-w-lg aspect-square relative">
-              <svg 
-                viewBox="0 0 400 400" 
-                className="w-full h-full hero-svg"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.1" />
-                  </linearGradient>
-                  <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.1" />
-                  </linearGradient>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-                
-                {/* Background circles */}
-                <circle cx="200" cy="200" r="180" fill="url(#gradient1)" opacity="0.4" />
-                <circle cx="200" cy="200" r="140" fill="url(#gradient2)" opacity="0.3" />
-                
-                {/* Central hub */}
-                <circle cx="200" cy="200" r="20" fill="#3b82f6" filter="url(#glow)" className="hero-node" />
-                <circle cx="200" cy="200" r="25" fill="#3b82f6" opacity="0.2" />
-                
-                {/* Outer nodes */}
-                <circle cx="200" cy="80" r="12" fill="#6366f1" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0s' }} />
-                <circle cx="320" cy="200" r="12" fill="#8b5cf6" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.2s' }} />
-                <circle cx="200" cy="320" r="12" fill="#3b82f6" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.4s' }} />
-                <circle cx="80" cy="200" r="12" fill="#6366f1" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.6s' }} />
-                
-                {/* Diagonal nodes */}
-                <circle cx="280" cy="120" r="10" fill="#a855f7" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.1s' }} />
-                <circle cx="280" cy="280" r="10" fill="#6366f1" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.3s' }} />
-                <circle cx="120" cy="280" r="10" fill="#3b82f6" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.5s' }} />
-                <circle cx="120" cy="120" r="10" fill="#8b5cf6" filter="url(#glow)" className="hero-node" style={{ animationDelay: '0.7s' }} />
-                
-                {/* Connection lines - main radial */}
-                <line x1="200" y1="200" x2="200" y2="80" stroke="#3b82f6" strokeWidth="2" opacity="0.4" className="hero-line" />
-                <line x1="200" y1="200" x2="320" y2="200" stroke="#6366f1" strokeWidth="2" opacity="0.4" className="hero-line" style={{ animationDelay: '0.1s' }} />
-                <line x1="200" y1="200" x2="200" y2="320" stroke="#8b5cf6" strokeWidth="2" opacity="0.4" className="hero-line" style={{ animationDelay: '0.2s' }} />
-                <line x1="200" y1="200" x2="80" y2="200" stroke="#3b82f6" strokeWidth="2" opacity="0.4" className="hero-line" style={{ animationDelay: '0.3s' }} />
-                
-                {/* Connection lines - diagonal */}
-                <line x1="200" y1="200" x2="280" y2="120" stroke="#a855f7" strokeWidth="1.5" opacity="0.3" className="hero-line" style={{ animationDelay: '0.15s' }} />
-                <line x1="200" y1="200" x2="280" y2="280" stroke="#6366f1" strokeWidth="1.5" opacity="0.3" className="hero-line" style={{ animationDelay: '0.25s' }} />
-                <line x1="200" y1="200" x2="120" y2="280" stroke="#3b82f6" strokeWidth="1.5" opacity="0.3" className="hero-line" style={{ animationDelay: '0.35s' }} />
-                <line x1="200" y1="200" x2="120" y2="120" stroke="#8b5cf6" strokeWidth="1.5" opacity="0.3" className="hero-line" style={{ animationDelay: '0.45s' }} />
-                
-                {/* Inter-node connections */}
-                <line x1="200" y1="80" x2="280" y2="120" stroke="#6366f1" strokeWidth="1" opacity="0.2" strokeDasharray="3,3" />
-                <line x1="320" y1="200" x2="280" y2="280" stroke="#8b5cf6" strokeWidth="1" opacity="0.2" strokeDasharray="3,3" />
-                <line x1="200" y1="320" x2="120" y2="280" stroke="#3b82f6" strokeWidth="1" opacity="0.2" strokeDasharray="3,3" />
-                <line x1="80" y1="200" x2="120" y2="120" stroke="#6366f1" strokeWidth="1" opacity="0.2" strokeDasharray="3,3" />
-              </svg>
-            </div>
+
+          {/* Main headline with glitch effect */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold leading-tight fade-in-up">
+            <span
+              className="glitch-text inline-block cursor-pointer"
+              data-text="Intelligence"
+              onMouseEnter={() => setGlitchActive(true)}
+              onMouseLeave={() => setGlitchActive(false)}
+            >
+              Intelligence
+            </span>
+            {' '}
+            <span className="text-white">Without Control</span>
+            <br />
+            <span className="text-signal-orange">Is Catastrophe.</span>
+          </h1>
+
+          {/* Sub-headline */}
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed font-light fade-in-up" style={{ animationDelay: '0.2s' }}>
+            We are rushing toward an intelligence explosion without the manual. 
+            We exist to engineer the brakes, the steering, and the safety standards 
+            for the most powerful technology humanity will ever create.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12 fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <button className="group relative px-8 py-4 bg-electric-cyan text-void font-display font-bold text-lg uppercase tracking-wider overflow-hidden transition-all duration-300 hover:scale-105">
+              <span className="relative z-10">Initialize Membership</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-electric-cyan to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </button>
+            <button className="px-8 py-4 border-2 border-electric-cyan/50 text-electric-cyan font-display font-bold text-lg uppercase tracking-wider hover:bg-electric-cyan/10 transition-all duration-300">
+              Read the Mission
+            </button>
+          </div>
+        </div>
+
+        {/* Central pulsing geometric shape */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 pointer-events-none opacity-20">
+          <div className="relative w-full h-full">
+            <svg viewBox="0 0 400 400" className="w-full h-full">
+              <defs>
+                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00d9ff" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#ff6b35" stopOpacity="0.4" />
+                </linearGradient>
+              </defs>
+              {/* Complex geometric shape */}
+              <polygon
+                points="200,50 350,150 300,300 100,300 50,150"
+                fill="none"
+                stroke="url(#glowGradient)"
+                strokeWidth="2"
+                className="pulse-glow"
+              />
+              <polygon
+                points="200,100 300,170 270,250 130,250 100,170"
+                fill="none"
+                stroke="#00d9ff"
+                strokeWidth="1"
+                opacity="0.5"
+              />
+              <circle cx="200" cy="200" r="30" fill="#00d9ff" opacity="0.3" className="pulse-glow" />
+            </svg>
           </div>
         </div>
       </div>
@@ -93,4 +96,3 @@ function Hero() {
 }
 
 export default Hero
-
