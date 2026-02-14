@@ -15,10 +15,10 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-6">
+                {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-6">
                   <span className="w-2 h-2 rounded-full bg-blue-600" />
                   Swiss Nonprofit Research Organization
-                </div>
+                </div> */}
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                   Pioneering
                   <br />
