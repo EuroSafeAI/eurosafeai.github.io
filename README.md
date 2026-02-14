@@ -1,10 +1,10 @@
-# EuroSafeAI Website
+# Astral Research Website
 
-This repository contains the website for EuroSafeAI, a non-profit association.
+This repository contains the website for Astral Research (EuroSafeAI), a non-profit research organization focused on AI safety and security.
 
 ## Development
 
-This is a React application built with Vite and Tailwind CSS.
+This is a Next.js application built with React, TypeScript, and Tailwind CSS.
 
 ### Prerequisites
 
@@ -28,10 +28,22 @@ npm run dev
 npm run build
 ```
 
-4. Preview production build:
+4. Start the production server:
 ```bash
-npm run preview
+npm start
 ```
+
+## Project Structure
+
+- `/app` - Next.js app directory containing pages and layouts
+- `/components` - Reusable React components
+- `/public` - Static assets
+
+## Pages
+
+- **Home** (`/`) - Main landing page with mission and research focus areas
+- **Team** (`/team`) - Team member directory with leadership, researchers, and students
+- **Careers** (`/careers`) - Job openings and application information
 
 ## Deployment
 

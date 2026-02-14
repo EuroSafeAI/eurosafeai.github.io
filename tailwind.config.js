@@ -1,24 +1,19 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Space Grotesk', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
-        display: ['Space Grotesk', 'sans-serif'],
-      },
       colors: {
-        void: '#050505',
-        charcoal: '#1a1a1a',
-        'signal-orange': '#ff6b35',
-        'electric-cyan': '#00d9ff',
+        primary: '#0d229ec7',
+        secondary: '#3e5f75',
+        accent: '#09f',
       },
-      animation: {
-        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+      fontFamily: {
+        inter: ['Inter', 'Arial', 'sans-serif'],
+        mono: ['Geist Mono', 'monospace'],
       },
     },
   },
