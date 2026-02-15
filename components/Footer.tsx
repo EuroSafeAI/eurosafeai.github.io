@@ -10,13 +10,13 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Image
               src="/images/logo.png"
-              alt="Astral Research"
+              alt="EuroSafeAI"
               width={120}
               height={50}
               className="h-8 w-auto object-contain brightness-0 invert mb-4"
             />
             <p className="text-gray-400 text-sm leading-relaxed mb-4 max-w-sm">
-              Astral Research is a nonprofit research organization registered under Swiss law,
+              EuroSafeAI is a nonprofit research organization registered under Swiss law,
               dedicated to advancing AI safety and security.
             </p>
           </div>
@@ -28,6 +28,11 @@ export default function Footer() {
               <li>
                 <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
                   Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/research" className="text-gray-400 hover:text-white text-sm transition-colors">
+                  Research
                 </Link>
               </li>
               <li>
@@ -74,7 +79,7 @@ export default function Footer() {
       <div className="border-t border-gray-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-2">
           <p className="text-gray-500 text-sm" suppressHydrationWarning>
-            © {new Date().getFullYear()} Astral Research. All rights reserved.
+            © {new Date().getFullYear()} EuroSafeAI. All rights reserved.
           </p>
           <p className="text-gray-500 text-sm">
             Swiss nonprofit registered under Swiss Law

@@ -33,10 +33,10 @@ export default function Careers() {
                   About Us
                 </p>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  Why Work With Astral Research?
+                  Why Work With EuroSafeAI?
                 </h2>
                 <p className="text-gray-600 leading-relaxed mb-4">
-                  Astral Research is a Swiss nonprofit focused on safety and security for advanced AI systems with emphasis on threat assessment and mitigation.
+                  EuroSafeAI is a Swiss nonprofit focused on safety and security for advanced AI systems with emphasis on threat assessment and mitigation.
                 </p>
                 <p className="text-gray-600 leading-relaxed mb-6">
                   We target scenarios where AI systems may act contrary to developer intent. We actively collaborate with industry partners including DeepMind and Anthropic.
@@ -251,7 +251,7 @@ export default function Careers() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Proactive Mindset</h3>
                 <p className="text-gray-600 text-sm">
-                  Initiative to identify and address potential risks before they become problems.
+                  Initiative to identify and address potential problems before they become an issue.
                 </p>
               </div>
             </div>

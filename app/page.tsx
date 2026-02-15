@@ -3,6 +3,22 @@ import Footer from '@/components/Footer'
 import Image from 'next/image'
 import Link from 'next/link'
 
+function InfoCard({ label, title, description }: { label: string; title: string; description: string }) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
+      <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
+        {label}
+      </p>
+      <h3 className="text-xl font-bold text-gray-900 leading-snug mb-4">
+        {title}
+      </h3>
+      <p className="text-gray-600 text-sm leading-relaxed">
+        {description}
+      </p>
+    </div>
+  )
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -15,10 +31,6 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div>
-                {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-6">
-                  <span className="w-2 h-2 rounded-full bg-blue-600" />
-                  Swiss Nonprofit Research Organization
-                </div> */}
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                   Pioneering
                   <br />
@@ -38,10 +50,13 @@ export default function Home() {
                     </svg>
                   </Link>
                   <Link
-                    href="/careers"
+                    href="/research"
                     className="inline-flex items-center px-6 py-3 border-2 border-blue-700 text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors"
                   >
-                    Join Us
+                    Our Research
+                    <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 </div>
               </div>
@@ -65,81 +80,46 @@ export default function Home() {
           </div>
         </section>
 
-        {/* About Section */}
-        <section className="bg-white py-20 lg:py-28">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Left Content */}
-              <div>
-                <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
-                  About Us
-                </p>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                  Dedicated to AI Safety Research
-                </h2>
-                <p className="text-gray-600 leading-relaxed mb-4">
-                  Astral Research is a nonprofit research organization registered under Swiss law. Our mission is to advance AI safety and security by developing risk assessments and mitigation strategies.
-                </p>
-                <p className="text-gray-600 leading-relaxed mb-8">
-                  We target scenarios where AI systems may act contrary to developer intent. We actively collaborate with industry partners including DeepMind and Anthropic, valuing curiosity, ethics, and a proactive, responsible mindset.
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="flex -space-x-2">
-                    {['ZJ', 'AH', 'PC', 'TZ'].map((initials, i) => (
-                      <div
-                        key={i}
-                        className="w-10 h-10 rounded-full bg-blue-700 border-2 border-white flex items-center justify-center text-white text-xs font-semibold"
-                      >
-                        {initials}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-sm">
-                    <p className="font-semibold text-gray-900">4 Co-founders</p>
-                    <p className="text-gray-500">Leading the mission</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Image */}
-              <div className="relative">
-                <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
-                  <Image
-                    src="/images/research-2.png"
-                    alt="Research collaboration"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-lg p-4 hidden md:flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Swiss Registered</p>
-                    <p className="text-xs text-gray-500">Nonprofit Organization</p>
-                  </div>
-                </div>
-              </div>
+        {/* Mission & About Cards */}
+        <section className="bg-gray-50 py-16 lg:py-20">
+          <div className="max-w-4xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <InfoCard
+                label="Our Mission"
+                title="AI systems will soon be integrated into large parts of the economy and our personal lives."
+                description="While this transformation may unlock substantial benefits, there are also vast risks. We believe some of the greatest risks stem from multi-agent systems that interact in complex, unpredictable ways. Our goal is to understand and evaluate these risks well enough to prevent the possible harms that unsafe AI systems might cause."
+              />
+              <InfoCard
+                label="About Us"
+                title="We focus on research in the areas of AI safety, security, and multi-agent systems."
+                description="We advance AI safety and security by developing risk assessments and mitigation strategies. We target scenarios where AI systems may act contrary to developer intent, and actively collaborate with industry partners including DeepMind and Anthropic. We value curiosity, ethics, and a proactive, responsible mindset."
+              />
             </div>
           </div>
         </section>
 
         {/* Research Focus Section */}
-        <section className="bg-gray-50 py-20 lg:py-28">
+        <section className="bg-white py-20 lg:py-28">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-12">
               <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
                 Research Focus
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Our Areas of Expertise
+                Our Three Pillars
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
+              <p className="text-gray-600 max-w-2xl mx-auto mb-4">
                 We focus on critical areas of AI safety to ensure advanced systems remain beneficial and aligned with human values.
               </p>
+              <Link
+                href="/research"
+                className="inline-flex items-center text-blue-700 font-medium hover:text-blue-800 transition-colors text-sm"
+              >
+                View our research
+                <svg className="w-4 h-4 ml-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">

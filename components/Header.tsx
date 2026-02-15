@@ -13,19 +13,22 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/images/logo.png"
-            alt="Astral Research"
+            alt="EuroSafeAI"
             width={120}
             height={50}
             className="h-8 w-auto object-contain"
             priority
           />
-          <span className="text-lg font-semibold text-white">Astral Research</span>
+          <span className="text-lg font-semibold text-white">EuroSafeAI</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           <Link href="/" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
             Home
+          </Link>
+          <Link href="/research" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
+            Research
           </Link>
           <Link href="/team" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
             Team
@@ -67,6 +70,13 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               Home
+            </Link>
+            <Link
+              href="/research"
+              className="text-sm font-medium text-blue-100 hover:text-white py-2 transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Research
             </Link>
             <Link
               href="/team"
