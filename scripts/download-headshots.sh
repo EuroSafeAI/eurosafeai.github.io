@@ -5,6 +5,8 @@ mkdir -p public/images/team
 cd public/images/team
 
 # Download all headshots in parallel
+curl -L -o zhijing-jin.png "https://zhijing-jin.com/home/wp-content/uploads/2026/02/profile_circle.png" &
+curl -L -o terry-zhang.png "https://scholar.googleusercontent.com/citations?view_op=medium_photo&user=hFY4t8gAAAAJ&citpid=3" &
 curl -L -o yongjin-yang.png "https://yangyongjin.github.io/assets/img/yongjin_profile.png" &
 curl -L -o rohan-subramani.png "https://ca.slack-edge.com/T013MAR86FN-U08LCV1SFPD-f92c3c12b36b-512" &
 curl -L -o ryan-faulkner.jpg "https://scholar.googleusercontent.com/citations?view_op=medium_photo&user=F0nxdKYAAAAJ&citpid=8" &
@@ -22,7 +24,7 @@ curl -L -o angelo-huang.png "https://ca.slack-edge.com/T013MAR86FN-U09ARMTL141-b
 curl -L -o vishal-verma.jpg "https://www.cmu.edu/dietrich/causality/assets/img/people_images/verma_vishal.jpg" &
 curl -L -o punya-pandey.png "https://ca.slack-edge.com/T013MAR86FN-U086REHRRJQ-6f570c1b0d42-512" &
 curl -L -o irene-strauss.png "https://ca.slack-edge.com/T013MAR86FN-U08AD9QG4DD-898f1035c4b6-512" &
-curl -L -o sawal-acharya.jpg "https://plevritislab.stanford.edu/sites/g/files/sbiybj30386/files/styles/square_1900/public/media/image/sawal_0.jpg" &
+curl -L -o sawal-acharya.jpg "https://plevritislab.stanford.edu/sites/g/files/sbiybj30386/files/styles/square_1900/public/media/image/sawal_0.jpg?h=d318f057&itok=gXR-tcZr" &
 curl -L -o joeun-yook.png "https://ca.slack-edge.com/T013MAR86FN-U091X67SNE9-6e39b0442a79-512" &
 
 # Wait for all downloads to complete

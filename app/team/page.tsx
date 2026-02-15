@@ -9,12 +9,83 @@ interface TeamMember {
   image?: string
 }
 
+function getInitials(name: string) {
+  return name.split(' ').map(n => n[0]).join('').slice(0, 2)
+}
+
+function LeadershipCard({ member }: { member: TeamMember }) {
+  return (
+    <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="h-32 bg-blue-700 relative flex items-center justify-center">
+        {member.image ? (
+          <Image src={member.image} alt={member.name} fill className="object-cover" />
+        ) : (
+          <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-white text-xl font-bold">
+            {getInitials(member.name)}
+          </div>
+        )}
+      </div>
+      <div className="p-5">
+        <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
+        <p className="text-blue-600 text-sm font-medium mb-2">{member.role}</p>
+        {member.description && (
+          <p className="text-gray-600 text-sm leading-relaxed">{member.description}</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function MemberCard({ member }: { member: TeamMember }) {
+  return (
+    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex items-center gap-4">
+      <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden relative">
+        {member.image ? (
+          <Image src={member.image} alt={member.name} fill className="object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm font-bold">
+            {getInitials(member.name)}
+          </div>
+        )}
+      </div>
+      <div>
+        <h3 className="font-semibold text-gray-900">{member.name}</h3>
+        <p className="text-gray-500 text-sm">{member.role}</p>
+      </div>
+    </div>
+  )
+}
+
+function ResearchCard({ member }: { member: TeamMember }) {
+  return (
+    <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-4">
+      <div className="w-14 h-14 rounded-lg bg-blue-100 flex-shrink-0 overflow-hidden relative">
+        {member.image ? (
+          <Image src={member.image} alt={member.name} fill className="object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-blue-700 font-bold">
+            {getInitials(member.name)}
+          </div>
+        )}
+      </div>
+      <div>
+        <h3 className="font-bold text-gray-900">{member.name}</h3>
+        <p className="text-blue-600 text-sm font-medium mb-1">{member.role}</p>
+        {member.description && (
+          <p className="text-gray-600 text-sm leading-relaxed">{member.description}</p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Team() {
   const leadership: TeamMember[] = [
     {
       name: 'Zhijing Jin',
       role: 'Co-founder and Director',
       description: 'Focus on risk analysis and alignment verification for advanced AI systems. Doctorate in computer science from ETH Zurich.',
+      image: '/images/team/zhijing-jin.png',
     },
     {
       name: 'Angelo Huang',
@@ -32,6 +103,7 @@ export default function Team() {
       name: 'Terry Jingchen Zhang',
       role: 'Co-founder and Director',
       description: 'Leading efforts in AI governance and safety standards with rigorous research methodology.',
+      image: '/images/team/terry-zhang.png',
     },
   ]
 
@@ -53,7 +125,7 @@ export default function Team() {
   const phdStudents: TeamMember[] = [
     { name: 'Yongjin Yang', role: 'PhD Student', image: '/images/team/yongjin-yang.png' },
     { name: 'Rohan Subramani', role: 'PhD Student', image: '/images/team/rohan-subramani.png' },
-    { name: 'Ryan Faulkner', role: 'PhD Student', image: '/images/team/ryan-faulkner.jpg' },
+    { name: 'Ryan Faulkner', role: 'PhD Student & Deepmind', image: '/images/team/ryan-faulkner.jpg' },
     { name: 'Andrei Muresanu', role: 'PhD Student', image: '/images/team/andrei-muresanu.jpg' },
     { name: 'Yahang Qi', role: 'PhD Student', image: '/images/team/yahang-qi.png' },
     { name: 'Furkan Danisman', role: 'PhD Student', image: '/images/team/furkan-danisman.png' },
@@ -76,70 +148,6 @@ export default function Team() {
     { name: 'Punya Syon Pandey', role: "Bachelor's Student", image: '/images/team/punya-pandey.png' },
     { name: 'Joeun Yook', role: "Bachelor's Student", image: '/images/team/joeun-yook.png' },
   ]
-
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').slice(0, 2)
-  }
-
-  const LeadershipCard = ({ member }: { member: TeamMember }) => (
-    <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className="h-32 bg-blue-700 relative flex items-center justify-center">
-        {member.image ? (
-          <Image src={member.image} alt={member.name} fill className="object-cover" />
-        ) : (
-          <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-white text-xl font-bold">
-            {getInitials(member.name)}
-          </div>
-        )}
-      </div>
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
-        <p className="text-blue-600 text-sm font-medium mb-2">{member.role}</p>
-        {member.description && (
-          <p className="text-gray-600 text-sm leading-relaxed">{member.description}</p>
-        )}
-      </div>
-    </div>
-  )
-
-  const MemberCard = ({ member }: { member: TeamMember }) => (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex items-center gap-4">
-      <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden relative">
-        {member.image ? (
-          <Image src={member.image} alt={member.name} fill className="object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm font-bold">
-            {getInitials(member.name)}
-          </div>
-        )}
-      </div>
-      <div>
-        <h3 className="font-semibold text-gray-900">{member.name}</h3>
-        <p className="text-gray-500 text-sm">{member.role}</p>
-      </div>
-    </div>
-  )
-
-  const ResearchCard = ({ member }: { member: TeamMember }) => (
-    <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex gap-4">
-      <div className="w-14 h-14 rounded-lg bg-blue-100 flex-shrink-0 overflow-hidden relative">
-        {member.image ? (
-          <Image src={member.image} alt={member.name} fill className="object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-blue-700 font-bold">
-            {getInitials(member.name)}
-          </div>
-        )}
-      </div>
-      <div>
-        <h3 className="font-bold text-gray-900">{member.name}</h3>
-        <p className="text-blue-600 text-sm font-medium mb-1">{member.role}</p>
-        {member.description && (
-          <p className="text-gray-600 text-sm leading-relaxed">{member.description}</p>
-        )}
-      </div>
-    </div>
-  )
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -173,7 +181,7 @@ export default function Team() {
               </div>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {leadership.map((member, i) => <LeadershipCard key={i} member={member} />)}
+              {leadership.map((member) => <LeadershipCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
@@ -190,7 +198,7 @@ export default function Team() {
               <h2 className="text-2xl font-bold text-gray-900">Research Staff</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
-              {researchStaff.map((member, i) => <ResearchCard key={i} member={member} />)}
+              {researchStaff.map((member) => <ResearchCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
@@ -207,7 +215,7 @@ export default function Team() {
               <h2 className="text-2xl font-bold text-gray-900">PhD Students</h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {phdStudents.map((member, i) => <MemberCard key={i} member={member} />)}
+              {phdStudents.map((member) => <MemberCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
@@ -224,7 +232,7 @@ export default function Team() {
               <h2 className="text-2xl font-bold text-gray-900">Research Assistants</h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {researchAssistants.map((member, i) => <MemberCard key={i} member={member} />)}
+              {researchAssistants.map((member) => <MemberCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
@@ -241,7 +249,7 @@ export default function Team() {
               <h2 className="text-2xl font-bold text-gray-900">Master's Students</h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mastersStudents.map((member, i) => <MemberCard key={i} member={member} />)}
+              {mastersStudents.map((member) => <MemberCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
@@ -258,7 +266,7 @@ export default function Team() {
               <h2 className="text-2xl font-bold text-gray-900">Bachelor's Students</h2>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {bachelorsStudents.map((member, i) => <MemberCard key={i} member={member} />)}
+              {bachelorsStudents.map((member) => <MemberCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>
