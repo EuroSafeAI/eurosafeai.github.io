@@ -2,13 +2,17 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Astral Research - Pioneering Multi-Agent Safety',
+  icons: {
+    icon: '/logo.ico',
+    apple: '/logo.ico',
+  },
+  title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
   description:
     'A nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
   keywords: ['AI Safety', 'AI Security', 'Multi-Agent Safety', 'Research', 'Nonprofit', 'Switzerland'],
-  authors: [{ name: 'Astral Research' }],
+  authors: [{ name: 'EuroSafeAI' }],
   openGraph: {
-    title: 'Astral Research - Pioneering Multi-Agent Safety',
+    title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
     description:
       'A nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
     type: 'website',
@@ -16,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Astral Research - Pioneering Multi-Agent Safety',
+    title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
     description:
       'A nonprofit research organization advancing AI safety and security.',
   },
