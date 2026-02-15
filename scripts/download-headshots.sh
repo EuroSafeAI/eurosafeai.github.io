@@ -31,7 +31,9 @@ curl -L -o joeun-yook.png "https://ca.slack-edge.com/T013MAR86FN-U091X67SNE9-6e3
 curl -L -o bernhard-scholkopf.png "https://www.wissenschaftsjahr.de/2019/fileadmin/_processed_/a/7/csm_Scho__lkopf_bd163fdd42.jpg" &
 curl -L -o mrimaya-sachan.png "	https://lre.inf.ethz.ch/images/teampic/Mrinmaya.jpg" &
 curl -L -o rada-mihalcea.png "https://eecs.engin.umich.edu/wp-content/uploads/portraits/mihalcea.jpg" &
-curl -L -o mona-diab.png "https://www.wise-qatar.org//app/uploads/2023/11/mona-diab-image.jpg"    &
+
+# doesn't work.
+# wget -o mona-diab.png "https://www.wise-qatar.org//app/uploads/2023/11/mona-diab-image.jpg"    &
 # Wait for all downloads to complete
 wait
 
