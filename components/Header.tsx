@@ -19,26 +19,26 @@ export default function Header() {
             className="h-8 w-auto object-contain"
             priority
           />
-          <span className="text-lg font-semibold text-white">EuroSafeAI</span>
+          <span className="text-xl font-bold text-white">EuroSafeAI</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
+          <Link href="/" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
             Home
           </Link>
-          <Link href="/research" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
+          <Link href="/research" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
             Research
           </Link>
-          <Link href="/team" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
+          <Link href="/team" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
             Team
           </Link>
-          <Link href="/careers" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
+          <Link href="/careers" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
             Careers
           </Link>
           <a
             href="mailto:eurosafeai.zurich@gmail.com"
-            className="px-4 py-2 bg-white text-primary-600 text-sm font-medium rounded-lg hover:bg-primary-50 transition-colors"
+            className="px-4 py-2 bg-white text-primary-600 text-base font-semibold rounded-lg hover:bg-primary-50 transition-colors"
           >
             Contact Us
           </a>
@@ -66,35 +66,35 @@ export default function Header() {
           <div className="flex flex-col gap-4">
             <Link
               href="/"
-              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
+              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/research"
-              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
+              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Research
             </Link>
             <Link
               href="/team"
-              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
+              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Team
             </Link>
             <Link
               href="/careers"
-              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
+              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Careers
             </Link>
             <a
               href="mailto:eurosafeai.zurich@gmail.com"
-              className="px-4 py-2 bg-white text-primary-600 text-sm font-medium rounded-lg text-center hover:bg-primary-50 transition-colors"
+              className="px-4 py-2 bg-white text-primary-600 text-base font-semibold rounded-lg text-center hover:bg-primary-50 transition-colors"
             >
               Contact Us
             </a>
