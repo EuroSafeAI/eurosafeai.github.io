@@ -64,10 +64,10 @@ export default function Team() {
   ]
 
   const advisors: TeamMember[] = [
-    { name: 'Prof. Bernhard Schoelkopf', role: 'Director, Max Planck Institute for Intelligent Systems', image: '/images/team/bernhard-scholkopf.png' },
+    { name: 'Prof. Bernhard Schölkopf', role: 'Director, Max Planck Institute for Intelligent Systems', image: '/images/team/bernhard-scholkopf.png' },
     // { name: 'Prof. Mrinmaya Sachan', role: 'Assistant Professor, ETH Zürich', image: '/images/team/mrimaya-sachan.png' },
     { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto', image: '/images/team/roger-grosse.png' },
-    { name: 'Prof. Rada Mihalcea', role: 'Head of AI Lab at UMich, UMich', image: '/images/team/rada-mihalcea.png' },
+    { name: 'Prof. Rada Mihalcea', role: 'Head of AI Lab, UMich', image: '/images/team/rada-mihalcea.png' },
     { name: 'Prof. Mona Diab', role: 'Professor, Head of CMU LTI', image: '/images/team/mona-diab.png' },
   ]
 
