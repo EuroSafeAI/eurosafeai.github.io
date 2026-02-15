@@ -31,7 +31,7 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div>
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-6">
+                <h1 className="text-5xl md:text-6xl  font-extrabold text-gray-900 leading-tight mb-6">
                   Pioneering
                   <br />
                   <span className="text-primary-600">Multi-Agent Safety</span>
