@@ -59,7 +59,7 @@ export default function Team() {
     { name: 'Angelo Huang', role: 'Co-founder and Director', image: '/images/team/angelo-huang.png' },
     { name: 'Pepijn Cobben', role: 'Co-founder and Director',
          image: '/images/team/pepijn-cobben.png' },
-    { name: 'J. C. Zhang', role: 'Co-founder and Director',
+    { name: 'Terry J. C. Zhang', role: 'Co-founder and Director',
          image: '/images/team/terry-zhang.png' },
   ]
 
