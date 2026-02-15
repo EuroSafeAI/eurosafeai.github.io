@@ -81,18 +81,20 @@ export default function Home() {
         </section>
 
         {/* Mission & About Cards */}
-        <section className="bg-gray-50 py-16 lg:py-20">
-          <div className="max-w-4xl mx-auto px-6">
+        <section className="bg-gray-50 py-10 lg:py-12">
+          <div className="max-w-6xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-6">
               <InfoCard
                 label="Our Mission"
-                title="AI systems will soon be integrated into large parts of the economy and our personal lives."
-                description="While this transformation may unlock substantial benefits, there are also vast risks. We believe some of the greatest risks stem from multi-agent systems that interact in complex, unpredictable ways. Our goal is to understand and evaluate these risks well enough to prevent the possible harms that unsafe AI systems might cause."
+                title="AI systems are rapidly becoming central to economic infrastructure and high-stakes decision-making."
+                description="As multi-agent AI systems interact in markets, supply chains, and critical services, they create complex emergent dynamics that are difficult to predict or control. Our research focuses on identifying and mitigating these systemic risks to ensure AI deployment remains safe and aligned with human values as these systems scale."
+                // title="AI systems will soon be integrated into large parts of the economy and our personal lives."
+                // description="While this transformation may unlock substantial benefits, there are also vast risks. We believe some of the greatest risks stem from multi-agent systems that interact in complex, unpredictable ways. Our goal is to understand and evaluate these risks well enough to prevent the possible harms that unsafe AI systems might cause."
               />
               <InfoCard
                 label="About Us"
-                title="We focus on research in the areas of AI safety, security, and multi-agent systems."
-                description="We advance AI safety and security by developing risk assessments and mitigation strategies. We target scenarios where AI systems may act contrary to developer intent, and actively collaborate with industry partners including DeepMind and Anthropic. We value curiosity, ethics, and a proactive, responsible mindset."
+                title="EuroSafeAI focuses on research in the areas of AI safety, security, and multi-agent systems."
+                description="We advance AI safety and security by developing risk assessments and mitigation strategies. We target scenarios where AI systems may act contrary to developer intent. We value curiosity, ethics, and a proactive, responsible mindset."
               />
             </div>
           </div>
@@ -161,12 +163,72 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Defense of Democracy
+                  Democracy Defense
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   Studying how AI systems can impact current models of government and developing protective measures.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Partners Section */}
+        <section className="bg-gray-50 py-16 lg:py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <p className="text-sm font-semibold text-primary-600 uppercase tracking-wider mb-3">
+                Collaborations
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Our Partners
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                We collaborate with leading research labs, governments, and foundations
+                to advance AI safety on a global scale.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto items-stretch">
+              {[
+                {
+                  name: 'Google DeepMind',
+                  href: 'https://deepmind.google/',
+                  logo: '/images/partners/google-deepmind.svg',
+                  width: 200,
+                  height: 36,
+                },
+                {
+                  name: 'Schmidt Sciences',
+                  href: 'https://www.schmidtsciences.org/',
+                  logo: '/images/partners/schmidt-sciences.png',
+                  width: 200,
+                  height: 84,
+                },
+                {
+                  name: 'UK AI Safety Institute',
+                  href: 'https://www.aisi.gov.uk/',
+                  logo: '/images/partners/uk-aisi.svg',
+                  width: 200,
+                  height: 28,
+                },
+              ].map((partner) => (
+                <a
+                  key={partner.name}
+                  href={partner.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center px-8 py-10 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-200 transition-all"
+                >
+                  <Image
+                    src={partner.logo}
+                    alt={partner.name}
+                    width={partner.width}
+                    height={partner.height}
+                    className="object-contain w-auto mx-auto"
+                  />
+                </a>
+              ))}
             </div>
           </div>
         </section>

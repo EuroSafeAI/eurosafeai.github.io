@@ -23,7 +23,7 @@ const highlighted: ResearchItem[] = [
     title: 'Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents',
     description:
       'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs. We find that most models fail to achieve sustainable equilibrium, with the highest survival rate below 54%. Agents leveraging moral reasoning achieve significantly better sustainability.',
-    category: 'Defense of Democracy',
+    category: 'Democracy Defense',
     categoryColor: 'bg-purple-100',
     categoryTextColor: 'text-purple-700',
     venue: 'NeurIPS 2024',

@@ -10,7 +10,7 @@ authors:
   - "Mrinmaya Sachan"
   - "Rada Mihalcea"
 venue: "NeurIPS 2024"
-category: "Defense of Democracy"
+category: "Democracy Defense"
 paperUrl: "https://arxiv.org/abs/2404.16698"
 featured: true
 summary: "We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs, revealing that most models fail to achieve sustainable equilibrium."
