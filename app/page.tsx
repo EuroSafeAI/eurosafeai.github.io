@@ -31,12 +31,12 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight mb-6">
                   Pioneering
                   <br />
                   <span className="text-primary-600">Multi-Agent Safety</span>
                 </h1>
-                <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 max-w-lg">
+                <p className="text-lg md:text-xl text-gray-700 font-medium leading-relaxed mb-8 max-w-lg">
                   Advancing AI safety through rigorous research, threat assessment, and mitigation strategies that prioritize safeguarding humanity.
                 </p>
                 <div className="flex flex-wrap gap-4">
