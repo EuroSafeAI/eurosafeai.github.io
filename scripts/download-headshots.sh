@@ -32,6 +32,7 @@ curl -L -o bernhard-scholkopf.png "https://www.wissenschaftsjahr.de/2019/fileadm
 curl -L -o mrimaya-sachan.png "	https://lre.inf.ethz.ch/images/teampic/Mrinmaya.jpg" &
 curl -L -o rada-mihalcea.png "https://eecs.engin.umich.edu/wp-content/uploads/portraits/mihalcea.jpg" &
 
+curl -L -o roger-grosse.png "https://futureoflife.org/wp-content/uploads/2021/09/RogerGrosse-e1632931292615.jpg" &
 # doesn't work.
 # wget -o mona-diab.png "https://www.wise-qatar.org//app/uploads/2023/11/mona-diab-image.jpg"    &
 # Wait for all downloads to complete
