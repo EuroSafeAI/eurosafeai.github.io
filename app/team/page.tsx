@@ -15,17 +15,17 @@ function getInitials(name: string) {
 
 function LeadershipCard({ member }: { member: TeamMember }) {
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-      <div className="h-32 bg-blue-700 relative flex items-center justify-center">
-        {member.image ? (
-          <Image src={member.image} alt={member.name} fill className="object-cover" />
-        ) : (
-          <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-white text-xl font-bold">
-            {getInitials(member.name)}
-          </div>
-        )}
-      </div>
-      <div className="p-5">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden">
+      <div className="pt-8 pb-5 px-5 flex flex-col items-center text-center">
+        <div className="w-24 h-24 rounded-full overflow-hidden bg-blue-700 flex-shrink-0 relative mb-4 ring-2 ring-gray-100">
+          {member.image ? (
+            <Image src={member.image} alt={member.name} fill className="object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+              {getInitials(member.name)}
+            </div>
+          )}
+        </div>
         <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
         <p className="text-blue-600 text-sm font-medium mb-2">{member.role}</p>
         {member.description && (
@@ -116,7 +116,7 @@ export default function Team() {
     },
     {
       name: 'David Guzman',
-      role: 'Research Scientist',
+      role: 'Senior Research Scientist',
       description: 'Focus on strategic deception detection in LLMs and malign agent behavior monitoring.',
       image: '/images/team/david-guzman.png',
     },
@@ -147,6 +147,13 @@ export default function Team() {
   const bachelorsStudents: TeamMember[] = [
     { name: 'Punya Syon Pandey', role: "Bachelor's Student", image: '/images/team/punya-pandey.png' },
     { name: 'Joeun Yook', role: "Bachelor's Student", image: '/images/team/joeun-yook.png' },
+  ]
+
+  const advisors: TeamMember[] = [
+    { name: 'Prof Bernhard Schoelkopf', role: 'Director, Max Planck Institute', image: '/images/team/bernhard-scholkopf.png' },
+    { name: 'Prof Mrinmaya Sachan', role: 'Assistant Professor, ETH Zürich', image: '/images/team/mrimaya-sachan.png' },
+    { name: 'Prof Rada Mihalcea', role: 'Head of AI, Professor, UMich', image: '/images/team/rada-mihalcea.png' },
+    { name: 'Prof Mona Diab', role: 'Professor, Head of CMU LTI', image: '/images/team/mona-diab.png' },
   ]
 
   return (
@@ -182,6 +189,26 @@ export default function Team() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {leadership.map((member) => <LeadershipCard key={member.name} member={member} />)}
+            </div>
+          </div>
+        </section>
+
+        {/* Advisors */}
+        <section className="py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-indigo-500 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Advisors</h2>
+                <p className="text-gray-600 text-sm">Collaborators across AI research institutions</p>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {advisors.map((member) => <LeadershipCard key={member.name} member={member} />)}
             </div>
           </div>
         </section>

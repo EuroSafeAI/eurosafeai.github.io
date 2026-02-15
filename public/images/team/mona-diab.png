@@ -1,0 +1,5 @@
+--2026-02-15 10:02:12--  https://www.wise-qatar.org//app/uploads/2023/11/mona-diab-image.jpg
+Resolving www.wise-qatar.org (www.wise-qatar.org)... 20.54.176.184, 20.50.222.94
+Connecting to www.wise-qatar.org (www.wise-qatar.org)|20.54.176.184|:443... connected.
+ERROR: The certificate of ‘www.wise-qatar.org’ is not trusted.
+ERROR: The certificate of ‘www.wise-qatar.org’ doesn't have a known issuer.

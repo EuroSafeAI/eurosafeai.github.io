@@ -27,6 +27,11 @@ curl -L -o irene-strauss.png "https://ca.slack-edge.com/T013MAR86FN-U08AD9QG4DD-
 curl -L -o sawal-acharya.jpg "https://plevritislab.stanford.edu/sites/g/files/sbiybj30386/files/styles/square_1900/public/media/image/sawal_0.jpg?h=d318f057&itok=gXR-tcZr" &
 curl -L -o joeun-yook.png "https://ca.slack-edge.com/T013MAR86FN-U091X67SNE9-6e39b0442a79-512" &
 
+
+curl -L -o bernhard-scholkopf.png "https://www.wissenschaftsjahr.de/2019/fileadmin/_processed_/a/7/csm_Scho__lkopf_bd163fdd42.jpg" &
+curl -L -o mrimaya-sachan.png "	https://lre.inf.ethz.ch/images/teampic/Mrinmaya.jpg" &
+curl -L -o rada-mihalcea.png "https://eecs.engin.umich.edu/wp-content/uploads/portraits/mihalcea.jpg" &
+curl -L -o mona-diab.png "https://www.wise-qatar.org//app/uploads/2023/11/mona-diab-image.jpg"    &
 # Wait for all downloads to complete
 wait
 
