@@ -8,7 +8,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="w-full bg-blue-700 border-b border-blue-600 sticky top-0 z-50">
+    <header className="w-full bg-primary-600 border-b border-primary-700 sticky top-0 z-50">
       <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -24,21 +24,21 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
+          <Link href="/" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
             Home
           </Link>
-          <Link href="/research" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
+          <Link href="/research" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
             Research
           </Link>
-          <Link href="/team" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
+          <Link href="/team" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
             Team
           </Link>
-          <Link href="/careers" className="text-sm font-medium text-blue-100 hover:text-white transition-colors">
+          <Link href="/careers" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
             Careers
           </Link>
           <a
             href="mailto:eurosafeai.zurich@gmail.com"
-            className="px-4 py-2 bg-white text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-50 transition-colors"
+            className="px-4 py-2 bg-white text-primary-600 text-sm font-medium rounded-lg hover:bg-primary-50 transition-colors"
           >
             Contact Us
           </a>
@@ -62,39 +62,39 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-blue-700 border-t border-blue-600 px-6 py-4">
+        <div className="md:hidden bg-primary-600 border-t border-primary-700 px-6 py-4">
           <div className="flex flex-col gap-4">
             <Link
               href="/"
-              className="text-sm font-medium text-blue-100 hover:text-white py-2 transition-colors"
+              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/research"
-              className="text-sm font-medium text-blue-100 hover:text-white py-2 transition-colors"
+              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Research
             </Link>
             <Link
               href="/team"
-              className="text-sm font-medium text-blue-100 hover:text-white py-2 transition-colors"
+              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Team
             </Link>
             <Link
               href="/careers"
-              className="text-sm font-medium text-blue-100 hover:text-white py-2 transition-colors"
+              className="text-sm font-medium text-primary-100 hover:text-white py-2 transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Careers
             </Link>
             <a
               href="mailto:eurosafeai.zurich@gmail.com"
-              className="px-4 py-2 bg-white text-blue-700 text-sm font-medium rounded-lg text-center hover:bg-blue-50 transition-colors"
+              className="px-4 py-2 bg-white text-primary-600 text-sm font-medium rounded-lg text-center hover:bg-primary-50 transition-colors"
             >
               Contact Us
             </a>

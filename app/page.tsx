@@ -6,7 +6,7 @@ import Link from 'next/link'
 function InfoCard({ label, title, description }: { label: string; title: string; description: string }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-8 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col">
-      <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
+      <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider mb-3">
         {label}
       </p>
       <h3 className="text-xl font-bold text-gray-900 leading-snug mb-4">
@@ -26,7 +26,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-slate-50 via-blue-50/50 to-white">
+        <section className="relative bg-gradient-to-br from-slate-50 via-primary-50/50 to-white">
           <div className="max-w-6xl mx-auto px-6 py-20 lg:py-32">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
@@ -34,7 +34,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
                   Pioneering
                   <br />
-                  <span className="text-blue-700">Multi-Agent Safety</span>
+                  <span className="text-primary-600">Multi-Agent Safety</span>
                 </h1>
                 <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 max-w-lg">
                   Advancing AI safety through rigorous research, threat assessment, and mitigation strategies that prioritize safeguarding humanity.
@@ -42,7 +42,7 @@ export default function Home() {
                 <div className="flex flex-wrap gap-4">
                   <Link
                     href="/team"
-                    className="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-medium rounded-lg hover:bg-blue-800 transition-colors"
+                    className="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
                   >
                     Meet Our Team
                     <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ export default function Home() {
                   </Link>
                   <Link
                     href="/research"
-                    className="inline-flex items-center px-6 py-3 border-2 border-blue-700 text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors"
+                    className="inline-flex items-center px-6 py-3 border-2 border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition-colors"
                   >
                     Our Research
                     <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ export default function Home() {
               {/* Right Image */}
               <div className="relative hidden lg:block">
                 <div className="relative w-full max-w-md mx-auto aspect-square">
-                  <div className="absolute inset-4 bg-blue-100 rounded-2xl transform rotate-3" />
+                  <div className="absolute inset-4 bg-primary-100 rounded-2xl transform rotate-3" />
                   <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden aspect-square">
                     <Image
                       src="/images/research-1.png"
@@ -102,7 +102,7 @@ export default function Home() {
         <section className="bg-white py-20 lg:py-28">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-12">
-              <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">
+              <p className="text-sm font-semibold text-primary-600 uppercase tracking-wider mb-3">
                 Research Focus
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -113,7 +113,7 @@ export default function Home() {
               </p>
               <Link
                 href="/research"
-                className="inline-flex items-center text-blue-700 font-medium hover:text-blue-800 transition-colors text-sm"
+                className="inline-flex items-center text-primary-600 font-medium hover:text-primary-700 transition-colors text-sm"
               >
                 View our research
                 <svg className="w-4 h-4 ml-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,8 +140,8 @@ export default function Home() {
 
               {/* Card 2 */}
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4 flex-shrink-0">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4 flex-shrink-0">
+                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
@@ -172,18 +172,18 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-blue-700 py-16 lg:py-20">
+        <section className="bg-primary-600 py-16 lg:py-20">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Join Our Mission
             </h2>
-            <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
               We're looking for talented researchers and professionals who are passionate about ensuring AI benefits humanity.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/careers"
-                className="inline-flex items-center px-6 py-3 bg-white text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-white text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition-colors"
               >
                 View Open Positions
                 <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

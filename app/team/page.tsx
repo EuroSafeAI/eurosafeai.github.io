@@ -17,7 +17,7 @@ function LeadershipCard({ member }: { member: TeamMember }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden">
       <div className="pt-8 pb-5 px-5 flex flex-col items-center text-center">
-        <div className="w-24 h-24 rounded-full overflow-hidden bg-blue-700 flex-shrink-0 relative mb-4 ring-2 ring-gray-100">
+        <div className="w-24 h-24 rounded-full overflow-hidden bg-primary-700 flex-shrink-0 relative mb-4 ring-2 ring-gray-100">
           {member.image ? (
             <Image src={member.image} alt={member.name} fill className="object-cover" />
           ) : (
@@ -27,7 +27,7 @@ function LeadershipCard({ member }: { member: TeamMember }) {
           )}
         </div>
         <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
-        <p className="text-blue-600 text-sm font-medium mb-2">{member.role}</p>
+        <p className="text-primary-600 text-sm font-medium mb-2">{member.role}</p>
         {member.description && (
           <p className="text-gray-600 text-sm leading-relaxed">{member.description}</p>
         )}
@@ -98,12 +98,12 @@ export default function Team() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="bg-blue-700 py-16 lg:py-24">
+        <section className="bg-primary-700 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Meet Our Team
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl">
+            <p className="text-xl text-primary-100 max-w-2xl">
               Experts in AI safety and strategic research, dedicated to advancing AI safety through innovative research.
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function Team() {
         <section className="py-16 bg-gray-50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-blue-700 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
@@ -131,7 +131,7 @@ export default function Team() {
         <section className="py-16 bg-gray-50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -163,13 +163,13 @@ export default function Team() {
         </section>
 
         {/* CTA */}
-        <section className="bg-blue-700 py-16">
+        <section className="bg-primary-700 py-16">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">Want to Join Our Team?</h2>
-            <p className="text-lg text-blue-100 mb-8">
+            <p className="text-lg text-primary-100 mb-8">
               We're always looking for talented individuals passionate about AI safety.
             </p>
-            <a href="/careers" className="inline-flex items-center px-6 py-3 bg-white text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors">
+            <a href="/careers" className="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-medium rounded-lg hover:bg-primary-50 transition-colors">
               View Open Positions
               <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

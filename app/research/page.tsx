@@ -38,7 +38,7 @@ const highlighted: ResearchItem[] = [
     category: 'Safety',
     categoryColor: 'bg-red-100',
     categoryTextColor: 'text-red-700',
-    venue: 'ICML 2025',
+    venue: 'IASEAI 2026',
     date: '2025-05-22',
     paperUrl: 'https://arxiv.org/abs/2505.16789',
     blogSlug: 'accidental-misalignment',
@@ -51,8 +51,8 @@ const otherResearch: ResearchItem[] = [
     description:
       'Investigating safety guarantees and failure modes when multiple AI agents interact in shared environments, with a focus on emergent risks that arise from agent-to-agent dynamics.',
     category: 'Multi-Agent Safety',
-    categoryColor: 'bg-blue-100',
-    categoryTextColor: 'text-blue-700',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
     date: '2025',
     comingSoon: true,
   },
@@ -66,7 +66,7 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow overflow-hidden flex flex-col">
       {/* Category stripe */}
-      <div className="h-1.5 w-full bg-blue-700" />
+      <div className="h-1.5 w-full bg-primary-700" />
 
       <div className="p-6 md:p-8 flex flex-col flex-1">
         {/* Badge row */}
@@ -98,7 +98,7 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
               href={item.paperUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -109,7 +109,7 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
           {item.blogSlug && existingBlogSlugs.has(item.blogSlug) && (
             <Link
               href={`/blog/${item.blogSlug}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-blue-700 text-blue-700 hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-primary-700 text-primary-700 hover:bg-primary-50 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
@@ -156,7 +156,7 @@ function OtherResearchRow({ item }: { item: ResearchItem }) {
             href={item.paperUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -167,7 +167,7 @@ function OtherResearchRow({ item }: { item: ResearchItem }) {
         {item.blogSlug && existingBlogSlugs.has(item.blogSlug) && (
           <Link
             href={`/blog/${item.blogSlug}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-blue-700 text-blue-700 hover:bg-blue-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-primary-700 text-primary-700 hover:bg-primary-50 transition-colors"
           >
             Blog post
           </Link>
@@ -186,12 +186,12 @@ export default function Research() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-blue-700 py-16 lg:py-24">
+        <section className="bg-primary-700 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Our Research
             </h1>
-            <p className="text-xl text-blue-100 max-w-3xl">
+            <p className="text-xl text-primary-100 max-w-3xl">
               Our technical research focuses on developing methods to ensure that
               AI systems act safely and cooperatively, even in multi-agent
               settings and under adversarial conditions.
@@ -203,7 +203,7 @@ export default function Research() {
         <section className="py-16 lg:py-20 bg-gray-50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-700 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center flex-shrink-0">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
@@ -246,19 +246,19 @@ export default function Research() {
         </section>
 
         {/* CTA */}
-        <section className="bg-blue-700 py-16">
+        <section className="bg-primary-700 py-16">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
               Interested in Collaborating?
             </h2>
-            <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
               We actively collaborate with academic and industry partners on AI
               safety research. Get in touch to explore opportunities.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a
                 href="mailto:eurosafeai.zurich@gmail.com"
-                className="inline-flex items-center px-6 py-3 bg-white text-blue-700 font-medium rounded-lg hover:bg-blue-50 transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-medium rounded-lg hover:bg-primary-50 transition-colors"
               >
                 Contact Us
                 <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
