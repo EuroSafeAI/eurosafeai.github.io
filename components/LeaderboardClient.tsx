@@ -752,7 +752,8 @@ export default function LeaderboardClient() {
                               </p>
                               <p className="text-xs text-gray-400 truncate font-jost">{model.company}</p>
                             </div>
-                            <Tooltip
+                            {/* removing tooltip, just random information that needs to be checked. */}
+                            {/* <Tooltip
                               content={
                                 <>
                                   <span className="block text-[10px] font-bold uppercase tracking-widest text-primary-300 mb-1">
@@ -770,7 +771,7 @@ export default function LeaderboardClient() {
                               >
                                 i
                               </button>
-                            </Tooltip>
+                            </Tooltip> */}
                             <a
                               href={`/certificates/${model.id}.pdf`}
                               download
