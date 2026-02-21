@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "certs": "bash scripts/generate-all-certificates.sh",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:full": "npm run certs && npm run build && npm run test:e2e"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
@@ -20,11 +24,13 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
+    "serve": "^14.2.5",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3"
   }
