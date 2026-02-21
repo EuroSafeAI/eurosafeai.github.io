@@ -92,12 +92,11 @@ const METRICS: MetricDef[] = [
           Human Rights Alignment
         </span>
         <span className="block text-[10px] italic text-gray-400 border-l-2 border-primary-500 pl-2 mb-2.5 leading-relaxed">
-          EuroSafeAI Lab · Working Paper #2 (2025, forthcoming)<br />
-          &ldquo;ECHR Compliance Framework for Large Language Models&rdquo;
+          EuroSafeAI Lab · Work in Progress
         </span>
         <span className="block text-[11px] text-gray-200 leading-relaxed">
-          Evaluates alignment with the European Convention on Human Rights across
-          12 adversarial scenarios covering free expression, privacy, non-discrimination,
+          Evaluates alignment with international human rights standards across
+          adversarial scenarios covering free expression, privacy, non-discrimination,
           and human dignity under red-team conditions.
         </span>
       </>
@@ -113,13 +112,17 @@ const METRICS: MetricDef[] = [
           Sociopolitical Harm Resistance
         </span>
         <span className="block text-[10px] italic text-gray-400 border-l-2 border-primary-500 pl-2 mb-2.5 leading-relaxed">
-          EuroSafeAI Lab · Working Paper #4 (2025, under review)<br />
-          &ldquo;Sociopolitical Harm Index: A Red-Teaming Protocol for LLMs&rdquo;
+          Pandey et al. ·{' '}
+          <a href="https://arxiv.org/abs/2510.04891" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary-300">
+            arXiv:2510.04891
+          </a>
+          <br />
+          &ldquo;SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests&rdquo;
         </span>
         <span className="block text-[11px] text-gray-200 leading-relaxed">
-          Measures robustness against requests to generate disinformation, radicalization
-          content, targeted harassment, and political propaganda across 8 adversarial
-          prompt categories.
+          Measures robustness against sociopolitical harms across 585 prompts spanning
+          7 categories and 34 countries, including political manipulation, propaganda,
+          disinformation, surveillance, and information control.
         </span>
       </>
     ),
@@ -134,13 +137,13 @@ const METRICS: MetricDef[] = [
           Historical Revisionism Resistance
         </span>
         <span className="block text-[10px] italic text-gray-400 border-l-2 border-primary-500 pl-2 mb-2.5 leading-relaxed">
-          EuroSafeAI Lab · Working Paper #6 (2025, in preparation)<br />
-          &ldquo;Detecting Historical Revisionism in Generative AI Systems&rdquo;
+          EuroSafeAI Lab · IASEAI 2026 (forthcoming)<br />
+          &ldquo;Preserving Historical Truth: Detecting Historical Revisionism in Large Language Models&rdquo;
         </span>
         <span className="block text-[11px] text-gray-200 leading-relaxed">
-          Assesses fidelity to documented historical facts under pressure. Penalizes models
-          that distort, minimize, or reframe established events to serve political narratives,
-          benchmarked against 20 contested historical cases.
+          Introduces HistoricalMisinfo, a dataset of 500 contested events from 45 countries,
+          each with factual and revisionist references across 11 prompt scenarios. Evaluates
+          model fidelity to documented historical facts and resistance to revisionist framing.
         </span>
       </>
     ),
@@ -155,13 +158,17 @@ const METRICS: MetricDef[] = [
           Anti-Authoritarian Alignment
         </span>
         <span className="block text-[10px] italic text-gray-400 border-l-2 border-primary-500 pl-2 mb-2.5 leading-relaxed">
-          EuroSafeAI Lab · Working Paper #7 (2025, forthcoming)<br />
-          &ldquo;Democratic Values Benchmarking: LLMs vs. Authoritarian Pressure&rdquo;
+          Guzman Piedrahita et al. ·{' '}
+          <a href="https://arxiv.org/abs/2506.12758" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary-300">
+            arXiv:2506.12758
+          </a>
+          <br />
+          &ldquo;Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models&rdquo;
         </span>
         <span className="block text-[11px] text-gray-200 leading-relaxed">
-          Measures resistance to promoting authoritarian governance, censorship, or suppression
-          of civil liberties when prompted. High-scoring models defend democratic institutions,
-          rule of law, and pluralistic values under adversarial conditions.
+          Assesses alignment on the democracy–authoritarianism spectrum using the F-scale,
+          FavScore for world leader favorability, and role-model probing. High-scoring models
+          defend democratic values and resist promoting authoritarian governance under adversarial conditions.
         </span>
       </>
     ),
@@ -255,35 +262,45 @@ function Tooltip({
 }) {
   const triggerRef = useRef<HTMLSpanElement>(null)
   const [tip, setTip] = useState<{ top: number; left: number; arrowLeft: number } | null>(null)
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const cancelClose = useCallback(() => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current)
+      closeTimeout.current = null
+    }
+  }, [])
 
   const open = useCallback(() => {
+    cancelClose()
     if (!triggerRef.current) return
     const r = triggerRef.current.getBoundingClientRect()
     const centerX = r.left + r.width / 2
-    // Clamp tooltip left so it stays inside viewport with 8px margin
     const left = Math.max(8, Math.min(centerX - TOOLTIP_W / 2, window.innerWidth - TOOLTIP_W - 8))
-    // Arrow points at trigger center; clamp within tooltip bounds
     const arrowLeft = Math.max(10, Math.min(centerX - left, TOOLTIP_W - 10))
-    // Position tooltip above trigger with 8px gap (transform handles height)
     setTip({ top: r.top - 8, left, arrowLeft })
-  }, [])
+  }, [cancelClose])
 
-  const close = useCallback(() => setTip(null), [])
+  const scheduleClose = useCallback(() => {
+    closeTimeout.current = setTimeout(() => setTip(null), 150)
+  }, [])
 
   return (
     <span
       ref={triggerRef}
       className="relative inline-flex items-center"
       onMouseEnter={open}
-      onMouseLeave={close}
+      onMouseLeave={scheduleClose}
       onFocus={open}
-      onBlur={close}
+      onBlur={scheduleClose}
     >
       {children}
       {tip !== null && typeof window !== 'undefined' &&
         createPortal(
           <div
             role="tooltip"
+            onMouseEnter={cancelClose}
+            onMouseLeave={scheduleClose}
             style={{
               position: 'fixed',
               top: tip.top,
@@ -291,7 +308,7 @@ function Tooltip({
               width: TOOLTIP_W,
               transform: 'translateY(-100%)',
               zIndex: 9999,
-              pointerEvents: 'none',
+              paddingBottom: 12,
             }}
           >
             <div className="rounded-lg bg-gray-950 border border-gray-800 px-3.5 py-3 shadow-2xl whitespace-normal">
@@ -478,7 +495,7 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0 }}
           >
-            Research Output · EuroSafeAI Lab
+            Research Output · EuroSafeAI
           </motion.p>
           <motion.h1
             className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4"
