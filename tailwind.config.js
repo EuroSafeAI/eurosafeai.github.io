@@ -23,8 +23,8 @@ module.exports = {
         accent: '#09f',
       },
       fontFamily: {
-        fraunces: ['Fraunces', 'Georgia', 'serif'],
-        jost: ['Jost', 'Arial', 'sans-serif'],
+        fraunces: ['Libre Baskerville', 'Georgia', 'serif'],
+        jost: ['IBM Plex Sans', 'Arial', 'sans-serif'],
         mono: ['JetBrains Mono', 'Geist Mono', 'monospace'],
       },
       keyframes: {
