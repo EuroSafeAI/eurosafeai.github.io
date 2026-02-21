@@ -20,16 +20,20 @@ const ROOT = resolve(__dirname, '..')
 // ── .env loader (no external dependency) ────────────────────────────────────
 
 function loadEnv() {
-  const envPath = resolve(ROOT, '.env')
-  if (!existsSync(envPath)) return {}
   const result = {}
-  for (const line of readFileSync(envPath, 'utf-8').split('\n')) {
-    const t = line.trim()
-    if (!t || t.startsWith('#')) continue
-    const eq = t.indexOf('=')
-    if (eq === -1) continue
-    result[t.slice(0, eq).trim()] = t.slice(eq + 1).trim().replace(/^["']|["']$/g, '')
+  // .env file (local dev)
+  const envPath = resolve(ROOT, '.env')
+  if (existsSync(envPath)) {
+    for (const line of readFileSync(envPath, 'utf-8').split('\n')) {
+      const t = line.trim()
+      if (!t || t.startsWith('#')) continue
+      const eq = t.indexOf('=')
+      if (eq === -1) continue
+      result[t.slice(0, eq).trim()] = t.slice(eq + 1).trim().replace(/^["']|["']$/g, '')
+    }
   }
+  // process.env always wins (CI / GitHub Actions secrets)
+  if (process.env.CERT_SECRET) result.CERT_SECRET = process.env.CERT_SECRET
   return result
 }
 

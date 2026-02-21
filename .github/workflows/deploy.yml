@@ -31,8 +31,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate certificates
+        env:
+          CERT_SECRET: ${{ secrets.CERT_SECRET }}
+        run: bash scripts/generate-all-certificates.sh
+
       - name: Build
         run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run integration tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
 
       - name: Add .nojekyll file
         run: touch ./out/.nojekyll

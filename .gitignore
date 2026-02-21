@@ -32,6 +32,9 @@ yarn-error.log*
 .env
 .env*.local
 
+# Generated certificate PDFs — produced by the CI workflow
+public/certificates/
+test-results
 # Vercel
 .vercel
 
