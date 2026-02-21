@@ -48,6 +48,43 @@ jobs:
         with:
           path: './out'
 
+      - name: Push to backup repository
+        env:
+          BACKUP_DEPLOY_KEY: ${{ secrets.BACKUP_DEPLOY_KEY }}
+        run: |
+          if [ -z "$BACKUP_DEPLOY_KEY" ]; then
+            echo "Skipping backup push: BACKUP_DEPLOY_KEY secret not configured"
+            exit 0
+          fi
+          mkdir -p ~/.ssh
+          echo "$BACKUP_DEPLOY_KEY" > ~/.ssh/backup_key
+          chmod 600 ~/.ssh/backup_key
+          echo -e "Host github.com\n  IdentityFile ~/.ssh/backup_key\n  IdentitiesOnly yes" >> ~/.ssh/config
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if git clone --depth 1 git@github.com:EuroSafeAI/backup.git backup-repo 2>/dev/null; then
+            cd backup-repo
+            ls -A | grep -v '^\.git$' | xargs rm -rf 2>/dev/null || true
+          else
+            mkdir backup-repo && cd backup-repo
+            git init
+            git remote add origin git@github.com:EuroSafeAI/backup.git
+          fi
+          cp -r ../out/* .
+          # Backup is served at eurosafe.ai.utoronto.ca — update CNAME and sitemap
+          echo "eurosafe.ai.utoronto.ca" > CNAME
+          if [ -f sitemap.xml ]; then
+            sed -i 's|eurosafe\.ai\.toronto\.edu|eurosafe.ai.utoronto.ca|g' sitemap.xml
+          fi
+          git add -A
+          if git diff --staged --quiet 2>/dev/null; then
+            echo "No changes to push"
+          else
+            git commit -m "Backup: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push -u origin HEAD
+          fi
+
   deploy:
     environment:
       name: github-pages
