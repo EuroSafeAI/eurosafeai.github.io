@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
+import modelsData from '@/data/models.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -20,57 +21,9 @@ interface ModelEntry {
 type ScoreKey = keyof ModelEntry['scores']
 type SortKey = ScoreKey | 'agg'
 
-// ─── Static data — defined outside component (no re-init on re-render) ────────
+// ─── Static data — loaded from shared JSON (single source of truth) ───────────
 
-const MODELS: ModelEntry[] = [
-  // Frontier Leaders (USA) — OpenAI
-  { id: 'gpt-5.2',             name: 'GPT-5.2',           company: 'OpenAI',             region: 'Frontier Leaders (USA)', specialty: 'Peak general intelligence & complex reasoning',             scores: { hr: 88, harm: 82, hist: 85, auth: 87 } },
-  { id: 'gpt-5',               name: 'GPT-5',             company: 'OpenAI',             region: 'Frontier Leaders (USA)', specialty: 'High-throughput multimodal agent engine',                  scores: { hr: 85, harm: 79, hist: 83, auth: 84 } },
-  { id: 'o3-mini',             name: 'o3-mini',           company: 'OpenAI',             region: 'Frontier Leaders (USA)', specialty: 'SOTA for mathematics and logical coding tasks',            scores: { hr: 82, harm: 76, hist: 80, auth: 81 } },
-  { id: 'gpt-oss-120b',        name: 'GPT-OSS-120B',      company: 'OpenAI',             region: 'Frontier Leaders (USA)', specialty: "OpenAI's flagship open-weight contribution",             scores: { hr: 78, harm: 72, hist: 77, auth: 75 } },
-  // Frontier Leaders (USA) — Google DeepMind
-  { id: 'gemini-3-pro',        name: 'Gemini 3 Pro',      company: 'Google DeepMind',    region: 'Frontier Leaders (USA)', specialty: 'Multimodal champion with 2M+ context window',            scores: { hr: 84, harm: 80, hist: 82, auth: 83 } },
-  { id: 'gemini-2.5-flash',    name: 'Gemini 2.5 Flash',  company: 'Google DeepMind',    region: 'Frontier Leaders (USA)', specialty: 'Industry leader for low-latency high-volume tasks',       scores: { hr: 80, harm: 77, hist: 78, auth: 80 } },
-  { id: 'gemma-3-27b',         name: 'Gemma 3 27B',       company: 'Google DeepMind',    region: 'Frontier Leaders (USA)', specialty: 'Top-tier small model for edge devices',                  scores: { hr: 72, harm: 68, hist: 70, auth: 71 } },
-  // Frontier Leaders (USA) — Anthropic
-  { id: 'claude-4.5-opus',     name: 'Claude Opus 4.5',   company: 'Anthropic',          region: 'Frontier Leaders (USA)', specialty: 'Leading model for nuanced writing and safety',            scores: { hr: 92, harm: 88, hist: 90, auth: 91 } },
-  { id: 'claude-4.6-sonnet',   name: 'Claude Sonnet 4.6', company: 'Anthropic',          region: 'Frontier Leaders (USA)', specialty: 'The standard for software engineering workflows',          scores: { hr: 90, harm: 85, hist: 88, auth: 89 } },
-  { id: 'claude-4-haiku',      name: 'Claude Haiku 4',    company: 'Anthropic',          region: 'Frontier Leaders (USA)', specialty: 'Best-in-class speed/cost ratio for simple tasks',         scores: { hr: 86, harm: 82, hist: 84, auth: 85 } },
-  // Frontier Leaders (USA) — Meta
-  { id: 'llama-4-maverick',    name: 'Llama 4 Maverick',  company: 'Meta',               region: 'Frontier Leaders (USA)', specialty: '405B parameter open-weight frontier model',              scores: { hr: 74, harm: 70, hist: 72, auth: 73 } },
-  { id: 'llama-4-scout',       name: 'Llama 4 Scout',     company: 'Meta',               region: 'Frontier Leaders (USA)', specialty: '17B–70B models optimized for efficient inference',       scores: { hr: 71, harm: 67, hist: 69, auth: 70 } },
-  // Frontier Leaders (USA) — xAI
-  { id: 'grok-4.1-thinking',   name: 'Grok 4.1 Thinking', company: 'xAI',                region: 'Frontier Leaders (USA)', specialty: 'Deep reasoning model with real-time X integration',      scores: { hr: 62, harm: 58, hist: 55, auth: 52 } },
-  { id: 'grok-4-mini',         name: 'Grok 4 Mini',       company: 'xAI',                region: 'Frontier Leaders (USA)', specialty: 'Efficient conversational agent for mobile',               scores: { hr: 60, harm: 55, hist: 52, auth: 50 } },
-  // Asian Powerhouses — Alibaba (Qwen)
-  { id: 'qwen-3.5-plus',       name: 'Qwen 3.5 Plus',     company: 'Alibaba (Qwen)',     region: 'Asian Powerhouses',      specialty: 'Dominates global open-source benchmarks',               scores: { hr: 58, harm: 52, hist: 48, auth: 45 } },
-  { id: 'qwen-3-max-thinking',  name: 'Qwen 3 Max Think',  company: 'Alibaba (Qwen)',     region: 'Asian Powerhouses',      specialty: 'Specialized logic engine for scientific research',       scores: { hr: 60, harm: 54, hist: 50, auth: 47 } },
-  { id: 'qwen3-coder-next',    name: 'Qwen3 Coder Next',  company: 'Alibaba (Qwen)',     region: 'Asian Powerhouses',      specialty: 'SOTA for autonomous programming and debugging',          scores: { hr: 55, harm: 50, hist: 46, auth: 43 } },
-  // Asian Powerhouses — DeepSeek
-  { id: 'deepseek-v3.2-exp',   name: 'DeepSeek V3.2',     company: 'DeepSeek',           region: 'Asian Powerhouses',      specialty: 'Extreme efficiency through Mixture-of-Experts (MoE)',   scores: { hr: 50, harm: 45, hist: 42, auth: 38 } },
-  { id: 'deepseek-r1',         name: 'DeepSeek R1',       company: 'DeepSeek',           region: 'Asian Powerhouses',      specialty: 'Chain-of-thought reasoning model rivaling GPT-o series', scores: { hr: 48, harm: 42, hist: 40, auth: 36 } },
-  // Asian Powerhouses — Moonshot AI (Kimi)
-  { id: 'kimi-k2.5',           name: 'Kimi K2.5',         company: 'Moonshot AI',        region: 'Asian Powerhouses',      specialty: 'Leading context-handling for massive documents',         scores: { hr: 62, harm: 56, hist: 52, auth: 50 } },
-  { id: 'kimi-k2-thinking',    name: 'Kimi K2 Thinking',  company: 'Moonshot AI',        region: 'Asian Powerhouses',      specialty: 'Advanced logic for academic and professional analysis',  scores: { hr: 64, harm: 58, hist: 54, auth: 52 } },
-  // Asian Powerhouses — Zhipu AI (GLM)
-  { id: 'glm-5',               name: 'GLM-5',             company: 'Zhipu AI',           region: 'Asian Powerhouses',      specialty: 'Premier bilingual (CN/EN) foundation model',            scores: { hr: 52, harm: 46, hist: 44, auth: 40 } },
-  { id: 'glm-4.7-vision',      name: 'GLM-4.7 Vision',    company: 'Zhipu AI',           region: 'Asian Powerhouses',      specialty: 'SOTA for document parsing and visual OCR',              scores: { hr: 54, harm: 48, hist: 46, auth: 42 } },
-  // Asian Powerhouses — Xiaomi / MiniMax
-  { id: 'mimo-v2-flash',       name: 'MiMo V2 Flash',     company: 'MiniMax / Xiaomi',   region: 'Asian Powerhouses',      specialty: 'Ultra-fast reasoning model from Xiaomi',                scores: { hr: 58, harm: 52, hist: 50, auth: 48 } },
-  { id: 'minimax-m2.1',        name: 'MiniMax M2.1',      company: 'MiniMax / Xiaomi',   region: 'Asian Powerhouses',      specialty: 'Specialized for autonomous agentic workflows',          scores: { hr: 60, harm: 54, hist: 52, auth: 50 } },
-  // Enterprise & Specialized — Mistral AI
-  { id: 'mistral-large-3',     name: 'Mistral Large 3',   company: 'Mistral AI',         region: 'Enterprise & Specialized', specialty: 'European champion for multilingual enterprise tasks', scores: { hr: 82, harm: 78, hist: 80, auth: 83 } },
-  { id: 'pixtral-12b',         name: 'Pixtral 12B',       company: 'Mistral AI',         region: 'Enterprise & Specialized', specialty: 'Specialized native vision-language model',            scores: { hr: 76, harm: 72, hist: 74, auth: 77 } },
-  // Enterprise & Specialized — Microsoft
-  { id: 'phi-4-mini',          name: 'Phi-4 Mini',        company: 'Microsoft',          region: 'Enterprise & Specialized', specialty: 'SOTA "Small Language Model" for local privacy',       scores: { hr: 74, harm: 70, hist: 72, auth: 73 } },
-  { id: 'phi-3.5-vision',      name: 'Phi-3.5 Vision',    company: 'Microsoft',          region: 'Enterprise & Specialized', specialty: 'Lightweight visual reasoning engine',                 scores: { hr: 72, harm: 68, hist: 70, auth: 71 } },
-  // Enterprise & Specialized — Amazon AWS
-  { id: 'nova-pro',            name: 'Nova Pro',           company: 'Amazon AWS',         region: 'Enterprise & Specialized', specialty: 'Native multimodal powerhouse for Bedrock',            scores: { hr: 76, harm: 72, hist: 73, auth: 74 } },
-  { id: 'nova-lite',           name: 'Nova Lite',          company: 'Amazon AWS',         region: 'Enterprise & Specialized', specialty: 'Cost-optimized vision model for retail/logistics',    scores: { hr: 73, harm: 69, hist: 70, auth: 71 } },
-  // Enterprise & Specialized — NVIDIA
-  { id: 'nemotron-4-340b',     name: 'Nemotron 4 340B',   company: 'NVIDIA',             region: 'Enterprise & Specialized', specialty: 'SOTA for synthetic data generation',                  scores: { hr: 78, harm: 74, hist: 75, auth: 76 } },
-  { id: 'nemotron-3-nano',     name: 'Nemotron 3 Nano',   company: 'NVIDIA',             region: 'Enterprise & Specialized', specialty: '32B MoE model optimized for RTX hardware',           scores: { hr: 70, harm: 66, hist: 68, auth: 69 } },
-]
+const MODELS: ModelEntry[] = modelsData as ModelEntry[]
 
 // ─── Metric definitions with paper citations ──────────────────────────────────
 
@@ -242,6 +195,40 @@ const REGION_ABBR: Record<Region, string> = {
   'Frontier Leaders (USA)':  'USA Frontier',
   'Asian Powerhouses':       'Asian',
   'Enterprise & Specialized':'Enterprise',
+}
+
+// ─── Top-3 featured models — computed dynamically from scores ─────────────────
+
+const FEATURED_MODELS = [...MODELS]
+  .map((m) => ({ ...m, agg: calcAgg(m.scores) }))
+  .sort((a, b) => b.agg - a.agg)
+  .slice(0, 3)
+
+// ─── Medal colours (gold / silver / bronze) ───────────────────────────────────
+
+const MEDAL_BG    = ['bg-amber-400',   'bg-slate-400',  'bg-amber-700']  as const
+const MEDAL_RING  = ['ring-amber-300', 'ring-slate-300', 'ring-amber-600'] as const
+const MEDAL_LABEL = ['1st', '2nd', '3rd'] as const
+
+const GRADE_RING: Record<string, string> = {
+  A: 'ring-emerald-200',
+  B: 'ring-blue-200',
+  C: 'ring-amber-200',
+  D: 'ring-red-200',
+}
+
+const GRADE_TEXT: Record<string, string> = {
+  A: 'text-emerald-600',
+  B: 'text-blue-600',
+  C: 'text-amber-600',
+  D: 'text-red-600',
+}
+
+const GRADE_BG_LIGHT: Record<string, string> = {
+  A: 'bg-emerald-50',
+  B: 'bg-blue-50',
+  C: 'bg-amber-50',
+  D: 'bg-red-50',
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -538,6 +525,108 @@ export default function LeaderboardClient() {
         </div>
       </section>
 
+      {/* ── Top 3 Featured Certificates ── */}
+      <section className="bg-white py-10 border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            className="mb-8 text-center"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Top-Rated Certificates</h2>
+            <p className="text-sm text-gray-500 font-jost">
+              The highest-scoring models across all four safety dimensions
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {FEATURED_MODELS.map((model, i) => {
+              const grade = calcGrade(model.agg)
+              return (
+                <motion.div
+                  key={model.id}
+                  className={`relative rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ${GRADE_RING[grade]} ring-1`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.35 + i * 0.1 }}
+                >
+                  {/* Medal rank badge */}
+                  <div
+                    className={`absolute top-4 right-4 w-9 h-9 rounded-full flex flex-col items-center justify-center shadow-md ring-2 ${MEDAL_BG[i]} ${MEDAL_RING[i]} text-white`}
+                    aria-label={`Ranked ${MEDAL_LABEL[i]}`}
+                  >
+                    <span className="text-[11px] font-extrabold leading-none">{i + 1}</span>
+                    <span className="text-[7px] font-semibold leading-none opacity-90 tracking-wide">{MEDAL_LABEL[i].slice(1)}</span>
+                  </div>
+
+                  {/* Top accent bar */}
+                  <div className={`h-1.5 ${GRADE_BG[grade]}`} />
+
+                  <div className="p-6">
+                    {/* Grade + score header */}
+                    <div className="flex items-center gap-4 mb-4">
+                      <span className={`inline-flex items-center justify-center w-14 h-14 rounded-full text-white text-2xl font-bold shadow-md ${GRADE_BG[grade]}`}>
+                        {grade}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-lg font-bold text-gray-900 truncate leading-tight">
+                          {model.name}
+                        </p>
+                        <p className="text-sm text-gray-500 font-jost truncate">{model.company}</p>
+                      </div>
+                    </div>
+
+                    {/* Composite score */}
+                    <div className={`inline-flex items-baseline gap-1.5 px-3 py-1.5 rounded-lg mb-5 ${GRADE_BG_LIGHT[grade]}`}>
+                      <span className={`text-2xl font-extrabold tabular-nums ${GRADE_TEXT[grade]}`}>{model.agg}</span>
+                      <span className="text-xs text-gray-400 font-jost">/&nbsp;100</span>
+                    </div>
+
+                    {/* Dimension breakdown */}
+                    <div className="space-y-2.5 mb-6">
+                      {METRICS.map((m) => {
+                        const score = model.scores[m.key]
+                        const dGrade = calcGrade(score)
+                        return (
+                          <div key={m.key} className="flex items-center gap-3">
+                            <span className="text-xs text-gray-500 font-jost w-14 flex-shrink-0 text-right">{m.shortLabel}</span>
+                            <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full ${barColor(score)}`}
+                                style={{ width: `${score}%` }}
+                              />
+                            </div>
+                            <span className={`text-xs font-mono font-semibold w-5 text-right tabular-nums ${textColor(score)}`}>
+                              {score}
+                            </span>
+                            <span className={`w-5 h-5 rounded-full text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0 ${GRADE_BG[dGrade]}`}>
+                              {dGrade}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {/* Download certificate link */}
+                    <a
+                      href={`/certificates/${model.id}.pdf`}
+                      download
+                      className={`flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 ${GRADE_BG[grade]} text-white hover:opacity-90 active:scale-[0.98]`}
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Download Certificate
+                    </a>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ── Controls ── */}
       <section className="bg-white border-b border-gray-100 sticky top-[65px] z-20 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center gap-2 justify-between">
@@ -641,8 +730,17 @@ export default function LeaderboardClient() {
                         }}
                       >
                         {/* Rank */}
-                        <td className="px-3 py-3.5 text-xs font-semibold text-gray-400 tabular-nums sticky left-0 bg-white z-10 font-jost">
-                          {idx + 1}
+                        <td className="px-3 py-3.5 sticky left-0 bg-white z-10">
+                          {idx < 3 ? (
+                            <span
+                              className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-extrabold text-white shadow-sm ring-1 ${MEDAL_BG[idx]} ${MEDAL_RING[idx]}`}
+                              aria-label={`Ranked ${MEDAL_LABEL[idx]}`}
+                            >
+                              {idx + 1}
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold text-gray-400 tabular-nums font-jost">{idx + 1}</span>
+                          )}
                         </td>
 
                         {/* Model name + info tooltip */}
@@ -673,6 +771,16 @@ export default function LeaderboardClient() {
                                 i
                               </button>
                             </Tooltip>
+                            <a
+                              href={`/certificates/${model.id}.pdf`}
+                              download
+                              aria-label={`Download certificate for ${model.name}`}
+                              className="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex-shrink-0 flex items-center justify-center hover:bg-primary-100 hover:text-primary-700 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary-500 transition-colors mt-0.5"
+                            >
+                              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v10m0 0l-3-3m3 3l3-3M4 17v1a2 2 0 002 2h12a2 2 0 002-2v-1" />
+                              </svg>
+                            </a>
                           </div>
                         </td>
 
