@@ -13,12 +13,34 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display headings use Fraunces across all pages */
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ── Score bar fill animation (used in LeaderboardClient) ────────────────── */
+.score-bar-fill {
+  transform-origin: left center;
+}
+
+/* ── Reduced motion: collapse all durations globally ──────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
 }

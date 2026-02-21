@@ -2,13 +2,24 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 6)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header className="w-full bg-primary-600 border-b border-primary-700 sticky top-0 z-50">
+    <header
+      className={`w-full bg-primary-600 border-b border-primary-700 sticky top-0 z-50 transition-shadow duration-300 ${
+        scrolled ? 'shadow-lg shadow-primary-900/25' : ''
+      }`}
+    >
       <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -19,26 +30,26 @@ export default function Header() {
             className="h-8 w-auto object-contain"
             priority
           />
-          <span className="text-xl font-bold text-white">EuroSafeAI</span>
+          <span className="text-xl font-bold text-white tracking-tight">EuroSafeAI</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
+          <Link href="/" className="text-base font-medium text-primary-100 hover:text-white transition-colors duration-150">
             Home
           </Link>
-          <Link href="/research" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
+          <Link href="/research" className="text-base font-medium text-primary-100 hover:text-white transition-colors duration-150">
             Research
           </Link>
-          <Link href="/team" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
+          <Link href="/team" className="text-base font-medium text-primary-100 hover:text-white transition-colors duration-150">
             Team
           </Link>
-          <Link href="/careers" className="text-base font-semibold text-primary-100 hover:text-white transition-colors">
+          <Link href="/careers" className="text-base font-medium text-primary-100 hover:text-white transition-colors duration-150">
             Careers
           </Link>
           <a
             href="mailto:eurosafeai.zurich@gmail.com"
-            className="px-4 py-2 bg-white text-primary-600 text-base font-semibold rounded-lg hover:bg-primary-50 transition-colors"
+            className="px-4 py-2 bg-white text-primary-600 text-base font-semibold rounded-lg hover:bg-primary-50 transition-colors duration-150"
           >
             Contact Us
           </a>
@@ -49,6 +60,7 @@ export default function Header() {
           className="md:hidden p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
         >
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMenuOpen ? (
@@ -64,32 +76,16 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden bg-primary-600 border-t border-primary-700 px-6 py-4">
           <div className="flex flex-col gap-4">
-            <Link
-              href="/"
-              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            <Link href="/" className="text-base font-medium text-primary-100 hover:text-white py-2 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Home
             </Link>
-            <Link
-              href="/research"
-              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            <Link href="/research" className="text-base font-medium text-primary-100 hover:text-white py-2 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Research
             </Link>
-            <Link
-              href="/team"
-              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            <Link href="/team" className="text-base font-medium text-primary-100 hover:text-white py-2 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Team
             </Link>
-            <Link
-              href="/careers"
-              className="text-base font-semibold text-primary-100 hover:text-white py-2 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            <Link href="/careers" className="text-base font-medium text-primary-100 hover:text-white py-2 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Careers
             </Link>
             <a

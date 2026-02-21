@@ -17,7 +17,7 @@ export default function Footer() {
             />
             <p className="text-gray-400 text-sm leading-relaxed mb-4 max-w-sm">
               EuroSafeAI is a nonprofit research organization registered under Swiss law,
-              dedicated to advancing AI safety and security.
+              dedicated to advancing AI safety and security. We have a deep collaboration with the University of Toronto.
             </p>
           </div>
 
