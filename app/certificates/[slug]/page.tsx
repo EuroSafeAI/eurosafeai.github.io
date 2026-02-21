@@ -1,6 +1,5 @@
 import { readdirSync, existsSync } from 'fs'
 import { resolve } from 'path'
-import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import modelsData from '@/data/models.json'
@@ -33,10 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CertificatePage({ params }: Props) {
   const { slug } = await params
 
-  // Double-check the PDF is actually present (guards against stale builds)
-  const pdfPath = resolve(process.cwd(), 'public/certificates', `${slug}.pdf`)
-  if (!existsSync(pdfPath)) notFound()
-
+  // dynamicParams = false ensures only slugs from generateStaticParams reach here,
+  // which already filters to PDFs that exist on disk. No secondary check needed.
   const model = (modelsData as { id: string; name: string; company: string }[])
     .find((m) => m.id === slug)
 
