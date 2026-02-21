@@ -72,6 +72,7 @@ jobs:
             git remote add origin git@github.com:EuroSafeAI/backup.git
           fi
           cp -r ../out/* .
+          cp ../out/.nojekyll . 2>/dev/null || true
           # Backup is served at eurosafe.ai.utoronto.ca — update CNAME and sitemap
           echo "eurosafe.ai.utoronto.ca" > CNAME
           if [ -f sitemap.xml ]; then
