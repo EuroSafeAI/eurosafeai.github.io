@@ -35,6 +35,8 @@ yarn-error.log*
 # Generated certificate PDFs — produced by the CI workflow
 public/certificates/
 test-results
+playwright-report
+
 # Vercel
 .vercel
 
