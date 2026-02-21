@@ -534,7 +534,7 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Top-Rated Certificates</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Top-Rated Models</h2>
             <p className="text-sm text-gray-500 font-jost">
               The highest-scoring models across all four safety dimensions
             </p>
