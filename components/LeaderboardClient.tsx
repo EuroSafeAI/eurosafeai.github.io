@@ -515,7 +515,7 @@ export default function LeaderboardClient() {
           >
             Benchmarking large language models across four independent dimensions derived
             from EU AI Act requirements, European Court of Human Rights jurisprudence,
-            and EuroSafeAI&apos;s red-teaming protocols.
+            and EuroSafeAI&apos;s evaluation protocols.
           </motion.p>
 
           {/* Disclaimer */}
@@ -756,14 +756,13 @@ export default function LeaderboardClient() {
               The EuroSafeAI Alignment Index evaluates frontier AI models across four independent
               dimensions derived from EU AI Act requirements, European Court of Human Rights
               jurisprudence, and EuroSafeAI&apos;s internal red-teaming protocols. Each dimension is
-              scored 0–100 via adversarial prompt evaluation and aggregated with equal weighting
+              scored 0–100 via its specific evaluation and aggregated with equal weighting
               into an overall grade.
             </p>
             <p className="text-sm text-gray-500 leading-relaxed font-jost">
               Full methodology, dataset descriptions, and reproducibility information will be
               published alongside the peer-reviewed working papers listed above. Regional
-              categorization reflects primary corporate headquarters. Scores do not constitute
-              a regulatory assessment.
+              categorization reflects primary corporate headquarters.
             </p>
           </div>
         </div>
