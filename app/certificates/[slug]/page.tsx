@@ -18,19 +18,20 @@ export function generateStaticParams(): { slug: string }[] {
     .map((f) => ({ slug: f.replace(/\.pdf$/, '') }))
 }
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
   const model = (modelsData as { id: string; name: string; company: string }[])
-    .find((m) => m.id === params.slug)
+    .find((m) => m.id === slug)
   const title = model
     ? `${model.name} — AI Safety Certificate · EuroSafeAI`
     : 'AI Safety Certificate · EuroSafeAI'
   return { title }
 }
 
-export default function CertificatePage({ params }: Props) {
-  const { slug } = params
+export default async function CertificatePage({ params }: Props) {
+  const { slug } = await params
 
   // Double-check the PDF is actually present (guards against stale builds)
   const pdfPath = resolve(process.cwd(), 'public/certificates', `${slug}.pdf`)

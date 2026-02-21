@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { getAllSlugs, getPostBySlug } from '@/lib/blog'
 
+export const dynamic = 'force-static'
+
 const BASE_URL = 'https://eurosafe.ai.toronto.edu'
 
 export default function sitemap(): MetadataRoute.Sitemap {
