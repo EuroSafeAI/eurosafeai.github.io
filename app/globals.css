@@ -13,14 +13,14 @@ html {
 }
 
 body {
-  font-family: 'Jost', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Display headings use Fraunces across all pages */
+/* Display headings use Libre Baskerville across all pages */
 h1, h2, h3 {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Libre Baskerville', Georgia, serif;
 }
 
 a {
