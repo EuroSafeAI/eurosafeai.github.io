@@ -39,7 +39,7 @@ export default function Careers() {
                   EuroSafeAI is a Swiss nonprofit focused on safety and security for advanced AI systems with emphasis on threat assessment and mitigation.
                 </p>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  We target scenarios where AI systems may act contrary to developer intent. We actively collaborate with industry partners including DeepMind and Anthropic.
+                  We target scenarios where AI systems may act contrary to developer intent. We actively collaborate with industry including DeepMind.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
