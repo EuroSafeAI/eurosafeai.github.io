@@ -3,8 +3,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   icons: {
-    icon: '/logo.ico',
-    apple: '/logo.ico',
+    icon: [{ url: '/favicon.ico', sizes: 'any' }],
+    apple: '/favicon.ico',
   },
   title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
   description:

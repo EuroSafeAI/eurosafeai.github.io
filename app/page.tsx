@@ -218,26 +218,33 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto items-stretch">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
                 {[
                   {
-                    name: 'Google DeepMind',
-                    href: 'https://deepmind.google/',
-                    logo: '/images/partners/google-deepmind.svg',
+                    name: 'University of Toronto',
+                    href: 'https://www.utoronto.ca/',
+                    logo: '/images/partners/utoronto.png',
                     width: 200,
-                    height: 36,
+                    height: 80,
                   },
                   {
-                    name: 'Schmidt Sciences',
-                    href: 'https://www.schmidtsciences.org/',
-                    logo: '/images/partners/schmidt-sciences.png',
+                    name: 'ETH Zurich',
+                    href: 'https://ethz.ch/',
+                    logo: '/images/partners/eth-zurich.png',
                     width: 200,
-                    height: 84,
+                    height: 66,
                   },
                   {
-                    name: 'UK AI Safety Institute',
+                    name: 'Max Planck Institute for Intelligent Systems',
+                    href: 'https://is.mpg.de/',
+                    logo: '/images/partners/mpi.png',
+                    width: 200,
+                    height: 50,
+                  },
+                  {
+                    name: 'UK AISI',
                     href: 'https://www.aisi.gov.uk/',
-                    logo: '/images/partners/uk-aisi.svg',
+                    logo: '/images/partners/aisi.svg',
                     width: 200,
                     height: 28,
                   },
@@ -245,6 +252,13 @@ export default function Home() {
                     name: 'University of Michigan',
                     href: 'https://umich.edu/',
                     logo: '/images/partners/university-of-michigan.png',
+                    width: 200,
+                    height: 80,
+                  },
+                  {
+                    name: 'Schwartz Reisman Institute - University of Toronto',
+                    href: 'https://srinstitute.utoronto.ca/',
+                    logo: '/images/partners/sri.png',
                     width: 200,
                     height: 80,
                   },
