@@ -241,6 +241,74 @@
     flex: 1;
   }
 
+  /* Location section */
+  .meta-row {
+    display: flex;
+    gap: 3mm;
+    margin-bottom: 3mm;
+  }
+
+  .meta-card {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 2.5mm 3mm;
+  }
+
+  .meta-card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 5.5pt;
+    letter-spacing: 0.15em;
+    color: rgba(0,170,255,0.6);
+    text-transform: uppercase;
+    margin-bottom: 1mm;
+  }
+
+  .meta-card-value {
+    font-size: 8pt;
+    font-weight: 600;
+    color: #e8edf5;
+    line-height: 1.3;
+  }
+
+  .meta-card-sub {
+    font-size: 6.5pt;
+    color: rgba(232,237,245,0.4);
+    margin-top: 0.5mm;
+    line-height: 1.3;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 1mm;
+    padding-bottom: 4mm;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-org {
+    font-size: 7pt;
+    color: rgba(232,237,245,0.3);
+    line-height: 1.4;
+  }
+
+  .footer-org strong {
+    color: rgba(232,237,245,0.6);
+    display: block;
+    font-size: 8pt;
+  }
+
+  .footer-contact {
+    font-family: 'Space Mono', monospace;
+    font-size: 5.5pt;
+    color: rgba(0,170,255,0.5);
+    text-align: right;
+    line-height: 1.6;
+  }
+
   /* QR code - right of hero */
   .qr-section {
     display: flex;
@@ -311,74 +379,6 @@
     font-family: 'Space Mono', monospace;
   }
 
-  /* Location section */
-  .meta-row {
-    display: flex;
-    gap: 3mm;
-    margin-bottom: 3mm;
-  }
-
-  .meta-card {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 2.5mm 3mm;
-  }
-
-  .meta-card-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 5.5pt;
-    letter-spacing: 0.15em;
-    color: rgba(0,170,255,0.6);
-    text-transform: uppercase;
-    margin-bottom: 1mm;
-  }
-
-  .meta-card-value {
-    font-size: 8pt;
-    font-weight: 600;
-    color: #e8edf5;
-    line-height: 1.3;
-  }
-
-  .meta-card-sub {
-    font-size: 6.5pt;
-    color: rgba(232,237,245,0.4);
-    margin-top: 0.5mm;
-    line-height: 1.3;
-  }
-
-  /* Footer */
-  .footer {
-    margin-top: auto;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding-top: 1mm;
-    padding-bottom: 4mm;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .footer-org {
-    font-size: 7pt;
-    color: rgba(232,237,245,0.3);
-    line-height: 1.4;
-  }
-
-  .footer-org strong {
-    color: rgba(232,237,245,0.6);
-    display: block;
-    font-size: 8pt;
-  }
-
-  .footer-contact {
-    font-family: 'Space Mono', monospace;
-    font-size: 5.5pt;
-    color: rgba(0,170,255,0.5);
-    text-align: right;
-    line-height: 1.6;
-  }
-
   /* Scan lines overlay */
   .scanlines {
     position: absolute;
@@ -423,7 +423,7 @@
 
   <div class="top-strip">
     <div style="display: flex; align-items: center; gap: 3mm;">
-      <img src="../public/images/logo.png" alt="EuroSafeAI" class="logo">
+      <img src="/images/logo.png" alt="EuroSafeAI" class="logo">
       <span class="org-label">EuroSafeAI</span>
     </div>
     <span class="founding-badge">★ Founding Event</span>
@@ -440,7 +440,7 @@
       <p class="tagline">First meetup of EuroSafeAI Zurich — for founders and ambitious student researchers building with AI. Lightning talks, drinks, and real conversation.</p>
     </div>
     <div class="qr-section">
-      <img src="../public/images/qr-code.png" alt="Sign up" class="qr-code">
+      <img src="/images/qr-code.png" alt="Sign up" class="qr-code">
       <div class="qr-cta">Sign up now</div>
       <div class="qr-cta-sub">Scan to register</div>
     </div>
@@ -476,7 +476,7 @@
     </div>
   </div>
 
-    <div class="talks-section">
+  <div class="talks-section">
     <div class="talks-label">Research Lines</div>
 
     <div class="talk-row">
@@ -499,23 +499,23 @@
     <div class="speakers-label">Speakers</div>
     <div class="speakers-row">
       <div class="speaker-item">
-        <img src="../public/images/team/zhijing-jin.png" alt="Zhijing Jin" class="speaker-avatar">
+        <img src="/images/team/zhijing-jin.png" alt="Zhijing Jin" class="speaker-avatar">
         <span class="speaker-name">Zhijing</span>
       </div>
       <div class="speaker-item">
-        <img src="../public/images/team/angelo-huang.png" alt="Angelo Huang" class="speaker-avatar">
+        <img src="/images/team/angelo-huang.png" alt="Angelo Huang" class="speaker-avatar">
         <span class="speaker-name">Angelo</span>
       </div>
       <div class="speaker-item">
-        <img src="../public/images/team/pepijn-cobben.png" alt="Pepijn Cobben" class="speaker-avatar">
+        <img src="/images/team/pepijn-cobben.png" alt="Pepijn Cobben" class="speaker-avatar">
         <span class="speaker-name">Pepijn</span>
       </div>
       <div class="speaker-item">
-        <img src="../public/images/team/samuel-simko.png" alt="Samuel Simko" class="speaker-avatar">
+        <img src="/images/team/samuel-simko.png" alt="Samuel Simko" class="speaker-avatar">
         <span class="speaker-name">Samuel</span>
       </div>
       <div class="speaker-item">
-        <img src="../public/images/team/david-guzman.png" alt="David Guzman" class="speaker-avatar">
+        <img src="/images/team/david-guzman.png" alt="David Guzman" class="speaker-avatar">
         <span class="speaker-name">David</span>
       </div>
     </div>
