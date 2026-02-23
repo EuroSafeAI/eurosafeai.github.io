@@ -1,31 +1,210 @@
 [
-  { "id": "gpt-5.2",             "name": "GPT-5.2",           "company": "OpenAI",             "region": "Frontier Leaders (USA)", "specialty": "Peak general intelligence & complex reasoning",             "scores": { "hr": 95, "harm": 85, "hist": 85, "auth": 87 } },
-  { "id": "gpt-5.2-codex",               "name": "GPT-5-Codex",             "company": "OpenAI",             "region": "Frontier Leaders (USA)", "specialty": "High-throughput multimodal agent engine",                  "scores": { "hr": 85, "harm": 79, "hist": 83, "auth": 84 } },
-
-  { "id": "gemini-3-pro",        "name": "Gemini 3 Pro",      "company": "Google DeepMind",    "region": "Frontier Leaders (USA)", "specialty": "Multimodal champion with 2M+ context window",            "scores": { "hr": 84, "harm": 80, "hist": 82, "auth": 83 } },
-
-  { "id": "claude-4.6-opus",   "name": "Claude Sonnet 4.6", "company": "Anthropic",          "region": "Frontier Leaders (USA)", "specialty": "The standard for software engineering workflows",          "scores": { "hr": 90, "harm": 85, "hist": 88, "auth": 89 } },
-
-  { "id": "llama-4-maverick",       "name": "Llama 4 Maverick",     "company": "Meta",               "region": "Frontier Leaders (USA)", "specialty": "17B–70B models optimized for efficient inference",       "scores": { "hr": 71, "harm": 67, "hist": 69, "auth": 70 } },
-
-  { "id": "grok-4.1-thinking",   "name": "Grok 4.1 Thinking", "company": "xAI",                "region": "Frontier Leaders (USA)", "specialty": "Deep reasoning model with real-time X integration",      "scores": { "hr": 62, "harm": 58, "hist": 55, "auth": 52 } },
-
-  { "id": "qwen-3.5-plus",       "name": "Qwen 3.5 Plus",     "company": "Alibaba (Qwen)",     "region": "Asian Powerhouses",      "specialty": "Dominates global open-source benchmarks",               "scores": { "hr": 58, "harm": 52, "hist": 48, "auth": 45 } },
-  { "id": "qwen3-coder-next",    "name": "Qwen3 Coder Next",  "company": "Alibaba (Qwen)",     "region": "Asian Powerhouses",      "specialty": "SOTA for autonomous programming and debugging",          "scores": { "hr": 55, "harm": 50, "hist": 46, "auth": 43 } },
-
-  { "id": "deepseek-v3.2-exp",   "name": "DeepSeek V3.2",     "company": "DeepSeek",           "region": "Asian Powerhouses",      "specialty": "Extreme efficiency through Mixture-of-Experts (MoE)",   "scores": { "hr": 50, "harm": 45, "hist": 42, "auth": 38 } },
-
-  { "id": "kimi-k2.5",           "name": "Kimi K2.5",         "company": "Moonshot AI",        "region": "Asian Powerhouses",      "specialty": "Leading context-handling for massive documents",         "scores": { "hr": 62, "harm": 56, "hist": 52, "auth": 50 } },
-
-  { "id": "glm-5",               "name": "GLM-5",             "company": "Zhipu AI",           "region": "Asian Powerhouses",      "specialty": "Premier bilingual (CN/EN) foundation model",            "scores": { "hr": 52, "harm": 46, "hist": 44, "auth": 40 } },
-
-  { "id": "mimo-v2-flash",       "name": "MiMo V2 Flash",     "company": "MiniMax / Xiaomi",   "region": "Asian Powerhouses",      "specialty": "Ultra-fast reasoning model from Xiaomi",                "scores": { "hr": 58, "harm": 52, "hist": 50, "auth": 48 } },
-
-  { "id": "mistral-large-3",     "name": "Mistral Large 3",   "company": "Mistral AI",         "region": "Enterprise & Specialized", "specialty": "European champion for multilingual enterprise tasks", "scores": { "hr": 82, "harm": 78, "hist": 80, "auth": 83 } },
-
-  { "id": "phi-4-mini",          "name": "Phi-4 Mini",        "company": "Microsoft",          "region": "Enterprise & Specialized", "specialty": "SOTA \"Small Language Model\" for local privacy",     "scores": { "hr": 74, "harm": 70, "hist": 72, "auth": 73 } },
-
-  { "id": "nemotron-4-340b",     "name": "Nemotron 4 340B",   "company": "NVIDIA",             "region": "Enterprise & Specialized", "specialty": "SOTA for synthetic data generation",                  "scores": { "hr": 78, "harm": 74, "hist": 75, "auth": 76 } },
-
-  { "id": "Apertus-70B-2509",          "name": "Apertus 1 70B",         "company": "Swiss AI",         "region": "Enterprise & Specialized", "specialty": "Safety-first foundation model with constitutional alignment guarantees", "scores": { "hr": 91, "harm": 86, "hist": 89, "auth": 90 } }
+  {
+    "id": "gpt-5.2",
+    "name": "GPT-5.2",
+    "company": "OpenAI",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "Peak general intelligence & complex reasoning",
+    "scores": {
+      "hr": 95,
+      "harm": 85,
+      "hist": 85,
+      "auth": 79
+    }
+  },
+  {
+    "id": "gpt-5.2-codex",
+    "name": "GPT-5-Codex",
+    "company": "OpenAI",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "High-throughput multimodal agent engine",
+    "scores": {
+      "hr": 85,
+      "harm": 79,
+      "hist": 83,
+      "auth": 78
+    }
+  },
+  {
+    "id": "gemini-3-pro",
+    "name": "Gemini 3 Pro",
+    "company": "Google DeepMind",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "Multimodal champion with 2M+ context window",
+    "scores": {
+      "hr": 84,
+      "harm": 80,
+      "hist": 82,
+      "auth": 80
+    }
+  },
+  {
+    "id": "claude-4.6-opus",
+    "name": "Claude Sonnet 4.6",
+    "company": "Anthropic",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "The standard for software engineering workflows",
+    "scores": {
+      "hr": 90,
+      "harm": 85,
+      "hist": 88,
+      "auth": 80
+    }
+  },
+  {
+    "id": "llama-4-maverick",
+    "name": "Llama 4 Maverick",
+    "company": "Meta",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "17B–70B models optimized for efficient inference",
+    "scores": {
+      "hr": 71,
+      "harm": 67,
+      "hist": 69,
+      "auth": 63
+    }
+  },
+  {
+    "id": "grok-4.1-thinking",
+    "name": "Grok 4.1 Thinking",
+    "company": "xAI",
+    "region": "Frontier Leaders (USA)",
+    "specialty": "Deep reasoning model with real-time X integration",
+    "scores": {
+      "hr": 62,
+      "harm": 58,
+      "hist": 55,
+      "auth": 77
+    }
+  },
+  {
+    "id": "qwen-3.5-plus",
+    "name": "Qwen 3.5 Plus",
+    "company": "Alibaba (Qwen)",
+    "region": "Asian Powerhouses",
+    "specialty": "Dominates global open-source benchmarks",
+    "scores": {
+      "hr": 58,
+      "harm": 52,
+      "hist": 48,
+      "auth": 80
+    }
+  },
+  {
+    "id": "qwen3-coder-next",
+    "name": "Qwen3 Coder Next",
+    "company": "Alibaba (Qwen)",
+    "region": "Asian Powerhouses",
+    "specialty": "SOTA for autonomous programming and debugging",
+    "scores": {
+      "hr": 55,
+      "harm": 50,
+      "hist": 46,
+      "auth": 83
+    }
+  },
+  {
+    "id": "deepseek-v3.2-exp",
+    "name": "DeepSeek V3.2",
+    "company": "DeepSeek",
+    "region": "Asian Powerhouses",
+    "specialty": "Extreme efficiency through Mixture-of-Experts (MoE)",
+    "scores": {
+      "hr": 50,
+      "harm": 45,
+      "hist": 42,
+      "auth": 78
+    }
+  },
+  {
+    "id": "kimi-k2.5",
+    "name": "Kimi K2.5",
+    "company": "Moonshot AI",
+    "region": "Asian Powerhouses",
+    "specialty": "Leading context-handling for massive documents",
+    "scores": {
+      "hr": 62,
+      "harm": 56,
+      "hist": 52,
+      "auth": 82
+    }
+  },
+  {
+    "id": "glm-5",
+    "name": "GLM-5",
+    "company": "Zhipu AI",
+    "region": "Asian Powerhouses",
+    "specialty": "Premier bilingual (CN/EN) foundation model",
+    "scores": {
+      "hr": 52,
+      "harm": 46,
+      "hist": 44,
+      "auth": 82
+    }
+  },
+  {
+    "id": "mimo-v2-flash",
+    "name": "MiMo V2 Flash",
+    "company": "MiniMax / Xiaomi",
+    "region": "Asian Powerhouses",
+    "specialty": "Ultra-fast reasoning model from Xiaomi",
+    "scores": {
+      "hr": 58,
+      "harm": 52,
+      "hist": 50,
+      "auth": 79
+    }
+  },
+  {
+    "id": "mistral-large-3",
+    "name": "Mistral Large 3",
+    "company": "Mistral AI",
+    "region": "Enterprise & Specialized",
+    "specialty": "European champion for multilingual enterprise tasks",
+    "scores": {
+      "hr": 82,
+      "harm": 78,
+      "hist": 80,
+      "auth": 60
+    }
+  },
+  {
+    "id": "phi-4-mini",
+    "name": "Phi-4 Mini",
+    "company": "Microsoft",
+    "region": "Enterprise & Specialized",
+    "specialty": "SOTA \"Small Language Model\" for local privacy",
+    "scores": {
+      "hr": 74,
+      "harm": 70,
+      "hist": 72,
+      "auth": 61
+    }
+  },
+  {
+    "id": "nemotron-4-340b",
+    "name": "Nemotron 4 340B",
+    "company": "NVIDIA",
+    "region": "Enterprise & Specialized",
+    "specialty": "SOTA for synthetic data generation",
+    "scores": {
+      "hr": 78,
+      "harm": 74,
+      "hist": 75,
+      "auth": 76
+    }
+  },
+  {
+    "id": "Apertus-70B-2509",
+    "name": "Apertus 1 70B",
+    "company": "Swiss AI",
+    "region": "Enterprise & Specialized",
+    "specialty": "Safety-first foundation model with constitutional alignment guarantees",
+    "scores": {
+      "hr": 91,
+      "harm": 86,
+      "hist": 89,
+      "auth": 90
+    }
+  }
 ]
