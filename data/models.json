@@ -7,7 +7,7 @@
     "specialty": "Peak general intelligence & complex reasoning",
     "scores": {
       "hr": 95,
-      "harm": 85,
+      "harm": 100,
       "hist": 85,
       "auth": 79
     }
@@ -20,7 +20,7 @@
     "specialty": "High-throughput multimodal agent engine",
     "scores": {
       "hr": 85,
-      "harm": 79,
+      "harm": 100,
       "hist": 83,
       "auth": 78
     }
@@ -33,7 +33,7 @@
     "specialty": "Multimodal champion with 2M+ context window",
     "scores": {
       "hr": 84,
-      "harm": 80,
+      "harm": 92,
       "hist": 82,
       "auth": 80
     }
@@ -46,7 +46,7 @@
     "specialty": "The standard for software engineering workflows",
     "scores": {
       "hr": 90,
-      "harm": 85,
+      "harm": 99,
       "hist": 88,
       "auth": 80
     }
@@ -59,7 +59,7 @@
     "specialty": "17B–70B models optimized for efficient inference",
     "scores": {
       "hr": 71,
-      "harm": 67,
+      "harm": 89,
       "hist": 69,
       "auth": 63
     }
@@ -72,7 +72,7 @@
     "specialty": "Deep reasoning model with real-time X integration",
     "scores": {
       "hr": 62,
-      "harm": 58,
+      "harm": 88,
       "hist": 55,
       "auth": 77
     }
@@ -85,7 +85,7 @@
     "specialty": "Dominates global open-source benchmarks",
     "scores": {
       "hr": 58,
-      "harm": 52,
+      "harm": 98,
       "hist": 48,
       "auth": 80
     }
@@ -98,7 +98,7 @@
     "specialty": "SOTA for autonomous programming and debugging",
     "scores": {
       "hr": 55,
-      "harm": 50,
+      "harm": 100,
       "hist": 46,
       "auth": 83
     }
@@ -111,7 +111,7 @@
     "specialty": "Extreme efficiency through Mixture-of-Experts (MoE)",
     "scores": {
       "hr": 50,
-      "harm": 45,
+      "harm": 97,
       "hist": 42,
       "auth": 78
     }
@@ -124,7 +124,7 @@
     "specialty": "Leading context-handling for massive documents",
     "scores": {
       "hr": 62,
-      "harm": 56,
+      "harm": 100,
       "hist": 52,
       "auth": 82
     }
@@ -137,7 +137,7 @@
     "specialty": "Premier bilingual (CN/EN) foundation model",
     "scores": {
       "hr": 52,
-      "harm": 46,
+      "harm": 96,
       "hist": 44,
       "auth": 82
     }
@@ -150,7 +150,7 @@
     "specialty": "Ultra-fast reasoning model from Xiaomi",
     "scores": {
       "hr": 58,
-      "harm": 52,
+      "harm": 100,
       "hist": 50,
       "auth": 79
     }
@@ -163,7 +163,7 @@
     "specialty": "European champion for multilingual enterprise tasks",
     "scores": {
       "hr": 82,
-      "harm": 78,
+      "harm": 60,
       "hist": 80,
       "auth": 60
     }
@@ -176,7 +176,7 @@
     "specialty": "SOTA \"Small Language Model\" for local privacy",
     "scores": {
       "hr": 74,
-      "harm": 70,
+      "harm": 96,
       "hist": 72,
       "auth": 61
     }
@@ -189,7 +189,7 @@
     "specialty": "SOTA for synthetic data generation",
     "scores": {
       "hr": 78,
-      "harm": 74,
+      "harm": 96,
       "hist": 75,
       "auth": 76
     }
