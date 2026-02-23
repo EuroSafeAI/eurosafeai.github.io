@@ -630,7 +630,7 @@ export default function LeaderboardClient() {
       {/* ── Controls ── */}
       <section className="bg-white border-b border-gray-100 sticky top-[65px] z-20 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center gap-2 justify-between">
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by region">
+          {/* <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by region">
             {REGIONS.map((r) => (
               <button
                 key={r}
@@ -646,7 +646,7 @@ export default function LeaderboardClient() {
                 {r}
               </button>
             ))}
-          </div>
+          </div> */}
           <p className="text-xs text-gray-400 font-jost">
             {ranked.length} model{ranked.length !== 1 ? 's' : ''}
           </p>
@@ -675,12 +675,12 @@ export default function LeaderboardClient() {
                   >
                     Model
                   </th>
-                  <th
+                  {/* <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-jost whitespace-nowrap"
                   >
                     Category
-                  </th>
+                  </th> */}
                   <SortableColHeader
                     label="Score"
                     colKey="agg"
@@ -786,7 +786,7 @@ export default function LeaderboardClient() {
                         </td>
 
                         {/* Region pill */}
-                        <td className="px-3 py-3.5 whitespace-nowrap">
+                        {/* <td className="px-3 py-3.5 whitespace-nowrap">
                           <span
                             className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold font-jost ${
                               REGION_PILL[model.region]
@@ -794,7 +794,7 @@ export default function LeaderboardClient() {
                           >
                             {REGION_ABBR[model.region]}
                           </span>
-                        </td>
+                        </td> */}
 
                         {/* Aggregate score */}
                         <td className="px-3 py-3.5 whitespace-nowrap">
