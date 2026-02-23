@@ -85,6 +85,16 @@ const otherResearch: ResearchItem[] = [
     imageUrl: '/images/democracy-defense/ccmoderation.png',
     blogSlug: 'cross-country-content-moderation-nlp',
   },
+  {
+    title: 'Socio-Political Risks of AI',
+    description:
+      'A report examining how AI systems can amplify or reshape socio-political risks, and outlining governance and technical approaches to mitigate these harms.',
+    category: 'Societal Impact',
+    categoryColor: 'bg-blue-100',
+    categoryTextColor: 'text-blue-700',
+    date: '2025',
+    paperUrl: '/sociopolitical-risks-of-ai.pdf',
+  },
 ]
 
 const workInProgress: ResearchItem[] = [
