@@ -27,7 +27,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* ── Hero Section ─────────────────────────────────────────────── */}
-        <section className="relative bg-gradient-to-br from-slate-50 via-primary-50/50 to-white overflow-hidden">
+        <section className="relative from-slate-50 via-primary-50/50 to-white overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 py-20 lg:py-32">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
@@ -43,7 +43,9 @@ export default function Home() {
                   className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6 motion-safe:animate-fade-slide-up"
                   style={{ animationDelay: '60ms' }}
                 >
-                  Developing Multi-Agent AI Safety
+                  Multi-Agent
+                  <br />
+                   AI Safety
                   <br />
                   <span className="text-primary-600">for Democracy</span>
                 </h1>
@@ -147,17 +149,25 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-6">
               <ScrollReveal delay={0}>
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
-                  <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4 flex-shrink-0">
-                    <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+                <Link href="/multi-agent-safety" className="block h-full">
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
+                    <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4 flex-shrink-0">
+                      <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Multi-Agent Safety</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed font-jost">
+                      Ensuring groups of agents can safely interact with the real world and each other without unintended consequences.
+                    </p>
+                    <span className="mt-3 inline-flex items-center text-sm text-primary-600 font-medium">
+                      Learn more
+                      <svg className="w-4 h-4 ml-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Multi-Agent Safety</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed font-jost">
-                    Ensuring groups of agents can safely interact with the real world and each other without unintended consequences.
-                  </p>
-                </div>
+                </Link>
               </ScrollReveal>
 
               <ScrollReveal delay={0.1}>
