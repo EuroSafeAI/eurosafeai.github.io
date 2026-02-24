@@ -89,7 +89,7 @@ export default function MultiAgentSafetyPage() {
 
       <main className="flex-1">
         {/* ── Hero ── */}
-        <section className="bg-gradient-to-br from-primary-50 via-white to-slate-50 py-16 lg:py-24">
+        <section className="from-primary-50 via-white to-slate-50 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <p
               className="text-xs font-semibold text-primary-600 uppercase tracking-widest mb-4 font-jost motion-safe:animate-fade-in"
