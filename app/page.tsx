@@ -43,15 +43,15 @@ export default function Home() {
                   className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6 motion-safe:animate-fade-slide-up"
                   style={{ animationDelay: '60ms' }}
                 >
-                  Pioneering
+                  Developing Multi-Agent AI Safety
                   <br />
-                  <span className="text-primary-600">Multi-Agent Safety</span>
+                  <span className="text-primary-600">for Democracy</span>
                 </h1>
                 <p
                   className="text-lg md:text-xl text-gray-700 font-medium leading-relaxed mb-8 max-w-lg font-jost motion-safe:animate-fade-slide-up"
                   style={{ animationDelay: '180ms' }}
                 >
-                  Advancing AI safety through rigorous research, threat assessment, and mitigation strategies that prioritize safeguarding humanity.
+                  A nonprofit research organization led by Prof. Zhijing Jin, aiming to advance AI safety and security through rigorous research, threat assessment, and mitigation strategies.
                 </p>
                 <div
                   className="flex flex-wrap gap-4 motion-safe:animate-fade-slide-up"
@@ -148,20 +148,6 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-6">
               <ScrollReveal delay={0}>
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
-                  <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center mb-4 flex-shrink-0">
-                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Preventing AI Misuse</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed font-jost">
-                    Keeping models from helping people do harm, even when prompted. Developing robust safeguards against malicious use.
-                  </p>
-                </div>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.1}>
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
                   <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center mb-4 flex-shrink-0">
                     <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -174,7 +160,7 @@ export default function Home() {
                 </div>
               </ScrollReveal>
 
-              <ScrollReveal delay={0.2}>
+              <ScrollReveal delay={0.1}>
                 <Link href="/democracy-defense" className="block h-full">
                   <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
                     <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4 flex-shrink-0">
@@ -194,6 +180,20 @@ export default function Home() {
                     </span>
                   </div>
                 </Link>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.2}>
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 h-full">
+                  <div className="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center mb-4 flex-shrink-0">
+                    <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">General AI Safety Research</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed font-jost">
+                    Our broader agenda includes safeguarding and post-training LLMs against harmful use cases, interpreting model behavior via internal states, and detecting model misalignment tendencies.
+                  </p>
+                </div>
               </ScrollReveal>
             </div>
           </div>
