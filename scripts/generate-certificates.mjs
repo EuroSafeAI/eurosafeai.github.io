@@ -187,7 +187,7 @@ function generateCertificate(model, env = {}) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
   setText(BRAND.midGray)
-  doc.text('Pioneering Multi-Agent Safety  ·  Zurich, Switzerland', 20, headerY + 4.5)
+  doc.text('Developing Multi-Agent AI Safety for Democracy  ·  Zurich, Switzerland', 20, headerY + 4.5)
 
   // Right header: evaluation date
   doc.setFont('helvetica', 'normal')

@@ -7,23 +7,23 @@ export const metadata: Metadata = {
     icon: [{ url: '/favicon.ico', sizes: 'any' }],
     apple: '/favicon.ico',
   },
-  title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
+  title: 'EuroSafeAI - Developing Multi-Agent AI Safety for Democracy',
   description:
-    'A nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
+    'A nonprofit research organization led by Prof. Zhijing Jin, aiming to advance AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
   keywords: ['AI Safety', 'AI Security', 'Multi-Agent Safety', 'Research', 'Nonprofit', 'Switzerland'],
   authors: [{ name: 'EuroSafeAI' }],
   openGraph: {
-    title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
+    title: 'EuroSafeAI - Developing Multi-Agent AI Safety for Democracy',
     description:
-      'A nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
+      'A nonprofit research organization led by Prof. Zhijing Jin, aiming to advance AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
     type: 'website',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EuroSafeAI - Pioneering Multi-Agent Safety',
+    title: 'EuroSafeAI - Developing Multi-Agent AI Safety for Democracy',
     description:
-      'A nonprofit research organization advancing AI safety and security.',
+      'A nonprofit research organization led by Prof. Zhijing Jin, aiming to advance AI safety and security through rigorous research, threat assessment, and mitigation strategies.',
   },
 }
 
