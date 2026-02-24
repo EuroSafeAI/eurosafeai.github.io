@@ -8,7 +8,7 @@
     "scores": {
       "hr": 79.2,
       "harm": 100,
-      "hist": 51.65,
+      "hist": 79.1,
       "auth": 79
     }
   },
@@ -21,7 +21,7 @@
     "scores": {
       "hr": 76.4,
       "harm": 100,
-      "hist": 1.69,
+      "hist": 1.94,
       "auth": 78
     }
   },
@@ -34,7 +34,7 @@
     "scores": {
       "hr": 69.3,
       "harm": 92,
-      "hist": 1.69,
+      "hist": 2.24,
       "auth": 80
     }
   },
@@ -47,7 +47,7 @@
     "scores": {
       "hr": 77.3,
       "harm": 99,
-      "hist": 79.0,
+      "hist": 97.2,
       "auth": 80
     }
   },
@@ -56,11 +56,11 @@
     "name": "Llama 4 Maverick",
     "company": "Meta",
     "region": "Frontier Leaders (USA)",
-    "specialty": "17B–70B models optimized for efficient inference",
+    "specialty": "17B\u201370B models optimized for efficient inference",
     "scores": {
       "hr": 67.6,
       "harm": 89,
-      "hist": 26.0,
+      "hist": 92.15,
       "auth": 63
     }
   },
@@ -73,7 +73,7 @@
     "scores": {
       "hr": 66.9,
       "harm": 88,
-      "hist": 1.59,
+      "hist": 1.98,
       "auth": 77
     }
   },
@@ -86,7 +86,7 @@
     "scores": {
       "hr": 70.2,
       "harm": 98,
-      "hist": 1.52,
+      "hist": 1.96,
       "auth": 80
     }
   },
@@ -99,7 +99,7 @@
     "scores": {
       "hr": 68.6,
       "harm": 100,
-      "hist": 39.0,
+      "hist": 93.94,
       "auth": 83
     }
   },
@@ -112,7 +112,7 @@
     "scores": {
       "hr": 68.3,
       "harm": 97,
-      "hist": 30.0,
+      "hist": 95.06,
       "auth": 78
     }
   },
@@ -125,7 +125,7 @@
     "scores": {
       "hr": 72.6,
       "harm": 100,
-      "hist": 30.67,
+      "hist": 47.29,
       "auth": 82
     }
   },
@@ -138,7 +138,7 @@
     "scores": {
       "hr": 73.0,
       "harm": 96,
-      "hist": 1.61,
+      "hist": 0,
       "auth": 82
     }
   },
@@ -151,7 +151,7 @@
     "scores": {
       "hr": 68.8,
       "harm": 100,
-      "hist": 1.67,
+      "hist": 0,
       "auth": 79
     }
   },
@@ -164,7 +164,7 @@
     "scores": {
       "hr": 72.1,
       "harm": 60,
-      "hist": 1.85,
+      "hist": 0,
       "auth": 60
     }
   },
@@ -177,7 +177,7 @@
     "scores": {
       "hr": 57.2,
       "harm": 96,
-      "hist": 1.59,
+      "hist": 0,
       "auth": 61
     }
   },
@@ -190,7 +190,7 @@
     "scores": {
       "hr": 0,
       "harm": 96,
-      "hist": 1.64,
+      "hist": 0,
       "auth": 0
     }
   },
@@ -203,7 +203,7 @@
     "scores": {
       "hr": 0,
       "harm": 0,
-      "hist": 1.79,
+      "hist": 0,
       "auth": 0
     }
   }
