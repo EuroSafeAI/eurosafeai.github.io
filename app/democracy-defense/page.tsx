@@ -4,6 +4,7 @@ import ScrollReveal from '@/components/ScrollReveal'
 import MediaContact from '@/components/MediaContact'
 import Link from 'next/link'
 import { Metadata } from 'next'
+import { getPapersByCategory } from '@/lib/papers'
 
 export const metadata: Metadata = {
   title: 'Democracy Defense | EuroSafeAI',
@@ -11,77 +12,9 @@ export const metadata: Metadata = {
     'Research on detecting democracy-threatening tendencies of AI and Large Language Models.',
 }
 
-/* ── Research data ─────────────────────────────────────────────── */
-
-interface Paper {
-  title: string
-  summary: string
-  authors: string[]
-  venue?: string
-  tags?: string[]
-  paperUrl?: string
-  blogSlug?: string
-}
-
-const papers: Paper[] = [
-  {
-    title: 'Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents',
-    summary:
-      'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs. We find that most models fail to achieve sustainable equilibrium, with the highest survival rate below 54%. Agents leveraging moral reasoning achieve significantly better sustainability.',
-    authors: ['Giorgio Piatti*', 'Zhijing Jin*', 'Max Kleiman-Weiner*', 'Bernhard Schölkopf', 'Mrinmaya Sachan', 'Rada Mihalcea'],
-    venue: 'NeurIPS 2024',
-    tags: ['multi-agent LLMs', 'social dilemma', 'cooperation', 'sustainability', 'game theory'],
-    paperUrl: 'https://arxiv.org/abs/2404.16698',
-    blogSlug: 'cooperate-or-collapse',
-  },
-  {
-    title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
-    summary:
-      'We propose SocialHarmBench, the first comprehensive benchmark to evaluate the vulnerability of LLMs to socially harmful goals with 78,836 prompts from 47 democratic countries collected from 16 genres and 11 domains. From experiments on 15 cutting-edge LLMs, many safety risks are uncovered.',
-    authors: ['Punya Syon Pandey', 'Hai Son Le', 'Devansh Bhardwaj', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['LLM safety', 'sociopolitical harms', 'benchmarking', 'democracy defense', 'red-teaming'],
-    paperUrl: 'https://arxiv.org/abs/2510.04891',
-    blogSlug: 'socialharmbench-llm-vulnerabilities',
-  },
-  {
-    title: 'Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models',
-    summary:
-      'We propose a novel methodology to assess LLM alignment on the democracy–authoritarianism spectrum, combining psychometric tools, a new favorability metric, and role-model probing. LLMs generally favor democratic values but exhibit increased favorability toward authoritarian figures when prompted in Mandarin.',
-    authors: ['David Guzman Piedrahita', 'Irene Strauss', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['political bias', 'democracy vs authoritarianism', 'multilingual evaluation', 'AI ethics'],
-    paperUrl: 'https://arxiv.org/abs/2506.12758',
-    blogSlug: 'democratic-or-authoritarian-bias-in-llms',
-  },
-  {
-    title: 'Revealing Hidden Mechanisms of Cross-Country Content Moderation with Natural Language Processing',
-    summary:
-      'We explore multiple directions to investigate hidden mechanisms behind content moderation: training classifiers to reverse-engineer decisions across countries, and explaining moderation decisions by analyzing Shapley values and LLM-guided explanations.',
-    authors: ['Neemesh Yadav', 'Jiarui Liu', 'Francesco Ortu', 'Roya Ensafi', 'Zhijing Jin', 'Rada Mihalcea'],
-    tags: ['content moderation', 'explainability', 'cross-country analysis', 'censorship', 'NLP ethics'],
-    paperUrl: 'https://arxiv.org/abs/2503.05280',
-    blogSlug: 'cross-country-content-moderation-nlp',
-  },
-  {
-    title: 'Defending against LLM Propaganda: Detecting Historical Revisionism by Large Language Models',
-    summary:
-      'We introduce HistoricalMisinfo, a curated dataset of 500 historically contested events from 45 countries, each paired with factual and revisionist narratives. Evaluating responses from multiple LLMs, we observe vulnerabilities and systematic variation in revisionism across models, countries, and prompt types.',
-    authors: ['Francesco Ortu', 'Joeun Yook', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['historical revisionism', 'misinformation', 'factuality', 'LLM evaluation', 'democratic integrity'],
-    blogSlug: 'preserving-historical-truth-revisionism-llms',
-  },
-  {
-    title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
-    summary:
-      'We evaluate how LLMs navigate trade-offs involving the Universal Declaration of Human Rights, leveraging 1,152 synthetically generated scenarios across 24 rights articles in eight languages. Analysis of eleven major LLMs reveals systematic biases in rights endorsement patterns.',
-    authors: ['Keenan Samway', 'Nicole Miu Takagi', 'Rada Mihalcea', 'Bernhard Schölkopf', 'Ilias Chalkidis', 'Daniel Hershcovich', 'Zhijing Jin'],
-    tags: ['human rights', 'UDHR', 'multilingual alignment', 'ethical AI', 'value bias'],
-    blogSlug: 'llms-udhr-human-rights-evaluation',
-  },
-]
-
-/* ── Page ─────────────────────────────────────────────────────────── */
-
 export default function DemocracyDefensePage() {
+  const papers = getPapersByCategory('democracy-defense')
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
@@ -181,7 +114,7 @@ export default function DemocracyDefensePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {papers.map((paper) => (
                     <article
-                      key={paper.title}
+                      key={paper.slug}
                       className="group rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-all hover:-translate-y-0.5 bg-white flex flex-col"
                     >
                       {paper.venue ? (
@@ -259,9 +192,7 @@ export default function DemocracyDefensePage() {
         <ScrollReveal>
           <section className="bg-purple-600 py-16">
             <div className="max-w-4xl mx-auto px-6 text-center">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Explore Our Research
-              </h2>
+              <h2 className="text-3xl font-bold text-white mb-4">Explore Our Research</h2>
               <p className="text-lg text-purple-100 mb-8 max-w-2xl mx-auto font-jost">
                 View all our publications across AI safety, multi-agent systems, and democracy defense.
               </p>
