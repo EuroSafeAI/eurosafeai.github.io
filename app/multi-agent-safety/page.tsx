@@ -1,7 +1,7 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ScrollReveal from '@/components/ScrollReveal'
-import Image from 'next/image'
+import MediaContact from '@/components/MediaContact'
 import Link from 'next/link'
 import { Metadata } from 'next'
 
@@ -13,44 +13,70 @@ export const metadata: Metadata = {
 
 /* ── Research data ─────────────────────────────────────────────── */
 
-const highlighted = [
+interface Paper {
+  title: string
+  summary: string
+  authors: string[]
+  venue?: string
+  tags?: string[]
+  paperUrl?: string
+  blogSlug?: string
+}
+
+const papers: Paper[] = [
   {
     title: 'GT-HarmBench: Benchmarking AI Safety Risks Through the Lens of Game Theory',
-    description:
-      'We map AI safety risks from the MIT AI Risk Repository to 6 canonical 2×2 games (Prisoner\'s Dilemma, Chicken, Stag Hunt, Battle of the Sexes, Coordination, No Conflict), generating 2,009 high-stakes scenarios. Evaluating 15 LLMs, we reveal wide variation in cooperative safety: Claude 4.5 Opus leads with a 0.85 weighted average while Grok 4.1 Fast scores 0.35. We identify systematic biases including a "game theory anchoring effect" and show that mechanism design—especially a Trusted Mediator—can steer agents toward safer outcomes (+0.18).',
+    summary:
+      'Frontier AI systems are increasingly capable and deployed in high-stakes multi-agent environments. However, existing AI safety benchmarks largely evaluate single agents, leaving multi-agent risks such as coordination failure and conflict poorly understood. We introduce GT-HarmBench, a benchmark of 2,009 high-stakes scenarios spanning game-theoretic structures such as the Prisoner\'s Dilemma, Stag Hunt and Chicken. Scenarios are drawn from realistic AI risk contexts in the MIT AI Risk Repository. Across 15 frontier models, agents choose socially beneficial actions in only 62% of cases',
+    authors: ['Pepijn Cobben*', 'Xuanqiang Angelo Huang*', 'Thao Amelia Pham*', 'Isabel Dahlgren*', 'Terry Jingchen Zhang', 'Zhijing Jin'],
     venue: 'Preprint 2026',
+    tags: ['multi-agent safety', 'game theory', 'benchmarking', 'LLM cooperation', 'mechanism design'],
     paperUrl: 'https://arxiv.org/abs/2602.12316',
   },
   {
     title: 'Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents',
-    description:
-      'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs facing a Tragedy of the Commons. Agents play as villagers sharing a finite resource (fish, pasture, or river) across monthly rounds of acting, discussing, and reflecting. We find that most models fail to achieve sustainable equilibrium, with the highest survival rate below 54%. Agents leveraging moral reasoning achieve significantly better sustainability.',
+    summary:
+      'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs facing a Tragedy of the Commons. Agents play as villagers sharing a finite resource across monthly rounds of acting, discussing, and reflecting. Most models fail to achieve sustainable equilibrium (< 54% survival rate); moral reasoning improves outcomes significantly.',
+    authors: ['Giorgio Piatti*', 'Zhijing Jin*', 'Max Kleiman-Weiner*', 'Bernhard Schölkopf', 'Mrinmaya Sachan', 'Rada Mihalcea'],
     venue: 'NeurIPS 2024',
+    tags: ['multi-agent LLMs', 'social dilemma', 'cooperation', 'tragedy of the commons', 'GovSim'],
     paperUrl: 'https://arxiv.org/abs/2404.16698',
     blogSlug: 'cooperate-or-collapse',
   },
-]
-
-const researchAgenda = [
   {
     title: 'MoralSim',
-    description: 'How do LLMs tradeoff payoff and moral values when facing other agents in strategic settings?',
+    summary:
+      'How do LLMs tradeoff payoff and moral values when facing other agents in strategic settings? Studying the tension between self-interest and ethical reasoning in multi-agent LLM interactions.',
+    authors: [],
+    tags: ['moral reasoning', 'multi-agent', 'payoff tradeoff', 'AI ethics'],
   },
   {
     title: 'SanctSim',
-    description: 'Do LLMs prefer sanctioning institutes or not? Studying whether agents adopt punishment mechanisms to sustain cooperation.',
+    summary:
+      'Do LLMs prefer sanctioning institutes or not? Studying whether agents voluntarily adopt punishment mechanisms to sustain cooperation in collective action settings.',
+    authors: [],
+    tags: ['sanctioning', 'governance', 'multi-agent', 'mechanism design'],
   },
   {
     title: 'GovSim-Elect / AgentElect',
-    description: 'A simulation of elections in multi-agent LLM societies — examining how AI agents vote, campaign, and coordinate in democratic processes.',
+    summary:
+      'A simulation of elections in multi-agent LLM societies. Examining how AI agents vote, campaign, and coordinate under democratic voting systems—and what incentives shape their electoral behavior.',
+    authors: [],
+    tags: ['elections', 'multi-agent LLMs', 'governance', 'simulation', 'democracy'],
   },
   {
     title: 'Agent-to-Agent Theory of Mind',
-    description: 'Do LLMs adapt towards each other and what are the opportunities and risks? Assessing how agents model one another\'s intentions and update their strategies.',
+    summary:
+      'Do LLMs adapt towards each other and what are the opportunities and risks? Assessing how agents model one another\'s intentions and update their strategies over multi-round interactions.',
+    authors: [],
+    tags: ['theory of mind', 'cognitive dynamics', 'multi-agent', 'adaptation'],
   },
   {
     title: 'CoopEval',
-    description: 'Benchmarking cooperation-sustaining mechanisms and LLM agents in social dilemmas — translating game-theoretic mechanisms to real evaluation settings.',
+    summary:
+      'Benchmarking cooperation-sustaining mechanisms and LLM agents in social dilemmas. Translating game-theoretic mechanisms to real evaluation settings to identify what makes cooperation robust at scale.',
+    authors: [],
+    tags: ['cooperation', 'benchmarking', 'social dilemmas', 'mechanism design'],
   },
 ]
 
@@ -87,7 +113,7 @@ export default function MultiAgentSafetyPage() {
               className="text-gray-600 max-w-2xl mx-auto font-jost motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '300ms' }}
             >
-              As AI agents increasingly interact with each other, the real world, and humans, single-agent safety evaluations are no longer sufficient. We study what happens when groups of LLMs face collective action problems, zero-sum competitions, and public goods games.
+              As AI agents increasingly interact with each other, the real world, and humans, single-agent safety evaluations are no longer sufficient. We study emergent risks in collective action problems, zero-sum competitions, and public goods games.
             </p>
             <div
               className="mt-8 flex flex-wrap justify-center gap-4 motion-safe:animate-fade-slide-up"
@@ -106,210 +132,101 @@ export default function MultiAgentSafetyPage() {
           </div>
         </section>
 
-        {/* ── Highlighted Research ── */}
+        {/* ── Research ── */}
         <section className="bg-gray-50 py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-6">
             <ScrollReveal>
-              <div className="flex items-center gap-3 mb-8">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Highlighted Research</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Research</h2>
               </div>
+              <p className="text-gray-600 mb-8 max-w-2xl">
+                Published work and ongoing research agenda on testing cooperation in multi-agent LLM systems.
+              </p>
             </ScrollReveal>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {highlighted.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 0.1}>
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col h-full">
-                    <div className="h-1.5 w-full bg-primary-700" />
-                    <div className="p-6 md:p-8 flex flex-col flex-1">
-                      {item.venue && (
-                        <span className="text-xs font-medium px-3 py-1 rounded-full bg-gray-100 text-gray-600 self-start mb-3">
-                          {item.venue}
-                        </span>
+            <ScrollReveal delay={0.1}>
+              <div className="rounded-xl bg-white p-4 sm:p-6 border border-gray-100">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {papers.map((paper) => (
+                    <article
+                      key={paper.title}
+                      className="group rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-all hover:-translate-y-0.5 bg-gray-50 flex flex-col"
+                    >
+                      {paper.venue ? (
+                        <div className="text-xs uppercase tracking-wide text-gray-500 mb-2">{paper.venue}</div>
+                      ) : (
+                        <div className="inline-flex items-center gap-1 rounded border border-amber-400/50 text-amber-700 px-2 py-0.5 text-[11px] self-start mb-2">
+                          Coming soon
+                        </div>
                       )}
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 leading-snug">
-                        {item.title}
+
+                      <h3 className="text-base font-semibold text-gray-900 group-hover:underline underline-offset-4 leading-snug mb-2">
+                        {paper.paperUrl ? (
+                          <a href={paper.paperUrl} target="_blank" rel="noopener noreferrer">
+                            {paper.title}
+                          </a>
+                        ) : paper.blogSlug ? (
+                          <Link href={`/blog/${paper.blogSlug}`}>{paper.title}</Link>
+                        ) : (
+                          paper.title
+                        )}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed mb-6 flex-1">{item.description}</p>
-                      <div className="flex flex-wrap items-center gap-3 mt-auto">
-                        {item.paperUrl && (
+
+                      <p className="text-sm text-gray-600 line-clamp-3 flex-1">{paper.summary}</p>
+
+                      {paper.authors.length > 0 && (
+                        <p className="mt-3 text-xs text-gray-500">{paper.authors.join(', ')}</p>
+                      )}
+
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {paper.paperUrl ? (
                           <a
-                            href={item.paperUrl}
+                            href={paper.paperUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition-colors active:scale-95"
+                            className="inline-flex text-xs items-center gap-1 rounded border border-primary-300 text-primary-700 px-2 py-1 hover:bg-primary-50 transition-colors"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                            Paper
+                            Read paper <span aria-hidden>↗</span>
                           </a>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded border border-red-400/40 text-red-600 px-2 py-1 text-[11px]">
+                            Paper coming soon
+                          </span>
                         )}
-                        {item.blogSlug && (
+                        {paper.blogSlug && (
                           <Link
-                            href={`/blog/${item.blogSlug}`}
-                            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg border border-primary-700 text-primary-700 hover:bg-primary-50 transition-colors active:scale-95"
+                            href={`/blog/${paper.blogSlug}`}
+                            className="inline-flex text-xs items-center gap-1 rounded border border-gray-200 text-gray-600 px-2 py-1 hover:bg-white transition-colors"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                            </svg>
                             Blog post
                           </Link>
                         )}
                       </div>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* ── Research Agenda ── */}
-        <section className="bg-white py-16 lg:py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                      {paper.tags && paper.tags.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {paper.tags.map((tag) => (
+                            <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-primary-100 text-primary-700">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </article>
+                  ))}
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Research Agenda</h2>
               </div>
-              <p className="text-gray-600 mb-10 max-w-2xl">
-                Our work series on testing cooperation in multi-agent LLM systems — from benchmarking emergent behavior to designing alignment mechanisms.
-              </p>
             </ScrollReveal>
-
-            <div className="space-y-4">
-              {researchAgenda.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 0.08}>
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 p-6 flex flex-col sm:flex-row sm:items-start gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <span className="text-xs font-semibold px-3 py-1 rounded-full bg-primary-100 text-primary-700">
-                          Multi-Agent Safety
-                        </span>
-                        <span className="text-xs font-medium px-3 py-1 rounded-full bg-amber-100 text-amber-700">
-                          Coming Soon
-                        </span>
-                      </div>
-                      <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
-                      <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
           </div>
         </section>
 
         {/* ── Media Contact ── */}
-        <section className="bg-gray-50 py-16 lg:py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Media Contact</h2>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={0.1}>
-              <div className="grid sm:grid-cols-2 gap-6 mb-8">
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-                  <div className="flex items-center gap-4">
-                    <a href="https://zhijing-jin.com/home/" target="_blank" rel="noopener noreferrer" className="shrink-0">
-                      <Image
-                        src="/images/team/zhijing-jin.png"
-                        alt="Zhijing Jin"
-                        width={48}
-                        height={48}
-                        className="w-12 h-12 rounded-full object-cover ring-1 ring-gray-200"
-                      />
-                    </a>
-                    <div>
-                      <a
-                        href="https://zhijing-jin.com/home/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Zhijing Jin
-                      </a>
-                      <p className="text-sm text-gray-500">Founder &amp; Head, Jinesis AI Lab</p>
-                      <a href="mailto:zjin.admin@cs.toronto.edu" className="text-sm text-primary-600 hover:underline">
-                        zjin.admin@cs.toronto.edu
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-                  <div className="flex items-center gap-4">
-                    <a href="https://vesaterra.github.io/" target="_blank" rel="noopener noreferrer" className="shrink-0">
-                      <Image
-                        src="/images/team/punya-pandey.png"
-                        alt="Punya Syon Pandey"
-                        width={48}
-                        height={48}
-                        className="w-12 h-12 rounded-full object-cover ring-1 ring-gray-200"
-                      />
-                    </a>
-                    <div>
-                      <a
-                        href="https://vesaterra.github.io/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-semibold text-gray-900 hover:text-primary-600 transition-colors"
-                      >
-                        Punya Syon Pandey
-                      </a>
-                      <p className="text-sm text-gray-500">Lab Assistant</p>
-                      <a href="mailto:ppandey@cs.toronto.edu" className="text-sm text-primary-600 hover:underline">
-                        ppandey@cs.toronto.edu
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={0.2}>
-              <div className="flex flex-wrap items-center gap-4 text-sm">
-                <a
-                  href="https://bsky.app/profile/zhijingjin.bsky.social"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-colors"
-                >
-                  Bluesky
-                </a>
-                <a
-                  href="https://x.com/ZhijingJin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-colors"
-                >
-                  X / Twitter
-                </a>
-                <a
-                  href="https://youtube.com/@Zhijing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-colors"
-                >
-                  YouTube
-                </a>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
+        <MediaContact color="primary" />
 
         {/* ── CTA ── */}
         <ScrollReveal>
