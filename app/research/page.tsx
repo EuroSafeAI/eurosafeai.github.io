@@ -81,6 +81,28 @@ const highlighted: ResearchItem[] = [
     imageUrl: '/images/democracy-defense/authoritarian.jpg',
     blogSlug: 'democratic-or-authoritarian-bias-in-llms',
   },
+  {
+    title: 'When Ethics and Payoffs Diverge: LLM Agents in Morally Charged Social Dilemmas',
+    description:
+      'We introduce MoralSim, a framework that tests how large language models navigate situations where ethical principles conflict with financial incentives. Using prisoner\'s dilemma and public goods games with moral contexts, we evaluated nine frontier models and find that no model exhibits consistently moral behavior. Game structure, moral framing, survival risk, and opponent behavior all significantly influence LLM decision-making.',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    venue: 'ICLR 2026',
+    date: '2025-09-19',
+    paperUrl: 'https://openreview.net/forum?id=XeZ5WBIRvz',
+  },
+  {
+    title: 'Corrupted by Reasoning: Reasoning Language Models Become Free-Riders in Public Goods Games',
+    description:
+      'We examine how language models handle cooperation in multi-agent systems using a public goods game framework. Advanced reasoning models like o1 paradoxically underperform at maintaining cooperation compared to traditional LLMs, suggesting that improving reasoning capabilities does not necessarily lead to cooperative behavior—with important implications for deploying autonomous AI agents in collaborative environments.',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    venue: 'COLM 2025',
+    date: '2025-06-29',
+    paperUrl: 'https://arxiv.org/abs/2506.23276',
+  },
 ]
 
 const otherResearch: ResearchItem[] = [
@@ -95,6 +117,16 @@ const otherResearch: ResearchItem[] = [
     paperUrl: 'https://arxiv.org/abs/2503.05280',
     imageUrl: '/images/democracy-defense/ccmoderation.png',
     blogSlug: 'cross-country-content-moderation-nlp',
+  },
+  {
+    title: 'Agent-to-Agent Theory of Mind: Testing Interlocutor Awareness among Large Language Models',
+    description:
+      'We investigate how LLMs recognize and adapt to their conversation partners\' characteristics, introducing "interlocutor awareness"—an LLM\'s capacity to identify dialogue partner traits across reasoning patterns, linguistic style, and alignment preferences. LLMs can reliably identify same-family peers and model families like GPT and Claude. This capability enables enhanced collaboration but also introduces new vulnerabilities including reward-hacking behaviors and increased jailbreak susceptibility.',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    date: '2025-06-28',
+    paperUrl: 'https://arxiv.org/abs/2506.22957',
   },
   {
     title: 'Socio-Political Risks of AI',
@@ -132,6 +164,26 @@ const workInProgress: ResearchItem[] = [
     comingSoon: true,
     imageUrl: '/images/democracy-defense/hr_pic.png',
     blogSlug: 'llms-udhr-human-rights-evaluation',
+  },
+  {
+    title: 'GovSim-Elect / AgentElect',
+    description:
+      'A simulation of elections in multi-agent LLM societies. Examining how AI agents vote, campaign, and coordinate under democratic voting systems—and what incentives shape their electoral behavior.',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    date: '2025',
+    comingSoon: true,
+  },
+  {
+    title: 'CoopEval',
+    description:
+      'Benchmarking cooperation-sustaining mechanisms and LLM agents in social dilemmas. Translating game-theoretic mechanisms to real evaluation settings to identify what makes cooperation robust at scale.',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    date: '2025',
+    comingSoon: true,
   },
 ]
 
