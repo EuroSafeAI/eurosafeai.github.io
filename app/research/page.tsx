@@ -23,6 +23,17 @@ interface ResearchItem {
 
 const highlighted: ResearchItem[] = [
   {
+    title: 'GT-HarmBench: Benchmarking AI Safety Risks Through the Lens of Game Theory',
+    description:
+      'Frontier AI systems are increasingly capable and deployed in high-stakes multi-agent environments. However, existing AI safety benchmarks largely evaluate single agents, leaving multi-agent risks such as coordination failure and conflict poorly understood. We introduce GT-HarmBench, a benchmark of 2,009 high-stakes scenarios spanning game-theoretic structures such as the Prisoner\'s Dilemma, Stag Hunt and Chicken. Scenarios are drawn from realistic AI risk contexts in the MIT AI Risk Repository. Across 15 frontier models, agents choose socially beneficial actions in only 62% of cases',
+    category: 'Multi-Agent Safety',
+    categoryColor: 'bg-primary-100',
+    categoryTextColor: 'text-primary-700',
+    venue: 'Preprint 2026',
+    date: '2026-02-01',
+    paperUrl: 'https://arxiv.org/abs/2602.12316',
+  },
+  {
     title: 'Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents',
     description:
       'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs. We find that most models fail to achieve sustainable equilibrium, with the highest survival rate below 54%. Agents leveraging moral reasoning achieve significantly better sustainability.',
@@ -98,16 +109,6 @@ const otherResearch: ResearchItem[] = [
 ]
 
 const workInProgress: ResearchItem[] = [
-  {
-    title: 'Multi-Agent Safety in Autonomous Systems',
-    description:
-      'Investigating safety guarantees and failure modes when multiple AI agents interact in shared environments, with a focus on emergent risks that arise from agent-to-agent dynamics.',
-    category: 'Multi-Agent Safety',
-    categoryColor: 'bg-primary-100',
-    categoryTextColor: 'text-primary-700',
-    date: '2025',
-    comingSoon: true,
-  },
   {
     title: 'Defending against LLM Propaganda: Detecting Historical Revisionism by Large Language Models',
     description:
