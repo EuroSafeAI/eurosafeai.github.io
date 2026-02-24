@@ -1,4 +1,4 @@
-export type Category = 'multi-agent-safety' | 'democracy-defense' | 'safety'
+export type Category = 'multi-agent-safety' | 'democracy-defense' | 'safety' | 'societal-impact'
 
 export interface Paper {
   slug: string
@@ -10,6 +10,9 @@ export interface Paper {
   paperUrl?: string
   blogSlug?: string
   categories: Category[]
+  highlight?: boolean
+  imageUrl?: string
+  comingSoon?: boolean
 }
 
 export const papers: Paper[] = [
@@ -24,6 +27,7 @@ export const papers: Paper[] = [
     tags: ['multi-agent safety', 'game theory', 'benchmarking', 'LLM cooperation', 'mechanism design'],
     paperUrl: 'https://arxiv.org/abs/2602.12316',
     categories: ['multi-agent-safety'],
+    highlight: true,
   },
   {
     slug: 'cooperate-or-collapse',
@@ -36,6 +40,7 @@ export const papers: Paper[] = [
     paperUrl: 'https://arxiv.org/abs/2404.16698',
     blogSlug: 'cooperate-or-collapse',
     categories: ['multi-agent-safety', 'democracy-defense'],
+    highlight: true,
   },
   {
     slug: 'moralsim',
@@ -78,6 +83,7 @@ export const papers: Paper[] = [
     authors: [],
     tags: ['elections', 'multi-agent LLMs', 'governance', 'simulation', 'democracy'],
     categories: ['multi-agent-safety'],
+    comingSoon: true,
   },
   {
     slug: 'coopeval',
@@ -87,6 +93,22 @@ export const papers: Paper[] = [
     authors: [],
     tags: ['cooperation', 'benchmarking', 'social dilemmas', 'mechanism design'],
     categories: ['multi-agent-safety'],
+    comingSoon: true,
+  },
+
+  /* ── Safety ───────────────────────────────────────────────────── */
+  {
+    slug: 'accidental-misalignment',
+    title: 'Accidental Misalignment: Fine-Tuning Language Models Induces Unexpected Vulnerability',
+    summary:
+      'We investigate how characteristics of fine-tuning datasets can accidentally misalign language models, revealing that structural and linguistic patterns in seemingly benign datasets amplify adversarial vulnerability. Our findings motivate more rigorous dataset curation as a proactive safety measure.',
+    authors: [],
+    venue: 'IASEAI 2026',
+    tags: ['fine-tuning', 'misalignment', 'adversarial vulnerability', 'dataset curation', 'AI safety'],
+    paperUrl: 'https://arxiv.org/abs/2505.16789',
+    blogSlug: 'accidental-misalignment',
+    categories: ['safety'],
+    highlight: true,
   },
 
   /* ── Democracy Defense ────────────────────────────────────────── */
@@ -100,6 +122,34 @@ export const papers: Paper[] = [
     paperUrl: 'https://arxiv.org/abs/2510.04891',
     blogSlug: 'socialharmbench-llm-vulnerabilities',
     categories: ['democracy-defense'],
+    highlight: true,
+    imageUrl: '/images/democracy-defense/social-harm.jpg',
+  },
+  {
+    slug: 'historical-revisionism',
+    title: 'Preserving Historical Truth: Detecting Historical Revisionism in Large Language Models',
+    summary:
+      'We introduce HistoricalMisinfo, a curated dataset of 500 historically contested events from 45 countries, each paired with factual and revisionist narratives. To simulate real-world pathways of information dissemination, we design eleven prompt scenarios per event. Evaluating responses from multiple LLMs, we observe vulnerabilities and systematic variation in revisionism across models, countries, and prompt types.',
+    authors: ['Francesco Ortu', 'Joeun Yook', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
+    tags: ['historical revisionism', 'misinformation', 'factuality', 'LLM evaluation', 'democratic integrity'],
+    paperUrl: 'https://arxiv.org/abs/2602.17433v2',
+    venue: 'ORAL IASEAI 2026',
+    blogSlug: 'preserving-historical-truth-revisionism-llms',
+    categories: ['democracy-defense'],
+    imageUrl: '/images/democracy-defense/historical_misinfo.jpg',
+  },
+  {
+    slug: 'human-rights-udhr',
+    title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
+    summary:
+      'We evaluate how LLMs navigate trade-offs involving the Universal Declaration of Human Rights, leveraging 1,152 synthetically generated scenarios across 24 rights articles in eight languages. Analysis of eleven major LLMs reveals systematic biases: models accept limiting Economic, Social, and Cultural rights more often than Political and Civil rights, with significant cross-linguistic variation.',
+    authors: ['Keenan Samway', 'Nicole Miu Takagi', 'Rada Mihalcea', 'Bernhard Schölkopf', 'Ilias Chalkidis', 'Daniel Hershcovich', 'Zhijing Jin'],
+    tags: ['human rights', 'UDHR', 'multilingual alignment', 'ethical AI', 'value bias'],
+    paperUrl: 'https://openreview.net/forum?id=qcrRfwPUjJ',
+    venue: 'COLM 2025 Workshop SoLaR Poster',
+    blogSlug: 'llms-udhr-human-rights-evaluation',
+    categories: ['democracy-defense'],
+    imageUrl: '/images/democracy-defense/hr_pic.png',
   },
   {
     slug: 'democratic-or-authoritarian',
@@ -111,6 +161,7 @@ export const papers: Paper[] = [
     paperUrl: 'https://arxiv.org/abs/2506.12758',
     blogSlug: 'democratic-or-authoritarian-bias-in-llms',
     categories: ['democracy-defense'],
+    imageUrl: '/images/democracy-defense/authoritarian.jpg',
   },
   {
     slug: 'cross-country-content-moderation',
@@ -122,26 +173,20 @@ export const papers: Paper[] = [
     paperUrl: 'https://arxiv.org/abs/2503.05280',
     blogSlug: 'cross-country-content-moderation-nlp',
     categories: ['democracy-defense'],
+    imageUrl: '/images/democracy-defense/ccmoderation.png',
   },
+
+  /* ── Societal Impact ──────────────────────────────────────────── */
   {
-    slug: 'historical-revisionism',
-    title: 'Defending against LLM Propaganda: Detecting Historical Revisionism by Large Language Models',
+    slug: 'socio-political-risks',
+    title: 'Socio-Political Risks of AI',
     summary:
-      'We introduce HistoricalMisinfo, a curated dataset of 500 historically contested events from 45 countries, each paired with factual and revisionist narratives. To simulate real-world pathways of information dissemination, we design eleven prompt scenarios per event. Evaluating responses from multiple LLMs, we observe vulnerabilities and systematic variation in revisionism across models, countries, and prompt types.',
-    authors: ['Francesco Ortu', 'Joeun Yook', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['historical revisionism', 'misinformation', 'factuality', 'LLM evaluation', 'democratic integrity'],
-    blogSlug: 'preserving-historical-truth-revisionism-llms',
-    categories: ['democracy-defense'],
-  },
-  {
-    slug: 'human-rights-udhr',
-    title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
-    summary:
-      'We evaluate how LLMs navigate trade-offs involving the Universal Declaration of Human Rights, leveraging 1,152 synthetically generated scenarios across 24 rights articles in eight languages. Analysis of eleven major LLMs reveals systematic biases: models accept limiting Economic, Social, and Cultural rights more often than Political and Civil rights, with significant cross-linguistic variation.',
-    authors: ['Keenan Samway', 'Nicole Miu Takagi', 'Rada Mihalcea', 'Bernhard Schölkopf', 'Ilias Chalkidis', 'Daniel Hershcovich', 'Zhijing Jin'],
-    tags: ['human rights', 'UDHR', 'multilingual alignment', 'ethical AI', 'value bias'],
-    blogSlug: 'llms-udhr-human-rights-evaluation',
-    categories: ['democracy-defense'],
+      'A report examining how AI systems can amplify or reshape socio-political risks, and outlining governance and technical approaches to mitigate these harms.',
+    authors: [],
+    venue: '2025',
+    tags: ['societal impact', 'governance', 'socio-political risks', 'AI policy'],
+    paperUrl: '/sociopolitical-risks-of-ai.pdf',
+    categories: ['societal-impact'],
   },
 ]
 
