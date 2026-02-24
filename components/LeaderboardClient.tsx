@@ -474,7 +474,7 @@ export default function LeaderboardClient() {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="bg-gradient-to-br from-slate-50 via-primary-50/40 to-white border-b border-gray-100">
+      <section className="from-slate-50 via-primary-50/40 to-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 py-14 lg:py-18">
           <motion.p
             className="text-xs font-semibold text-primary-600 uppercase tracking-widest mb-3 font-jost"
