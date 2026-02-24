@@ -6,7 +6,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "Peak general intelligence & complex reasoning",
     "scores": {
-      "hr": 95,
+      "hr": 79.2,
       "harm": 100,
       "hist": 85,
       "auth": 79
@@ -19,7 +19,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "High-throughput multimodal agent engine",
     "scores": {
-      "hr": 85,
+      "hr": 76.4,
       "harm": 100,
       "hist": 83,
       "auth": 78
@@ -32,7 +32,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "Multimodal champion with 2M+ context window",
     "scores": {
-      "hr": 84,
+      "hr": 69.3,
       "harm": 92,
       "hist": 82,
       "auth": 80
@@ -45,7 +45,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "The standard for software engineering workflows",
     "scores": {
-      "hr": 90,
+      "hr": 77.3,
       "harm": 99,
       "hist": 88,
       "auth": 80
@@ -58,7 +58,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "17B–70B models optimized for efficient inference",
     "scores": {
-      "hr": 71,
+      "hr": 67.6,
       "harm": 89,
       "hist": 69,
       "auth": 63
@@ -71,7 +71,7 @@
     "region": "Frontier Leaders (USA)",
     "specialty": "Deep reasoning model with real-time X integration",
     "scores": {
-      "hr": 62,
+      "hr": 66.9,
       "harm": 88,
       "hist": 55,
       "auth": 77
@@ -84,7 +84,7 @@
     "region": "Asian Powerhouses",
     "specialty": "Dominates global open-source benchmarks",
     "scores": {
-      "hr": 58,
+      "hr": 70.2,
       "harm": 98,
       "hist": 48,
       "auth": 80
@@ -97,7 +97,7 @@
     "region": "Asian Powerhouses",
     "specialty": "SOTA for autonomous programming and debugging",
     "scores": {
-      "hr": 55,
+      "hr": 68.6,
       "harm": 100,
       "hist": 46,
       "auth": 83
@@ -110,7 +110,7 @@
     "region": "Asian Powerhouses",
     "specialty": "Extreme efficiency through Mixture-of-Experts (MoE)",
     "scores": {
-      "hr": 50,
+      "hr": 68.3,
       "harm": 97,
       "hist": 42,
       "auth": 78
@@ -123,7 +123,7 @@
     "region": "Asian Powerhouses",
     "specialty": "Leading context-handling for massive documents",
     "scores": {
-      "hr": 62,
+      "hr": 72.6,
       "harm": 100,
       "hist": 52,
       "auth": 82
@@ -136,7 +136,7 @@
     "region": "Asian Powerhouses",
     "specialty": "Premier bilingual (CN/EN) foundation model",
     "scores": {
-      "hr": 52,
+      "hr": 73.0,
       "harm": 96,
       "hist": 44,
       "auth": 82
@@ -149,7 +149,7 @@
     "region": "Asian Powerhouses",
     "specialty": "Ultra-fast reasoning model from Xiaomi",
     "scores": {
-      "hr": 58,
+      "hr": 68.8,
       "harm": 100,
       "hist": 50,
       "auth": 79
@@ -162,7 +162,7 @@
     "region": "Enterprise & Specialized",
     "specialty": "European champion for multilingual enterprise tasks",
     "scores": {
-      "hr": 82,
+      "hr": 72.1,
       "harm": 60,
       "hist": 80,
       "auth": 60
@@ -175,7 +175,7 @@
     "region": "Enterprise & Specialized",
     "specialty": "SOTA \"Small Language Model\" for local privacy",
     "scores": {
-      "hr": 74,
+      "hr": 57.2,
       "harm": 96,
       "hist": 72,
       "auth": 61
@@ -188,10 +188,10 @@
     "region": "Enterprise & Specialized",
     "specialty": "SOTA for synthetic data generation",
     "scores": {
-      "hr": 78,
+      "hr": 0,
       "harm": 96,
       "hist": 75,
-      "auth": 76
+      "auth": 0
     }
   },
   {
@@ -201,10 +201,10 @@
     "region": "Enterprise & Specialized",
     "specialty": "Safety-first foundation model with constitutional alignment guarantees",
     "scores": {
-      "hr": 91,
-      "harm": 86,
-      "hist": 89,
-      "auth": 90
+      "hr": 0,
+      "harm": 0,
+      "hist": 0,
+      "auth": 0
     }
   }
 ]
