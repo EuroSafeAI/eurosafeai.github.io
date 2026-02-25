@@ -70,7 +70,7 @@ export const papers: Paper[] = [
     summary:
       'We investigate how LLMs recognize and adapt to their conversation partners\' characteristics, introducing "interlocutor awareness"—an LLM\'s capacity to identify dialogue partner traits across reasoning patterns, linguistic style, and alignment preferences. LLMs can reliably identify same-family peers and prominent model families like GPT and Claude. This capability enables enhanced multi-agent collaboration but also introduces new vulnerabilities including reward-hacking behaviors and increased jailbreak susceptibility.',
     authors: ['Younwoo Choi', 'Changling Li', 'Yongjin Yang', 'Zhijing Jin'],
-    venue: 'Preprint 2025',
+    venue: 'EMNLP 2025',
     tags: ['theory of mind', 'interlocutor awareness', 'multi-agent', 'adaptation', 'jailbreak'],
     paperUrl: 'https://arxiv.org/abs/2506.22957',
     categories: ['multi-agent-safety'],
@@ -123,7 +123,6 @@ export const papers: Paper[] = [
     blogSlug: 'socialharmbench-llm-vulnerabilities',
     categories: ['democracy-defense'],
     highlight: true,
-    imageUrl: '/images/democracy-defense/social-harm.jpg',
   },
   {
     slug: 'historical-revisionism',
