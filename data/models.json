@@ -180,31 +180,5 @@
       "hist": 0,
       "auth": 61
     }
-  },
-  {
-    "id": "nemotron-4-340b",
-    "name": "Nemotron 4 340B",
-    "company": "NVIDIA",
-    "region": "Enterprise & Specialized",
-    "specialty": "SOTA for synthetic data generation",
-    "scores": {
-      "hr": 0,
-      "harm": 96,
-      "hist": 0,
-      "auth": 0
-    }
-  },
-  {
-    "id": "Apertus-70B-2509",
-    "name": "Apertus 1 70B",
-    "company": "Swiss AI",
-    "region": "Enterprise & Specialized",
-    "specialty": "Safety-first foundation model with constitutional alignment guarantees",
-    "scores": {
-      "hr": 0,
-      "harm": 0,
-      "hist": 0,
-      "auth": 0
-    }
   }
 ]
