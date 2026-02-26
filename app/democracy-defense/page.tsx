@@ -72,36 +72,6 @@ export default function DemocracyDefensePage() {
           </div>
         </section>
 
-        {/* ── Featured Video ── */}
-        <section className="bg-gray-50 py-16 lg:py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Featured Video</h2>
-                <p className="text-gray-600 font-jost">AI, Safety, and Democratic Resilience</p>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={0.1}>
-              <div className="max-w-3xl mx-auto">
-                <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm" style={{ aspectRatio: '16 / 9' }}>
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/NpGpq1WKcuI"
-                    title="AI, Safety, and Democratic Resilience"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                </div>
-                <p className="mt-4 text-sm text-gray-600 text-center font-jost">
-                  A concise overview connecting AI safety, platform accountability, and information integrity.
-                  Highlights practical approaches for evaluating model risks and building civic-minded safeguards.
-                </p>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
         {/* ── Research ── */}
         <section className="bg-white py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-6">
@@ -193,6 +163,37 @@ export default function DemocracyDefensePage() {
           </div>
         </section>
 
+
+        {/* ── Featured Video ── */}
+        <section className="bg-gray-50 py-16 lg:py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            <ScrollReveal>
+              <div className="text-center mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Featured Video</h2>
+                <p className="text-gray-600 font-jost">AI, Safety, and Democratic Resilience</p>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <div className="max-w-3xl mx-auto">
+                <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm" style={{ aspectRatio: '16 / 9' }}>
+                  <iframe
+                    className="w-full h-full"
+                    src="https://www.youtube.com/embed/NpGpq1WKcuI"
+                    title="AI, Safety, and Democratic Resilience"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <p className="mt-4 text-sm text-gray-600 text-center font-jost">
+                  A concise overview connecting AI safety, platform accountability, and information integrity.
+                  Highlights practical approaches for evaluating model risks and building civic-minded safeguards.
+                </p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+        
         {/* ── Media Contact ── */}
         <MediaContact color="purple" />
 
