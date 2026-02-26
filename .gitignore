@@ -33,6 +33,7 @@ yarn-error.log*
 .env*.local
 
 # Generated certificate PDFs — produced by the CI workflow
+public/certificate/
 public/certificates/
 test-results
 playwright-report

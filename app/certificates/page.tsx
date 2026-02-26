@@ -1,22 +1,16 @@
-import type { Metadata } from 'next'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import LeaderboardClient from '@/components/LeaderboardClient'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'AI Safety Alignment Leaderboard — EuroSafeAI',
-  description:
-    'Ranking frontier AI models by human rights alignment, harm resistance, historical accuracy, and anti-authoritarian values — evaluated through an EU regulatory lens.',
-}
+import { useEffect } from 'react'
 
-export default function LeaderboardPage() {
+export default function CertificatesRedirect() {
+  useEffect(() => {
+    window.location.replace('/certificate')
+  }, [])
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Header />
-      <main className="flex-1">
-        <LeaderboardClient />
-      </main>
-      <Footer />
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-500">
+        Redirecting to <a href="/certificate" className="text-primary-600 underline">leaderboard</a>…
+      </p>
     </div>
   )
 }

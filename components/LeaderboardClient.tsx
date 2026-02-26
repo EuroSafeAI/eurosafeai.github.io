@@ -610,7 +610,7 @@ export default function LeaderboardClient() {
 
                     {/* Download certificate link */}
                     <a
-                      href={`/certificates/${model.id}.pdf`}
+                      href={`/certificate/${model.id}.pdf`}
                       download
                       className={`flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 ${GRADE_BG[grade]} text-white hover:opacity-90 active:scale-[0.98]`}
                     >
@@ -773,7 +773,7 @@ export default function LeaderboardClient() {
                               </button>
                             </Tooltip> */}
                             <a
-                              href={`/certificates/${model.id}.pdf`}
+                              href={`/certificate/${model.id}.pdf`}
                               download
                               aria-label={`Download certificate for ${model.name}`}
                               className="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex-shrink-0 flex items-center justify-center hover:bg-primary-100 hover:text-primary-700 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary-500 transition-colors mt-0.5"
