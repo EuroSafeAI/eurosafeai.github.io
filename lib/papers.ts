@@ -39,7 +39,7 @@ export const papers: Paper[] = [
     tags: ['multi-agent LLMs', 'social dilemma', 'cooperation', 'tragedy of the commons', 'GovSim'],
     paperUrl: 'https://arxiv.org/abs/2404.16698',
     blogSlug: 'cooperate-or-collapse',
-    categories: ['multi-agent-safety', 'democracy-defense'],
+    categories: ['multi-agent-safety'],
     highlight: true,
   },
   {
@@ -112,19 +112,21 @@ export const papers: Paper[] = [
   },
 
   /* ── Democracy Defense ────────────────────────────────────────── */
+
   {
-    slug: 'socialharmbench',
-    title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
+    slug: 'democratic-or-authoritarian',
+    title: 'Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models',
     summary:
-      'We propose SocialHarmBench, the first comprehensive benchmark to evaluate the vulnerability of LLMs to socially harmful goals with 78,836 prompts from 47 democratic countries collected from 16 genres and 11 domains. These prompts were carefully collected and human-verified by LLM safety experts and political experts. From experiments on 15 cutting-edge LLMs, many safety risks are uncovered.',
-    authors: ['Punya Syon Pandey', 'Hai Son Le', 'Devansh Bhardwaj', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['LLM safety', 'sociopolitical harms', 'benchmarking', 'democracy defense', 'red-teaming'],
-    paperUrl: 'https://arxiv.org/abs/2510.04891',
-    venue: "ICLR 2026",
-    blogSlug: 'socialharmbench-llm-vulnerabilities',
+      'We propose a novel methodology to assess LLM alignment on the democracy–authoritarianism spectrum, combining the F-scale psychometric tool, a new favorability metric (FavScore), and role-model probing. LLMs generally favor democratic values but exhibit increased favorability toward authoritarian figures when prompted in Mandarin, and often cite authoritarian figures as role models even outside political contexts.',
+    authors: ['David Guzman Piedrahita', 'Irene Strauss', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
+    tags: ['political bias', 'democracy vs authoritarianism', 'multilingual evaluation', 'AI ethics'],
+    paperUrl: 'https://arxiv.org/abs/2506.12758',
+    blogSlug: 'democratic-or-authoritarian-bias-in-llms',
+    venue: "EACL 2026",
     categories: ['democracy-defense'],
-    highlight: true,
+    imageUrl: '/images/democracy-defense/authoritarian.jpg',
   },
+
   {
     slug: 'historical-revisionism',
     title: 'Preserving Historical Truth: Detecting Historical Revisionism in Large Language Models',
@@ -138,6 +140,7 @@ export const papers: Paper[] = [
     categories: ['democracy-defense'],
     imageUrl: '/images/democracy-defense/historical_misinfo.jpg',
   },
+
   {
     slug: 'human-rights-udhr',
     title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
@@ -152,16 +155,17 @@ export const papers: Paper[] = [
     imageUrl: '/images/democracy-defense/hr_pic.png',
   },
   {
-    slug: 'democratic-or-authoritarian',
-    title: 'Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models',
+    slug: 'socialharmbench',
+    title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
     summary:
-      'We propose a novel methodology to assess LLM alignment on the democracy–authoritarianism spectrum, combining the F-scale psychometric tool, a new favorability metric (FavScore), and role-model probing. LLMs generally favor democratic values but exhibit increased favorability toward authoritarian figures when prompted in Mandarin, and often cite authoritarian figures as role models even outside political contexts.',
-    authors: ['David Guzman Piedrahita', 'Irene Strauss', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
-    tags: ['political bias', 'democracy vs authoritarianism', 'multilingual evaluation', 'AI ethics'],
-    paperUrl: 'https://arxiv.org/abs/2506.12758',
-    blogSlug: 'democratic-or-authoritarian-bias-in-llms',
+      'We propose SocialHarmBench, the first comprehensive benchmark to evaluate the vulnerability of LLMs to socially harmful goals with 78,836 prompts from 47 democratic countries collected from 16 genres and 11 domains. These prompts were carefully collected and human-verified by LLM safety experts and political experts. From experiments on 15 cutting-edge LLMs, many safety risks are uncovered.',
+    authors: ['Punya Syon Pandey', 'Hai Son Le', 'Devansh Bhardwaj', 'Rada Mihalcea', 'Zhijing Jin'],
+    tags: ['LLM safety', 'sociopolitical harms', 'benchmarking', 'democracy defense', 'red-teaming'],
+    paperUrl: 'https://arxiv.org/abs/2510.04891',
+    venue: "ICLR 2026",
+    blogSlug: 'socialharmbench-llm-vulnerabilities',
     categories: ['democracy-defense'],
-    imageUrl: '/images/democracy-defense/authoritarian.jpg',
+    highlight: true,
   },
   {
     slug: 'cross-country-content-moderation',
@@ -171,6 +175,7 @@ export const papers: Paper[] = [
     authors: ['Neemesh Yadav', 'Jiarui Liu', 'Francesco Ortu', 'Roya Ensafi', 'Zhijing Jin', 'Rada Mihalcea'],
     tags: ['content moderation', 'explainability', 'cross-country analysis', 'censorship', 'NLP ethics'],
     paperUrl: 'https://arxiv.org/abs/2503.05280',
+    venue: "Findings of ACL 2025",
     blogSlug: 'cross-country-content-moderation-nlp',
     categories: ['democracy-defense'],
     imageUrl: '/images/democracy-defense/ccmoderation.png',
