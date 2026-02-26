@@ -35,17 +35,25 @@ export default function DemocracyDefensePage() {
             >
               Democracy Defense
             </h1>
+
+            <p
+              className="text-xl md:text-xl text-gray-700 max-w-3xl mx-auto mb-4 font-jost motion-safe:animate-fade-slide-up"
+              style={{ animationDelay: '180ms' }}
+            >
+             Avoiding AI that passes the redline of Europe or humanity.
+            </p>
+
             <p
               className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-4 font-jost motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '180ms' }}
             >
-              Research on detecting democracy-threatening tendencies of AI and Large Language Models (LLMs).
+            Research on detecting democracy-threatening tendencies of AI, especially the emergent risks exposed by Large Language Models (LLMs).
             </p>
             <p
               className="text-gray-600 max-w-2xl mx-auto font-jost motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '300ms' }}
             >
-              Democracy Defense is a research line within EuroSafeAI, advancing rigorous, public-interest evaluations of AI systems in democratic contexts.
+                EuroSafeAI conducts rigorous, public-interest evaluations of AI systems for democratic societies. Our audits assess conformity with the EU AI Act, democratic integrity, historical accuracy, and adherence to human rights standards
             </p>
             <div
               className="mt-8 flex flex-wrap justify-center gap-4 motion-safe:animate-fade-slide-up"
