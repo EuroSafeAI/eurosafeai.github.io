@@ -69,9 +69,37 @@ export default function MediaContact({ color = 'primary' }: Props) {
                   >
                     Zhijing Jin
                   </a>
-                  <p className="text-sm text-gray-500">Founder &amp; Head, Jinesis AI Lab</p>
+                  <p className="text-sm text-gray-500">Founder &amp; Head, EuroSafeAI</p>
                   <a href="mailto:zjin.admin@cs.toronto.edu" className={`text-sm ${c.emailText} hover:underline`}>
                     zjin.admin@cs.toronto.edu
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+              <div className="flex items-center gap-4">
+                <a href="https://zhijing-jin.com/home/" target="_blank" rel="noopener noreferrer" className="shrink-0">
+                  <Image
+                    src="/images/team/pepijn-cobben.png"
+                    alt="Pepijn Cobben"
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded-full object-cover ring-1 ring-gray-200"
+                  />
+                </a>
+                <div>
+                  <a
+                    href="https://www.linkedin.com/in/pepijn-cobben?originalSubdomain=ch"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`font-semibold text-gray-900 ${c.nameHover} transition-colors`}
+                  >
+                    Pepijn Cobben
+                  </a>
+                  <p className="text-sm text-gray-500">Cofounder, EuroSafeAI</p>
+                  <a href="mailto:pcobben@ethz.ch" className={`text-sm ${c.emailText} hover:underline`}>
+                    pcobben@ethz.ch
                   </a>
                 </div>
               </div>

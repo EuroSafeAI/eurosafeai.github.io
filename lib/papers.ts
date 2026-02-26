@@ -75,26 +75,26 @@ export const papers: Paper[] = [
     paperUrl: 'https://arxiv.org/abs/2506.22957',
     categories: ['multi-agent-safety'],
   },
-  {
-    slug: 'govsim-elect',
-    title: 'GovSim-Elect / AgentElect',
-    summary:
-      'A simulation of elections in multi-agent LLM societies. Examining how AI agents vote, campaign, and coordinate under democratic voting systems—and what incentives shape their electoral behavior.',
-    authors: [],
-    tags: ['elections', 'multi-agent LLMs', 'governance', 'simulation', 'democracy'],
-    categories: ['multi-agent-safety'],
-    comingSoon: true,
-  },
-  {
-    slug: 'coopeval',
-    title: 'CoopEval',
-    summary:
-      'Benchmarking cooperation-sustaining mechanisms and LLM agents in social dilemmas. Translating game-theoretic mechanisms to real evaluation settings to identify what makes cooperation robust at scale.',
-    authors: [],
-    tags: ['cooperation', 'benchmarking', 'social dilemmas', 'mechanism design'],
-    categories: ['multi-agent-safety'],
-    comingSoon: true,
-  },
+//   {
+//     slug: 'govsim-elect',
+//     title: 'GovSim-Elect / AgentElect',
+//     summary:
+//       'A simulation of elections in multi-agent LLM societies. Examining how AI agents vote, campaign, and coordinate under democratic voting systems—and what incentives shape their electoral behavior.',
+//     authors: [],
+//     tags: ['elections', 'multi-agent LLMs', 'governance', 'simulation', 'democracy'],
+//     categories: ['multi-agent-safety'],
+//     comingSoon: true,
+//   },
+//   {
+//     slug: 'coopeval',
+//     title: 'CoopEval',
+//     summary:
+//       'Benchmarking cooperation-sustaining mechanisms and LLM agents in social dilemmas. Translating game-theoretic mechanisms to real evaluation settings to identify what makes cooperation robust at scale.',
+//     authors: [],
+//     tags: ['cooperation', 'benchmarking', 'social dilemmas', 'mechanism design'],
+//     categories: ['multi-agent-safety'],
+//     comingSoon: true,
+//   },
 
   /* ── Safety ───────────────────────────────────────────────────── */
   {
@@ -120,6 +120,7 @@ export const papers: Paper[] = [
     authors: ['Punya Syon Pandey', 'Hai Son Le', 'Devansh Bhardwaj', 'Rada Mihalcea', 'Zhijing Jin'],
     tags: ['LLM safety', 'sociopolitical harms', 'benchmarking', 'democracy defense', 'red-teaming'],
     paperUrl: 'https://arxiv.org/abs/2510.04891',
+    venue: "ICLR 2026",
     blogSlug: 'socialharmbench-llm-vulnerabilities',
     categories: ['democracy-defense'],
     highlight: true,
