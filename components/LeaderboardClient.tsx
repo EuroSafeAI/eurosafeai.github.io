@@ -490,9 +490,9 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.07 }}
           >
-            AI Safety Alignment
+            Safe AI Certificate
             <br />
-            <span className="text-primary-600 italic">Leaderboard</span>
+            <span className="text-primary-600 italic">for Europe and Humanity</span>
           </motion.h1>
           <motion.p
             className="text-lg text-gray-600 max-w-2xl leading-relaxed mb-6 font-jost"
@@ -500,9 +500,7 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
-            Benchmarking large language models across four independent dimensions derived
-            from EU AI Act requirements, European Court of Human Rights jurisprudence,
-            and EuroSafeAI&apos;s evaluation protocols.
+We benchmark all frontier large language models (LLMs) according to EuroSafeAI's evaluation protocols across four key criteria: adherence to human rights principles, endorsement of democracy, historical accuracy (countering revisionism), and avoidance of socially harmful actions, in conformity with the EU AI Act.
           </motion.p>
 
           {/* Disclaimer */}
