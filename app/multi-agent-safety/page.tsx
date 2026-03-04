@@ -7,13 +7,13 @@ import { Metadata } from 'next'
 import { getPapersByCategory } from '@/lib/papers'
 
 export const metadata: Metadata = {
-  title: 'Democracy Defense | EuroSafeAI',
+  title: 'Multi-Agent Safety | EuroSafeAI',
   description:
-    'Research on detecting democracy-threatening tendencies of AI and Large Language Models.',
+    'Research on testing LLM cooperation and safety in multi-agent simulation settings, including game-theoretic benchmarking and social dilemma experiments.',
 }
 
-export default function DemocracyDefensePage() {
-  const papers = getPapersByCategory('democracy-defense')
+export default function MultiAgentSafetyPage() {
+  const papers = getPapersByCategory('multi-agent-safety')
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -21,10 +21,10 @@ export default function DemocracyDefensePage() {
 
       <main className="flex-1">
         {/* ── Hero ── */}
-        <section className="from-purple-50 via-white to-slate-50 py-16 lg:py-24">
+        <section className="from-primary-50 via-white to-slate-50 py-16 lg:py-24">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <p
-              className="text-xs font-semibold text-purple-600 uppercase tracking-widest mb-4 font-jost motion-safe:animate-fade-in"
+              className="text-xs font-semibold text-primary-600 uppercase tracking-widest mb-4 font-jost motion-safe:animate-fade-in"
               style={{ animationDelay: '0ms' }}
             >
               Research Line
@@ -33,27 +33,19 @@ export default function DemocracyDefensePage() {
               className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '60ms' }}
             >
-              Democracy Defense
+              Multi-Agent AI Safety
             </h1>
-
-            <p
-              className="text-xl md:text-xl text-gray-700 max-w-3xl mx-auto mb-4 font-jost motion-safe:animate-fade-slide-up"
-              style={{ animationDelay: '180ms' }}
-            >
-             Avoiding AI that passes the redline of Europe or humanity.
-            </p>
-
             <p
               className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-4 font-jost motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '180ms' }}
             >
-            Research on detecting democracy-threatening tendencies of AI, especially the emergent risks exposed by Large Language Models (LLMs).
+              Testing LLM cooperation and safety in multi-agent simulation settings — from game-theoretic benchmarks to society-scale social dilemmas.
             </p>
             <p
               className="text-gray-600 max-w-2xl mx-auto font-jost motion-safe:animate-fade-slide-up"
               style={{ animationDelay: '300ms' }}
             >
-                EuroSafeAI conducts rigorous, public-interest evaluations of AI systems for democratic societies. Our audits assess conformity with the EU AI Act, democratic integrity, historical accuracy, and adherence to human rights standards
+              As AI agents increasingly interact with each other, the real world, and humans, single-agent safety evaluations are no longer sufficient. We study emergent risks in collective action problems, zero-sum competitions, and public goods games.
             </p>
             <div
               className="mt-8 flex flex-wrap justify-center gap-4 motion-safe:animate-fade-slide-up"
@@ -61,7 +53,7 @@ export default function DemocracyDefensePage() {
             >
               <Link
                 href="/research"
-                className="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors active:scale-95"
+                className="inline-flex items-center px-6 py-3 bg-primary-700 text-white font-medium rounded-lg hover:bg-primary-800 transition-colors active:scale-95"
               >
                 View All Research
                 <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,27 +65,29 @@ export default function DemocracyDefensePage() {
         </section>
 
         {/* ── Research ── */}
-        <section className="bg-white py-16 lg:py-20">
+        <section className="bg-gray-50 py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-6">
             <ScrollReveal>
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-primary-700 flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                   </svg>
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">Research</h2>
               </div>
-              <p className="text-gray-600 mb-8 max-w-2xl">Publications and ongoing work in this research direction.</p>
+              <p className="text-gray-600 mb-8 max-w-2xl">
+                Published work and ongoing research agenda on testing cooperation in multi-agent LLM systems.
+              </p>
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div className="rounded-xl bg-gray-50 p-4 sm:p-6">
+              <div className="rounded-xl bg-white p-4 sm:p-6 border border-gray-100">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {papers.map((paper) => (
                     <article
                       key={paper.slug}
-                      className="group rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-all hover:-translate-y-0.5 bg-white flex flex-col"
+                      className="group rounded-lg border border-gray-200 p-5 hover:shadow-sm transition-all hover:-translate-y-0.5 bg-gray-50 flex flex-col"
                     >
                       {paper.venue ? (
                         <div className="text-xs uppercase tracking-wide text-gray-500 mb-2">{paper.venue}</div>
@@ -127,7 +121,7 @@ export default function DemocracyDefensePage() {
                             href={paper.paperUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex text-xs items-center gap-1 rounded border border-purple-300 text-purple-700 px-2 py-1 hover:bg-purple-50 transition-colors"
+                            className="inline-flex text-xs items-center gap-1 rounded border border-primary-300 text-primary-700 px-2 py-1 hover:bg-primary-50 transition-colors"
                           >
                             Read paper <span aria-hidden>↗</span>
                           </a>
@@ -139,7 +133,7 @@ export default function DemocracyDefensePage() {
                         {paper.blogSlug && (
                           <Link
                             href={`/blog/${paper.blogSlug}`}
-                            className="inline-flex text-xs items-center gap-1 rounded border border-gray-200 text-gray-600 px-2 py-1 hover:bg-gray-50 transition-colors"
+                            className="inline-flex text-xs items-center gap-1 rounded border border-gray-200 text-gray-600 px-2 py-1 hover:bg-white transition-colors"
                           >
                             Blog post
                           </Link>
@@ -149,7 +143,7 @@ export default function DemocracyDefensePage() {
                       {paper.tags && paper.tags.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-1.5">
                           {paper.tags.map((tag) => (
-                            <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                            <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-primary-100 text-primary-700">
                               {tag}
                             </span>
                           ))}
@@ -163,52 +157,21 @@ export default function DemocracyDefensePage() {
           </div>
         </section>
 
-
-        {/* ── Featured Video ── */}
-        <section className="bg-gray-50 py-16 lg:py-20">
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              <div className="text-center mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Featured Video</h2>
-                <p className="text-gray-600 font-jost">AI, Safety, and Democratic Resilience</p>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={0.1}>
-              <div className="max-w-3xl mx-auto">
-                <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm" style={{ aspectRatio: '16 / 9' }}>
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/NpGpq1WKcuI"
-                    title="AI, Safety, and Democratic Resilience"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                </div>
-                <p className="mt-4 text-sm text-gray-600 text-center font-jost">
-                  A concise overview connecting AI safety, platform accountability, and information integrity.
-                  Highlights practical approaches for evaluating model risks and building civic-minded safeguards.
-                </p>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-        
         {/* ── Media Contact ── */}
-        <MediaContact color="purple" />
+        <MediaContact color="primary" />
 
         {/* ── CTA ── */}
         <ScrollReveal>
-          <section className="bg-purple-600 py-16">
+          <section className="bg-primary-700 py-16">
             <div className="max-w-4xl mx-auto px-6 text-center">
               <h2 className="text-3xl font-bold text-white mb-4">Explore Our Research</h2>
-              <p className="text-lg text-purple-100 mb-8 max-w-2xl mx-auto font-jost">
+              <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto font-jost">
                 View all our publications across AI safety, multi-agent systems, and democracy defense.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   href="/research"
-                  className="inline-flex items-center px-6 py-3 bg-white text-purple-600 font-medium rounded-lg hover:bg-purple-50 transition-colors active:scale-95"
+                  className="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-medium rounded-lg hover:bg-primary-50 transition-colors active:scale-95"
                 >
                   All Research
                   <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

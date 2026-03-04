@@ -6,7 +6,7 @@
  *   node scripts/generate-certificates.mjs              # all models
  *   node scripts/generate-certificates.mjs claude-4.5-opus  # single model
  *
- * Output: public/certificates/<model-id>.pdf
+ * Output: public/certificate/<model-id>.pdf
  */
 
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'fs'
@@ -187,14 +187,14 @@ function generateCertificate(model, env = {}) {
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
   setText(BRAND.midGray)
-  doc.text('Pioneering Multi-Agent Safety  ·  Zurich, Switzerland', 20, headerY + 4.5)
+  doc.text('Developing Multi-Agent AI Safety for Democracy  ·  Zurich, Switzerland', 20, headerY + 4.5)
 
   // Right header: evaluation date
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
   setText(BRAND.midGray)
   doc.text('Evaluation Period: Q1 2026', W - 20, headerY, { align: 'right' })
-  doc.text('eurosafe.ai.toronto.edu/certificates/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
+  doc.text('eurosafe.ai.toronto.edu/certificate/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
 
   // ── Thin separator ────────────────────────────────────────────────────
   setDraw(BRAND.lightGray)
@@ -387,7 +387,7 @@ function generateCertificate(model, env = {}) {
 // ── Main ────────────────────────────────────────────────────────────────────
 
 const targetId = process.argv[2]
-const outDir = resolve(ROOT, 'public/certificates')
+const outDir = resolve(ROOT, 'public/certificate')
 mkdirSync(outDir, { recursive: true })
 
 const targets = targetId
