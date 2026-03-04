@@ -4,125 +4,26 @@ import ScrollReveal from '@/components/ScrollReveal'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getAllSlugs } from '@/lib/blog'
+import { papers, Paper } from '@/lib/papers'
 
-/* ── Research data ────────────────────────────────────────────────── */
+/* ── Category display config ──────────────────────────────────────── */
 
-interface ResearchItem {
-  title: string
-  description: string
-  category: string
-  categoryColor: string
-  categoryTextColor: string
-  venue?: string
-  date: string
-  paperUrl?: string
-  blogSlug?: string
-  comingSoon?: boolean
-  imageUrl?: string
+const CATEGORY_DISPLAY: Record<string, { label: string; color: string; text: string }> = {
+  'multi-agent-safety': { label: 'Multi-Agent Safety', color: 'bg-primary-100', text: 'text-primary-700' },
+  'democracy-defense':  { label: 'Democracy Defense',  color: 'bg-purple-100',  text: 'text-purple-700' },
+  'safety':             { label: 'Safety',             color: 'bg-red-100',     text: 'text-red-700' },
+  'societal-impact':    { label: 'Societal Impact',    color: 'bg-blue-100',    text: 'text-blue-700' },
 }
 
-const highlighted: ResearchItem[] = [
-  {
-    title: 'Cooperate or Collapse: Emergence of Sustainable Cooperation in a Society of LLM Agents',
-    description:
-      'We introduce GovSim, a generative simulation platform to study strategic interactions and cooperative decision-making in LLMs. We find that most models fail to achieve sustainable equilibrium, with the highest survival rate below 54%. Agents leveraging moral reasoning achieve significantly better sustainability.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    venue: 'NeurIPS 2024',
-    date: '2024-04-25',
-    paperUrl: 'https://arxiv.org/abs/2404.16698',
-    blogSlug: 'cooperate-or-collapse',
-  },
-  {
-    title: 'Accidental Misalignment: Fine-Tuning Language Models Induces Unexpected Vulnerability',
-    description:
-      'We investigate how characteristics of fine-tuning datasets can accidentally misalign language models, revealing that structural and linguistic patterns in seemingly benign datasets amplify adversarial vulnerability. Our findings motivate more rigorous dataset curation as a proactive safety measure.',
-    category: 'Safety',
-    categoryColor: 'bg-red-100',
-    categoryTextColor: 'text-red-700',
-    venue: 'IASEAI 2026',
-    date: '2025-05-22',
-    paperUrl: 'https://arxiv.org/abs/2505.16789',
-    blogSlug: 'accidental-misalignment',
-  },
-  {
-    title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
-    description:
-      'We propose SocialHarmBench, the first comprehensive benchmark to evaluate the vulnerability of LLMs to socially harmful goals with 78,836 prompts from 47 democratic countries collected from 16 genres and 11 domains. From experiments on 15 cutting-edge LLMs, many safety risks are uncovered.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    date: '2025',
-    paperUrl: 'https://arxiv.org/abs/2510.04891',
-    imageUrl: '/images/democracy-defense/social-harm.jpg',
-    blogSlug: 'socialharmbench-llm-vulnerabilities',
-  },
-  {
-    title: 'Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models',
-    description:
-      'We propose a novel methodology to assess LLM alignment on the democracy\u2013authoritarianism spectrum, combining psychometric tools, a new favorability metric, and role-model probing. We find that LLMs generally favor democratic values but exhibit increased favorability toward authoritarian figures when prompted in Mandarin.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    date: '2025',
-    paperUrl: 'https://arxiv.org/abs/2506.12758',
-    imageUrl: '/images/democracy-defense/authoritarian.jpg',
-    blogSlug: 'democratic-or-authoritarian-bias-in-llms',
-  },
-]
+function getCategoryDisplay(paper: Paper) {
+  return CATEGORY_DISPLAY[paper.categories[0]] ?? { label: paper.categories[0], color: 'bg-gray-100', text: 'text-gray-700' }
+}
 
-const otherResearch: ResearchItem[] = [
-  {
-    title: 'Revealing Hidden Mechanisms of Cross-Country Content Moderation with Natural Language Processing',
-    description:
-      'We explore multiple directions to investigate hidden mechanisms behind content moderation: training classifiers to reverse-engineer decisions across countries, and explaining moderation decisions by analyzing Shapley values and LLM-guided explanations.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    date: '2025',
-    paperUrl: 'https://arxiv.org/abs/2503.05280',
-    imageUrl: '/images/democracy-defense/ccmoderation.png',
-    blogSlug: 'cross-country-content-moderation-nlp',
-  },
-]
+/* ── Derived sections ─────────────────────────────────────────────── */
 
-const workInProgress: ResearchItem[] = [
-  {
-    title: 'Multi-Agent Safety in Autonomous Systems',
-    description:
-      'Investigating safety guarantees and failure modes when multiple AI agents interact in shared environments, with a focus on emergent risks that arise from agent-to-agent dynamics.',
-    category: 'Multi-Agent Safety',
-    categoryColor: 'bg-primary-100',
-    categoryTextColor: 'text-primary-700',
-    date: '2025',
-    comingSoon: true,
-  },
-  {
-    title: 'Defending against LLM Propaganda: Detecting Historical Revisionism by Large Language Models',
-    description:
-      'We introduce HistoricalMisinfo, a curated dataset of 500 historically contested events from 45 countries, each paired with factual and revisionist narratives. Evaluating responses from multiple LLMs, we observe vulnerabilities and systematic variation in revisionism across models, countries, and prompt types.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    date: '2025',
-    comingSoon: true,
-    imageUrl: '/images/democracy-defense/historical_misinfo.jpg',
-    blogSlug: 'preserving-historical-truth-revisionism-llms',
-  },
-  {
-    title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
-    description:
-      'We evaluate how LLMs navigate trade-offs involving the Universal Declaration of Human Rights, leveraging 1,152 synthetically generated scenarios across 24 rights articles in eight languages. Analysis of eleven major LLMs reveals systematic biases in rights endorsement patterns.',
-    category: 'Democracy Defense',
-    categoryColor: 'bg-purple-100',
-    categoryTextColor: 'text-purple-700',
-    date: '2025',
-    comingSoon: true,
-    imageUrl: '/images/democracy-defense/hr_pic.png',
-    blogSlug: 'llms-udhr-human-rights-evaluation',
-  },
-]
+const highlighted    = papers.filter(p => p.highlight && !p.comingSoon)
+const otherResearch  = papers.filter(p => !p.highlight && !p.comingSoon)
+const workInProgress = papers.filter(p => p.comingSoon)
 
 const mediaCoverage = [
   {
@@ -149,7 +50,8 @@ const mediaCoverage = [
 
 const existingBlogSlugs = new Set(getAllSlugs())
 
-function HighlightedCard({ item }: { item: ResearchItem }) {
+function HighlightedCard({ item }: { item: Paper }) {
+  const cat = getCategoryDisplay(item)
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col">
       {item.imageUrl ? (
@@ -166,8 +68,8 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
 
       <div className="p-6 md:p-8 flex flex-col flex-1">
         <div className="flex flex-wrap items-center gap-2 mb-4">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${item.categoryColor} ${item.categoryTextColor}`}>
-            {item.category}
+          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${cat.color} ${cat.text}`}>
+            {cat.label}
           </span>
           {item.venue && (
             <span className="text-xs font-medium px-3 py-1 rounded-full bg-gray-100 text-gray-600">
@@ -180,7 +82,7 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
           {item.title}
         </h3>
 
-        <p className="text-gray-600 leading-relaxed mb-6 flex-1">{item.description}</p>
+        <p className="text-gray-600 leading-relaxed mb-6 flex-1">{item.summary}</p>
 
         <div className="flex flex-wrap items-center gap-3 mt-auto">
           {item.paperUrl && (
@@ -213,7 +115,8 @@ function HighlightedCard({ item }: { item: ResearchItem }) {
   )
 }
 
-function OtherResearchRow({ item }: { item: ResearchItem }) {
+function OtherResearchRow({ item }: { item: Paper }) {
+  const cat = getCategoryDisplay(item)
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 p-6 flex flex-col sm:flex-row sm:items-center gap-4">
       {item.imageUrl && (
@@ -227,8 +130,8 @@ function OtherResearchRow({ item }: { item: ResearchItem }) {
       )}
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${item.categoryColor} ${item.categoryTextColor}`}>
-            {item.category}
+          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${cat.color} ${cat.text}`}>
+            {cat.label}
           </span>
           {item.venue && (
             <span className="text-xs font-medium px-3 py-1 rounded-full bg-gray-100 text-gray-600">
@@ -242,7 +145,7 @@ function OtherResearchRow({ item }: { item: ResearchItem }) {
           )}
         </div>
         <h4 className="text-lg font-bold text-gray-900 mb-1">{item.title}</h4>
-        <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+        <p className="text-gray-600 text-sm leading-relaxed">{item.summary}</p>
       </div>
 
       <div className="flex items-center gap-3 flex-shrink-0">
@@ -322,7 +225,7 @@ export default function Research() {
 
             <div className="grid md:grid-cols-2 gap-8">
               {highlighted.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 0.1}>
+                <ScrollReveal key={item.slug} delay={i * 0.1}>
                   <HighlightedCard item={item} />
                 </ScrollReveal>
               ))}
@@ -349,7 +252,7 @@ export default function Research() {
 
             <div className="space-y-4">
               {otherResearch.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 0.08}>
+                <ScrollReveal key={item.slug} delay={i * 0.08}>
                   <OtherResearchRow item={item} />
                 </ScrollReveal>
               ))}
@@ -376,7 +279,7 @@ export default function Research() {
 
             <div className="space-y-4">
               {workInProgress.map((item, i) => (
-                <ScrollReveal key={item.title} delay={i * 0.08}>
+                <ScrollReveal key={item.slug} delay={i * 0.08}>
                   <OtherResearchRow item={item} />
                 </ScrollReveal>
               ))}

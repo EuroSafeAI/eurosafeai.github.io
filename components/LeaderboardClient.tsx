@@ -474,7 +474,7 @@ export default function LeaderboardClient() {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="bg-gradient-to-br from-slate-50 via-primary-50/40 to-white border-b border-gray-100">
+      <section className="from-slate-50 via-primary-50/40 to-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 py-14 lg:py-18">
           <motion.p
             className="text-xs font-semibold text-primary-600 uppercase tracking-widest mb-3 font-jost"
@@ -490,9 +490,9 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.07 }}
           >
-            AI Safety Alignment
+            Safe AI Certificate
             <br />
-            <span className="text-primary-600 italic">Leaderboard</span>
+            <span className="text-primary-600 italic">for Europe and Humanity</span>
           </motion.h1>
           <motion.p
             className="text-lg text-gray-600 max-w-2xl leading-relaxed mb-6 font-jost"
@@ -500,9 +500,7 @@ export default function LeaderboardClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
-            Benchmarking large language models across four independent dimensions derived
-            from EU AI Act requirements, European Court of Human Rights jurisprudence,
-            and EuroSafeAI&apos;s evaluation protocols.
+We benchmark all frontier large language models (LLMs) according to EuroSafeAI's evaluation protocols across four key criteria: adherence to human rights principles, endorsement of democracy, historical accuracy (countering revisionism), and avoidance of socially harmful actions, in conformity with the EU AI Act.
           </motion.p>
 
           {/* Disclaimer */}
@@ -610,7 +608,7 @@ export default function LeaderboardClient() {
 
                     {/* Download certificate link */}
                     <a
-                      href={`/certificates/${model.id}.pdf`}
+                      href={`/certificate/${model.id}.pdf`}
                       download
                       className={`flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 ${GRADE_BG[grade]} text-white hover:opacity-90 active:scale-[0.98]`}
                     >
@@ -630,7 +628,7 @@ export default function LeaderboardClient() {
       {/* ── Controls ── */}
       <section className="bg-white border-b border-gray-100 sticky top-[65px] z-20 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center gap-2 justify-between">
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by region">
+          {/* <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter by region">
             {REGIONS.map((r) => (
               <button
                 key={r}
@@ -646,7 +644,7 @@ export default function LeaderboardClient() {
                 {r}
               </button>
             ))}
-          </div>
+          </div> */}
           <p className="text-xs text-gray-400 font-jost">
             {ranked.length} model{ranked.length !== 1 ? 's' : ''}
           </p>
@@ -675,12 +673,12 @@ export default function LeaderboardClient() {
                   >
                     Model
                   </th>
-                  <th
+                  {/* <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-jost whitespace-nowrap"
                   >
                     Category
-                  </th>
+                  </th> */}
                   <SortableColHeader
                     label="Score"
                     colKey="agg"
@@ -773,7 +771,7 @@ export default function LeaderboardClient() {
                               </button>
                             </Tooltip> */}
                             <a
-                              href={`/certificates/${model.id}.pdf`}
+                              href={`/certificate/${model.id}.pdf`}
                               download
                               aria-label={`Download certificate for ${model.name}`}
                               className="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex-shrink-0 flex items-center justify-center hover:bg-primary-100 hover:text-primary-700 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary-500 transition-colors mt-0.5"
@@ -786,7 +784,7 @@ export default function LeaderboardClient() {
                         </td>
 
                         {/* Region pill */}
-                        <td className="px-3 py-3.5 whitespace-nowrap">
+                        {/* <td className="px-3 py-3.5 whitespace-nowrap">
                           <span
                             className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold font-jost ${
                               REGION_PILL[model.region]
@@ -794,7 +792,7 @@ export default function LeaderboardClient() {
                           >
                             {REGION_ABBR[model.region]}
                           </span>
-                        </td>
+                        </td> */}
 
                         {/* Aggregate score */}
                         <td className="px-3 py-3.5 whitespace-nowrap">
@@ -864,14 +862,13 @@ export default function LeaderboardClient() {
             <p className="text-sm text-gray-600 leading-relaxed mb-4 font-jost">
               The EuroSafeAI Alignment Index evaluates frontier AI models across four independent
               dimensions derived from EU AI Act requirements, European Court of Human Rights
-              jurisprudence, and EuroSafeAI&apos;s internal red-teaming protocols. Each dimension is
+              jurisprudence, and EuroSafeAI&apos;s internal evaluation protocols. Each dimension is
               scored 0–100 via its specific evaluation and aggregated with equal weighting
               into an overall grade.
             </p>
             <p className="text-sm text-gray-500 leading-relaxed font-jost">
               Full methodology, dataset descriptions, and reproducibility information will be
-              published alongside the peer-reviewed working papers listed above. Regional
-              categorization reflects primary corporate headquarters.
+              published alongside the peer-reviewed working papers listed above.
             </p>
           </div>
         </div>
