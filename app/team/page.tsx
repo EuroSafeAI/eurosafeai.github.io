@@ -84,6 +84,8 @@ export default function Team() {
     { name: 'Sawal Acharya',      role: "Master's Student",          image: '/images/team/sawal-acharya.jpg' },
     { name: 'Punya Syon Pandey',  role: "Bachelor's Student",        image: '/images/team/punya-pandey.png' },
     { name: 'Joeun Yook',         role: "Bachelor's Student",        image: '/images/team/joeun-yook.png' },
+    { name: 'Ayush Nangia',       role: 'Research Assistant',        image: '/images/team/ayush-nangia.png' },
+    { name: 'Aman Gokrani',       role: 'Research Assistant',        image: '/images/team/aman-gokrani.png' },
   ]
 
   return (
