@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EuroSafeAI — Name Cards</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --card-bg: #111118;
+    --border: #1e1e2a;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --text: #e8e8ef;
+    --text-muted: #8888a0;
+    --text-dim: #55556a;
+    --white: #ffffff;
+    --card-w: 3.5in;
+    --card-h: 2in;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .page-header h1 {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .card-pair {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  /* ─── Business Card ─── */
+  .card {
+    width: var(--card-w);
+    height: var(--card-h);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Front */
+  .card-front {
+    background: linear-gradient(165deg, #111118 0%, #0d0d14 40%, #0f0e1a 100%);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 22px 16px;
+  }
+
+  .card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card-front::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light), transparent);
+    opacity: 0.6;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.3px;
+    line-height: 1.25;
+  }
+
+  .card-chinese {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-weight: 300;
+  }
+
+  .card-title {
+    font-size: 9.5px;
+    color: var(--accent-light);
+    margin-top: 5px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  .card-logo {
+    width: 42px;
+    height: auto;
+    opacity: 0.85;
+    filter: brightness(1.2);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .card-detail {
+    font-family: 'Space Mono', monospace;
+    font-size: 7.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-detail .icon {
+    width: 10px;
+    height: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-detail .icon svg {
+    width: 9px;
+    height: 9px;
+    stroke: var(--accent-light);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .card-org {
+    font-size: 7.5px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  /* Back */
+  .card-back {
+    background: linear-gradient(165deg, #12121f 0%, #0d0d17 60%, #111120 100%);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .card-back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(129, 140, 248, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .card-back .back-logo {
+    width: 80px;
+    height: auto;
+    opacity: 0.9;
+    filter: brightness(1.3);
+    margin-bottom: 10px;
+  }
+
+  .card-back .tagline {
+    font-size: 8px;
+    color: var(--text-dim);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .card-back .url {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px;
+    color: var(--accent-light);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
+  }
+
+  .card-back .accent-line {
+    width: 40px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 10px 0;
+    opacity: 0.4;
+  }
+
+  /* Separator */
+  .separator {
+    width: 1px;
+    height: 30px;
+    background: var(--border);
+    align-self: center;
+    opacity: 0.5;
+  }
+
+  /* Print */
+  @media print {
+    body {
+      background: white;
+      padding: 0.5in;
+    }
+    .page-header { display: none; }
+    .card-front, .card-back {
+      border: 1px solid #ddd;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .cards-container { gap: 24px; }
+  }
+
+  /* Hover hint */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>EuroSafeAI — Name Cards</h1>
+  <p>Standard business card format · 3.5 × 2 in · Front & Back</p>
+</div>
+
+<div class="cards-container">
+
+  <!-- ═══ Card 1: Zhijing Jin ═══ -->
+  <div>
+    <div class="card-label">Zhijing Jin</div>
+    <div class="card-pair">
+      <div class="card card-front">
+        <div class="card-top">
+          <div>
+            <div class="card-name">Zhijing Jin</div>
+            <!-- <div class="card-chinese">金芝晶</div> -->
+            <div class="card-title">Founder & Principal Investigator</div>
+          </div>
+          <img class="card-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        </div>
+        <div class="card-bottom">
+          <div class="card-org">EuroSafeAI</div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></span>
+            zhijing.jin@utoronto.ca
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            eurosafe.ai.toronto.edu
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            Zürich, Switzerland · Toronto, Canada
+          </div>
+        </div>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="card card-back">
+        <img class="back-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        <div class="accent-line"></div>
+        <div class="tagline">Pioneering Multi-Agent Safety</div>
+        <div class="url">eurosafe.ai.toronto.edu</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Card 2: Xuanqiang Angelo Huang ═══ -->
+  <div>
+    <div class="card-label">Xuanqiang Angelo Huang</div>
+    <div class="card-pair">
+      <div class="card card-front">
+        <div class="card-top">
+          <div>
+            <div class="card-name">Xuanqiang Angelo Huang</div>
+            <!-- <div class="card-chinese">黄炫强</div> -->
+            <div class="card-title">Co-Founder & Researcher</div>
+          </div>
+          <img class="card-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        </div>
+        <div class="card-bottom">
+          <div class="card-org">EuroSafeAI</div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></span>
+            angeloh@cs.toronto.edu
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            eurosafe.ai.toronto.edu
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            Zürich, Switzerland
+          </div>
+        </div>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="card card-back">
+        <img class="back-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        <div class="accent-line"></div>
+        <div class="tagline">Pioneering Multi-Agent Safety</div>
+        <div class="url">eurosafe.ai.toronto.edu</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Card 3: Pepijn Cobben ═══ -->
+  <div>
+    <div class="card-label">Pepijn Cobben</div>
+    <div class="card-pair">
+      <div class="card card-front">
+        <div class="card-top">
+          <div>
+            <div class="card-name">Pepijn Cobben</div>
+            <div class="card-title">Co-Founder & Researcher</div>
+          </div>
+          <img class="card-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        </div>
+        <div class="card-bottom">
+          <div class="card-org">EuroSafeAI</div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></span>
+            pcobben@ethz.ch
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            eurosafe.ai.toronto.edu
+          </div>
+          <div class="card-detail">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            Zürich, Switzerland
+          </div>
+        </div>
+      </div>
+
+      <div class="separator"></div>
+
+      <div class="card card-back">
+        <img class="back-logo" src="data:image/png;base64,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" alt="EuroSafeAI">
+        <div class="accent-line"></div>
+        <div class="tagline">Pioneering Multi-Agent Safety</div>
+        <div class="url">eurosafe.ai.toronto.edu</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
