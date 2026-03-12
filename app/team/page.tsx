@@ -66,6 +66,10 @@ export default function Team() {
     { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto', image: '/images/team/roger-grosse.png' },
   ]
 
+  const scientificCoordination: TeamMember[] = [
+    { name: 'Ettore Gran', role: 'Scientific Coordinator', image: '/images/team/ettore-gran.png' },
+  ]
+
   const technicalStaff: TeamMember[] = [
     { name: 'Samuel Simko',       role: 'Senior Research Scientist', image: '/images/team/samuel-simko.png' },
     { name: 'David Guzman',       role: 'Senior Research Scientist', image: '/images/team/david-guzman.png' },
@@ -134,6 +138,35 @@ export default function Team() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {board.map((member, i) => (
+                <ScrollReveal key={member.name} delay={i * 0.08}>
+                  <LeadershipCard member={member} />
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Scientific Coordination ── */}
+        <section className="py-12 bg-gray-50">
+          <div className="max-w-6xl mx-auto px-6">
+            <ScrollReveal>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0112 21.5 12.083 12.083 0 015.84 10.578L12 14z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Scientific Coordination</h2>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {scientificCoordination.map((member, i) => (
                 <ScrollReveal key={member.name} delay={i * 0.08}>
                   <LeadershipCard member={member} />
                 </ScrollReveal>
