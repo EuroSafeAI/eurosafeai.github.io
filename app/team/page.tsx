@@ -18,7 +18,7 @@ function LeadershipCard({ member }: { member: TeamMember }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
       <div className="pt-8 pb-5 px-5 flex flex-col items-center text-center">
-        <div className="w-24 h-24 rounded-full overflow-hidden bg-primary-700 flex-shrink-0 relative mb-4 ring-2 ring-gray-100">
+        <div className="w-32 h-32 rounded-full overflow-hidden bg-primary-700 flex-shrink-0 relative mb-4 ring-2 ring-gray-100">
           {member.image ? (
             <Image src={member.image} alt={member.name} fill className="object-cover" />
           ) : (
@@ -40,7 +40,7 @@ function LeadershipCard({ member }: { member: TeamMember }) {
 function StaffCard({ member }: { member: TeamMember }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col items-center text-center py-5 px-4">
-      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative mb-3 ring-2 ring-gray-100">
+      <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative mb-3 ring-2 ring-gray-100">
         {member.image ? (
           <Image src={member.image} alt={member.name} fill className="object-cover" />
         ) : (
@@ -56,19 +56,18 @@ function StaffCard({ member }: { member: TeamMember }) {
 
 export default function Team() {
   const board: TeamMember[] = [
-    { name: 'Zhijing Jin',     role: 'Chief Scientist',          image: '/images/team/zhijing-jin.png' },
+    { name: 'Zhijing Jin',     role: 'Co-founder',               image: '/images/team/zhijing-jin.png' },
     { name: 'Angelo Huang',    role: 'Co-founder and Director',  image: '/images/team/angelo-huang.png' },
-    { name: 'Pepijn Cobben',   role: 'Co-founder and Director',  image: '/images/team/pepijn-cobben.png' },
-    { name: 'Terry J. C. Zhang', role: 'Co-founder and Director', image: '/images/team/terry-zhang.png' },
+    { name: 'Ettore Gran',      role: 'Co-founder',               image: '/images/team/ettore-gran.png' },
+    { name: 'Pepijn Cobben',   role: 'Co-founder',               image: '/images/team/pepijn-cobben.png' },
+    { name: 'Terry J. C. Zhang', role: 'Co-founder and Chief Scientist Lead', image: '/images/team/terry-zhang.png' },
   ]
 
   const advisors: TeamMember[] = [
     { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto', image: '/images/team/roger-grosse.png' },
+    { name: 'Prof. Matthias Bethge', role: 'Professor, University of Tübingen', image: '/images/team/matthias-bethge.png' },
   ]
 
-  const scientificCoordination: TeamMember[] = [
-    { name: 'Ettore Gran', role: 'Scientific Coordinator', image: '/images/team/ettore-gran.png' },
-  ]
 
   const technicalStaff: TeamMember[] = [
     { name: 'Samuel Simko',       role: 'Senior Research Scientist', image: '/images/team/samuel-simko.png' },
@@ -138,35 +137,6 @@ export default function Team() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {board.map((member, i) => (
-                <ScrollReveal key={member.name} delay={i * 0.08}>
-                  <LeadershipCard member={member} />
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Scientific Coordination ── */}
-        <section className="py-12 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0112 21.5 12.083 12.083 0 015.84 10.578L12 14z"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Scientific Coordination</h2>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {scientificCoordination.map((member, i) => (
                 <ScrollReveal key={member.name} delay={i * 0.08}>
                   <LeadershipCard member={member} />
                 </ScrollReveal>
