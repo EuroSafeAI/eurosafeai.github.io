@@ -164,6 +164,38 @@ export default function DemocracyDefensePage() {
         </section>
 
 
+        {/* ── LLM Assessment ── */}
+        <section className="bg-gray-50 py-16 lg:py-20">
+          <div className="max-w-6xl mx-auto px-6">
+            <ScrollReveal>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-600 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">AI Alignment Index</h2>
+              </div>
+              <p className="text-gray-600 mb-6 max-w-3xl">
+                Building on the research above, we developed the <strong>EuroSafeAI Alignment Index</strong> — a
+                public leaderboard that evaluates frontier AI models across four dimensions derived directly
+                from our democracy defense publications.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <Link
+                href="/certificate"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors active:scale-95"
+              >
+                View the Alignment Index
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* ── Featured Video ── */}
         <section className="bg-gray-50 py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-6">
