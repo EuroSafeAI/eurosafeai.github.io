@@ -857,8 +857,15 @@ We benchmark all frontier large language models (LLMs) according to EuroSafeAI's
       {/* ── Methodology note ── */}
       <section className="bg-white border-t border-gray-100 py-12">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-2xl">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">About This Index</h2>
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">About This Index</h2>
+            </div>
             <p className="text-sm text-gray-600 leading-relaxed mb-4 font-jost">
               The EuroSafeAI Alignment Index evaluates frontier AI models across four independent
               dimensions derived from EU AI Act requirements, European Court of Human Rights
@@ -866,11 +873,76 @@ We benchmark all frontier large language models (LLMs) according to EuroSafeAI's
               scored 0–100 via its specific evaluation and aggregated with equal weighting
               into an overall grade.
             </p>
-            <p className="text-sm text-gray-500 leading-relaxed font-jost">
-              Full methodology, dataset descriptions, and reproducibility information will be
-              published alongside the peer-reviewed working papers listed above.
+            <p className="text-sm text-gray-500 leading-relaxed mb-6 font-jost">
+              Full methodology, dataset descriptions, and reproducibility information are
+              published in the peer-reviewed papers listed below.
             </p>
           </div>
+
+            <div className="space-y-4">
+              {[
+                {
+                  title: 'Democratic or Authoritarian? Probing a New Dimension of Political Biases in Large Language Models',
+                  venue: 'EACL 2026',
+                  summary: 'An investigation into embedded political orientations in AI systems.',
+                  url: 'http://arxiv.org/abs/2506.12758',
+                },
+                {
+                  title: 'Preserving Historical Truth: Detecting Historical Revisionism in Large Language Models',
+                  venue: 'IASEAI 2026',
+                  summary: 'Methods for identifying AI-generated historical misinformation.',
+                  url: 'https://arxiv.org/abs/2602.17433',
+                },
+                {
+                  title: 'Revealing Hidden Mechanisms of Cross-Country Content Moderation with Natural Language Processing',
+                  venue: 'ACL 2025 Findings',
+                  summary: '',
+                  url: 'https://arxiv.org/abs/2503.05280',
+                },
+                {
+                  title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
+                  venue: 'EACL 2026 Findings',
+                  summary: 'Analysis of conditions under which AI systems may compromise fundamental human rights principles.',
+                  url: 'https://arxiv.org/abs/2603.04217',
+                },
+                {
+                  title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
+                  venue: 'ICLR 2026',
+                  summary: 'A comprehensive benchmark for evaluating AI vulnerability to harmful sociopolitical queries.',
+                  url: 'https://arxiv.org/abs/2510.04891',
+                },
+              ].map((paper) => (
+                <div
+                  key={paper.url}
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-xs font-medium px-3 py-1 rounded-full bg-gray-100 text-gray-600">
+                        {paper.venue}
+                      </span>
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-900 mb-1">{paper.title}</h4>
+                    {paper.summary && (
+                      <p className="text-gray-600 text-sm leading-relaxed">{paper.summary}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <a
+                      href={paper.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-primary-700 text-white hover:bg-primary-800 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      Paper
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
         </div>
       </section>
     </div>

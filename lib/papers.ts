@@ -132,7 +132,7 @@ export const papers: Paper[] = [
     title: 'Preserving Historical Truth: Detecting Historical Revisionism in Large Language Models',
     summary:
       'We introduce HistoricalMisinfo, a curated dataset of 500 historically contested events from 45 countries, each paired with factual and revisionist narratives. To simulate real-world pathways of information dissemination, we design eleven prompt scenarios per event. Evaluating responses from multiple LLMs, we observe vulnerabilities and systematic variation in revisionism across models, countries, and prompt types.',
-    authors: ['Francesco Ortu', 'Joeun Yook', 'Bernhard Schölkopf', 'Rada Mihalcea', 'Zhijing Jin'],
+    authors: ['Francesco Ortu', 'Joeun Yook', 'Punya Syon Pandey', 'Keenan Samway', 'Bernhard Schölkopf', 'Alberto Cazzaniga', 'Rada Mihalcea', 'Zhijing Jin'],
     tags: ['historical revisionism', 'misinformation', 'factuality', 'LLM evaluation', 'democratic integrity'],
     paperUrl: 'https://arxiv.org/abs/2602.17433v2',
     venue: 'ORAL IASEAI 2026',
