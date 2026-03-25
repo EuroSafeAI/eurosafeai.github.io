@@ -50,45 +50,46 @@ function StaffCard({ member }: { member: TeamMember }) {
         )}
       </div>
       <h3 className="font-semibold text-gray-900 text-sm">{member.name}</h3>
+      <p className="text-primary-600 text-xs font-medium mt-0.5">{member.role}</p>
     </div>
   )
 }
 
 export default function Team() {
   const board: TeamMember[] = [
-    { name: 'Zhijing Jin',     role: 'Co-founder',               image: '/images/team/zhijing-jin.png' },
-    { name: 'Angelo Huang',    role: 'Co-founder and Director',  image: '/images/team/angelo-huang.png' },
-    { name: 'Ettore Gran',      role: 'Co-founder',               image: '/images/team/ettore-gran.png' },
-    { name: 'Pepijn Cobben',   role: 'Co-founder',               image: '/images/team/pepijn-cobben.png' },
-    { name: 'Terry J. C. Zhang', role: 'Co-founder and Chief Scientist Lead', image: '/images/team/terry-zhang.png' },
+    { name: 'Zhijing Jin',    role: 'Co-founder and Director',    image: '/images/team/zhijing-jin.png' },
+    { name: 'Ettore Gran',    role: 'Co-founder and Co-director', image: '/images/team/ettore-gran.png' },
+    { name: 'Pepijn Cobben',  role: 'Co-founder',                 image: '/images/team/pepijn-cobben.png' },
+    { name: 'Angelo Huang',   role: 'Co-founder',                 image: '/images/team/angelo-huang.png' },
   ]
 
   const advisors: TeamMember[] = [
-    { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto', image: '/images/team/roger-grosse.png' },
-    { name: 'Prof. Matthias Bethge', role: 'Professor, University of Tübingen', image: '/images/team/matthias-bethge.png' },
+    { name: 'Prof. Matthias Bethge', role: 'Professor, University of Tübingen; Founding Director, Tübingen AI Center; ELLIS Fellow', image: '/images/team/matthias-bethge.png' },
+    { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto; Schwartz Reisman Chair in Technology and Society; Founding Member, Vector Institute', image: '/images/team/roger-grosse.png' },
   ]
 
 
   const technicalStaff: TeamMember[] = [
-    { name: 'Samuel Simko',       role: 'Senior Research Scientist', image: '/images/team/samuel-simko.png' },
-    { name: 'David Guzman',       role: 'Senior Research Scientist', image: '/images/team/david-guzman.png' },
-    { name: 'Yongjin Yang',       role: 'PhD Student',               image: '/images/team/yongjin-yang.png' },
-    { name: 'Rohan Subramani',    role: 'PhD Student',               image: '/images/team/rohan-subramani.png' },
-    { name: 'Ryan Faulkner',      role: 'PhD Student & Deepmind',    image: '/images/team/ryan-faulkner.jpg' },
-    { name: 'Andrei Muresanu',    role: 'PhD Student',               image: '/images/team/andrei-muresanu.jpg' },
-    { name: 'Yahang Qi',          role: 'PhD Student',               image: '/images/team/yahang-qi.png' },
-    { name: 'Furkan Danisman',    role: 'PhD Student',               image: '/images/team/furkan-danisman.png' },
-    { name: 'Abir Harrasse',      role: 'Research Assistant',        image: '/images/team/abir-harrasse.jpeg' },
-    { name: 'Keenan Samway',      role: 'Research Assistant',        image: '/images/team/keenan-samway.png' },
-    { name: 'Changling Li',       role: "Master's Student",          image: '/images/team/changling-li.png' },
-    { name: 'Jiarui Liu',         role: "Master's Student",          image: '/images/team/jiarui-liu.jpg' },
-    { name: 'Vishal Verma',       role: "Master's Student",          image: '/images/team/vishal-verma.jpg' },
-    { name: 'Irene Strauss',      role: "Master's Student",          image: '/images/team/irene-strauss.png' },
-    { name: 'Sawal Acharya',      role: "Master's Student",          image: '/images/team/sawal-acharya.jpg' },
-    { name: 'Punya Syon Pandey',  role: "Bachelor's Student",        image: '/images/team/punya-pandey.png' },
-    { name: 'Joeun Yook',         role: "Bachelor's Student",        image: '/images/team/joeun-yook.png' },
-    { name: 'Ayush Nangia',       role: 'Research Assistant',        image: '/images/team/ayush-nangia.png' },
-    { name: 'Aman Gokrani',       role: 'Research Assistant',        image: '/images/team/aman-gokrani.png' },
+    { name: 'Terry J. C. Zhang',  role: 'Chief Scientist Lead',      image: '/images/team/terry-zhang.png' },
+    { name: 'Samuel Simko',       role: 'Research Lead',              image: '/images/team/samuel-simko.png' },
+    { name: 'David Guzman',       role: 'Research Lead',              image: '/images/team/david-guzman.png' },
+    { name: 'Yongjin Yang',       role: 'Technical Member',           image: '/images/team/yongjin-yang.png' },
+    { name: 'Rohan Subramani',    role: 'Technical Member',           image: '/images/team/rohan-subramani.png' },
+    { name: 'Ryan Faulkner',      role: 'Technical Member',           image: '/images/team/ryan-faulkner.jpg' },
+    { name: 'Andrei Muresanu',    role: 'Technical Member',           image: '/images/team/andrei-muresanu.jpg' },
+    { name: 'Yahang Qi',          role: 'Technical Member',           image: '/images/team/yahang-qi.png' },
+    { name: 'Furkan Danisman',    role: 'Technical Member',           image: '/images/team/furkan-danisman.png' },
+    { name: 'Abir Harrasse',      role: 'Technical Member',           image: '/images/team/abir-harrasse.jpeg' },
+    { name: 'Keenan Samway',      role: 'Technical Member',           image: '/images/team/keenan-samway.png' },
+    { name: 'Changling Li',       role: 'Technical Member',           image: '/images/team/changling-li.png' },
+    { name: 'Jiarui Liu',         role: 'Technical Member',           image: '/images/team/jiarui-liu.jpg' },
+    { name: 'Vishal Verma',       role: 'Technical Member',           image: '/images/team/vishal-verma.jpg' },
+    { name: 'Irene Strauss',      role: 'Technical Member',           image: '/images/team/irene-strauss.png' },
+    { name: 'Sawal Acharya',      role: 'Technical Member',           image: '/images/team/sawal-acharya.jpg' },
+    { name: 'Punya Syon Pandey',  role: 'Technical Member',           image: '/images/team/punya-pandey.png' },
+    { name: 'Joeun Yook',         role: 'Technical Member',           image: '/images/team/joeun-yook.png' },
+    { name: 'Ayush Nangia',       role: 'Technical Member',           image: '/images/team/ayush-nangia.png' },
+    { name: 'Aman Gokrani',       role: 'Technical Member',           image: '/images/team/aman-gokrani.png' },
   ]
 
   return (
@@ -131,7 +132,7 @@ export default function Team() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Executive Team</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Leadership</h2>
               </div>
             </ScrollReveal>
 
