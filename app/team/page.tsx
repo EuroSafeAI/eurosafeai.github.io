@@ -70,26 +70,16 @@ export default function Team() {
 
 
   const technicalStaff: TeamMember[] = [
+    // Leads
     { name: 'Terry J. C. Zhang',  role: 'Chief Scientist Lead',      image: '/images/team/terry-zhang.png' },
     { name: 'Samuel Simko',       role: 'Research Lead',              image: '/images/team/samuel-simko.png' },
     { name: 'David Guzman',       role: 'Research Lead',              image: '/images/team/david-guzman.png' },
-    { name: 'Yongjin Yang',       role: 'Technical Member',           image: '/images/team/yongjin-yang.png' },
-    { name: 'Rohan Subramani',    role: 'Technical Member',           image: '/images/team/rohan-subramani.png' },
-    { name: 'Ryan Faulkner',      role: 'Technical Member',           image: '/images/team/ryan-faulkner.jpg' },
+    // Technical Members
     { name: 'Andrei Muresanu',    role: 'Technical Member',           image: '/images/team/andrei-muresanu.jpg' },
-    { name: 'Yahang Qi',          role: 'Technical Member',           image: '/images/team/yahang-qi.png' },
     { name: 'Furkan Danisman',    role: 'Technical Member',           image: '/images/team/furkan-danisman.png' },
-    { name: 'Abir Harrasse',      role: 'Technical Member',           image: '/images/team/abir-harrasse.jpeg' },
-    { name: 'Keenan Samway',      role: 'Technical Member',           image: '/images/team/keenan-samway.png' },
-    { name: 'Changling Li',       role: 'Technical Member',           image: '/images/team/changling-li.png' },
-    { name: 'Jiarui Liu',         role: 'Technical Member',           image: '/images/team/jiarui-liu.jpg' },
-    { name: 'Vishal Verma',       role: 'Technical Member',           image: '/images/team/vishal-verma.jpg' },
     { name: 'Irene Strauss',      role: 'Technical Member',           image: '/images/team/irene-strauss.png' },
-    { name: 'Sawal Acharya',      role: 'Technical Member',           image: '/images/team/sawal-acharya.jpg' },
+    { name: 'Ryan Faulkner',      role: 'Technical Member',           image: '/images/team/ryan-faulkner.jpg' },
     { name: 'Punya Syon Pandey',  role: 'Technical Member',           image: '/images/team/punya-pandey.png' },
-    { name: 'Joeun Yook',         role: 'Technical Member',           image: '/images/team/joeun-yook.png' },
-    { name: 'Ayush Nangia',       role: 'Technical Member',           image: '/images/team/ayush-nangia.png' },
-    { name: 'Aman Gokrani',       role: 'Technical Member',           image: '/images/team/aman-gokrani.png' },
   ]
 
   return (
