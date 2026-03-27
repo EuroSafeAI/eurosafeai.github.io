@@ -14,6 +14,18 @@ function getInitials(name: string) {
   return name.split(' ').map(n => n[0]).join('').slice(0, 2)
 }
 
+const AVATAR_COLORS = [
+  '#DB4437', '#E91E63', '#9C27B0', '#673AB7',
+  '#3F51B5', '#4285F4', '#0097A7', '#00897B',
+  '#388E3C', '#F57C00', '#E64A19', '#5D4037',
+]
+
+function getAvatarColor(name: string) {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
+
 function LeadershipCard({ member }: { member: TeamMember }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
@@ -40,12 +52,17 @@ function LeadershipCard({ member }: { member: TeamMember }) {
 function StaffCard({ member }: { member: TeamMember }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col items-center text-center py-5 px-4">
-      <div className="w-28 h-28 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative mb-3 ring-2 ring-gray-100">
+      <div className="w-28 h-28 rounded-full overflow-hidden flex-shrink-0 relative mb-3 ring-2 ring-gray-100">
         {member.image ? (
           <Image src={member.image} alt={member.name} fill className="object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-600 font-bold">
-            {getInitials(member.name)}
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ backgroundColor: getAvatarColor(member.name) }}
+          >
+            <svg viewBox="0 0 24 24" className="w-16 h-16 text-white opacity-90" fill="currentColor">
+              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+            </svg>
           </div>
         )}
       </div>
@@ -71,15 +88,24 @@ export default function Team() {
 
   const technicalStaff: TeamMember[] = [
     // Leads
-    { name: 'Terry J. C. Zhang',  role: 'Chief Scientist Lead',      image: '/images/team/terry-zhang.png' },
-    { name: 'Samuel Simko',       role: 'Research Lead',              image: '/images/team/samuel-simko.png' },
-    { name: 'David Guzman',       role: 'Research Lead',              image: '/images/team/david-guzman.png' },
+    { name: 'Terry J. C. Zhang',      role: 'Chief Scientist Lead', image: '/images/team/terry-zhang.png' },
+    { name: 'Samuel Simko',           role: 'Research Lead',        image: '/images/team/samuel-simko.png' },
+    { name: 'David Guzman',           role: 'Research Lead',        image: '/images/team/david-guzman.png' },
     // Technical Members
-    { name: 'Andrei Muresanu',    role: 'Technical Member',           image: '/images/team/andrei-muresanu.jpg' },
-    { name: 'Furkan Danisman',    role: 'Technical Member',           image: '/images/team/furkan-danisman.png' },
-    { name: 'Irene Strauss',      role: 'Technical Member',           image: '/images/team/irene-strauss.png' },
-    { name: 'Ryan Faulkner',      role: 'Technical Member',           image: '/images/team/ryan-faulkner.jpg' },
-    { name: 'Punya Syon Pandey',  role: 'Technical Member',           image: '/images/team/punya-pandey.png' },
+    { name: 'Andrei Muresanu',        role: 'Technical Member',     image: '/images/team/andrei-muresanu.jpg' },
+    { name: 'Colomban Duclaux',       role: 'Technical Member' },
+    { name: 'Damiano Amatruda',       role: 'Technical Member' },
+    { name: 'David Jenny',            role: 'Technical Member' },
+    { name: 'Florent Draye',          role: 'Technical Member' },
+    { name: 'Francesco Ortu',         role: 'Technical Member' },
+    { name: 'Irene Strauss',          role: 'Technical Member',     image: '/images/team/irene-strauss.png' },
+    { name: 'Isabel Dahlgren',        role: 'Technical Member' },
+    { name: 'Johannes Taraz',         role: 'Technical Member' },
+    { name: 'Kevin Blin',             role: 'Technical Member' },
+    { name: 'Marcelo Sartori Locatelli', role: 'Technical Member' },
+    { name: 'Ryan Faulkner',          role: 'Technical Member',     image: '/images/team/ryan-faulkner.jpg' },
+    { name: 'Yann Billeter',          role: 'Technical Member' },
+    { name: 'Yves Bicker',            role: 'Technical Member' },
   ]
 
   return (
