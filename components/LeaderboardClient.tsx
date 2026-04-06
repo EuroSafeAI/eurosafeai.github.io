@@ -197,39 +197,11 @@ const REGION_ABBR: Record<Region, string> = {
   'Enterprise & Specialized':'Enterprise',
 }
 
-// ─── Top-3 featured models — computed dynamically from scores ─────────────────
-
-const FEATURED_MODELS = [...MODELS]
-  .map((m) => ({ ...m, agg: calcAgg(m.scores) }))
-  .sort((a, b) => b.agg - a.agg)
-  .slice(0, 3)
-
 // ─── Medal colours (gold / silver / bronze) ───────────────────────────────────
 
 const MEDAL_BG    = ['bg-amber-400',   'bg-slate-400',  'bg-amber-700']  as const
 const MEDAL_RING  = ['ring-amber-300', 'ring-slate-300', 'ring-amber-600'] as const
 const MEDAL_LABEL = ['1st', '2nd', '3rd'] as const
-
-const GRADE_RING: Record<string, string> = {
-  A: 'ring-emerald-200',
-  B: 'ring-blue-200',
-  C: 'ring-amber-200',
-  D: 'ring-red-200',
-}
-
-const GRADE_TEXT: Record<string, string> = {
-  A: 'text-emerald-600',
-  B: 'text-blue-600',
-  C: 'text-amber-600',
-  D: 'text-red-600',
-}
-
-const GRADE_BG_LIGHT: Record<string, string> = {
-  A: 'bg-emerald-50',
-  B: 'bg-blue-50',
-  C: 'bg-amber-50',
-  D: 'bg-red-50',
-}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -523,107 +495,6 @@ We benchmark all frontier large language models (LLMs) according to EuroSafeAI's
         </div>
       </section>
 
-      {/* ── Top 3 Featured Certificates ── */}
-      <section className="bg-white py-10 border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            className="mb-8 text-center"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Top-Rated Models</h2>
-            <p className="text-sm text-gray-500 font-jost">
-              The highest-scoring models across all four safety dimensions
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {FEATURED_MODELS.map((model, i) => {
-              const grade = calcGrade(model.agg)
-              return (
-                <motion.div
-                  key={model.id}
-                  className={`relative rounded-2xl border bg-white overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ${GRADE_RING[grade]} ring-1`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.35 + i * 0.1 }}
-                >
-                  {/* Medal rank badge */}
-                  <div
-                    className={`absolute top-4 right-4 w-9 h-9 rounded-full flex flex-col items-center justify-center shadow-md ring-2 ${MEDAL_BG[i]} ${MEDAL_RING[i]} text-white`}
-                    aria-label={`Ranked ${MEDAL_LABEL[i]}`}
-                  >
-                    <span className="text-[11px] font-extrabold leading-none">{i + 1}</span>
-                    <span className="text-[7px] font-semibold leading-none opacity-90 tracking-wide">{MEDAL_LABEL[i].slice(1)}</span>
-                  </div>
-
-                  {/* Top accent bar */}
-                  <div className={`h-1.5 ${GRADE_BG[grade]}`} />
-
-                  <div className="p-6">
-                    {/* Grade + score header */}
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className={`inline-flex items-center justify-center w-14 h-14 rounded-full text-white text-2xl font-bold shadow-md ${GRADE_BG[grade]}`}>
-                        {grade}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-lg font-bold text-gray-900 truncate leading-tight">
-                          {model.name}
-                        </p>
-                        <p className="text-sm text-gray-500 font-jost truncate">{model.company}</p>
-                      </div>
-                    </div>
-
-                    {/* Composite score */}
-                    <div className={`inline-flex items-baseline gap-1.5 px-3 py-1.5 rounded-lg mb-5 ${GRADE_BG_LIGHT[grade]}`}>
-                      <span className={`text-2xl font-extrabold tabular-nums ${GRADE_TEXT[grade]}`}>{model.agg}</span>
-                      <span className="text-xs text-gray-400 font-jost">/&nbsp;100</span>
-                    </div>
-
-                    {/* Dimension breakdown */}
-                    <div className="space-y-2.5 mb-6">
-                      {METRICS.map((m) => {
-                        const score = model.scores[m.key]
-                        const dGrade = calcGrade(score)
-                        return (
-                          <div key={m.key} className="flex items-center gap-3">
-                            <span className="text-xs text-gray-500 font-jost w-14 flex-shrink-0 text-right">{m.shortLabel}</span>
-                            <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
-                              <div
-                                className={`h-full rounded-full ${barColor(score)}`}
-                                style={{ width: `${score}%` }}
-                              />
-                            </div>
-                            <span className={`text-xs font-mono font-semibold w-5 text-right tabular-nums ${textColor(score)}`}>
-                              {score}
-                            </span>
-                            <span className={`w-5 h-5 rounded-full text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0 ${GRADE_BG[dGrade]}`}>
-                              {dGrade}
-                            </span>
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    {/* Download certificate link */}
-                    <a
-                      href={`/certificate/${model.id}.pdf`}
-                      download
-                      className={`flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 ${GRADE_BG[grade]} text-white hover:opacity-90 active:scale-[0.98]`}
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      Download Certificate
-                    </a>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* ── Controls ── */}
       <section className="bg-white border-b border-gray-100 sticky top-[65px] z-20 shadow-sm">
