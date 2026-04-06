@@ -26,6 +26,54 @@ export default function Home() {
       <Header />
 
       <main className="flex-1">
+        {/* ── Featured Paper ───────────────────────────────────────────── */}
+        <section className="bg-primary-50 border-b border-primary-100">
+          <div className="max-w-6xl mx-auto px-6 py-10 lg:py-12">
+            <div className="bg-white rounded-2xl border border-primary-200 shadow-sm overflow-hidden">
+              <div className="flex flex-col lg:flex-row">
+                {/* Text */}
+                <div className="border-l-4 border-primary-600 p-8 lg:p-10 flex-1">
+                  <p className="text-xs font-semibold text-primary-600 uppercase tracking-widest mb-3 font-jost">
+                    New Publication
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-4">
+                    AI Poses Risks to Democratic and Social Systems
+                  </h2>
+                  <p className="text-gray-600 text-sm leading-relaxed font-jost mb-6 max-w-3xl">
+                    We identify seven failure modes through which AI poses risks to social systems — from belief homogenization and epistemic floods to power concentration and normative centralization — and argue that AI safety must complement model-level benchmarks with system-level evaluation that captures these aggregate institutional effects.
+                  </p>
+                  <p className="text-xs text-gray-500 font-jost mb-6">
+                    <span className="font-medium text-gray-700">Zhijing Jin</span>,{' '}
+                    Yoshua Bengio, Stuart Russell, Audrey Tang, Bernhard Schölkopf, Rada Mihalcea, Roger Grosse{' '}
+                    <span className="italic">+ 22 co-authors</span>
+                  </p>
+                  <a
+                    href="/2026-ai-risk.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors duration-200 active:scale-95 cursor-pointer"
+                  >
+                    View Paper
+                    <svg className="w-4 h-4 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+                {/* Paper preview image */}
+                <div className="flex-shrink-0 border-t border-primary-100 lg:border-t-0 lg:border-l lg:border-primary-100 bg-gray-50 flex items-center justify-center p-3 lg:w-80 xl:w-96">
+                  <Image
+                    src="/2026-ai-risk.png"
+                    alt="AI Poses Risks to Democratic and Social Systems — paper preview"
+                    width={384}
+                    height={384}
+                    className="max-h-56 md:max-h-44 lg:max-h-none w-auto lg:w-full h-auto object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Hero Section ─────────────────────────────────────────────── */}
         <section className="relative from-slate-50 via-primary-50/50 to-white overflow-hidden">
           <div className="max-w-6xl mx-auto px-6 py-20 lg:py-32">
