@@ -83,7 +83,7 @@ export default function Team() {
   const advisors: TeamMember[] = [
     { name: 'Prof. Matthias Bethge', role: 'Professor, University of Tübingen; Founding Director, Tübingen AI Center; ELLIS Fellow', image: '/images/team/matthias-bethge.png' },
     { name: 'Prof. Roger Grosse', role: 'Associate Professor, University of Toronto; Schwartz Reisman Chair in Technology and Society; Founding Member, Vector Institute', image: '/images/team/roger-grosse.png' },
-    { name: 'Audrey Tang', role: 'Cyber Ambassador, Taiwan; Senior Accelerator Fellow, Oxford Institute for Ethics in AI; 1st Digital Minister of Taiwan (2016–2024)', image: '/images/team/audrey-tang.png' },
+    { name: 'Audrey Tang', role: 'Senior Accelerator Fellow, Oxford Institute for Ethics in AI', image: '/images/team/audrey-tang.png' },
   ]
 
 
