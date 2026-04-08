@@ -765,10 +765,10 @@ We benchmark all frontier large language models (LLMs) according to EuroSafeAI's
                   url: 'https://arxiv.org/abs/2602.17433',
                 },
                 {
-                  title: 'Revealing Hidden Mechanisms of Cross-Country Content Moderation with Natural Language Processing',
-                  venue: 'ACL 2025 Findings',
-                  summary: '',
-                  url: 'https://arxiv.org/abs/2503.05280',
+                  title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
+                  venue: 'ICLR 2026',
+                  summary: 'A comprehensive benchmark for evaluating AI vulnerability to harmful sociopolitical queries.',
+                  url: 'https://arxiv.org/abs/2510.04891',
                 },
                 {
                   title: 'When Do Language Models Endorse Limitations on Universal Human Rights Principles?',
@@ -777,10 +777,10 @@ We benchmark all frontier large language models (LLMs) according to EuroSafeAI's
                   url: 'https://arxiv.org/abs/2603.04217',
                 },
                 {
-                  title: 'SocialHarmBench: Revealing LLM Vulnerabilities to Socially Harmful Requests',
-                  venue: 'ICLR 2026',
-                  summary: 'A comprehensive benchmark for evaluating AI vulnerability to harmful sociopolitical queries.',
-                  url: 'https://arxiv.org/abs/2510.04891',
+                  title: 'Revealing Hidden Mechanisms of Cross-Country Content Moderation with Natural Language Processing',
+                  venue: 'ACL 2025 Findings',
+                  summary: '',
+                  url: 'https://arxiv.org/abs/2503.05280',
                 },
               ].map((paper) => (
                 <div
