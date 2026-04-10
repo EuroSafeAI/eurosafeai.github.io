@@ -108,6 +108,7 @@ export default function Team() {
     { name: 'Johannes Taraz',         role: 'Technical Member',     image: '/images/team/johannes-taraz.jpg' },
     { name: 'Kevin Blin',             role: 'Technical Member',     image: '/images/team/kevin-blin.jpg' },
     { name: 'Leyla Yaayladere',       role: 'Technical Member',     image: '/images/team/leyla-yaayladere.png' },
+    { name: 'Mariana Meireles',       role: 'Technical Member',     image: '/images/team/Mariana-Meireles.jpg' },
     { name: 'Punya Syon Pandey',      role: 'Technical Member',     image: '/images/team/punya-pandey.png' },
     { name: 'Ryan Faulkner',          role: 'Technical Member',     image: '/images/team/ryan-faulkner.jpg' },
     { name: 'Van Quynh Thi Truong',   role: 'Technical Member',     image: '/images/team/van-quynh-thi-truong.jpg' },
