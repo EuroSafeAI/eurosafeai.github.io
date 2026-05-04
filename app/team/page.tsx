@@ -95,8 +95,10 @@ export default function Team() {
     { name: 'Pepijn Cobben',          role: 'Research Lead',        image: '/images/team/pepijn-cobben.png' },
     // Technical Members
     { name: 'Abir Harrasse',          role: 'Technical Member',     image: '/images/team/abir-harrasse.jpeg' },
+    { name: 'Aman Gokrani',           role: 'Technical Member',     image: '/images/team/aman-gokrani.png' },
     { name: 'Amelia Thao P.',         role: 'Technical Member',     image: '/images/team/amelia-thao-p.jpg' },
     { name: 'Andrei Muresanu',        role: 'Technical Member',     image: '/images/team/andrei-muresanu.jpg' },
+    { name: 'Ayush Nangia',           role: 'Technical Member',     image: '/images/team/ayush-nangia.png' },
     { name: 'Changling Li',           role: 'Technical Member',     image: '/images/team/changling-li.png' },
     { name: 'Colomban Duclaux',       role: 'Technical Member',     image: '/images/team/colomban-duclaux.jpg' },
     { name: 'Damiano Amatruda',       role: 'Technical Member',     image: '/images/team/damiano-amatruda.jpg' },
