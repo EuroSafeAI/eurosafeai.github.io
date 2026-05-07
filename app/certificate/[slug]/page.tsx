@@ -1,20 +1,12 @@
-import { readdirSync, existsSync } from 'fs'
-import { resolve } from 'path'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import modelsData from '@/data/models.json'
 import DownloadTrigger from './DownloadTrigger'
 
-// Only generate pages for slugs that have a PDF on disk.
-// Any other slug → 404.
 export const dynamicParams = false
 
 export function generateStaticParams(): { slug: string }[] {
-  const dir = resolve(process.cwd(), 'public/certificate')
-  if (!existsSync(dir)) return []
-  return readdirSync(dir)
-    .filter((f) => f.endsWith('.pdf'))
-    .map((f) => ({ slug: f.replace(/\.pdf$/, '') }))
+  return (modelsData as { id: string }[]).map((m) => ({ slug: m.id }))
 }
 
 type Props = { params: Promise<{ slug: string }> }

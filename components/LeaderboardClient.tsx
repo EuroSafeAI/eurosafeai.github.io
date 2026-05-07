@@ -15,7 +15,7 @@ interface ModelEntry {
   company: string
   region: Region
   specialty: string
-  scores: { hr: number; harm: number; hist: number; auth: number }
+  scores: { hr?: number; harm?: number; hist?: number; auth?: number }
 }
 
 type ScoreKey = keyof ModelEntry['scores']
@@ -154,7 +154,9 @@ const REGIONS = [
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function calcAgg(s: ModelEntry['scores']): number {
-  return Math.round((s.hr + s.harm + s.hist + s.auth) / 4)
+  const values = [s.hr, s.harm, s.auth, s.hist].filter((v): v is number => v !== undefined)
+  if (values.length === 0) return 0
+  return Math.round(values.reduce((a, b) => a + b, 0) / values.length)
 }
 
 function calcGrade(n: number): 'A' | 'B' | 'C' | 'D' {
@@ -316,10 +318,19 @@ function ScoreBar({
   delay,
   reduced,
 }: {
-  score: number
+  score: number | undefined
   delay: number
   reduced: boolean
 }) {
+  if (score === undefined) {
+    return (
+      <div className="flex items-center gap-2 min-w-[88px]">
+        <div className="flex-1 h-1.5 rounded-full bg-gray-100" aria-hidden="true" />
+        <span className="text-xs font-mono font-semibold w-6 text-right text-gray-400">—</span>
+      </div>
+    )
+  }
+  const rounded = Math.round(score)
   return (
     <div className="flex items-center gap-2 min-w-[88px]">
       <div
@@ -327,9 +338,9 @@ function ScoreBar({
         aria-hidden="true"
       >
         <motion.div
-          className={`h-full rounded-full score-bar-fill ${barColor(score)}`}
+          className={`h-full rounded-full score-bar-fill ${barColor(rounded)}`}
           initial={{ width: 0 }}
-          animate={{ width: `${score}%` }}
+          animate={{ width: `${rounded}%` }}
           transition={{
             duration: reduced ? 0 : 0.75,
             ease: [0.16, 1, 0.3, 1],
@@ -338,9 +349,9 @@ function ScoreBar({
         />
       </div>
       <span
-        className={`text-xs font-mono font-semibold w-6 text-right tabular-nums ${textColor(score)}`}
+        className={`text-xs font-mono font-semibold w-6 text-right tabular-nums ${textColor(rounded)}`}
       >
-        {score}
+        {rounded}
       </span>
     </div>
   )
