@@ -1,16 +1,3 @@
-__pycache__/
-# Dependencies
-node_modules
-/.pnp
-.pnp.js
-
-# Next.js
-/.next/
-/out/
-
-# Production
-/build
-
 # Logs
 logs
 *.log
@@ -20,39 +7,25 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Misc
-.DS_Store
-*.pem
+node_modules
+dist
+dist-ssr
+*.local
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env
-.env*.local
-
-# Generated certificate PDFs — produced by the CI workflow
+# Generated certificate PDFs — produced by `npm run certs` / CI pipeline
 public/certificate/
 public/certificates/
-test-results
-playwright-report
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
+# Claude Code session artifacts
+.claude/

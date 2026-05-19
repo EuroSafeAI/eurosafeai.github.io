@@ -2,195 +2,116 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  :root {
+    /* Snow — page background, card fills */
+    --background: 220 33% 97%;
+    /* Ink — body text, headings */
+    --foreground: 216 50% 12%;
+
+    /* White cards stand out on Snow background */
+    --card: 0 0% 100%;
+    --card-foreground: 216 50% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 50% 12%;
+
+    /* Core Blue — primary buttons, navbar, section accents */
+    --primary: 220 100% 30%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Sky Blue — hover states */
+    --primary-hover: 217 68% 62%;
+
+    /* Ice — subtle backgrounds */
+    --secondary: 218 77% 86%;
+    --secondary-foreground: 216 50% 12%;
+
+    --muted: 218 40% 92%;
+    --muted-foreground: 216 25% 46%;
+
+    /* Ice — subtle backgrounds, icon containers */
+    --accent: 218 77% 86%;
+    --accent-foreground: 220 100% 30%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Ice — card borders */
+    --border: 218 77% 86%;
+    --input: 218 77% 86%;
+    --ring: 220 100% 30%;
+
+    --radius: 0.5rem;
+
+    /* White for alternating sections (contrast against Snow bg) */
+    --section-alt: 0 0% 100%;
+    /* Ice bg, Sky Blue text for tags/labels */
+    --tag-bg: 218 77% 86%;
+    --tag-text: 217 68% 62%;
+    --globe-ocean: 220 49% 12%;
+    --globe-grid: 210 70% 64%;
+    --globe-land: 208 50% 35%;
+    --globe-border: 203 82% 74%;
+    --globe-atmosphere: 211 100% 68%;
+    --risk-low: 142 71% 45%;
+    --risk-moderate: 217 91% 60%;
+    --risk-high: 38 92% 50%;
+    --risk-critical: 0 84% 60%;
+  }
 }
 
-body {
-  font-family: 'Space Grotesk', sans-serif;
-  background-color: #050505;
-  color: #ffffff;
-  overflow-x: hidden;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
 }
 
 @layer utilities {
-  .font-mono {
-    font-family: 'JetBrains Mono', monospace;
-  }
-  
-  .font-display {
-    font-family: 'Space Grotesk', sans-serif;
+  .section-alt {
+    background-color: hsl(var(--section-alt));
   }
 }
 
-/* Glitch effect */
-@keyframes glitch {
-  0%, 100% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(-2px, 2px);
-  }
-  40% {
-    transform: translate(-2px, -2px);
-  }
-  60% {
-    transform: translate(2px, 2px);
-  }
-  80% {
-    transform: translate(2px, -2px);
-  }
-}
-
-.glitch-text {
-  position: relative;
-  display: inline-block;
-}
-
-.glitch-text:hover::before,
-.glitch-text:hover::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.glitch-text:hover::before {
-  animation: glitch 0.3s infinite;
-  color: #ff6b35;
-  z-index: -1;
-}
-
-.glitch-text:hover::after {
-  animation: glitch 0.3s infinite reverse;
-  color: #00d9ff;
-  z-index: -2;
-}
-
-/* Terminal typing effect */
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes blink {
-  0%, 50% {
-    border-color: transparent;
-  }
-  51%, 100% {
-    border-color: #00d9ff;
-  }
-}
-
-.typing-effect {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid #00d9ff;
-  animation: typing 2s steps(40, end), blink 1s step-end infinite;
-}
-
-/* Particle background */
-.particles {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #00d9ff;
-  border-radius: 50%;
-  opacity: 0.3;
-  animation: float-particle 20s infinite;
-}
-
-@keyframes float-particle {
-  0%, 100% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0.3;
-  }
-  50% {
-    transform: translateY(-100vh) translateX(100px);
-    opacity: 0.6;
-  }
-}
-
-/* Pulse glow */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.4;
-    box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
-  }
-  50% {
-    opacity: 1;
-    box-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
-  }
-}
-
-.pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-/* Scroll reveal */
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  animation: fade-in-up 0.8s ease-out;
-}
-
-/* Data stream effect */
-@keyframes data-stream {
+@keyframes marquee {
   0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
+    transform: translateX(0%);
   }
   100% {
-    transform: translateY(100vh);
-    opacity: 0;
+    transform: translateX(-33.333%);
   }
 }
 
-.data-stream {
-  position: absolute;
-  width: 1px;
-  height: 100px;
-  background: linear-gradient(to bottom, transparent, #00d9ff, transparent);
-  opacity: 0.2;
-  animation: data-stream 10s linear infinite;
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
+/* Mission illustrations */
+@keyframes missionBarRise {
+  0%, 4% { transform: scaleY(0); }
+  22% { transform: scaleY(1); }
+  90% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+@keyframes missionThresholdGlow {
+  0%, 55% { stroke-opacity: 0.4; filter: none; }
+  70%, 85% { stroke-opacity: 1; filter: drop-shadow(0 0 3px rgba(0,51,153,0.55)); }
+  100% { stroke-opacity: 0.4; filter: none; }
+}
+@keyframes missionNorthRays {
+  0%, 100% { transform: rotate(0deg); opacity: 0.65; }
+  50% { transform: rotate(45deg); opacity: 1; }
+}
+.mission-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: missionBarRise 4.5s ease-out infinite both; }
+.mission-threshold { animation: missionThresholdGlow 4.5s ease-in-out infinite; }
+.mission-north-rays { animation: missionNorthRays 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-bar, .mission-threshold, .mission-north-rays { animation: none !important; }
+}

@@ -1,5 +1,14 @@
 name: Deploy to GitHub Pages
 
+# Required repo secrets:
+#   CERT_SECRET   — PRNG seed for deterministic certificate stamp placement.
+#                   Must remain stable across deploys, otherwise every PDF's
+#                   stamp position and file bytes change.
+#
+# Required GitHub Pages settings (Settings → Pages):
+#   Source: "GitHub Actions" (not "branch")
+#   Custom domain: eurosafe.ai.toronto.edu (matches CNAME written below)
+
 on:
   push:
     branches:
@@ -31,33 +40,45 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify stamp fingerprint
+        # Pins the cert visual identity. If stamp.png is re-exported with even
+        # a one-byte change, every PDF's bytes change too. CI catches that here.
+        run: |
+          actual=$(shasum -a 256 public/images/stamp.png | awk '{print $1}')
+          expected="d934c0f8303a01c745519587df62d7f222c5fce8e7f4dd07a98634e63c5a2c6c"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::public/images/stamp.png hash drifted (got $actual, want $expected)"
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm test
+
       - name: Generate certificates
+        # Produces public/certificate/<id>.pdf for every model in
+        # src/data/models.json. Dimensions without a score (today: `hist` on
+        # every model) render as a neutral gray "—" card in the PDF — same
+        # visual treatment as the leaderboard's History column. As hist scores
+        # land in the data, those cards start showing real grades automatically.
         env:
           CERT_SECRET: ${{ secrets.CERT_SECRET }}
-        run: bash scripts/generate-all-certificates.sh
+        run: npm run certs
 
       - name: Build
+        # Must run AFTER `npm run certs` so the generated PDFs in public/certificate/
+        # get copied into dist/ by Vite's static-asset handling.
         run: npm run build
 
-      # - name: Install Playwright browsers
-      #   run: npx playwright install chromium --with-deps
+      - name: SPA fallback (copy index.html to 404.html)
+        # GitHub Pages serves 404.html for any path not present on disk.
+        # Mirroring index.html lets react-router pick up the route on hard refresh.
+        run: cp ./dist/index.html ./dist/404.html
 
-      # - name: Run integration tests
-      #   run: npm run test:e2e
+      - name: Add .nojekyll
+        run: touch ./dist/.nojekyll
 
-      # - name: Upload Playwright report on failure
-      #   if: failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: playwright-report
-      #     path: playwright-report/
-      #     retention-days: 7
-
-      - name: Add .nojekyll file
-        run: touch ./out/.nojekyll
-
-      - name: Add CNAME file
-        run: echo "eurosafe.ai.toronto.edu" > ./out/CNAME
+      - name: Add CNAME
+        run: echo "eurosafe.ai.toronto.edu" > ./dist/CNAME
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -65,45 +86,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './out'
-
-      - name: Push to backup repository
-        env:
-          BACKUP_DEPLOY_KEY: ${{ secrets.BACKUP_DEPLOY_KEY }}
-        run: |
-          if [ -z "$BACKUP_DEPLOY_KEY" ]; then
-            echo "Skipping backup push: BACKUP_DEPLOY_KEY secret not configured"
-            exit 0
-          fi
-          mkdir -p ~/.ssh
-          echo "$BACKUP_DEPLOY_KEY" > ~/.ssh/backup_key
-          chmod 600 ~/.ssh/backup_key
-          echo -e "Host github.com\n  IdentityFile ~/.ssh/backup_key\n  IdentitiesOnly yes" >> ~/.ssh/config
-          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if git clone --depth 1 git@github.com:EuroSafeAI/backup.git backup-repo 2>/dev/null; then
-            cd backup-repo
-            ls -A | grep -v '^\.git$' | xargs rm -rf 2>/dev/null || true
-          else
-            mkdir backup-repo && cd backup-repo
-            git init
-            git remote add origin git@github.com:EuroSafeAI/backup.git
-          fi
-          cp -r ../out/* .
-          cp ../out/.nojekyll . 2>/dev/null || true
-          # Backup is served at eurosafe.ai.utoronto.ca — update CNAME and sitemap
-          echo "eurosafe.ai.utoronto.ca" > CNAME
-          if [ -f sitemap.xml ]; then
-            sed -i 's|eurosafe\.ai\.toronto\.edu|eurosafe.ai.utoronto.ca|g' sitemap.xml
-          fi
-          git add -A
-          if git diff --staged --quiet 2>/dev/null; then
-            echo "No changes to push"
-          else
-            git commit -m "Backup: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            git push -u origin HEAD
-          fi
+          path: './dist'
 
   deploy:
     environment:
@@ -115,4 +98,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
