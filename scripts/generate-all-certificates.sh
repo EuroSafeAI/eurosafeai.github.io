@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Generate a PDF certificate for every model in data/models.json.
+# Generate a PDF certificate for every model in src/data/models.json.
 # Each model is processed individually so one failure doesn't stop the rest.
 #
 # Usage:
@@ -15,10 +15,10 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 RESET='\033[0m'
 
-MODELS_FILE="$ROOT/data/models.json"
+MODELS_FILE="$ROOT/src/data/models.json"
 
 if [[ ! -f "$MODELS_FILE" ]]; then
-  echo -e "${RED}✗ data/models.json not found at $MODELS_FILE${RESET}" >&2
+  echo -e "${RED}✗ src/data/models.json not found at $MODELS_FILE${RESET}" >&2
   exit 1
 fi
 
