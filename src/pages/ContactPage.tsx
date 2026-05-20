@@ -34,13 +34,6 @@ const team = [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/pepijn-cobben" },
     ],
   },
-  {
-    name: "Punya Syon Pandey",
-    role: "Lab Assistant",
-    email: "ppandey@cs.toronto.edu",
-    website: "https://vesaterra.github.io/",
-    social: [],
-  },
 ];
 
 type SubmitStatus = "idle" | "sending" | "success" | "error";

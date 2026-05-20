@@ -18,13 +18,6 @@ const contacts = [
     profile: "https://www.linkedin.com/in/pepijn-cobben?originalSubdomain=ch",
     image: "/images/team/pepijn-cobben.webp",
   },
-  {
-    name: "Punya Syon Pandey",
-    role: "Lab Assistant",
-    email: "ppandey@cs.toronto.edu",
-    profile: "https://vesaterra.github.io/",
-    image: "/images/team/punya-pandey.webp",
-  },
 ];
 
 const social = [
