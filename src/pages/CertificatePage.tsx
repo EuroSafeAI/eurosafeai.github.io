@@ -14,10 +14,10 @@ type SortKey = ScoreKey | "agg";
 const MODELS = modelsData as ModelEntry[];
 
 const METRICS: { key: ScoreKey; label: string; shortLabel: string }[] = [
-  { key: "hr", label: "Human Rights", shortLabel: "HR" },
-  { key: "harm", label: "Harm Resistance", shortLabel: "Harm" },
-  { key: "hist", label: "Historical Accuracy", shortLabel: "History" },
+  { key: "hr",   label: "Human Rights",          shortLabel: "HR"        },
+  { key: "hist", label: "Historical Accuracy",   shortLabel: "History"   },
   { key: "auth", label: "Anti-Authoritarianism", shortLabel: "Anti-Auth" },
+  { key: "harm", label: "Anti-Harm",             shortLabel: "Anti-Harm" },
 ];
 
 
@@ -144,7 +144,7 @@ const CertificatePage = () => {
   };
 
   const colHeader = (label: string, colKey: SortKey) => (
-    <th style={{ padding: "0.85rem 0.75rem", textAlign: "left", whiteSpace: "nowrap" }}>
+    <th key={colKey} style={{ padding: "0.85rem 0.75rem", textAlign: "left", whiteSpace: "nowrap" }}>
       <button
         type="button"
         onClick={() => handleSort(colKey)}
@@ -255,225 +255,13 @@ const CertificatePage = () => {
         </div>
       </section>
 
-      {/* Mobile sort controls */}
-      {isMobile && (
-        <section style={{ background: "#f5f7fb", padding: "1.25rem 0 0" }}>
-          <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "center",
-                gap: "0.4rem",
-                background: "#ffffff",
-                border: "1px solid rgba(10,31,77,0.08)",
-                borderRadius: 10,
-                padding: "0.65rem 0.85rem",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "0.65rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "#6b7280",
-                  marginRight: "0.25rem",
-                }}
-              >
-                Sort
-              </span>
-              {(
-                [
-                  { key: "agg" as const, label: "Score" },
-                  ...METRICS.map((m) => ({ key: m.key as SortKey, label: m.shortLabel })),
-                ]
-              ).map(({ key, label }) => {
-                const active = sortKey === key;
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => handleSort(key)}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 2,
-                      fontSize: "0.7rem",
-                      fontWeight: 700,
-                      letterSpacing: "0.04em",
-                      padding: "0.35rem 0.65rem",
-                      borderRadius: 999,
-                      background: active ? ACCENT : "rgba(0,51,153,0.08)",
-                      color: active ? "#ffffff" : ACCENT,
-                      border: 0,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {label}
-                    {active && <SortArrow active asc={sortAsc} />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Table / Cards */}
+      {/* Table */}
       <section style={{ background: "#f5f7fb", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <div className="md:hidden flex flex-col gap-3">
-              {ranked.map((model, idx) => {
-                const rowDelay = reduced ? 0 : idx * 0.025;
-                const barDelay = reduced ? 0 : rowDelay + 0.1;
-                return (
-                  <motion.div
-                    key={model.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: reduced ? 0 : 0.35, delay: rowDelay }}
-                    style={{
-                      background: "#ffffff",
-                      border: "1px solid rgba(10,31,77,0.08)",
-                      borderRadius: 12,
-                      padding: "1rem 1rem 1.1rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.65rem",
-                        marginBottom: "0.85rem",
-                      }}
-                    >
-                      <span
-                        style={{
-                          flexShrink: 0,
-                          width: 26,
-                          height: 26,
-                          borderRadius: "50%",
-                          background: "#f3f4f6",
-                          color: "#6b7280",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: 12,
-                          fontWeight: 700,
-                          fontVariantNumeric: "tabular-nums",
-                        }}
-                      >
-                        {idx + 1}
-                      </span>
-                      {COMPANY_LOGO[model.company] && (
-                        <img
-                          src={COMPANY_LOGO[model.company]}
-                          alt={model.company}
-                          loading="lazy"
-                          style={{ width: 24, height: 24, objectFit: "contain", flexShrink: 0 }}
-                        />
-                      )}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p
-                          style={{
-                            fontWeight: 700,
-                            color: INK,
-                            margin: 0,
-                            lineHeight: 1.25,
-                            fontSize: "0.95rem",
-                            overflowWrap: "anywhere",
-                          }}
-                        >
-                          {model.name}
-                        </p>
-                        <p
-                          style={{
-                            fontSize: 11,
-                            color: "#9ca3af",
-                            margin: "2px 0 0",
-                          }}
-                        >
-                          {model.company}
-                        </p>
-                      </div>
-                      <a
-                        href={`/certificate/${model.id}.pdf`}
-                        download
-                        aria-label={`Download certificate for ${model.name}`}
-                        style={{
-                          width: 26,
-                          height: 26,
-                          borderRadius: "50%",
-                          background: "rgba(0,51,153,0.08)",
-                          color: ACCENT,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexShrink: 0,
-                        }}
-                      >
-                        <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v10m0 0l-3-3m3 3l3-3M4 17v1a2 2 0 002 2h12a2 2 0 002-2v-1" />
-                        </svg>
-                      </a>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "0.5rem",
-                        paddingBottom: "0.7rem",
-                        marginBottom: "0.7rem",
-                        borderBottom: "1px solid rgba(10,31,77,0.06)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "0.7rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: "#6b7280",
-                        }}
-                      >
-                        Overall Score
-                      </span>
-                      <GradeBadge score={model.agg} delay={barDelay} reduced={reduced} />
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
-                      {METRICS.map((m) => (
-                        <div
-                          key={m.key}
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
-                            alignItems: "center",
-                            gap: "0.65rem",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "0.72rem",
-                              fontWeight: 600,
-                              color: "#4b5563",
-                            }}
-                          >
-                            {m.label}
-                          </span>
-                          <ScoreBar score={model.scores[m.key]} delay={barDelay} reduced={reduced} />
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
           <div
-            className="hidden md:block"
             style={{
               overflowX: "auto",
+              WebkitOverflowScrolling: "touch",
               borderRadius: 12,
               border: "1px solid rgba(10,31,77,0.08)",
               background: "#ffffff",
@@ -512,8 +300,10 @@ const CertificatePage = () => {
                   >
                     Model
                   </th>
-                  {colHeader("Score", "agg")}
-                  {METRICS.map((m) => colHeader(m.shortLabel, m.key))}
+                  {[
+                    { label: "Score", colKey: "agg" as SortKey },
+                    ...METRICS.map((m) => ({ label: m.shortLabel, colKey: m.key as SortKey })),
+                  ].map(({ label, colKey }) => colHeader(label, colKey))}
                 </tr>
               </thead>
               <AnimatePresence mode="wait">
