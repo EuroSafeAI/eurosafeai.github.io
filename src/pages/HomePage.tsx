@@ -369,31 +369,28 @@ const PillarCard = ({
 };
 
 const PublicationDiagram = () => {
-  const nodes = {
-    input: { cx: 340, cy: 110, r: 40, label: "Input" },
-    processing: { cx: 200, cy: 320, r: 38, label: "Processing" },
-    feedback: { cx: 480, cy: 320, r: 38, label: "Feedback" },
-  };
-  const tPoints: {
-    id: string;
-    label: string;
-    dotX: number;
-    dotY: number;
-    anchor: "start" | "end" | "middle";
-  }[] = [
-    // Input → Processing (left side) - dot on left, text reads rightward
-    { id: "T3", label: "CONGESTED BUREAUCRACY", dotX: 40, dotY: 195, anchor: "start" },
-    { id: "T4", label: "EPISTEMIC FLOOD", dotX: 40, dotY: 235, anchor: "start" },
-    // Feedback → Input (right side) - dot on left, text reads rightward
-    { id: "T1", label: "BELIEF HOMOGENIZATION", dotX: 460, dotY: 195, anchor: "start" },
-    { id: "T2", label: "BELIEF REINFORCEMENT", dotX: 460, dotY: 235, anchor: "start" },
-    // Processing → Feedback (bottom) - labels stacked, T-id to the LEFT of name
-    { id: "T5", label: "UNAUDITABLE AUTHORITY", dotX: 280, dotY: 395, anchor: "start" },
-    { id: "T6", label: "NORMATIVE CENTRALIZATION", dotX: 280, dotY: 425, anchor: "start" },
-    { id: "T7", label: "POWER CONCENTRATION", dotX: 280, dotY: 455, anchor: "start" },
+  // Triangle centred in the 740-wide viewBox.
+  // Exact arrow endpoints computed from circle-edge intersections so arrows
+  // land flush on each circle surface.
+  const nodes = [
+    { cx: 360, cy: 110, r: 52, label: "Input",      accent: true  },
+    { cx: 220, cy: 320, r: 62, label: "Processing",  accent: false },
+    { cx: 500, cy: 320, r: 62, label: "Feedback",    accent: false },
   ];
+
+  // Left side: slightly left of the circles, right side: past the Feedback circle
+  const tPoints = [
+    { id: "T3", label: "CONGESTED BUREAUCRACY",   dotX: -18, dotY: 185 },
+    { id: "T4", label: "EPISTEMIC FLOOD",          dotX: -18, dotY: 227 },
+    { id: "T1", label: "BELIEF HOMOGENIZATION",    dotX: 492, dotY: 185 },
+    { id: "T2", label: "BELIEF REINFORCEMENT",     dotX: 492, dotY: 227 },
+    { id: "T5", label: "UNAUDITABLE AUTHORITY",    dotX: 248, dotY: 440 },
+    { id: "T6", label: "NORMATIVE CENTRALIZATION", dotX: 248, dotY: 475 },
+    { id: "T7", label: "POWER CONCENTRATION",      dotX: 248, dotY: 510 },
+  ];
+
   return (
-    <svg viewBox="0 0 680 490" width="100%" height="100%" role="img" aria-hidden="true">
+    <svg viewBox="0 0 740 545" width="100%" height="100%" overflow="visible" role="img" aria-hidden="true">
       <defs>
         <marker
           id="pubdiag-arrow"
@@ -408,68 +405,51 @@ const PublicationDiagram = () => {
         </marker>
       </defs>
 
-      {/* Input → Processing (left arrow, head on Processing) */}
+      {/* Input(360,110,r52) → Processing(220,320,r62)
+          exit ≈ (331,153), entry ≈ (254,268), control bows outward-left */}
       <path
-        d={`M ${nodes.input.cx - 30} ${nodes.input.cy + 28} Q 250 215 ${nodes.processing.cx + 22} ${nodes.processing.cy - 32}`}
-        stroke={ACCENT}
-        strokeOpacity="0.85"
-        strokeWidth="1.5"
-        fill="none"
-        markerEnd="url(#pubdiag-arrow)"
+        d="M 331 153 Q 258 210 254 268"
+        stroke={ACCENT} strokeOpacity="0.85" strokeWidth="1.5"
+        fill="none" markerEnd="url(#pubdiag-arrow)"
       />
-      {/* Feedback → Input (right arrow, head on Input) */}
+      {/* Feedback(500,320,r62) → Input(360,110,r52)
+          exit ≈ (466,268), entry ≈ (389,153), control bows outward-right */}
       <path
-        d={`M ${nodes.feedback.cx - 22} ${nodes.feedback.cy - 32} Q 430 215 ${nodes.input.cx + 30} ${nodes.input.cy + 28}`}
-        stroke={ACCENT}
-        strokeOpacity="0.85"
-        strokeWidth="1.5"
-        fill="none"
-        markerEnd="url(#pubdiag-arrow)"
+        d="M 466 268 Q 462 210 389 153"
+        stroke={ACCENT} strokeOpacity="0.85" strokeWidth="1.5"
+        fill="none" markerEnd="url(#pubdiag-arrow)"
       />
-      {/* Processing → Feedback (bottom arrow, head on Feedback) */}
+      {/* Processing(220,320) → Feedback(500,320)  horizontal, dips slightly */}
       <path
-        d={`M ${nodes.processing.cx + 38} ${nodes.processing.cy} Q 340 350 ${nodes.feedback.cx - 38} ${nodes.feedback.cy}`}
-        stroke={ACCENT}
-        strokeOpacity="0.85"
-        strokeWidth="1.5"
-        fill="none"
-        markerEnd="url(#pubdiag-arrow)"
+        d="M 282 320 Q 360 378 438 320"
+        stroke={ACCENT} strokeOpacity="0.85" strokeWidth="1.5"
+        fill="none" markerEnd="url(#pubdiag-arrow)"
       />
 
-      {/* Main circles */}
-      {Object.values(nodes).map((n) => (
+      {/* Circles + labels */}
+      {nodes.map((n) => (
         <g key={n.label}>
-          <circle cx={n.cx} cy={n.cy} r={n.r} fill={n.label === "Input" ? "#dbe4f4" : "#f5f8fe"} stroke={ACCENT} strokeWidth="1.3" />
-          <text
-            x={n.cx}
-            y={n.cy + 4}
-            textAnchor="middle"
-            fontSize="13"
-            fontWeight="600"
-            fill="#0a1f4d"
+          <circle cx={n.cx} cy={n.cy} r={n.r}
+            fill={n.accent ? "#dbe4f4" : "#f5f8fe"}
+            stroke={ACCENT} strokeWidth="1.3"
+          />
+          <text x={n.cx} y={n.cy + 6}
+            textAnchor="middle" fontSize="18" fontWeight="600" fill="#0a1f4d"
           >
             {n.label}
           </text>
         </g>
       ))}
 
-      {/* T-points: dot on the LEFT, T-id then label name reading rightward */}
+      {/* T-point labels */}
       {tPoints.map((t) => (
         <g key={t.id}>
-          <circle cx={t.dotX} cy={t.dotY} r="3" fill={ACCENT} />
-          <text
-            x={t.dotX + 10}
-            y={t.dotY + 3}
-            textAnchor="start"
-            fontSize="9.5"
-            letterSpacing="0.08em"
+          <circle cx={t.dotX} cy={t.dotY} r="4" fill={ACCENT} />
+          <text x={t.dotX + 13} y={t.dotY + 5}
+            textAnchor="start" fontSize="15" letterSpacing="0.07em"
           >
-            <tspan fontWeight="700" fill={ACCENT}>
-              {t.id}:
-            </tspan>
-            <tspan dx={4} fontWeight="500" fill="#0a1f4d" fillOpacity="0.85">
-              {t.label}
-            </tspan>
+            <tspan fontWeight="700" fill={ACCENT}>{t.id}:</tspan>
+            <tspan dx={6} fontWeight="500" fill="#0a1f4d" fillOpacity="0.85">{t.label}</tspan>
           </text>
         </g>
       ))}
@@ -959,9 +939,7 @@ const HomePage = () => {
               </div>
             </AnimatedSection>
             <AnimatedSection delay={0.15}>
-              <div style={{ width: "100%", aspectRatio: "680/490" }}>
-                <PublicationDiagram />
-              </div>
+              <PublicationDiagram />
             </AnimatedSection>
           </div>
         </div>
