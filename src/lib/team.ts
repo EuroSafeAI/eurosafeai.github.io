@@ -279,6 +279,13 @@ export const advisors: TeamMember[] = [
     section: "advisors",
     image: "/images/team/audrey-tang.webp",
   }),
+  define({
+    name: "Prof. Geoffrey Rockwell",
+    aliases: ["Geoffrey Rockwell"],
+    role: "Professor of Philosophy and Humanities Computing, University of Alberta; Director, Kule Institute for Advanced Study; Co-developer, Voyant Tools",
+    section: "advisors",
+    image: "/images/team/geoffrey-rockwell.webp",
+  }),
 ];
 
 export const allMembers: TeamMember[] = [...leadership, ...technicalStaff, ...advisors];
