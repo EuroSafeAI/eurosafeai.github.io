@@ -282,7 +282,7 @@ export const advisors: TeamMember[] = [
   define({
     name: "Prof. Geoffrey Rockwell",
     aliases: ["Geoffrey Rockwell"],
-    role: "Professor of Philosophy and Humanities Computing, University of Alberta; Director, Kule Institute for Advanced Study; Co-developer, Voyant Tools",
+    role: "Professor of Philosophy and Digital Humanities, University of Alberta; Canada CIFAR AI Chair; Fellow, Alberta Machine Intelligence Institute",
     section: "advisors",
     image: "/images/team/geoffrey-rockwell.webp",
   }),
