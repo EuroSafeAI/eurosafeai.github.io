@@ -1,3 +1,0 @@
-module.exports=[34699,a=>{"use strict";var b=a.i(87924),c=a.i(72131);a.s(["default",0,function({slug:a}){return(0,c.useEffect)(()=>{window.location.replace(`/certificate/${a}`)},[a]),(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center",children:(0,b.jsx)("p",{className:"text-gray-500",children:"Redirecting to certificate…"})})}])}];
-
-//# sourceMappingURL=app_certificates_%5Bslug%5D_CertificatesSlugRedirect_tsx_0wo~u1c._.js.map

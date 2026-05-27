@@ -1,3 +1,0 @@
-module.exports=[44596,a=>{"use strict";var b=a.i(87924),c=a.i(72131);a.s(["default",0,function(){return(0,c.useEffect)(()=>{window.location.replace("/certificate")},[]),(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center",children:(0,b.jsxs)("p",{className:"text-gray-500",children:["Redirecting to ",(0,b.jsx)("a",{href:"/certificate",className:"text-primary-600 underline",children:"leaderboard"}),"…"]})})}])}];
-
-//# sourceMappingURL=app_certificates_page_tsx_05nczos._.js.map
