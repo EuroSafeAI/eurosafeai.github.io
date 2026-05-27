@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,72328,e=>{"use strict";var t=e.i(71164),i=e.i(38544),o=e.i(71645);e.s(["useReducedMotion",0,function(){t.hasReducedMotionListener.current||(0,i.initPrefersReducedMotion)();let[e]=(0,o.useState)(t.prefersReducedMotion.current);return e}])}]);
