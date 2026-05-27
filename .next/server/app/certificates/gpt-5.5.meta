@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/certificates/layout,_N_T_/certificates/[slug]/layout,_N_T_/certificates/[slug]/page,_N_T_/certificates/gpt-5.5"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/certificates/$d$slug/__PAGE__",
+    "/certificates/$d$slug",
+    "/certificates",
+    "/_index",
+    "/_head"
+  ]
+}

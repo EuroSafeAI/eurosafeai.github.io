@@ -1,0 +1,18 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/careers/page": "app/careers/page.js",
+  "/certificate/[slug]/page": "app/certificate/[slug]/page.js",
+  "/certificate/page": "app/certificate/page.js",
+  "/certificates/[slug]/page": "app/certificates/[slug]/page.js",
+  "/certificates/page": "app/certificates/page.js",
+  "/democracy-defense/page": "app/democracy-defense/page.js",
+  "/events/2026-03-06-founding/page": "app/events/2026-03-06-founding/page.js",
+  "/map/page": "app/map/page.js",
+  "/multi-agent-safety/page": "app/multi-agent-safety/page.js",
+  "/page": "app/page.js",
+  "/research/page": "app/research/page.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/team/page": "app/team/page.js"
+}

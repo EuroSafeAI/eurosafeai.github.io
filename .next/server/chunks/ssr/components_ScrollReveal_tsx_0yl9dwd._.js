@@ -1,0 +1,3 @@
+module.exports=[31600,a=>{"use strict";var b=a.i(87924),c=a.i(46271);a.s(["default",0,function({children:a,className:d,delay:e=0,distance:f=24}){return(0,b.jsx)(c.motion.div,{className:d,initial:{opacity:0,y:f},whileInView:{opacity:1,y:0},viewport:{once:!0,margin:"-80px"},transition:{duration:.65,ease:[.16,1,.3,1],delay:e},children:a})}])}];
+
+//# sourceMappingURL=components_ScrollReveal_tsx_0yl9dwd._.js.map
