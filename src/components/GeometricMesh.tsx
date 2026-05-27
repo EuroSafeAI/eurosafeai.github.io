@@ -40,11 +40,11 @@ void main() {
   float asp = u_res.x / u_res.y;
   vec2 p = (uv - 0.5) * vec2(asp, 1.0) * 2.5;
   vec2 m = (u_mouse - 0.5) * vec2(asp, 1.0) * 2.5;
-  float t = u_time * 0.18;
+  float t = u_time * 0.07;
 
   vec2 dm = m - p;
   float rd = length(dm);
-  vec2 vortex = vec2(-dm.y, dm.x) / (rd * rd + 0.6) * 0.5;
+  vec2 vortex = vec2(-dm.y, dm.x) / (rd * rd + 0.6) * 0.20;
 
   vec2 q = p + vortex;
   float n1 = fbm(q + t);
