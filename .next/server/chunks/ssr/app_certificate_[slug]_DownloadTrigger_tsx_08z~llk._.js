@@ -1,3 +1,0 @@
-module.exports=[2540,a=>{"use strict";var b=a.i(72131);a.s(["default",0,function({slug:a}){let c=(0,b.useRef)(!1);return(0,b.useEffect)(()=>{if(c.current)return;c.current=!0;let b=document.createElement("a");b.href=`/certificate/${a}.pdf`,b.download=`${a}-eurosafe-certificate.pdf`,document.body.appendChild(b),b.click(),document.body.removeChild(b)},[a]),null}])}];
-
-//# sourceMappingURL=app_certificate_%5Bslug%5D_DownloadTrigger_tsx_08z~llk._.js.map
