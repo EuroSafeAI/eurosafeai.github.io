@@ -1,0 +1,13 @@
+{
+  "pages": {
+    "/_app": []
+  },
+  "devFiles": [],
+  "polyfillFiles": [],
+  "lowPriorityFiles": [
+    "static/wDE064os6660m507vp_vw/_buildManifest.js",
+    "static/wDE064os6660m507vp_vw/_ssgManifest.js",
+    "static/wDE064os6660m507vp_vw/_clientMiddlewareManifest.js"
+  ],
+  "rootMainFiles": []
+}
