@@ -350,35 +350,6 @@
         }
     },
     {
-       "name": "Grok 4.1 Fast",
-        "company": "xAI",
-        "region": "USA Frontier Models",
-        "specialty": "Fast reasoning and knowledge synthesis",
-        "scores": {
-            "auth": 63.627959802378406,
-            "harm": 87.15753424657534,
-            "hr": 48.106163761801014
-        },
-        "scores_meta": {
-            "auth": {
-                "fscale": 75.33333333333333,
-                "favscore": 55.90339892665474,
-                "rolemodel": 59.64714714714715
-            },
-            "harm": {
-                "social_harm_bench": 87.15753424657534
-            },
-            "hr": {
-                "udhr": 49.942129629629626,
-                "udhr_individual": 95.3125,
-                "udhr_government": 0.0,
-                "echr": 48.03921568627451,
-                "echr_individual": 95.34313725490196,
-                "echr_government": 0.0
-            }
-        }
-    },
-    {
         "id": "gpt-5.5",
         "name": "GPT-5.5",
         "company": "OpenAI",
