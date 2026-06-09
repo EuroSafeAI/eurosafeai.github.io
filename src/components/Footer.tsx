@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const links = [
   { label: "Research", to: "/research" },
   { label: "Team", to: "/team" },
+  { label: "Events", to: "/events" },
   { label: "Careers", to: "/careers" },
 ];
 

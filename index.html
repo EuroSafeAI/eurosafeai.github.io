@@ -15,5 +15,13 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!--
+      EventsPage uses Luma's iframe Calendar Embed, which is self-contained
+      and does not require this script. Re-introduce it if/when we add
+      hand-curated "featured event" cards using Luma's "Embed as Button"
+      snippet (data-luma-action="checkout" + data-luma-event-id="…"):
+        <script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js"></script>
+    -->
+
   </body>
 </html>

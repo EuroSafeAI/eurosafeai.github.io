@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookOpen, Users, Briefcase, Mail, Menu, X, ChevronDown } from "lucide-react";
+import { BookOpen, Users, Briefcase, Calendar, Mail, Menu, X, ChevronDown } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,6 +12,7 @@ const researchFocuses = [
 const navItems = [
   { label: "Research", path: "/research", icon: BookOpen },
   { label: "Team", path: "/team", icon: Users },
+  { label: "Events", path: "/events", icon: Calendar },
   { label: "Careers", path: "/careers", icon: Briefcase },
   { label: "Contact", path: "mailto:eurosafeai.zurich@gmail.com", icon: Mail, external: true },
 ];

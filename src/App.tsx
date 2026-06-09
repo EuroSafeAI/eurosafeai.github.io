@@ -18,6 +18,7 @@ const MemberPage = lazy(() => import("@/pages/MemberPage"));
 const CareersPage = lazy(() => import("@/pages/CareersPage"));
 const BlogPage = lazy(() => import("@/pages/BlogPage"));
 const BlogPostPage = lazy(() => import("@/pages/BlogPostPage"));
+const EventsPage = lazy(() => import("@/pages/EventsPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
 
@@ -44,6 +45,8 @@ const App = () => (
                 <Route path="/careers" element={<ErrorBoundary><CareersPage /></ErrorBoundary>} />
                 <Route path="/blog" element={<ErrorBoundary><BlogPage /></ErrorBoundary>} />
                 <Route path="/blog/:slug" element={<ErrorBoundary><BlogPostPage /></ErrorBoundary>} />
+                <Route path="/events" element={<ErrorBoundary><EventsPage /></ErrorBoundary>} />
+                <Route path="/events/past" element={<ErrorBoundary><EventsPage /></ErrorBoundary>} />
                 <Route path="/contact" element={<ErrorBoundary><ContactPage /></ErrorBoundary>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

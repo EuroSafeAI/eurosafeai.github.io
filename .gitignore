@@ -16,6 +16,11 @@ dist-ssr
 public/certificate/
 public/certificates/
 
+# Generated Luma events snapshot — produced by `npm run sync:luma` / CI
+# pipeline. See scripts/SYNC-LUMA.md for the contract. Regenerated fresh on
+# every deploy (and every 6h cron); the repo only holds the script.
+src/data/events.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
