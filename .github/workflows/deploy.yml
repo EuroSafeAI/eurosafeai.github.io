@@ -14,6 +14,12 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # Periodic rebuild so the /events page picks up new past events from
+  # Luma without anyone touching this repo. See scripts/SYNC-LUMA.md.
+  # Every 6h is a balance between freshness (~3h average staleness) and
+  # CI minutes (~10 min/day).
+  schedule:
+    - cron: "0 */6 * * *"
 
 permissions:
   contents: read
@@ -64,9 +70,17 @@ jobs:
           CERT_SECRET: ${{ secrets.CERT_SECRET }}
         run: npm run certs
 
+      - name: Sync Luma events
+        # Fetches the latest event list from Luma's API and writes
+        # src/data/events.json. The file is gitignored — regenerated fresh
+        # on every deploy and every 6h cron run. Failure here intentionally
+        # breaks the build rather than shipping stale data silently. See
+        # scripts/SYNC-LUMA.md for the contract.
+        run: npm run sync:luma
+
       - name: Build
-        # Must run AFTER `npm run certs` so the generated PDFs in public/certificate/
-        # get copied into dist/ by Vite's static-asset handling.
+        # Must run AFTER `npm run certs` (PDFs land in public/certificate/)
+        # and AFTER `npm run sync:luma` (events.json is bundled by Vite).
         run: npm run build
 
       - name: SPA fallback (copy index.html to 404.html)

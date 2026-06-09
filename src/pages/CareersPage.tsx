@@ -67,7 +67,7 @@ const CareersPage = () => (
               color: INK,
               letterSpacing: "-0.03em",
               margin: 0,
-              marginBottom: "clamp(1rem, 3vw, 3rem)",
+              marginBottom: "1.4rem",
               maxWidth: "920px",
             }}
           >
