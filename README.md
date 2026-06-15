@@ -2,7 +2,7 @@
 
 The public website for **EuroSafeAI**, a Swiss nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.
 
-Production: <https://eurosafe.ai.toronto.edu>
+Production: <https://safe.eu>
 
 ---
 
@@ -127,7 +127,7 @@ Pushing to `main` triggers `.github/workflows/deploy.yml`:
 ### Required GitHub Pages settings
 
 - **Source**: `GitHub Actions` (not "branch").
-- **Custom domain**: `eurosafe.ai.toronto.edu` (matches the `CNAME` written by the workflow).
+- **Custom domain**: `safe.eu` (matches the `CNAME` written by the workflow).
 
 ---
 

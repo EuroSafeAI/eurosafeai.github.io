@@ -7,7 +7,7 @@ name: Deploy to GitHub Pages
 #
 # Required GitHub Pages settings (Settings → Pages):
 #   Source: "GitHub Actions" (not "branch")
-#   Custom domain: eurosafe.ai.toronto.edu (matches CNAME written below)
+#   Custom domain: safe.eu (matches CNAME written below)
 
 on:
   push:
@@ -92,7 +92,7 @@ jobs:
         run: touch ./dist/.nojekyll
 
       - name: Add CNAME
-        run: echo "eurosafe.ai.toronto.edu" > ./dist/CNAME
+        run: echo "safe.eu" > ./dist/CNAME
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
