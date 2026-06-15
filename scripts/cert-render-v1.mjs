@@ -160,7 +160,7 @@ export function renderCertificateV1(doc, model, computed, env, stampBase64) {
   doc.setFontSize(7.5)
   setText(BRAND.midGray)
   doc.text('Evaluation Period: Q1 2026', W - 20, headerY, { align: 'right' })
-  doc.text('eurosafe.ai.toronto.edu/certificate/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
+  doc.text('safe.eu/certificate/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
 
   // ── Thin separator ────────────────────────────────────────────────────
   setDraw(BRAND.lightGray)
@@ -332,7 +332,7 @@ export function renderCertificateV1(doc, model, computed, env, stampBase64) {
     W / 2, footerY + 4, { align: 'center' }
   )
   doc.text(
-    'Scores are indicative and subject to revision as evaluations are peer-reviewed.  |  eurosafe.ai.toronto.edu  |  Certificate ID: ESAI-' + model.id.toUpperCase(),
+    'Scores are indicative and subject to revision as evaluations are peer-reviewed.  |  safe.eu  |  Certificate ID: ESAI-' + model.id.toUpperCase(),
     W / 2, footerY + 8, { align: 'center' }
   )
 
