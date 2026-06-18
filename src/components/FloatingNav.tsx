@@ -185,7 +185,7 @@ const FloatingNav = () => {
       {/* Mobile hamburger */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden absolute top-4 right-4 z-[60] rounded-full bg-primary text-primary-foreground p-3 shadow-lg"
+        className="md:hidden absolute top-4 right-4 z-[60] p-2 text-foreground"
         aria-label="Toggle menu"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
