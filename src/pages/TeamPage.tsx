@@ -166,6 +166,15 @@ const TeamPage = () => (
     <SectionRow label="Our team" members={technicalStaff} bg="#f5f7fb" columns={4} />
     <SectionRow label="Advisory board" members={advisors} bg="#ffffff" columns={3} />
 
+    {/* Footnote */}
+    <section className="team-footnote">
+      <div className="mx-auto px-6" style={{ maxWidth: "1200px" }}>
+        <p className="team-footnote-text">
+          * Team members and advisory board are listed alphabetically by first name; the order does not reflect any ranking or seniority.
+        </p>
+      </div>
+    </section>
+
     {/* CTA */}
     <section className="team-cta" style={{ background: ACCENT }}>
       <div className="mx-auto px-6" style={{ maxWidth: "900px", textAlign: "center" }}>
@@ -226,6 +235,16 @@ const TeamPage = () => (
       .team-cta { padding: clamp(3.5rem, 7vw, 6rem) 0 clamp(4rem, 8vw, 7rem); }
       .team-cta-sub { font-size: clamp(1rem, 1.2vw, 1.05rem); }
       .team-section { padding: clamp(2.5rem, 6vw, 5rem) 0; }
+      .team-footnote { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2.5rem, 5vw, 4rem); background: #ffffff; }
+      .team-footnote-text {
+        font-size: 0.72rem;
+        line-height: 1.5;
+        color: ${ACCENT};
+        margin: 0;
+        text-align: center;
+        font-style: italic;
+        font-weight: 500;
+      }
       .team-section-grid {
         display: grid;
         grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
