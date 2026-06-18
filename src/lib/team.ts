@@ -28,6 +28,28 @@ const define = (m: Omit<TeamMember, "slug"> & { slug?: string }): TeamMember => 
   slug: m.slug ?? slugify(m.name),
 });
 
+/** First name, ignoring leading honorifics like "Prof." or "Dr.". */
+const firstName = (name: string) =>
+  name.replace(/^(Prof\.|Dr\.|Mr\.|Ms\.|Mrs\.)\s+/i, "").trim();
+
+/** Sort comparator: alphabetical by first name (used so order implies no ranking). */
+const byFirstName = (a: TeamMember, b: TeamMember) =>
+  firstName(a.name).localeCompare(firstName(b.name));
+
+const isLead = (m: TeamMember) => /lead/i.test(m.role);
+
+/**
+ * Team-section order: research leads first (Terry pinned first), then everyone
+ * else; alphabetical by first name within each group.
+ */
+const byTeamOrder = (a: TeamMember, b: TeamMember) => {
+  if (isLead(a) !== isLead(b)) return isLead(a) ? -1 : 1;
+  const aTerry = a.name.startsWith("Terry");
+  const bTerry = b.name.startsWith("Terry");
+  if (aTerry !== bTerry) return aTerry ? -1 : 1;
+  return byFirstName(a, b);
+};
+
 export const leadership: TeamMember[] = [
   define({
     name: "Zhijing Jin",
@@ -86,16 +108,32 @@ export const technicalStaff: TeamMember[] = [
     twitter: "https://x.com/SimkoSamuel",
   }),
   define({
-    name: "Florent Draye",
-    role: "Research Lead",
-    section: "team",
-    image: "/images/team/florent-draye.webp",
-  }),
-  define({
     name: "Pepijn Cobben",
     role: "Research Lead",
     section: "team",
     image: "/images/team/pepijn-cobben.webp",
+  }),
+  define({
+    name: "Rahul B. Shrestha",
+    role: "Research Lead",
+    section: "team",
+    image: "/images/team/rahul-shrestha.webp",
+    linkedin: "https://www.linkedin.com/in/rahulbshrestha/",
+  }),
+  define({
+    name: "David Guzman Piedrahita",
+    role: "Research Lead",
+    section: "team",
+    image: "/images/team/david-guzman-piedrahita.webp",
+    linkedin: "https://www.linkedin.com/in/davidguzman1120/",
+  }),
+  define({
+    name: "Vedant Palit",
+    role: "Research Lead",
+    section: "team",
+    image: "/images/team/vedant-palit.webp",
+    linkedin: "https://www.linkedin.com/in/vedant-palit-b22558188",
+    twitter: "https://x.com/vedantpalit1008",
   }),
   define({
     name: "Abir Harrasse",
@@ -177,18 +215,6 @@ export const technicalStaff: TeamMember[] = [
     twitter: "https://x.com/erivan_in",
   }),
   define({
-    name: "Francesco Ortu",
-    role: "Technical Member",
-    section: "team",
-    image: "/images/team/francesco-ortu.webp",
-  }),
-  define({
-    name: "Irene Strauss",
-    role: "Technical Member",
-    section: "team",
-    image: "/images/team/irene-strauss.webp",
-  }),
-  define({
     name: "Isabel Dahlgren",
     role: "Technical Member",
     section: "team",
@@ -256,9 +282,23 @@ export const technicalStaff: TeamMember[] = [
     linkedin: "https://www.linkedin.com/in/yves-bicker/",
     twitter: "https://x.com/yvesbicker",
   }),
-];
+].sort(byTeamOrder);
 
+// Like team members, advisors are listed alphabetically by first name; the order carries no ranking.
 export const advisors: TeamMember[] = [
+  define({
+    name: "Audrey Tang",
+    role: "Senior Accelerator Fellow, Oxford Institute for Ethics in AI",
+    section: "advisors",
+    image: "/images/team/audrey-tang.webp",
+  }),
+  define({
+    name: "Prof. Geoffrey Rockwell",
+    aliases: ["Geoffrey Rockwell"],
+    role: "Professor of Philosophy and Digital Humanities, University of Alberta; Canada CIFAR AI Chair; Fellow, Alberta Machine Intelligence Institute",
+    section: "advisors",
+    image: "/images/team/geoffrey-rockwell.webp",
+  }),
   define({
     name: "Prof. Matthias Bethge",
     role: "Professor, University of Tübingen; Founding Director, Tübingen AI Center; ELLIS Fellow",
@@ -273,20 +313,7 @@ export const advisors: TeamMember[] = [
     image: "/images/team/roger-grosse.webp",
     aliases: ["Roger Grosse"],
   }),
-  define({
-    name: "Audrey Tang",
-    role: "Senior Accelerator Fellow, Oxford Institute for Ethics in AI",
-    section: "advisors",
-    image: "/images/team/audrey-tang.webp",
-  }),
-  define({
-    name: "Prof. Geoffrey Rockwell",
-    aliases: ["Geoffrey Rockwell"],
-    role: "Professor of Philosophy and Digital Humanities, University of Alberta; Canada CIFAR AI Chair; Fellow, Alberta Machine Intelligence Institute",
-    section: "advisors",
-    image: "/images/team/geoffrey-rockwell.webp",
-  }),
-];
+].sort(byFirstName);
 
 export const allMembers: TeamMember[] = [...leadership, ...technicalStaff, ...advisors];
 
