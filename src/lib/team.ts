@@ -114,6 +114,12 @@ export const technicalStaff: TeamMember[] = [
     image: "/images/team/pepijn-cobben.webp",
   }),
   define({
+    name: "Angelo Huang",
+    role: "Research Lead",
+    section: "team",
+    image: "/images/team/angelo-huang.webp",
+  }),
+  define({
     name: "Rahul B. Shrestha",
     role: "Research Lead",
     section: "team",
@@ -270,7 +276,7 @@ export const technicalStaff: TeamMember[] = [
   }),
   define({
     name: "Yann Billeter",
-    role: "Technical Member",
+    role: "Policy Lead & Democracy Tech Lead",
     section: "team",
     image: "/images/team/yann-billeter.webp",
   }),
