@@ -266,6 +266,14 @@ export const technicalStaff: TeamMember[] = [
     twitter: "https://x.com/_rfaulk",
   }),
   define({
+    name: "Tae Emerson",
+    role: "Technical Member",
+    section: "team",
+    image: "/images/team/tae-emerson.webp",
+    linkedin: "https://www.linkedin.com/in/jtemmerson/",
+    website: "https://emmerson.dev",
+  }),
+  define({
     name: "Van Quynh Thi Truong",
     role: "Technical Member",
     section: "team",
