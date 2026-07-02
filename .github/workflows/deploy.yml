@@ -112,3 +112,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
+
+      - name: Retry deploy once
+        # Pages intermittently rejects deployments with a generic
+        # "Deployment failed, try again later" seconds after creation
+        # (seen 2026-07-02 with identical artifacts succeeding minutes
+        # apart). One retry absorbs the transient case.
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
