@@ -37,3 +37,17 @@ src/data/events.json
 next-env.d.ts
 tsconfig.tsbuildinfo
 .next/
+
+# Local env / secrets
+.env
+
+# Next.js static export output
+out/
+
+# Playwright artifacts
+playwright-report/
+test-results/
+
+# Standalone deploy clones (each has its own .git)
+backup/
+toronto-redirect/
