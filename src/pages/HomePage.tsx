@@ -1067,7 +1067,7 @@ const HomePage = () => {
                 View Open Positions <span aria-hidden>›</span>
               </Link>
               <a
-                href="mailto:eurosafeai.zurich@gmail.com"
+                href="mailto:hello@safe.eu"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",

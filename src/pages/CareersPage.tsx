@@ -252,7 +252,7 @@ const CareersPage = () => (
             We're always interested in hearing from talented individuals passionate about AI safety.
           </p>
           <a
-            href="mailto:eurosafeai.zurich@gmail.com?subject=General Application"
+            href="mailto:hello@safe.eu?subject=General Application"
             className="careers-cta-btn"
             style={{
               display: "inline-flex",

@@ -14,7 +14,7 @@ const navItems = [
   { label: "Team", path: "/team", icon: Users },
   { label: "Events", path: "/events", icon: Calendar },
   { label: "Careers", path: "/careers", icon: Briefcase },
-  { label: "Contact", path: "mailto:eurosafeai.zurich@gmail.com", icon: Mail, external: true },
+  { label: "Contact", path: "mailto:hello@safe.eu", icon: Mail, external: true },
 ];
 
 const FloatingNav = () => {
