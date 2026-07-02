@@ -29,7 +29,7 @@ describe("certificate ↔ leaderboard parity", () => {
   });
 
   it("model IDs are URL-safe (used as path segments and filenames)", () => {
-    const safe = /^[a-z0-9.\-]+$/;
+    const safe = /^[a-z0-9.-]+$/;
     for (const m of MODELS) {
       expect(safe.test(m.id), `${m.id} contains non-URL-safe chars`).toBe(true);
     }
