@@ -58,7 +58,7 @@ const Footer = () => {
             </Link>
           ))}
           <a
-            href="mailto:eurosafeai.zurich@gmail.com"
+            href="mailto:hello@safe.eu"
             style={{ fontSize: "0.85rem", color: "rgba(10,31,77,0.7)", textDecoration: "none", transition: "color 0.2s" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#003399"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(10,31,77,0.7)"; }}

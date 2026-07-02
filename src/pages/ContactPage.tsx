@@ -58,7 +58,7 @@ const ContactPage = () => {
       // No backend yet — open a prefilled mailto as a graceful fallback.
       const { name, email, subject, message } = result.data;
       const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
-      window.location.href = `mailto:eurosafeai.zurich@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.href = `mailto:hello@safe.eu?subject=${encodeURIComponent(subject)}&body=${body}`;
       setStatus("success");
       reset();
     } catch {
@@ -131,7 +131,7 @@ const ContactPage = () => {
               {status === "error" && (
                 <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800 text-sm">
                   <AlertCircle className="h-5 w-5 mt-0.5 shrink-0" />
-                  <span>Something went wrong. Please email us directly at eurosafeai.zurich@gmail.com</span>
+                  <span>Something went wrong. Please email us directly at hello@safe.eu</span>
                 </div>
               )}
 
@@ -239,10 +239,10 @@ const ContactPage = () => {
                   For general questions, collaborations, or media requests.
                 </p>
                 <a
-                  href="mailto:eurosafeai.zurich@gmail.com"
+                  href="mailto:hello@safe.eu"
                   className="inline-flex items-center gap-1.5 text-primary font-semibold text-sm hover:underline"
                 >
-                  eurosafeai.zurich@gmail.com <ExternalLink className="h-3.5 w-3.5" />
+                  hello@safe.eu <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               </AnimatedSection>
 
