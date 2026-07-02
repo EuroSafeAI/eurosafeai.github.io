@@ -58,7 +58,7 @@ const ContactPage = () => {
       // No backend yet — open a prefilled mailto as a graceful fallback.
       const { name, email, subject, message } = result.data;
       const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
-      window.location.href = `mailto:hello@safe.eu?subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.assign(`mailto:hello@safe.eu?subject=${encodeURIComponent(subject)}&body=${body}`);
       setStatus("success");
       reset();
     } catch {

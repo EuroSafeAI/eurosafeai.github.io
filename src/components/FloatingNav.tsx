@@ -41,12 +41,8 @@ const FloatingNav = () => {
   }, [location.pathname]);
 
   const handleNav = (item: (typeof navItems)[0]) => {
-    if (item.external) {
-      window.location.href = item.path;
-    } else {
-      window.scrollTo({ top: 0 });
-      navigate(item.path);
-    }
+    window.scrollTo({ top: 0 });
+    navigate(item.path);
     setOpen(false);
   };
 
@@ -158,6 +154,19 @@ const FloatingNav = () => {
                   );
                 }
 
+                if (item.external) {
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.path}
+                      className="text-sm font-medium transition-colors relative pb-0.5 hover:opacity-70"
+                      style={{ color: "#001233" }}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                }
+
                 return (
                   <button
                     key={item.label}
@@ -219,6 +228,18 @@ const FloatingNav = () => {
             </button>
             {navItems.map((item) => {
               const active = !item.external && location.pathname === item.path;
+              if (item.external) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.path}
+                    onClick={() => setOpen(false)}
+                    className="text-2xl font-display font-semibold transition-colors text-foreground hover:text-primary"
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
               return (
                 <button
                   key={item.label}
