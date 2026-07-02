@@ -125,7 +125,7 @@ const FloatingNav = () => {
                                 className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors border-b border-black/5 ${
                                   location.pathname === "/research"
                                     ? "text-primary bg-primary/5"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-black/[0.03]"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-black/3"
                                 }`}
                               >
                                 All Research
@@ -139,7 +139,7 @@ const FloatingNav = () => {
                                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                                       focusActive
                                         ? "text-primary bg-primary/5 font-medium"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-black/[0.03]"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-black/3"
                                     }`}
                                   >
                                     {focus.label}
@@ -194,14 +194,14 @@ const FloatingNav = () => {
       {/* Mobile hamburger */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden absolute top-4 right-4 z-[60] p-2 text-foreground"
+        className="md:hidden absolute top-4 right-4 z-60 p-2 text-foreground"
         aria-label="Toggle menu"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
       {/* Mobile logo */}
-      <div className="md:hidden absolute top-4 left-4 z-[60]">
+      <div className="md:hidden absolute top-4 left-4 z-60">
         <button
           onClick={() => { navigate("/"); window.scrollTo({ top: 0 }); setOpen(false); }}
           className="font-display font-bold text-foreground text-lg"

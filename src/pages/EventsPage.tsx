@@ -65,7 +65,7 @@ const DatePill = ({ iso }: { iso: string }) => {
     .toUpperCase();
   const day = d.toLocaleDateString("en-US", { day: "numeric" });
   return (
-    <div className="flex-shrink-0 w-14 h-16 rounded-xl border border-border bg-white flex flex-col items-center justify-center shadow-sm">
+    <div className="shrink-0 w-14 h-16 rounded-xl border border-border bg-white flex flex-col items-center justify-center shadow-xs">
       <div
         className="font-mono text-[10px] font-bold tracking-wider leading-none"
         style={{ color: ACCENT }}
@@ -95,7 +95,7 @@ const PastEventCard = ({ event: e }: { event: EventItem }) => {
     >
       <div className="flex flex-col md:flex-row gap-5 md:gap-6">
         {e.coverUrl && (
-          <div className="order-1 md:order-2 md:w-44 md:flex-shrink-0">
+          <div className="order-1 md:order-2 md:w-44 md:shrink-0">
             <a
               href={lumaUrl}
               target="_blank"
@@ -140,7 +140,7 @@ const PastEventCard = ({ event: e }: { event: EventItem }) => {
           </h3>
 
           <div className="text-sm text-muted-foreground inline-flex items-center gap-1.5 mb-3">
-            <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{e.location}</span>
           </div>
 
