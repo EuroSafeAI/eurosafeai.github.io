@@ -1,0 +1,40 @@
+name: CI
+
+# Build check for pull requests. Verifies the site compiles; deployment
+# happens separately in deploy.yml on push to main.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync Luma events
+        # src/data/events.json is gitignored and statically imported by
+        # EventsPage.tsx, so the build cannot succeed without generating it.
+        # Uses Luma's public API — no secrets needed, safe for fork PRs.
+        run: npm run sync:luma
+
+      - name: Build
+        run: npm run build
