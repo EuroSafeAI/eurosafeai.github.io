@@ -34,3 +34,6 @@ src/data/events.json
 
 # Claude Code session artifacts
 .claude/
+next-env.d.ts
+tsconfig.tsbuildinfo
+.next/
