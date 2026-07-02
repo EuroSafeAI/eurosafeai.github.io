@@ -1005,7 +1005,7 @@ const HomePage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={c.name}
-                className="flex-shrink-0 flex items-center justify-center"
+                className="shrink-0 flex items-center justify-center"
                 style={{ height: "80px", width: "220px" }}
               >
                 <img src={c.logo} alt={c.name} loading="lazy" className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" style={{ height: "100%", width: "100%" }} />

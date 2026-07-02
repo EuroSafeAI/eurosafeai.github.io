@@ -67,7 +67,7 @@ const ContactPage = () => {
   };
 
   const inputBase =
-    "w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow";
+    "w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-primary/40 transition-shadow";
   const errorClass = "border-red-400 focus:ring-red-300/40";
 
   return (
@@ -220,7 +220,7 @@ const ContactPage = () => {
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-60 transition-colors"
+                  className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus:outline-hidden focus:ring-2 focus:ring-primary/40 disabled:opacity-60 transition-colors"
                 >
                   {status === "sending" ? "Sending…" : "Send message"}
                 </button>
@@ -276,7 +276,7 @@ const ContactPage = () => {
               <AnimatedSection
                 key={member.name}
                 delay={i * 0.05}
-                className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-lg border p-5 hover:shadow-sm transition-shadow"
+                className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-lg border p-5 hover:shadow-xs transition-shadow"
               >
                 <div className="shrink-0 min-w-[200px]">
                   <p className="font-display font-bold text-base">{member.name}</p>
