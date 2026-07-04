@@ -1,0 +1,98 @@
+/*
+ * Styles for the /institute-efforts CAISI dashboard. Ported verbatim from the
+ * original standalone Plotly HTML and scoped under `.ie-page` so nothing here
+ * leaks into the rest of the EuroSafeAI site. Design tokens live on `.ie-page`
+ * (instead of :root) for the same reason.
+ */
+
+.ie-page,
+.ie-page *,
+.ie-page *::before,
+.ie-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.ie-page {
+  --bg:#F3F5FB; --panel:#FFFFFF; --brd:#D6DAE8; --grid:#E4E8F2;
+  --h:#0A1628; --b:#2C3A55; --d:#7880A2;
+  --blue:#1A4FBF; --teal:#0E7A6E; --violet:#4F3EC8;
+  --red:#D32F2F; --red2:#EF5350;
+  --fnt:"Inter","Helvetica Neue",Arial,sans-serif;
+  --shad:0 1px 4px rgba(0,0,0,.06),0 6px 22px rgba(0,0,0,.06);
+
+  background:var(--bg); color:var(--h); font-family:var(--fnt);
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+
+/* TOP BAR */
+.ie-page .bar{background:#fff;border-bottom:1px solid var(--brd);padding:0 52px;height:66px;
+  display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.ie-page .leaf{width:36px;height:36px;flex-shrink:0}
+.ie-page .brand{display:flex;flex-direction:column;gap:1px}
+.ie-page .bname{font-size:.74rem;font-weight:800;color:var(--red);letter-spacing:.08em;text-transform:uppercase}
+.ie-page .bsub{font-size:.67rem;color:var(--d)}
+.ie-page .ttl{font-size:1.03rem;font-weight:700;color:var(--h);margin-left:14px;letter-spacing:-.015em}
+.ie-page .bdg{margin-left:auto;background:rgba(79,62,200,.09);border:1px solid rgba(79,62,200,.22);
+  color:var(--violet);font-size:.67rem;font-weight:600;padding:5px 14px;border-radius:20px;
+  letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+
+/* HERO */
+.ie-page .hero{padding:34px 52px 0}
+.ie-page .hero h1{font-size:1.72rem;font-weight:900;letter-spacing:-.04em;color:var(--h);line-height:1.18}
+.ie-page .hero h1 em{font-style:normal;color:var(--violet)}
+.ie-page .hero p{font-size:.87rem;color:var(--d);max-width:820px;line-height:1.65;margin-top:8px}
+
+/* TIMELINE RAIL */
+.ie-page .chron{display:flex;align-items:center;padding:18px 52px 0;overflow-x:auto;gap:0}
+.ie-page .chron-conf{display:flex;flex-direction:column;align-items:center;gap:5px;
+  flex:1;min-width:88px;user-select:none}
+.ie-page .cnm{font-size:.80rem;font-weight:700;color:var(--b)}
+.ie-page .cdot{width:10px;height:10px;border-radius:50%;background:var(--d);flex-shrink:0}
+.ie-page .cyr{font-size:.62rem;color:var(--d);letter-spacing:.03em}
+.ie-page .chron-conf.newest .cnm{color:var(--violet)}
+.ie-page .chron-conf.newest .cdot{background:var(--violet);box-shadow:0 0 0 3px rgba(79,62,200,.20)}
+.ie-page .carr{flex:1;display:flex;align-items:center;padding-bottom:14px;min-width:28px}
+.ie-page .carr svg{width:100%;height:14px}
+
+/* STAT STRIP */
+.ie-page .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:22px 52px 0}
+.ie-page .sc{border:1px solid;border-radius:10px;padding:15px 17px;
+  display:flex;flex-direction:column;gap:3px;box-shadow:var(--shad)}
+.ie-page .sv{font-size:1.50rem;font-weight:900;letter-spacing:-.04em;line-height:1}
+.ie-page .sl{font-size:.63rem;font-weight:600;color:var(--b);letter-spacing:.035em;
+  text-transform:uppercase;margin-top:3px}
+.ie-page .ss{font-size:.61rem;color:var(--d)}
+
+/* SECTIONS */
+.ie-page .sec{padding:30px 52px 0}
+.ie-page .sec-hd{margin-bottom:14px}
+.ie-page .sec-hd h2{font-size:1.05rem;font-weight:700;letter-spacing:-.012em;color:var(--h)}
+.ie-page .sec-hd h2 .n{color:var(--d);font-weight:400;margin-right:6px;font-size:.90rem}
+.ie-page .sec-hd h2 .ca{color:var(--red)}
+.ie-page .sec-hd p{font-size:.80rem;color:var(--d);margin-top:6px;max-width:860px;line-height:1.60}
+.ie-page .sec-hd p strong{color:var(--b)}
+
+/* DIM PILLS */
+.ie-page .pills{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px}
+.ie-page .pill{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;
+  font-size:.76rem;font-weight:600;border:1px solid}
+.ie-page .pdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ie-page .legend-note{display:flex;align-items:center;font-size:.74rem;color:#7880A2;margin-left:6px}
+
+/* CHART CARD */
+.ie-page .cc{background:var(--panel);border:1px solid var(--brd);border-radius:12px;
+  box-shadow:var(--shad);overflow:hidden;padding:8px 4px 4px}
+
+/* DIVIDER */
+.ie-page .dvd{height:1px;background:var(--brd);margin:30px 52px 0}
+
+/* FOOTER */
+.ie-page footer{border-top:1px solid var(--brd);padding:18px 52px;margin-top:38px;
+  display:flex;justify-content:space-between;align-items:center}
+.ie-page footer p{font-size:.67rem;color:var(--d)}
+.ie-page footer em{color:var(--red)}
+
+@media(max-width:960px){
+  .ie-page .bar,.ie-page .hero,.ie-page .chron,.ie-page .stats,.ie-page .sec,.ie-page .dvd,.ie-page footer{padding-left:20px;padding-right:20px}
+  .ie-page .stats{grid-template-columns:repeat(3,1fr)}
+  .ie-page .ttl,.ie-page .bdg{display:none}
+}
