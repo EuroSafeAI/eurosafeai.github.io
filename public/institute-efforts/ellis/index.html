@@ -1,0 +1,289 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ELLIS · Europe in top ML research</title>
+<style>:root{color-scheme:light dark}html,body{margin:0;background:#f4f3f0}@media(prefers-color-scheme:dark){html,body{background:#0d0d0d}}</style>
+</head><body>
+<div class="viz-root" id="app">
+<style>
+  #app{--surface-1:#fcfcfb;--plane:#f4f3f0;--tp:#0b0b0b;--ts:#52514e;--tm:#898781;
+    --grid:#e1e0d9;--axis:#c3c2b7;--ring:rgba(11,11,11,.10);
+    --us:#2a78d6;--cn:#e34948;--eu:#e06a10;--ca:#7c5cc9;--ot:#8a8f98;--accent:#e06a10;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--tp);
+    background:var(--plane);line-height:1.5;-webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;overflow-x:hidden;}
+  @media (prefers-color-scheme:dark){#app{--surface-1:#1a1a19;--plane:#0d0d0d;
+    --tp:#fff;--ts:#c3c2b7;--tm:#898781;--grid:#2c2c2a;--axis:#383835;--ring:rgba(255,255,255,.12);
+    --us:#5598e7;--cn:#e66767;--eu:#f2954a;--ca:#a78bff;--ot:#b9bec6;--accent:#f2954a;}}
+  #app *{box-sizing:border-box}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 80px}
+  header.hd{position:sticky;top:0;z-index:20;background:var(--plane);border-bottom:1px solid var(--grid);padding:14px 0 12px}
+  .hd .wrap{padding-bottom:0}
+  .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:23px;margin:3px 0 2px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+  .sub{color:var(--ts);font-size:14px;max-width:74ch}
+  section{background:var(--surface-1);border:1px solid var(--ring);border-radius:14px;padding:20px 22px;margin-top:20px}
+  h2{font-size:16px;margin:0 0 2px;font-weight:700}
+  .lead{color:var(--ts);font-size:13.5px;margin:0 0 14px;max-width:82ch}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:var(--surface-1);border:1px solid var(--ring);border-radius:14px;padding:16px 18px}
+  .kpi .v{font-size:30px;font-weight:750;letter-spacing:-.02em;line-height:1.05}
+  .kpi .l{font-size:12.5px;color:var(--ts);margin-top:5px}
+  .kpi .d{font-size:12px;font-weight:650;margin-top:6px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  svg{width:100%;height:auto;display:block}
+  .axlab{fill:var(--tm);font-size:11px}
+  .vlab{fill:var(--tp);font-size:11.5px;font-weight:650;font-variant-numeric:tabular-nums}
+  .cardttl{font-size:13px;font-weight:700;margin:0 0 2px}
+  .cardsub{font-size:11.5px;color:var(--tm);margin:0 0 10px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ts);margin:4px 0 12px}
+  .legend span{white-space:nowrap}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .tvwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.tv{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;font-variant-numeric:tabular-nums;min-width:420px}
+  table.tv th,table.tv td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--grid)}
+  table.tv th:first-child,table.tv td:first-child{text-align:left}
+  table.tv th{color:var(--tm);font-weight:600}
+  details.method{margin-top:20px}
+  details.method summary{cursor:pointer;font-weight:700;font-size:15px;padding:6px 0}
+  .method h3{font-size:13.5px;margin:14px 0 4px}
+  .method p,.method li{font-size:13px;color:var(--ts)}
+  .method code{background:var(--plane);border:1px solid var(--grid);border-radius:5px;padding:1px 5px;font-size:12px;word-break:break-word}
+  .method a{color:var(--us);font-weight:600;text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+  .tag{display:inline-block;background:var(--plane);border:1px solid var(--grid);border-radius:20px;padding:2px 10px;font-size:11.5px;color:var(--ts);margin:2px 4px 2px 0}
+  .foot{margin-top:26px;font-size:12px;color:var(--tm);text-align:center}
+  .foot a{color:var(--us);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  .tt{position:fixed;pointer-events:none;background:var(--tp);color:var(--plane);font-size:12px;padding:6px 9px;border-radius:7px;opacity:0;transition:opacity .1s;z-index:60;max-width:74vw;font-variant-numeric:tabular-nums;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+  .banner{background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid var(--accent);border-radius:10px;padding:9px 13px;font-size:12.5px;color:var(--ts);margin-top:14px}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.wrap{padding:0 13px 60px}section{padding:16px 15px}
+    h1{font-size:20px}.sub{font-size:13px}.kpi .v{font-size:25px}.kpi{padding:13px 14px}}
+  @media(prefers-reduced-motion:reduce){.tt{transition:none}}
+</style>
+
+<header class="hd"><div class="wrap">
+  <div class="eyebrow">ELLIS &middot; European Laboratory for Learning and Intelligent Systems</div>
+  <h1>Europe&rsquo;s place in the world&rsquo;s top ML research (2025&ndash;2026)</h1>
+  <div class="sub">Who produces the research accepted at ICLR, ICML and NeurIPS &mdash; a regional comparison of <b>Europe vs the US vs China</b> (and Canada &amp; the rest of the world), in the spirit of comparing economies. Built from primary conference data + author affiliations, with <b>ELLIS units</b> highlighted. This covers <b>all</b> accepted ML papers, not a single sub-field.</div>
+</div></header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>1 &middot; The pie is growing</h2>
+    <p class="lead">Total papers accepted at each conference, in chronological order. Top-tier ML research output is expanding &mdash; the question for Europe is its <i>share</i> of that growing pie.</p>
+    <div class="cardttl">Accepted papers per conference (all fields)</div><div class="cardsub" id="c1-sub"></div>
+    <div id="c1"></div>
+  </section>
+
+  <section>
+    <h2>2 &middot; Who produces it? Europe vs US vs China</h2>
+    <p class="lead">Share of research output by region, like comparing GDP. Left: the full composition per venue (each paper attributed equally across the regions of its authors, so bars sum to 100% of identified papers). Right: the head-to-head trend for the three largest players.</p>
+    <div class="legend" id="leg2"></div>
+    <div class="grid2">
+      <div><div class="cardttl">Regional composition (attributed share)</div><div class="cardsub" id="c2a-sub"></div><div id="c2a"></div></div>
+      <div><div class="cardttl">Europe vs US vs China over time</div><div class="cardsub" id="c2b-sub"></div><div class="legend" id="leg2b"></div><div id="c2b"></div></div>
+    </div>
+    <div class="banner" id="c2note"></div>
+  </section>
+
+  <section>
+    <h2>3 &middot; Europe &amp; ELLIS in focus</h2>
+    <p class="lead">Europe&rsquo;s participation (share of papers with at least one European author) and, within that, the footprint of <b>ELLIS units</b> (T&uuml;bingen, ETH, EPFL, Amsterdam, Oxford, INRIA, CISPA, &hellip;). Also: papers thanking a <b>European funder</b> (ERC, Horizon&nbsp;Europe, Marie&nbsp;Sk&#322;odowska-Curie, DFG, ANR, EPSRC, &hellip;) in their acknowledgments.</p>
+    <div class="legend">
+      <span><i style="background:var(--eu)"></i>European author (participation)</span>
+      <span><i style="background:var(--accent);opacity:.55"></i>of which ELLIS units</span>
+    </div>
+    <div id="c3"></div>
+    <div class="banner" id="c3note"></div>
+    <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12.5px;color:var(--ts)">Full regional table (per venue)</summary><div class="tvwrap" id="c3tv"></div></details>
+  </section>
+
+  <details class="method" open>
+    <summary>Methodology, definitions &amp; caveats &mdash; read before citing</summary>
+    <div class="method">
+      <h3>What this shows</h3>
+      <p>A <b>regional comparison of top-tier ML research output</b> &mdash; not a safety analysis. Every accepted paper at ICLR/ICML/NeurIPS 2025&ndash;2026 counts, regardless of topic, because ELLIS is a general AI-research network. The narrative mirrors comparing economies (Europe vs US vs China).</p>
+      <h3>Data sources (all primary)</h3>
+      <ul>
+        <li><b>Papers &amp; counts:</b> OpenReview API &mdash; every <i>accepted</i> paper per venue (Poster/Spotlight/Oral).</li>
+        <li><b>Affiliations:</b> parsed from the first page of each paper&rsquo;s arXiv PDF (title&rarr;arXiv via Semantic Scholar), on a <b>stratified random sample</b> of all accepted papers (equal draw per venue).</li>
+      </ul>
+      <h3>How regions are assigned</h3>
+      <p>A paper is credited to every region that appears among its author affiliations (institutions + country/state tokens), so an international collaboration counts for each partner (<b>participation</b>). For the 100%-stacked composition, each paper is split <b>equally across the distinct regions present</b> (<b>attributed share</b>). Regions: <span class="tag">US</span><span class="tag">China (incl. Hong Kong)</span><span class="tag">Europe (geographic + UK/CH)</span><span class="tag">Canada</span><span class="tag">Other / rest of world</span>. Precision-first matching, guarded against look-alikes (US state &ldquo;Georgia&rdquo; vs the country; Cambridge&nbsp;MA vs UK; Microsoft&nbsp;Research&nbsp;Asia is in Beijing; Israel counted as Other, not Europe).</p>
+      <div class="banner" id="method-sample"></div>
+      <h3>Known limitations</h3>
+      <ul>
+        <li>Affiliation figures are a <b>sample</b> with a margin, and only cover papers with a retrievable arXiv full text &mdash; a <b>lower bound</b>. Papers whose affiliations we could not identify are shown as <b>Unknown</b> and excluded from the attributed shares.</li>
+        <li>Region assignment is any-author, so participation rates overlap (sum &gt; 100%); the attributed shares are the ones that sum to 100%.</li>
+        <li>Total accepted counts ARE exhaustive; only the regional split is sampled.</li>
+      </ul>
+      <h3>Code &amp; reproducibility</h3>
+      <p>The full pipeline (data collection, affiliation parsing, regional classification) is open for developers to reuse and adapt: <a href="https://github.com/ArianKhorasani/AI_Safety_Venue_Dashboards" target="_blank" rel="noopener">github.com/ArianKhorasani/AI_Safety_Venue_Dashboards</a>. Maintained by <a href="https://github.com/ArianKhorasani" target="_blank" rel="noopener">Arian&nbsp;Khorasani (@ArianKhorasani)</a>.</p>
+      <style>
+.cite-card{position:relative;border:1px solid var(--ring);border-left:3px solid var(--cite-accent);border-radius:12px;padding:15px 18px;margin-top:14px;background:var(--plane)}
+.cite-label{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--cite-accent);margin-bottom:7px}
+.cite-ref{font-size:13.5px;color:var(--tp);line-height:1.62;margin:0 0 12px}
+.cite-ref .ct{font-style:italic}
+.cite-ref a{color:var(--cite-accent);text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+.cite-bibwrap{position:relative}
+.cite-bib{background:var(--surface-1);border:1px solid var(--grid);border-radius:9px;padding:13px 14px;margin:0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;color:var(--ts);white-space:pre}
+.cite-copy{position:absolute;top:8px;right:8px;border:1px solid var(--axis);background:var(--surface-1);color:var(--ts);font:inherit;font-size:11px;font-weight:700;padding:4px 11px;border-radius:6px;cursor:pointer}
+.cite-copy:hover{border-color:var(--cite-accent);color:var(--cite-accent)}
+.cite-ack{font-size:12px;color:var(--tm);margin:11px 0 0}
+.cite-ack a{color:var(--tm);text-decoration:underline}
+</style>
+      <div class="cite-card" style="--cite-accent:var(--accent)">
+  <div class="cite-label">How to cite</div>
+  <p class="cite-ref">Zhijing&nbsp;Jin, Arian&nbsp;Khorasani, and the Jinesis&nbsp;Lab (University of Toronto &amp; Vector Institute). <span class="ct">Europe&rsquo;s Place in the World&rsquo;s Top ML Research (2025&ndash;2026).</span> 2026. <a href="https://safe.eu/institute-efforts/ellis/" target="_blank" rel="noopener">safe.eu/institute-efforts/ellis</a></p>
+  <div class="cite-bibwrap">
+    <button class="cite-copy" type="button" onclick="var p=this.parentNode.querySelector('pre');if(navigator.clipboard){navigator.clipboard.writeText(p.textContent);}var b=this;b.textContent='Copied \u2713';setTimeout(function(){b.textContent='Copy';},1500);">Copy</button>
+    <pre class="cite-bib">@misc{jin2026ellis,
+  author       = {Jin, Zhijing and Khorasani, Arian},
+  title        = {Europe's Place in the World's Top ML Research (2025--2026)},
+  year         = {2026},
+  howpublished = {\url{https://safe.eu/institute-efforts/ellis/}},
+  note         = {Jinesis Lab, University of Toronto \&amp; Vector Institute}
+}</pre>
+  </div>
+  <p class="cite-ack"><b>Acknowledgement &amp; contact:</b> Zhijing&nbsp;Jin (<a href="mailto:zjin@cs.toronto.edu">zjin@cs.toronto.edu</a>) &middot; Arian&nbsp;Khorasani (<a href="mailto:ariankh@cs.toronto.edu">ariankh@cs.toronto.edu</a>).</p>
+</div>
+    </div>
+  </details>
+
+  <div class="foot" id="foot"></div>
+</div>
+<div class="tt" id="tt"></div>
+
+<script>
+const DATA = Object.assign({"venues": [{"key": "ICLR2025", "label": "ICLR 2025", "total_accepted": 3690, "regions": {"matched": 246, "identified": 229, "unknown": 17, "any": {"US": 140, "China": 77, "Europe": 46, "Canada": 11, "Other": 40}, "attributed": {"US": 107.67, "China": 55.0, "Europe": 32.67, "Canada": 5.33, "Other": 28.33}, "ellis": 28, "ack_pool": 169, "eu_fund": 23}}, {"key": "ICML2025", "label": "ICML 2025", "total_accepted": 3230, "regions": {"matched": 241, "identified": 231, "unknown": 10, "any": {"US": 112, "China": 75, "Europe": 51, "Canada": 15, "Other": 46}, "attributed": {"US": 88.17, "China": 60.0, "Europe": 38.5, "Canada": 9.83, "Other": 34.5}, "ellis": 36, "ack_pool": 189, "eu_fund": 26}}, {"key": "NeurIPS2025", "label": "NeurIPS 2025", "total_accepted": 5240, "regions": {"matched": 223, "identified": 209, "unknown": 14, "any": {"US": 94, "China": 79, "Europe": 44, "Canada": 11, "Other": 50}, "attributed": {"US": 73.33, "China": 59.5, "Europe": 33.17, "Canada": 8.33, "Other": 34.67}, "ellis": 30, "ack_pool": 157, "eu_fund": 26}}, {"key": "ICLR2026", "label": "ICLR 2026", "total_accepted": 5290, "regions": {"matched": 245, "identified": 231, "unknown": 14, "any": {"US": 114, "China": 96, "Europe": 42, "Canada": 10, "Other": 50}, "attributed": {"US": 86.75, "China": 73.75, "Europe": 34.0, "Canada": 4.92, "Other": 31.58}, "ellis": 25, "ack_pool": 168, "eu_fund": 17}}, {"key": "ICML2026", "label": "ICML 2026", "total_accepted": 6194, "regions": {"matched": 204, "identified": 196, "unknown": 8, "any": {"US": 88, "China": 83, "Europe": 52, "Canada": 10, "Other": 46}, "attributed": {"US": 62.17, "China": 61.5, "Europe": 37.67, "Canada": 5.5, "Other": 29.17}, "ellis": 31, "ack_pool": 115, "eu_fund": 18}}], "order": ["ICLR2025", "ICML2025", "NeurIPS2025", "ICLR2026", "ICML2026"], "regionOrder": ["US", "China", "Europe", "Canada", "Other"], "agg": {"matched": 1159, "identified": 1096, "unknown": 63, "any": {"US": 548, "China": 410, "Europe": 235, "Canada": 57, "Other": 232}, "attributed": {"US": 418.08, "China": 309.75, "Europe": 176.0, "Canada": 33.92, "Other": 158.25}, "ellis": 150, "ack_pool": 798, "eu_fund": 110}, "meta": {"total_accepted": 23644, "sample_matched": 1159, "sample_identified": 1096}, "buildDate": "2026-07-06"},{});
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+const venues=DATA.venues, order=DATA.order, REG=DATA.regionOrder;
+const COL={US:'var(--us)',China:'var(--cn)',Europe:'var(--eu)',Canada:'var(--ca)',Other:'var(--ot)'};
+const tt=$('#tt');
+function showTT(e,html){tt.innerHTML=html;tt.style.opacity=1;
+  const x=(e.clientX!=null?e.clientX:innerWidth/2), y=(e.clientY!=null?e.clientY:100);
+  tt.style.left=Math.max(6,Math.min(x+12,innerWidth-tt.offsetWidth-8))+'px';
+  tt.style.top=Math.max(6,y-tt.offsetHeight-10)+'px';}
+function hideTT(){tt.style.opacity=0;}
+const cw=id=>{const el=document.getElementById(id);return Math.max((el&&el.clientWidth)||340,280);};
+const NARROW=()=>innerWidth<640;
+const abbr=l=>l.replace(/ 20(\d\d)/,"’$1");
+function xlab(x,yBase,label){
+  const m=label.match(/^(.*)\s+20(\d\d)$/);
+  if(NARROW()&&m) return `<text x="${x}" y="${yBase}" text-anchor="middle" class="axlab"><tspan x="${x}">${m[1]}</tspan><tspan x="${x}" dy="12">’${m[2]}</tspan></text>`;
+  return `<text x="${x}" y="${yBase}" text-anchor="middle" class="axlab">${abbr(label)}</text>`;
+}
+function svg(w,h){return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet" role="img">`}
+function grid(x0,x1,y,ticks,fmtf){let s='';ticks.forEach(t=>{const yy=y(t);
+  s+=`<line x1="${x0}" x2="${x1}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`+
+     `<text x="${x0-6}" y="${yy+3}" text-anchor="end" class="axlab">${fmtf?fmtf(t):t}</text>`});return s}
+// attributed share % of identified, per venue, per region
+function share(v,reg){const b=v.regions, id=b.identified||1; return b.attributed[reg]/id*100;}
+function part(v,reg){const b=v.regions, m=b.matched||1; return b.any[reg]/m*100;}
+
+function kpis(){
+  const A=DATA.agg, id=A.identified||1;
+  const eu=A.attributed.Europe/id*100, us=A.attributed.US/id*100, cn=A.attributed.China/id*100;
+  const ell=A.ellis/(A.matched||1)*100;
+  $('#kpis').innerHTML=[
+    ['Accepted papers','2025&ndash;2026, all fields',fmt(DATA.meta.total_accepted),`<div class="d" style="color:var(--tm)">across 5 venues</div>`],
+    ['Europe','share of world output',eu.toFixed(1)+'%',`<div class="d" style="color:var(--eu)">ELLIS units: ${ell.toFixed(1)}%</div>`],
+    ['United States','share of world output',us.toFixed(1)+'%',`<div class="d" style="color:var(--us)">largest single player</div>`],
+    ['China','share of world output',cn.toFixed(1)+'%',`<div class="d" style="color:var(--cn)">incl. Hong Kong</div>`],
+  ].map(k=>`<div class="kpi"><div class="v">${k[2]}</div><div class="l">${k[0]}<br><span style="color:var(--tm)">${k[1]}</span></div>${k[3]||''}</div>`).join('');
+}
+
+function chart1(){
+  const W=cw('c1'), H=NARROW()?210:236, PL=48,PR=12,PT=18,PB=NARROW()?48:34;
+  const vals=venues.map(v=>v.total_accepted), max=Math.max(...vals)*1.14;
+  const y=v=>PT+(H-PT-PB)*(1-v/max);
+  const bw=(W-PL-PR)/venues.length, iw=Math.min(bw*0.56,50);
+  const step=1000, ticks=[]; for(let t=0;t<=max;t+=step)ticks.push(t);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,fmt);
+  venues.forEach((v,i)=>{const x=PL+bw*i+(bw-iw)/2, val=v.total_accepted, yy=y(val);
+    s+=`<rect x="${x}" y="${yy}" width="${iw}" height="${H-PB-yy}" rx="4" fill="var(--accent)" data-t="${v.label}: <b>${fmt(val)}</b> accepted papers"/>`;
+    s+=`<text x="${x+iw/2}" y="${yy-5}" text-anchor="middle" class="vlab">${fmt(val)}</text>`;
+    s+=xlab(x+iw/2, H-PB+15, v.label)});
+  $('#c1').innerHTML=s+'</svg>';
+  $('#c1-sub').textContent=`total accepted · ${fmt(DATA.meta.total_accepted)} papers 2025–2026`;
+}
+
+function legend2(){
+  $('#leg2').innerHTML=REG.map(r=>`<span><i style="background:${COL[r]}"></i>${r==='China'?'China (+HK)':r}</span>`).join('');
+}
+function chart2a(){  // 100% stacked composition per venue
+  const W=cw('c2a'), H=NARROW()?250:280, PL=34,PR=8,PT=12,PB=NARROW()?50:34;
+  const y=v=>PT+(H-PT-PB)*(1-v/100);
+  const bw=(W-PL-PR)/venues.length, iw=Math.min(bw*0.62,54);
+  let s=svg(W,H)+grid(PL,W-PR,y,[0,25,50,75,100],t=>t+'%');
+  venues.forEach((v,i)=>{const x=PL+bw*i+(bw-iw)/2; let acc=0;
+    REG.forEach(reg=>{const pc=share(v,reg); if(pc<=0)return;
+      const y0=y(acc+pc), y1=y(acc);
+      s+=`<rect x="${x}" y="${y0}" width="${iw}" height="${Math.max(y1-y0,0)}" fill="${COL[reg]}" data-t="${v.label} — ${reg}: <b>${pc.toFixed(1)}%</b>"/>`;
+      if(pc>=9) s+=`<text x="${x+iw/2}" y="${(y0+y1)/2+4}" text-anchor="middle" class="vlab" fill="#fff" style="font-size:10px">${Math.round(pc)}</text>`;
+      acc+=pc;});
+    s+=xlab(x+iw/2, H-PB+15, v.label)});
+  $('#c2a').innerHTML=s+'</svg>';
+  $('#c2a-sub').textContent='attributed share · sums to 100% of identified';
+}
+function chart2b(){  // grouped bars: US vs China vs Europe per venue (no line overlap)
+  $('#leg2b').innerHTML=[['US','us'],['China','cn'],['Europe','eu']]
+    .map(([lab,c])=>`<span><i style="background:var(--${c})"></i>${lab}</span>`).join('');
+  const W=cw('c2b'), H=NARROW()?254:284, PL=34,PR=8,PT=20,PB=NARROW()?52:38;
+  const keys=['US','China','Europe'];
+  const rows=venues.map(v=>({label:v.label, vals:keys.map(k=>share(v,k))}));
+  const max=Math.max(...rows.flatMap(r=>r.vals))*1.2;
+  const y=v=>PT+(H-PT-PB)*(1-v/max), yBase=H-PB;
+  const gw=(W-PL-PR)/venues.length, ig=NARROW()?2:3, bw=Math.min((gw*0.72-ig*2)/3,24);
+  const grp=bw*3+ig*2;
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(0)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  rows.forEach((r,i)=>{const x0=PL+gw*i+(gw-grp)/2;
+    keys.forEach((k,j)=>{const val=r.vals[j], x=x0+j*(bw+ig), yy=y(val);
+      s+=`<rect x="${x}" y="${yy}" width="${bw}" height="${Math.max(yBase-yy,0)}" rx="3" fill="${COL[k]}" data-t="${r.label} — ${k}: <b>${val.toFixed(1)}%</b>"/>`;
+      s+=`<text x="${x+bw/2}" y="${yy-4}" text-anchor="middle" class="vlab" style="font-size:${NARROW()?9:10}px;fill:${COL[k]}">${val.toFixed(0)}</text>`;});
+    s+=xlab(x0+grp/2, H-PB+15, r.label)});
+  $('#c2b').innerHTML=s+'</svg>';
+  $('#c2b-sub').textContent='attributed share · side-by-side per venue';
+  const A=DATA.agg,id=A.identified||1;
+  $('#c2note').innerHTML=`Across the sample, <b>${(A.attributed.US/id*100).toFixed(1)}%</b> of identified output is US, <b>${(A.attributed.China/id*100).toFixed(1)}%</b> China, <b>${(A.attributed.Europe/id*100).toFixed(1)}%</b> Europe, <b>${(A.attributed.Canada/id*100).toFixed(1)}%</b> Canada, <b>${(A.attributed.Other/id*100).toFixed(1)}%</b> rest of world &mdash; based on <b>${fmt(A.identified)}</b> papers with an identified affiliation (of <b>${fmt(A.matched)}</b> sampled; <b>${fmt(A.unknown)}</b> unknown).`;
+}
+
+function chart3(){  // Europe participation with ELLIS within, per venue
+  const W=cw('c3'), H=NARROW()?250:264, PL=38,PR=10,PT=16,PB=NARROW()?52:38;
+  const rows=venues.map(v=>({label:v.label, eu:part(v,'Europe'), ellis:(v.regions.ellis/(v.regions.matched||1)*100), fund:(v.regions.ack_pool?v.regions.eu_fund/v.regions.ack_pool*100:0)}));
+  const max=Math.max(6,...rows.map(r=>r.eu))*1.25;
+  const y=v=>PT+(H-PT-PB)*(1-v/max);
+  const gw=(W-PL-PR)/venues.length, bw=Math.min(gw*0.4,40);
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(0)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  rows.forEach((r,i)=>{const x=PL+gw*i+(gw-bw)/2, yE=y(r.eu), yEl=y(r.ellis), yBase=H-PB;
+    s+=`<rect x="${x}" y="${yE}" width="${bw}" height="${yBase-yE}" rx="3" fill="var(--eu)" data-t="${r.label} — European author: <b>${r.eu.toFixed(1)}%</b>"/>`;
+    s+=`<rect x="${x}" y="${yEl}" width="${bw}" height="${yBase-yEl}" rx="3" fill="var(--accent)" opacity="0.55" data-t="${r.label} — ELLIS units: <b>${r.ellis.toFixed(1)}%</b>"/>`;
+    s+=`<text x="${x+bw/2}" y="${yE-5}" text-anchor="middle" class="vlab">${r.eu.toFixed(0)}%</text>`;
+    s+=xlab(x+bw/2, H-PB+15, r.label)});
+  $('#c3').innerHTML=s+'</svg>';
+  const A=DATA.agg, m=A.matched||1;
+  $('#c3note').innerHTML=`Europe appears on <b>${(A.any.Europe/m*100).toFixed(1)}%</b> of sampled papers; <b>ELLIS units</b> on <b>${(A.ellis/m*100).toFixed(1)}%</b>. Of papers with an acknowledgments section, <b>${(A.eu_fund/(A.ack_pool||1)*100).toFixed(1)}%</b> thank a European funder. Participation counts any-author, so it overlaps other regions.`;
+  let tv=`<table class="tv"><tr><th>Venue</th><th>Sampled</th><th>US%</th><th>China%</th><th>Europe%</th><th>Canada%</th><th>Other%</th><th>ELLIS%</th></tr>`;
+  venues.forEach(v=>{const b=v.regions,id=b.identified||1,m2=b.matched||1;
+    tv+=`<tr><td>${v.label}</td><td>${fmt(m2)}</td><td>${(b.attributed.US/id*100).toFixed(1)}</td><td>${(b.attributed.China/id*100).toFixed(1)}</td><td>${(b.attributed.Europe/id*100).toFixed(1)}</td><td>${(b.attributed.Canada/id*100).toFixed(1)}</td><td>${(b.attributed.Other/id*100).toFixed(1)}</td><td>${(b.ellis/m2*100).toFixed(1)}</td></tr>`});
+  $('#c3tv').innerHTML=tv+'</table>';
+}
+
+function renderAll(){kpis();chart1();legend2();chart2a();chart2b();chart3();}
+function ptr(e){const p=e.touches&&e.touches[0]?e.touches[0]:e;const t=(e.target.closest?e.target.closest('[data-t]'):null);
+  if(t){showTT({clientX:p.clientX,clientY:p.clientY},t.getAttribute('data-t'));}else hideTT();}
+document.addEventListener('mousemove',ptr);
+document.addEventListener('touchstart',ptr,{passive:true});
+document.addEventListener('touchend',()=>setTimeout(hideTT,1200));
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderAll,150);});
+$('#method-sample').innerHTML=`The regional split is measured on a <b>stratified random sample</b> of ${fmt(DATA.meta.sample_matched)} arXiv-matched papers (equal draw per venue) out of the full accepted set &mdash; a real measurement with a sampling margin, not an exhaustive census. Total accepted counts ARE exhaustive.`;
+$('#foot').innerHTML=`Built ${DATA.buildDate} · primary data from OpenReview + arXiv · ELLIS — European research network · draft<br>Code &amp; pipeline: <a href="https://github.com/ArianKhorasani/AI_Safety_Venue_Dashboards" target="_blank" rel="noopener">github.com/ArianKhorasani/AI_Safety_Venue_Dashboards</a> · maintained by <a href="https://github.com/ArianKhorasani" target="_blank" rel="noopener">@ArianKhorasani</a>`;
+renderAll();
+</script>
+</div>
+</body></html>
