@@ -1,0 +1,423 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAISI · AI Safety Research Dashboard</title>
+<style>:root{color-scheme:light dark}html,body{margin:0;background:#f4f3f0}@media(prefers-color-scheme:dark){html,body{background:#0d0d0d}}</style>
+</head><body>
+<div class="viz-root" id="app">
+<style>
+  #app{--surface-1:#fcfcfb;--plane:#f4f3f0;--tp:#0b0b0b;--ts:#52514e;--tm:#898781;
+    --grid:#e1e0d9;--axis:#c3c2b7;--b1:#2a78d6;--b1s:#256abf;--aqua:#1baf7a;
+    --red:#e34948;--good:#006300;--ring:rgba(11,11,11,.10);
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--tp);
+    background:var(--plane);line-height:1.5;-webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;overflow-x:hidden;}
+  @media (prefers-color-scheme:dark){#app{--surface-1:#1a1a19;--plane:#0d0d0d;
+    --tp:#fff;--ts:#c3c2b7;--tm:#898781;--grid:#2c2c2a;--axis:#383835;
+    --b1:#3987e5;--b1s:#5598e7;--aqua:#199e70;--red:#e66767;
+    --good:#0ca30c;--ring:rgba(255,255,255,.12);}}
+  #app *{box-sizing:border-box}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 80px}
+  header.hd{position:sticky;top:0;z-index:20;background:var(--plane);
+    border-bottom:1px solid var(--grid);padding:14px 0 12px}
+  .hd .wrap{padding-bottom:0}
+  .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--red);font-weight:700}
+  h1{font-size:23px;margin:3px 0 2px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+  .sub{color:var(--ts);font-size:14px;max-width:70ch}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .segscroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .seg{display:inline-flex;border:1px solid var(--axis);border-radius:9px;overflow:hidden;white-space:nowrap}
+  .seg button{appearance:none;border:0;background:transparent;color:var(--ts);
+    font:inherit;font-size:13px;font-weight:600;padding:7px 14px;cursor:pointer;flex:0 0 auto}
+  .seg button.on{background:var(--b1);color:#fff}
+  .seg button:focus-visible{outline:2px solid var(--b1);outline-offset:-2px}
+  .hint{font-size:12px;color:var(--tm)}
+  section{background:var(--surface-1);border:1px solid var(--ring);border-radius:14px;
+    padding:20px 22px;margin-top:20px}
+  h2{font-size:16px;margin:0 0 2px;font-weight:700}
+  .lead{color:var(--ts);font-size:13.5px;margin:0 0 14px;max-width:80ch}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:var(--surface-1);border:1px solid var(--ring);border-radius:14px;padding:16px 18px}
+  .kpi .v{font-size:30px;font-weight:750;letter-spacing:-.02em;line-height:1.05}
+  .kpi .l{font-size:12.5px;color:var(--ts);margin-top:5px}
+  .kpi .d{font-size:12px;color:var(--good);font-weight:650;margin-top:6px}
+  .kpi .d.mut{color:var(--tm);font-weight:500}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  svg{width:100%;height:auto;display:block}
+  .axlab{fill:var(--tm);font-size:11px}
+  .vlab{fill:var(--tp);font-size:11.5px;font-weight:650;font-variant-numeric:tabular-nums}
+  .rowlab{fill:var(--tp);font-size:12.5px}
+  .cardttl{font-size:13px;font-weight:700;margin:0 0 2px}
+  .cardsub{font-size:11.5px;color:var(--tm);margin:0 0 10px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ts);margin:4px 0 12px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .tvwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.tv{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px;
+    font-variant-numeric:tabular-nums;min-width:340px}
+  table.tv th,table.tv td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--grid)}
+  table.tv th:first-child,table.tv td:first-child{text-align:left}
+  table.tv th{color:var(--tm);font-weight:600}
+  details.method{margin-top:20px}
+  details.method summary{cursor:pointer;font-weight:700;font-size:15px;padding:6px 0}
+  .method h3{font-size:13.5px;margin:14px 0 4px}
+  .method p,.method li{font-size:13px;color:var(--ts)}
+  .method code{background:var(--plane);border:1px solid var(--grid);border-radius:5px;padding:1px 5px;font-size:12px;word-break:break-word}
+  .method a{color:var(--b1);font-weight:600;text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+  .tag{display:inline-block;background:var(--plane);border:1px solid var(--grid);
+    border-radius:20px;padding:2px 10px;font-size:11.5px;color:var(--ts);margin:2px 4px 2px 0}
+  .foot{margin-top:26px;font-size:12px;color:var(--tm);text-align:center}
+  .foot a{color:var(--b1);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  .tt{position:fixed;pointer-events:none;background:var(--tp);color:var(--plane);
+    font-size:12px;padding:6px 9px;border-radius:7px;opacity:0;transition:opacity .1s;z-index:60;
+    max-width:74vw;font-variant-numeric:tabular-nums;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+  .banner{background:color-mix(in srgb,var(--red) 12%,transparent);border:1px solid var(--red);
+    border-radius:10px;padding:9px 13px;font-size:12.5px;color:var(--ts);margin-top:14px}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.wrap{padding:0 13px 60px}section{padding:16px 15px}
+    h1{font-size:20px}.sub{font-size:13px}.kpi .v{font-size:25px}.kpi{padding:13px 14px}
+    .seg button{padding:8px 13px}}
+  @media(prefers-reduced-motion:reduce){.tt{transition:none}}
+</style>
+
+<header class="hd"><div class="wrap">
+  <div class="eyebrow">Canadian AI Safety Institute</div>
+  <h1>AI Safety Research at Top ML Venues (2025&ndash;2026)</h1>
+  <div class="sub">Growth, topic composition, and Canadian footprint of AI-safety papers accepted at ICLR, ICML and NeurIPS &mdash; built from primary conference data to support the case for continued investment.</div>
+  <div class="toolbar">
+    <div class="segscroll"><div class="seg" id="scope">
+      <button data-s="broad" class="on">Broad (trustworthy ML)</button>
+      <button data-s="narrow">Narrow (frontier safety)</button>
+    </div></div>
+    <span class="hint" id="scopehint"></span>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <h2>1 &middot; Is AI-safety research growing?</h2>
+    <p class="lead">Accepted AI-safety papers per conference, in chronological order. Left: absolute count. Right: share of all accepted papers at that venue. One measure per axis.</p>
+    <div class="grid2">
+      <div><div class="cardttl">AI-safety papers (count)</div><div class="cardsub" id="c1a-sub"></div><div id="c1a"></div></div>
+      <div><div class="cardttl">AI-safety share of venue (%)</div><div class="cardsub" id="c1b-sub"></div><div id="c1b"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2 &middot; What are the portions of different topics?</h2>
+    <p class="lead">Every safety paper is assigned one dominant subtopic (keyword + primary-area rules; see Methodology). Choose a venue to see its mix.</p>
+    <div class="toolbar"><div class="segscroll"><div class="seg" id="venuepick"></div></div></div>
+    <div id="c2" style="margin-top:12px"></div>
+    <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12.5px;color:var(--ts)">Table view</summary><div class="tvwrap" id="c2tv"></div></details>
+  </section>
+
+  <section>
+    <h2>3 &middot; The Canadian footprint</h2>
+    <p class="lead">First, the Canadian contribution set against all of AI-safety research &mdash; the same two charts as Section&nbsp;1, now with the Canadian portion (&ldquo;either&rdquo;: a Canadian author <b>or</b> a Canadian acknowledgment) shown inside them. Then, below, how that portion is detected.</p>
+
+    <div class="cardttl" style="font-size:14px">The Canadian portion of AI-safety research</div>
+    <p class="cardsub">Left: AI-safety papers per venue with the estimated Canadian share highlighted within the total. Right: that same share as a percentage. The Canadian portion is estimated by applying each venue&rsquo;s sampled &ldquo;either&rdquo; rate to its full safety count.</p>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>Canadian contribution (estimated)</span>
+      <span><i style="background:var(--b1);opacity:.34"></i>Other AI-safety papers</span>
+    </div>
+    <div class="grid2">
+      <div><div class="cardttl">AI-safety papers, Canadian portion within (count)</div><div class="cardsub" id="c3a-sub"></div><div id="c3a"></div></div>
+      <div><div class="cardttl">Canadian share of AI-safety papers (%)</div><div class="cardsub" id="c3b-sub"></div><div id="c3b"></div></div>
+    </div>
+    <div class="banner" id="c3anote"></div>
+
+    <div class="cardttl" style="font-size:14px;margin-top:26px">How the Canadian portion is detected &mdash; affiliation, acknowledgment, and either</div>
+    <p class="lead" style="margin-top:2px">Share of AI-safety papers with (a) at least one <b>Canadian author affiliation</b> and (b) a <b>Canadian entity thanked in the acknowledgments</b> (Mila, Vector, Amii, CIFAR, NSERC, Compute Canada, &hellip;), by venue.</p>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>Canadian affiliation</span>
+      <span><i style="background:var(--aqua)"></i>Canadian acknowledgment</span>
+      <span><i style="background:var(--b1)"></i>Either</span>
+    </div>
+    <div id="c3"></div>
+    <div class="banner" id="c3note"></div>
+    <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12.5px;color:var(--ts)">Table view</summary><div class="tvwrap" id="c3tv"></div></details>
+  </section>
+
+  <section id="sec4">
+    <h2>4 &middot; Canada CIFAR AI Chairs in AI-safety research</h2>
+    <p class="lead">Share of AI-safety papers with at least one <b>Canada CIFAR AI Chair</b> among the authors. Unlike Section&nbsp;3, this is measured <b>exhaustively</b> &mdash; across every safety paper, by author name against the full CIFAR roster &mdash; not on a sample.</p>
+    <div class="cardttl">Papers with a Canada CIFAR AI Chair author (% of AI-safety papers)</div>
+    <div class="cardsub" id="c4-sub"></div>
+    <div id="c4"></div>
+    <div class="banner" id="c4note"></div>
+    <details style="margin-top:10px"><summary style="cursor:pointer;font-size:12.5px;color:var(--ts)">Table view</summary><div class="tvwrap" id="c4tv"></div></details>
+  </section>
+
+  <details class="method" open>
+    <summary>Methodology, definitions &amp; caveats &mdash; read before citing</summary>
+    <div class="method">
+      <h3>Data sources (all primary)</h3>
+      <ul>
+        <li><b>Papers &amp; metadata:</b> OpenReview API (<code>/notes/search</code>) &mdash; every <i>accepted</i> paper at each venue, with title, abstract, keywords, primary&nbsp;area, and authors. Counts are accepted-only (Poster/Spotlight/Oral), verified against each venue&rsquo;s own accept tags.</li>
+        <li><b>Full text (for acknowledgments &amp; affiliations):</b> Semantic Scholar (title&rarr;arXiv id) + arXiv PDFs, matched by exact/near-exact title plus author-surname overlap.</li>
+      </ul>
+      <h3>What counts as &ldquo;AI safety&rdquo;</h3>
+      <p>A hybrid, transparent rule applied uniformly across all five venues (their <code>primary_area</code> taxonomies are not comparable &mdash; NeurIPS has no safety area at all &mdash; so a keyword layer is the equalizer):</p>
+      <p><span class="tag">Broad = trustworthy ML</span> alignment/RLHF, interpretability, evals &amp; red-teaming, jailbreaks/misuse, hallucination/truthfulness, privacy, fairness/bias, adversarial robustness, security (poisoning/backdoor), governance/societal.</p>
+      <p><span class="tag">Narrow = frontier safety</span> the subset most tied to frontier-model risk: alignment, interpretability, evals &amp; red-teaming, jailbreaks/misuse, hallucination/truthfulness.</p>
+      <p>Precision-first keyword rules over title/abstract/keywords, context-gated to avoid false hits; auditable per-paper.</p>
+      <h3>Footprint detection</h3>
+      <p><b>Affiliation:</b> first-page author affiliations parsed from the PDF, matched against Canadian universities/institutes with guards (e.g. &ldquo;New&nbsp;York&nbsp;University&rdquo;, &ldquo;Northwestern&rdquo;, &ldquo;University of Queensland&rdquo;, &ldquo;CIFAR-10&rdquo; excluded; the ICML/PMLR &ldquo;Vancouver, Canada&rdquo; proceedings line stripped). <b>Acknowledgments:</b> the acknowledgments section only, matched against Canadian funders/institutes (NSERC, CIFAR AI Chair, Mila, Vector, Amii, Compute Canada, FRQNT, &hellip;).</p>
+      <div class="banner" id="method-sample"></div>
+      <h3>Canada CIFAR AI Chairs (Section 4)</h3>
+      <p>The roster of <b>Canada CIFAR AI Chairs</b> is taken from CIFAR&rsquo;s official directory (its WordPress REST API, &ldquo;Pan-Canadian AI Strategy&rdquo; program). A safety paper is credited if any author&rsquo;s name matches a chair (accent- and case-normalized, first&nbsp;+&nbsp;last name). This is <b>exhaustive</b> across all safety papers &mdash; author names are in the conference metadata &mdash; so it is <i>not</i> a sample. Caveat: name-matching may miss a chair listed under a different name form, or over-count a common name shared with a non-chair; spot-checks show the matched set is dominated by correct, well-known chairs.</p>
+      <h3>Known limitations</h3>
+      <ul>
+        <li>Keyword classification has residual false positives/negatives in both directions (~a few&nbsp;% per subtopic).</li>
+        <li>Footprint figures cover only papers with a retrievable arXiv full text, so they are a <b>lower bound</b>; papers not on arXiv are excluded from that measure (but not from counts/topics).</li>
+        <li>2026 venues reflect acceptances known as of the build date.</li>
+      </ul>
+      <h3>Code &amp; reproducibility</h3>
+      <p>The full pipeline (data collection, safety classification, and footprint detection) is open for developers to reuse and adapt: <a href="https://github.com/ArianKhorasani/AI_Safety_Venue_Dashboards" target="_blank" rel="noopener">github.com/ArianKhorasani/AI_Safety_Venue_Dashboards</a>. Maintained by <a href="https://github.com/ArianKhorasani" target="_blank" rel="noopener">Arian&nbsp;Khorasani (@ArianKhorasani)</a>.</p>
+      <style>
+.cite-card{position:relative;border:1px solid var(--ring);border-left:3px solid var(--cite-accent);border-radius:12px;padding:15px 18px;margin-top:14px;background:var(--plane)}
+.cite-label{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--cite-accent);margin-bottom:7px}
+.cite-ref{font-size:13.5px;color:var(--tp);line-height:1.62;margin:0 0 12px}
+.cite-ref .ct{font-style:italic}
+.cite-ref a{color:var(--cite-accent);text-decoration:underline;text-underline-offset:2px;word-break:break-all}
+.cite-bibwrap{position:relative}
+.cite-bib{background:var(--surface-1);border:1px solid var(--grid);border-radius:9px;padding:13px 14px;margin:0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.6;color:var(--ts);white-space:pre}
+.cite-copy{position:absolute;top:8px;right:8px;border:1px solid var(--axis);background:var(--surface-1);color:var(--ts);font:inherit;font-size:11px;font-weight:700;padding:4px 11px;border-radius:6px;cursor:pointer}
+.cite-copy:hover{border-color:var(--cite-accent);color:var(--cite-accent)}
+.cite-ack{font-size:12px;color:var(--tm);margin:11px 0 0}
+.cite-ack a{color:var(--tm);text-decoration:underline}
+</style>
+      <div class="cite-card" style="--cite-accent:var(--red)">
+  <div class="cite-label">How to cite</div>
+  <p class="cite-ref">Zhijing&nbsp;Jin, Arian&nbsp;Khorasani, and the Jinesis&nbsp;Lab (University of Toronto &amp; Vector Institute). <span class="ct">AI Safety Research at Top ML Venues (2025&ndash;2026).</span> 2026. <a href="https://safe.eu/institute-efforts/canada/" target="_blank" rel="noopener">safe.eu/institute-efforts/canada</a></p>
+  <div class="cite-bibwrap">
+    <button class="cite-copy" type="button" onclick="var p=this.parentNode.querySelector('pre');if(navigator.clipboard){navigator.clipboard.writeText(p.textContent);}var b=this;b.textContent='Copied \u2713';setTimeout(function(){b.textContent='Copy';},1500);">Copy</button>
+    <pre class="cite-bib">@misc{jin2026caisi,
+  author       = {Jin, Zhijing and Khorasani, Arian},
+  title        = {AI Safety Research at Top ML Venues (2025--2026)},
+  year         = {2026},
+  howpublished = {\url{https://safe.eu/institute-efforts/canada/}},
+  note         = {Jinesis Lab, University of Toronto \&amp; Vector Institute}
+}</pre>
+  </div>
+  <p class="cite-ack"><b>Acknowledgement &amp; contact:</b> Zhijing&nbsp;Jin (<a href="mailto:zjin@cs.toronto.edu">zjin@cs.toronto.edu</a>) &middot; Arian&nbsp;Khorasani (<a href="mailto:ariankh@cs.toronto.edu">ariankh@cs.toronto.edu</a>).</p>
+</div>
+    </div>
+  </details>
+
+  <div class="foot" id="foot"></div>
+</div>
+<div class="tt" id="tt"></div>
+
+<script>
+const DATA = Object.assign({"venues": [{"key": "ICLR2025", "label": "ICLR 2025", "total_accepted": 3690, "safety_broad": 938, "safety_narrow": 627, "pct_broad": 25.42, "pct_narrow": 16.99, "topics_broad": {"Interpretability": 239, "Alignment/RLHF": 219, "Privacy": 108, "Hallucination/Truthfulness": 78, "Robustness/Adversarial": 75, "Jailbreaks/Misuse": 65, "Safety (general)": 56, "Fairness/Bias": 51, "Security (poisoning/backdoor)": 37, "Evals & Red-teaming": 7, "Governance/Societal": 3}, "topics_narrow": {"Interpretability": 239, "Alignment/RLHF": 219, "Hallucination/Truthfulness": 78, "Jailbreaks/Misuse": 65, "Robustness/Adversarial": 8, "Evals & Red-teaming": 7, "Privacy": 6, "Security (poisoning/backdoor)": 4, "Fairness/Bias": 1}, "canada_broad": {"safety_n": 938, "processed": 200, "matched": 167, "aff_ca": 7, "ack_pool": 124, "ack_ca": 3, "any_ca": 7}, "canada_narrow": {"safety_n": 627, "processed": 135, "matched": 116, "aff_ca": 6, "ack_pool": 85, "ack_ca": 3, "any_ca": 6}}, {"key": "ICML2025", "label": "ICML 2025", "total_accepted": 3230, "safety_broad": 807, "safety_narrow": 482, "pct_broad": 24.98, "pct_narrow": 14.92, "topics_broad": {"Alignment/RLHF": 176, "Interpretability": 170, "Privacy": 134, "Robustness/Adversarial": 95, "Jailbreaks/Misuse": 75, "Fairness/Bias": 66, "Security (poisoning/backdoor)": 37, "Hallucination/Truthfulness": 34, "Governance/Societal": 13, "Evals & Red-teaming": 7}, "topics_narrow": {"Alignment/RLHF": 176, "Interpretability": 170, "Jailbreaks/Misuse": 75, "Hallucination/Truthfulness": 34, "Privacy": 11, "Evals & Red-teaming": 7, "Robustness/Adversarial": 5, "Security (poisoning/backdoor)": 3, "Fairness/Bias": 1}, "canada_broad": {"safety_n": 807, "processed": 200, "matched": 163, "aff_ca": 8, "ack_pool": 123, "ack_ca": 4, "any_ca": 8}, "canada_narrow": {"safety_n": 482, "processed": 111, "matched": 99, "aff_ca": 4, "ack_pool": 72, "ack_ca": 2, "any_ca": 4}}, {"key": "NeurIPS2025", "label": "NeurIPS 2025", "total_accepted": 5240, "safety_broad": 1141, "safety_narrow": 750, "pct_broad": 21.77, "pct_narrow": 14.31, "topics_broad": {"Interpretability": 268, "Alignment/RLHF": 252, "Privacy": 180, "Hallucination/Truthfulness": 106, "Fairness/Bias": 100, "Jailbreaks/Misuse": 91, "Robustness/Adversarial": 78, "Security (poisoning/backdoor)": 45, "Evals & Red-teaming": 13, "Governance/Societal": 8}, "topics_narrow": {"Interpretability": 268, "Alignment/RLHF": 252, "Hallucination/Truthfulness": 106, "Jailbreaks/Misuse": 91, "Evals & Red-teaming": 13, "Privacy": 10, "Robustness/Adversarial": 5, "Security (poisoning/backdoor)": 3, "Fairness/Bias": 1, "Governance/Societal": 1}, "canada_broad": {"safety_n": 1141, "processed": 200, "matched": 142, "aff_ca": 7, "ack_pool": 102, "ack_ca": 2, "any_ca": 7}, "canada_narrow": {"safety_n": 750, "processed": 133, "matched": 108, "aff_ca": 6, "ack_pool": 76, "ack_ca": 2, "any_ca": 6}}, {"key": "ICLR2026", "label": "ICLR 2026", "total_accepted": 5290, "safety_broad": 1307, "safety_narrow": 926, "pct_broad": 24.71, "pct_narrow": 17.5, "topics_broad": {"Interpretability": 345, "Alignment/RLHF": 308, "Privacy": 151, "Hallucination/Truthfulness": 122, "Jailbreaks/Misuse": 120, "Robustness/Adversarial": 77, "Fairness/Bias": 67, "Safety (general)": 61, "Security (poisoning/backdoor)": 33, "Evals & Red-teaming": 15, "Governance/Societal": 8}, "topics_narrow": {"Interpretability": 345, "Alignment/RLHF": 308, "Hallucination/Truthfulness": 122, "Jailbreaks/Misuse": 120, "Evals & Red-teaming": 15, "Robustness/Adversarial": 6, "Privacy": 6, "Fairness/Bias": 3, "Governance/Societal": 1}, "canada_broad": {"safety_n": 1307, "processed": 200, "matched": 155, "aff_ca": 6, "ack_pool": 106, "ack_ca": 4, "any_ca": 8}, "canada_narrow": {"safety_n": 926, "processed": 149, "matched": 116, "aff_ca": 5, "ack_pool": 77, "ack_ca": 3, "any_ca": 7}}, {"key": "ICML2026", "label": "ICML 2026", "total_accepted": 6194, "safety_broad": 1532, "safety_narrow": 1026, "pct_broad": 24.73, "pct_narrow": 16.56, "topics_broad": {"Alignment/RLHF": 346, "Interpretability": 342, "Privacy": 195, "Hallucination/Truthfulness": 151, "Jailbreaks/Misuse": 135, "Robustness/Adversarial": 120, "Fairness/Bias": 110, "Security (poisoning/backdoor)": 80, "Governance/Societal": 37, "Evals & Red-teaming": 16}, "topics_narrow": {"Alignment/RLHF": 346, "Interpretability": 342, "Hallucination/Truthfulness": 151, "Jailbreaks/Misuse": 135, "Evals & Red-teaming": 16, "Security (poisoning/backdoor)": 13, "Privacy": 11, "Fairness/Bias": 9, "Governance/Societal": 2, "Robustness/Adversarial": 1}, "canada_broad": {"safety_n": 1532, "processed": 200, "matched": 132, "aff_ca": 6, "ack_pool": 84, "ack_ca": 2, "any_ca": 6}, "canada_narrow": {"safety_n": 1026, "processed": 126, "matched": 89, "aff_ca": 4, "ack_pool": 52, "ack_ca": 1, "any_ca": 4}}], "agg_topics_broad": {"Interpretability": 1364, "Alignment/RLHF": 1301, "Privacy": 768, "Hallucination/Truthfulness": 491, "Jailbreaks/Misuse": 486, "Robustness/Adversarial": 445, "Fairness/Bias": 394, "Security (poisoning/backdoor)": 232, "Safety (general)": 117, "Governance/Societal": 69, "Evals & Red-teaming": 58}, "agg_topics_narrow": {"Interpretability": 1364, "Alignment/RLHF": 1301, "Hallucination/Truthfulness": 491, "Jailbreaks/Misuse": 486, "Evals & Red-teaming": 58, "Privacy": 44, "Robustness/Adversarial": 25, "Security (poisoning/backdoor)": 23, "Fairness/Bias": 15, "Governance/Societal": 4}, "order": ["ICLR2025", "ICML2025", "NeurIPS2025", "ICLR2026", "ICML2026"], "meta": {"total_safety_broad": 5725, "total_safety_narrow": 3811, "total_accepted": 23644, "canada_processed": 1000, "canada_ok": 759}, "cifar": {"order": ["ICLR2025", "ICLR2026", "ICML2025", "ICML2026", "NeurIPS2025"], "roster_size": 157, "venues": {"ICLR2025": {"safety_broad": 938, "cifar_broad": 25, "safety_narrow": 627, "cifar_narrow": 19}, "ICLR2026": {"safety_broad": 1307, "cifar_broad": 20, "safety_narrow": 926, "cifar_narrow": 12}, "ICML2025": {"safety_broad": 807, "cifar_broad": 21, "safety_narrow": 482, "cifar_narrow": 13}, "ICML2026": {"safety_broad": 1532, "cifar_broad": 35, "safety_narrow": 1026, "cifar_narrow": 20}, "NeurIPS2025": {"safety_broad": 1141, "cifar_broad": 28, "safety_narrow": 750, "cifar_narrow": 21}}, "total": {"safety_broad": 5725, "cifar_broad": 129, "safety_narrow": 3811, "cifar_narrow": 85}}, "buildDate": "2026-07-06"},{});
+const CFG = {"leg": ["Canadian affiliation", "Canadian acknowledgment", "Either"], "fpKpi": ["Canadian footprint", "affiliation or ack (sampled)"], "ackWord": "acknowledgment", "contrib": "Canadian", "ellis": false};
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>n.toLocaleString('en-US');
+let SCOPE='broad', VENUE='ALL';
+const venues=DATA.venues, order=DATA.order;
+const tt=$('#tt');
+function showTT(e,html){tt.innerHTML=html;tt.style.opacity=1;
+  const x=(e.clientX!=null?e.clientX:innerWidth/2), y=(e.clientY!=null?e.clientY:100);
+  tt.style.left=Math.max(6,Math.min(x+12,innerWidth-tt.offsetWidth-8))+'px';
+  tt.style.top=Math.max(6,y-tt.offsetHeight-10)+'px';}
+function hideTT(){tt.style.opacity=0;}
+const cw=id=>{const el=document.getElementById(id);return Math.max((el&&el.clientWidth)||340,280);};
+const NARROW=()=>innerWidth<640;
+const abbr=l=>l.replace(/ 20(\d\d)/,"’$1");
+function xlab(x,yBase,label){
+  const m=label.match(/^(.*)\s+20(\d\d)$/);
+  if(NARROW()&&m) return `<text x="${x}" y="${yBase}" text-anchor="middle" class="axlab"><tspan x="${x}">${m[1]}</tspan><tspan x="${x}" dy="12">’${m[2]}</tspan></text>`;
+  return `<text x="${x}" y="${yBase}" text-anchor="middle" class="axlab">${abbr(label)}</text>`;
+}
+function svg(w,h){return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMinYMin meet" role="img">`}
+function grid(x0,x1,y,ticks,fmtf){let s='';ticks.forEach(t=>{const yy=y(t);
+  s+=`<line x1="${x0}" x2="${x1}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/>`+
+     `<text x="${x0-6}" y="${yy+3}" text-anchor="end" class="axlab">${fmtf?fmtf(t):t}</text>`});return s}
+
+function kpis(){
+  const key=SCOPE, tot=venues.reduce((a,v)=>a+v['safety_'+key],0);
+  const first=venues[0], last=venues[venues.length-1];
+  const g=((last['safety_'+key]-first['safety_'+key])/first['safety_'+key]*100);
+  const avgpct=(venues.reduce((a,v)=>a+v['pct_'+key],0)/venues.length);
+  let any=0,match=0,ellis=0;
+  venues.forEach(v=>{const c=v['canada_'+key];any+=c.any_ca;match+=c.matched;ellis+=(c.ellis||0);});
+  const caPct=match?(any/match*100):0, elPct=match?(ellis/match*100):0;
+  const fpDelta = CFG.ellis ? `<div class="d mut">${CFG.ellisLabel}: ${elPct.toFixed(1)}%</div>`
+                            : `<div class="d mut">n=${fmt(match)} matched</div>`;
+  $('#kpis').innerHTML=[
+    ['Total AI-safety papers','2025&ndash;2026 across 5 venues',fmt(tot),''],
+    ['Growth, first&rarr;last venue',first.label+' &rarr; '+last.label,(g>=0?'+':'')+g.toFixed(0)+'%',g>=0?'up':''],
+    ['Avg. safety share','of all accepted papers',avgpct.toFixed(1)+'%',''],
+    [CFG.fpKpi[0],CFG.fpKpi[1],caPct.toFixed(1)+'%','fp']
+  ].map(k=>`<div class="kpi"><div class="v">${k[2]}</div><div class="l">${k[0]}<br><span style="color:var(--tm)">${k[1]}</span></div>${k[3]==='up'?`<div class="d">&#9650; growth</div>`:(k[3]==='fp'?fpDelta:'')}</div>`).join('');
+}
+
+function chart1a(){
+  const key='safety_'+SCOPE, W=cw('c1a'), H=NARROW()?208:230, PL=40,PR=10,PT=18,PB=NARROW()?48:34;
+  const vals=venues.map(v=>v[key]), max=Math.max(...vals)*1.14;
+  const y=v=>PT+(H-PT-PB)*(1-v/max);
+  const bw=(W-PL-PR)/venues.length, iw=Math.min(bw*0.56,46);
+  const step=max>1500?500:(max>600?250:100), ticks=[]; for(let t=0;t<=max;t+=step)ticks.push(t);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,fmt);
+  venues.forEach((v,i)=>{const x=PL+bw*i+(bw-iw)/2, val=v[key], yy=y(val);
+    s+=`<rect x="${x}" y="${yy}" width="${iw}" height="${H-PB-yy}" rx="4" fill="var(--b1)" data-t="${v.label}: <b>${fmt(val)}</b> safety papers (${v['pct_'+SCOPE]}% of ${fmt(v.total_accepted)})"/>`;
+    s+=`<text x="${x+iw/2}" y="${yy-5}" text-anchor="middle" class="vlab">${fmt(val)}</text>`;
+    s+=xlab(x+iw/2, H-PB+15, v.label)});
+  $('#c1a').innerHTML=s+'</svg>';
+  $('#c1a-sub').textContent=`chronological · ${SCOPE} definition`;
+}
+function chart1b(){
+  const key='pct_'+SCOPE, W=cw('c1b'), H=NARROW()?208:230, PL=40,PR=18,PT=22,PB=NARROW()?48:34;
+  const vals=venues.map(v=>v[key]), max=Math.max(...vals)*1.28;
+  const y=v=>PT+(H-PT-PB)*(1-v/max), x=i=>PL+(W-PL-PR)*(i/(venues.length-1));
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(0)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  s+=`<path d="${venues.map((v,i)=>`${i?'L':'M'}${x(i)},${y(v[key])}`).join(' ')}" fill="none" stroke="var(--b1)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  venues.forEach((v,i)=>{s+=`<circle cx="${x(i)}" cy="${y(v[key])}" r="4.5" fill="var(--surface-1)" stroke="var(--b1)" stroke-width="2.5" data-t="${v.label}: <b>${v[key]}%</b> safety"/>`;
+    s+=`<text x="${x(i)}" y="${y(v[key])-11}" text-anchor="middle" class="vlab">${v[key]}%</text>`;
+    s+=xlab(x(i), H-PB+15, v.label)});
+  $('#c1b').innerHTML=s+'</svg>';
+  $('#c1b-sub').textContent=`share of all accepted · ${SCOPE}`;
+}
+
+function topicsFor(){ if(VENUE==='ALL') return DATA['agg_topics_'+SCOPE];
+  return venues.find(v=>v.key===VENUE)['topics_'+SCOPE]; }
+function chart2(){
+  const ents=Object.entries(topicsFor()).sort((a,b)=>b[1]-a[1]);
+  const total=ents.reduce((a,e)=>a+e[1],0)||1, W=cw('c2'), max=Math.max(...ents.map(e=>e[1]));
+  let s;
+  if(NARROW()){
+    const rowH=42, PT=4, PR=62, H=PT+ents.length*rowH+4, x=v=>(W-PR)*(v/max); s=svg(W,H);
+    ents.forEach((e,i)=>{const yy=PT+i*rowH, val=e[1], pc=val/total*100;
+      s+=`<text x="0" y="${yy+11}" class="rowlab">${e[0]}</text>`;
+      s+=`<rect x="0" y="${yy+16}" width="${Math.max(x(val),2)}" height="16" rx="4" fill="var(--b1)" data-t="${e[0]}: <b>${fmt(val)}</b> (${pc.toFixed(1)}%)"/>`;
+      s+=`<text x="${Math.max(x(val),2)+6}" y="${yy+28}" class="vlab">${fmt(val)} · ${pc.toFixed(0)}%</text>`});
+  } else {
+    const rowH=30, PT=6, PL=Math.min(200,W*0.28), PR=78, H=PT+ents.length*rowH+6, x=v=>PL+(W-PL-PR)*(v/max); s=svg(W,H);
+    ents.forEach((e,i)=>{const yy=PT+i*rowH, bh=18, val=e[1], pc=val/total*100;
+      s+=`<text x="${PL-10}" y="${yy+bh/2+4}" text-anchor="end" class="rowlab">${e[0]}</text>`;
+      s+=`<rect x="${PL}" y="${yy}" width="${Math.max(x(val)-PL,2)}" height="${bh}" rx="4" fill="var(--b1)" data-t="${e[0]}: <b>${fmt(val)}</b> papers (${pc.toFixed(1)}%)"/>`;
+      s+=`<text x="${x(val)+7}" y="${yy+bh/2+4}" class="vlab">${fmt(val)} · ${pc.toFixed(0)}%</text>`});
+  }
+  $('#c2').innerHTML=s+'</svg>';
+  let tv='<table class="tv"><tr><th>Subtopic</th><th>Papers</th><th>Share</th></tr>';
+  ents.forEach(e=>tv+=`<tr><td>${e[0]}</td><td>${fmt(e[1])}</td><td>${(e[1]/total*100).toFixed(1)}%</td></tr>`);
+  $('#c2tv').innerHTML=tv+`<tr><td><b>Total</b></td><td><b>${fmt(total)}</b></td><td>100%</td></tr></table>`;
+}
+
+// --- Section 3 opener: augmented copy of Section 1, with the contribution portion ---
+function contribRows(){
+  const key='safety_'+SCOPE, ck='canada_'+SCOPE;
+  return venues.map(v=>{const c=v[ck], m=c.matched||1, rate=c.any_ca/m;
+    return {label:v.label, tot:v[key], rate, can:Math.round(v[key]*rate),
+            matched:c.matched, any:c.any_ca};});
+}
+function chart3a(){
+  const W=cw('c3a'), H=NARROW()?208:230, PL=40,PR=10,PT=18,PB=NARROW()?48:34;
+  const rows=contribRows(), max=Math.max(...rows.map(r=>r.tot))*1.14;
+  const y=v=>PT+(H-PT-PB)*(1-v/max), yBase=H-PB;
+  const bw=(W-PL-PR)/venues.length, iw=Math.min(bw*0.56,46);
+  const step=max>1500?500:(max>600?250:100), ticks=[]; for(let t=0;t<=max;t+=step)ticks.push(t);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,fmt);
+  rows.forEach((r,i)=>{const x=PL+bw*i+(bw-iw)/2, yTop=y(r.tot), yCan=y(r.can), sliceH=yBase-yCan;
+    s+=`<rect x="${x}" y="${yTop}" width="${iw}" height="${yBase-yTop}" rx="4" fill="var(--b1)" opacity="0.34" data-t="${r.label}: <b>${fmt(r.tot)}</b> AI-safety papers"/>`;
+    s+=`<rect x="${x}" y="${yCan}" width="${iw}" height="${sliceH}" rx="4" fill="var(--red)" data-t="${r.label}: ~<b>${fmt(r.can)}</b> ${CFG.contrib} (est.) &middot; ${(r.rate*100).toFixed(1)}% of ${fmt(r.tot)}"/>`;
+    s+=`<text x="${x+iw/2}" y="${yTop-5}" text-anchor="middle" class="vlab">${fmt(r.tot)}</text>`;
+    if(sliceH>=14) s+=`<text x="${x+iw/2}" y="${yCan+sliceH/2+4}" text-anchor="middle" class="vlab" fill="#fff" style="font-size:10px">~${fmt(r.can)}</text>`;
+    else s+=`<text x="${x+iw/2}" y="${yCan-4}" text-anchor="middle" class="vlab" fill="var(--red)" style="font-size:10px">~${fmt(r.can)}</text>`;
+    s+=xlab(x+iw/2, H-PB+15, r.label)});
+  $('#c3a').innerHTML=s+'</svg>';
+  $('#c3a-sub').textContent=`estimated ${CFG.contrib} portion · ${SCOPE}`;
+}
+function chart3b(){
+  const W=cw('c3b'), H=NARROW()?208:230, PL=40,PR=18,PT=22,PB=NARROW()?48:34;
+  const rows=contribRows().map(r=>({label:r.label, pct:r.rate*100}));
+  const max=Math.max(2,...rows.map(r=>r.pct))*1.35;
+  const y=v=>PT+(H-PT-PB)*(1-v/max), x=i=>PL+(W-PL-PR)*(i/(venues.length-1));
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(1)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  s+=`<path d="${rows.map((r,i)=>`${i?'L':'M'}${x(i)},${y(r.pct)}`).join(' ')}" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  rows.forEach((r,i)=>{s+=`<circle cx="${x(i)}" cy="${y(r.pct)}" r="4.5" fill="var(--surface-1)" stroke="var(--red)" stroke-width="2.5" data-t="${r.label}: <b>${r.pct.toFixed(1)}%</b> of AI-safety papers are ${CFG.contrib} (est.)"/>`;
+    s+=`<text x="${x(i)}" y="${y(r.pct)-11}" text-anchor="middle" class="vlab">${r.pct.toFixed(1)}%</text>`;
+    s+=xlab(x(i), H-PB+15, r.label)});
+  $('#c3b').innerHTML=s+'</svg>';
+  $('#c3b-sub').textContent=`share of AI-safety papers · ${SCOPE}`;
+  let match=0,any=0; contribRows().forEach(r=>{match+=r.matched;any+=r.any;});
+  $('#c3anote').innerHTML=`The ${CFG.contrib} portion here is an <b>estimate</b>: each venue&rsquo;s full AI-safety count &times; the &ldquo;either&rdquo; rate measured on its arXiv-matched sample (<b>${fmt(any)}</b> ${CFG.contrib} of <b>${fmt(match)}</b> matched papers across venues). Because the sample is a lower bound, the true portion is at least this. Exact matched counts and the affiliation/${CFG.ackWord} split are in the breakdown below.`;
+}
+
+function chart3(){
+  const key='canada_'+SCOPE, W=cw('c3'), H=NARROW()?252:270, PL=38,PR=10,PT=16,PB=NARROW()?52:38;
+  const rows=venues.map(v=>{const c=v[key], m=c.matched||1;
+    return {label:v.label, aff:c.aff_ca/m*100, ack:(c.ack_pool?c.ack_ca/c.ack_pool*100:0), any:c.any_ca/m*100, c};});
+  const max=Math.max(6,...rows.flatMap(r=>[r.aff,r.ack,r.any]))*1.2;
+  const y=v=>PT+(H-PT-PB)*(1-v/max);
+  const gw=(W-PL-PR)/venues.length, bw=Math.min(gw*0.24,20), gap=Math.max((gw-bw*3-4)/2,2);
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(0)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  const cols=[['aff','var(--red)',CFG.leg[0]],['ack','var(--aqua)',CFG.leg[1]],['any','var(--b1)',CFG.leg[2]]];
+  rows.forEach((r,i)=>{const x0=PL+gw*i+gap;
+    cols.forEach((c,j)=>{const val=r[c[0]], x=x0+j*(bw+2), yy=y(val);
+      s+=`<rect x="${x}" y="${yy}" width="${bw}" height="${Math.max(H-PB-yy,0)}" rx="3" fill="${c[1]}" data-t="${r.label} — ${c[2]}: <b>${val.toFixed(1)}%</b>"/>`});
+    s+=xlab(x0+(bw*3+4)/2, H-PB+15, r.label)});
+  $('#c3').innerHTML=s+'</svg>';
+  let proc=0,match=0,ellis=0; venues.forEach(v=>{proc+=v[key].processed;match+=v[key].matched;ellis+=(v[key].ellis||0);});
+  const ellisClause = CFG.ellis ? ` Of matched papers, <b>${fmt(ellis)}</b> (${(ellis/(match||1)*100).toFixed(1)}%) are from <b>ELLIS units</b>.` : '';
+  $('#c3note').innerHTML=`Based on a stratified random sample of AI-safety papers (${SCOPE} scope): <b>${fmt(match)}</b> with a matched arXiv full text out of <b>${fmt(proc)}</b> sampled. Percentages are of matched papers; the ${CFG.ackWord}&nbsp;% is of papers with an acknowledgments section. A <b>lower bound</b> &mdash; papers without a retrievable arXiv PDF are not counted.${ellisClause}`;
+  const eh = CFG.ellis ? '<th>ELLIS%</th>' : '';
+  let tv=`<table class="tv"><tr><th>Venue</th><th>Matched</th><th>Affil.%</th><th>Ack%</th><th>Either%</th>${eh}</tr>`;
+  rows.forEach(r=>{const ec=CFG.ellis?`<td>${((r.c.ellis||0)/(r.c.matched||1)*100).toFixed(1)}</td>`:'';
+    tv+=`<tr><td>${r.label}</td><td>${fmt(r.c.matched)}</td><td>${r.aff.toFixed(1)}</td><td>${r.ack.toFixed(1)}</td><td>${r.any.toFixed(1)}</td>${ec}</tr>`;});
+  $('#c3tv').innerHTML=tv+'</table>';
+}
+
+function chart4(){
+  const cf=DATA.cifar; if(!cf)return;
+  const W=cw('c4'), H=NARROW()?208:230, PL=40,PR=10,PT=18,PB=NARROW()?48:34;
+  const rows=order.map(k=>{const v=cf.venues[k], s=v['safety_'+SCOPE]||1, c=v['cifar_'+SCOPE]||0;
+    return {label:venues.find(x=>x.key===k).label, pct:c/s*100, c, s};});
+  const max=Math.max(2,...rows.map(r=>r.pct))*1.22, yBase=H-PB;
+  const y=v=>PT+(H-PT-PB)*(1-v/max);
+  const bw=(W-PL-PR)/rows.length, iw=Math.min(bw*0.56,46);
+  const ticks=[0,.25,.5,.75,1].map(f=>+(max*f).toFixed(1)).filter((v,i,a)=>a.indexOf(v)===i);
+  let s=svg(W,H)+grid(PL,W-PR,y,ticks,t=>t+'%');
+  rows.forEach((r,i)=>{const x=PL+bw*i+(bw-iw)/2, yy=y(r.pct);
+    s+=`<rect x="${x}" y="${yy}" width="${iw}" height="${Math.max(yBase-yy,0)}" rx="4" fill="var(--red)" data-t="${r.label}: <b>${fmt(r.c)}</b> of ${fmt(r.s)} safety papers (${r.pct.toFixed(1)}%)"/>`;
+    s+=`<text x="${x+iw/2}" y="${yy-5}" text-anchor="middle" class="vlab">${r.pct.toFixed(1)}%</text>`;
+    s+=xlab(x+iw/2, H-PB+15, r.label)});
+  $('#c4').innerHTML=s+'</svg>';
+  $('#c4-sub').textContent=`exhaustive · all AI-safety papers · ${SCOPE}`;
+  const t=cf.total, tc=t['cifar_'+SCOPE], ts=t['safety_'+SCOPE];
+  $('#c4note').innerHTML=`Across 2025&ndash;2026, <b>${fmt(tc)}</b> of <b>${fmt(ts)}</b> ${SCOPE} AI-safety papers (<b>${(tc/ts*100).toFixed(1)}%</b>) have at least one <b>Canada CIFAR AI Chair</b> author, matched against the full roster of <b>${fmt(cf.roster_size)}</b> chairs. Exhaustive over all safety papers &mdash; not a sample.`;
+  let tv=`<table class="tv"><tr><th>Venue</th><th>Safety papers</th><th>CIFAR-chair papers</th><th>Share</th></tr>`;
+  rows.forEach(r=>tv+=`<tr><td>${r.label}</td><td>${fmt(r.s)}</td><td>${fmt(r.c)}</td><td>${r.pct.toFixed(1)}%</td></tr>`);
+  $('#c4tv').innerHTML=tv+`<tr><td><b>Total</b></td><td><b>${fmt(ts)}</b></td><td><b>${fmt(tc)}</b></td><td><b>${(tc/ts*100).toFixed(1)}%</b></td></tr></table>`;
+}
+function venuePicker(){
+  $('#venuepick').innerHTML=`<button data-v="ALL" class="on">All venues</button>`+
+    order.map(k=>`<button data-v="${k}">${venues.find(v=>v.key===k).label}</button>`).join('');
+  $$('#venuepick button').forEach(b=>b.onclick=()=>{VENUE=b.dataset.v;
+    $$('#venuepick button').forEach(x=>x.classList.toggle('on',x===b));chart2();});
+}
+function scopeHint(){const m=DATA.meta;
+  $('#scopehint').textContent=SCOPE==='broad'
+    ? `${fmt(m.total_safety_broad)} safety papers of ${fmt(m.total_accepted)} accepted`
+    : `${fmt(m.total_safety_narrow)} frontier-safety papers of ${fmt(m.total_accepted)} accepted`;}
+function renderAll(){kpis();chart1a();chart1b();chart2();chart3a();chart3b();chart3();chart4();scopeHint();}
+$$('#scope button').forEach(b=>b.onclick=()=>{SCOPE=b.dataset.s;
+  $$('#scope button').forEach(x=>x.classList.toggle('on',x===b));renderAll();});
+function ptr(e){const p=e.touches&&e.touches[0]?e.touches[0]:e;const t=(e.target.closest?e.target.closest('[data-t]'):null);
+  if(t){showTT({clientX:p.clientX,clientY:p.clientY},t.getAttribute('data-t'));}else hideTT();}
+document.addEventListener('mousemove',ptr);
+document.addEventListener('touchstart',ptr,{passive:true});
+document.addEventListener('touchend',()=>setTimeout(hideTT,1200));
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderAll,150);});
+$('#method-sample').innerHTML='The footprint metric is measured on a <b>stratified random sample</b> of safety papers (equal draw per venue) because full-text retrieval is rate-limited; it is a real measurement with a sampling margin, not an exhaustive census. Growth and topic figures ARE exhaustive (all accepted papers).';
+$('#foot').innerHTML=`Built ${DATA.buildDate} · primary data from OpenReview + arXiv · Canadian AI Safety Institute<br>Code &amp; pipeline: <a href="https://github.com/ArianKhorasani/AI_Safety_Venue_Dashboards" target="_blank" rel="noopener">github.com/ArianKhorasani/AI_Safety_Venue_Dashboards</a> · maintained by <a href="https://github.com/ArianKhorasani" target="_blank" rel="noopener">@ArianKhorasani</a>`;
+venuePicker();renderAll();
+</script>
+</div>
+</body></html>
