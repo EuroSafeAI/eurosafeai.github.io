@@ -284,7 +284,7 @@ export const technicalStaff: TeamMember[] = [
   }),
   define({
     name: "Yann Billeter",
-    role: "Policy Lead & Democracy Tech Lead",
+    role: "Policy Lead",
     section: "team",
     image: "/images/team/yann-billeter.webp",
   }),

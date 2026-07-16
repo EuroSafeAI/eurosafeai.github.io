@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { HelmetProvider } from "react-helmet-async";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import FloatingNav from "@/components/FloatingNav";
@@ -46,7 +46,7 @@ const App = () => (
                 <Route path="/blog" element={<ErrorBoundary><BlogPage /></ErrorBoundary>} />
                 <Route path="/blog/:slug" element={<ErrorBoundary><BlogPostPage /></ErrorBoundary>} />
                 <Route path="/events" element={<ErrorBoundary><EventsPage /></ErrorBoundary>} />
-                <Route path="/events/past" element={<ErrorBoundary><EventsPage /></ErrorBoundary>} />
+                <Route path="/events/past" element={<Navigate to="/events" replace />} />
                 <Route path="/contact" element={<ErrorBoundary><ContactPage /></ErrorBoundary>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

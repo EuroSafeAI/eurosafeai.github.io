@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import { useLocation, useNavigate } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import Tag from "@/components/Tag";
 import {
@@ -19,17 +18,17 @@ const PANEL_BG = "#f5f7fb";
 const BORDER = "rgba(10,31,77,0.08)";
 
 /* Architecture (verified):
- *   - /events uses Luma's calendar embed iframe (LUMA_EMBED_URL).
+ *   - Upcoming events use Luma's calendar embed iframe (LUMA_EMBED_URL).
  *     Auto-syncs in the visitor's browser; iframe is upcoming-only by
  *     design (we inspected Luma's JS bundle: no past-events code).
- *   - /events/past renders cards from src/data/events.json. That JSON
+ *   - Past events render cards from src/data/events.json. That JSON
  *     is generated at build time by scripts/sync-luma.mjs (matches the
  *     scripts/generate-certificates.mjs pattern). See scripts/SYNC-LUMA.md.
  *   - Both render paths share types from src/data/events.types.ts.
+ *   - Everything lives on /events: upcoming on top, past below.
+ *     /events/past redirects here (see App.tsx).
  */
 const data = eventsData as EventsData;
-
-type View = "upcoming" | "past";
 
 /* ────────────────── date helpers ────────────────── */
 const formatFullDate = (iso: string) =>
@@ -162,53 +161,8 @@ const PastEventCard = ({ event: e }: { event: EventItem }) => {
   );
 };
 
-/* Tabs — pill toggle, same visual idiom we had before. */
-const ViewTabs = ({
-  view,
-  setView,
-}: {
-  view: View;
-  setView: (v: View) => void;
-}) => (
-  <div
-    role="tablist"
-    aria-label="Filter events"
-    className="inline-flex p-1 rounded-full bg-white"
-    style={{
-      border: `1px solid ${BORDER}`,
-      boxShadow: "0 1px 2px rgba(10,31,77,0.04)",
-    }}
-  >
-    {(["upcoming", "past"] as View[]).map((v) => {
-      const active = view === v;
-      return (
-        <button
-          key={v}
-          role="tab"
-          aria-selected={active}
-          onClick={() => setView(v)}
-          className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors capitalize ${
-            active
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {v}
-        </button>
-      );
-    })}
-  </div>
-);
-
 /* ────────────────── page ────────────────── */
 const EventsPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const view: View = location.pathname.endsWith("/past") ? "past" : "upcoming";
-  const setView = (v: View) =>
-    navigate(v === "past" ? "/events/past" : "/events");
-
-  const isPast = view === "past";
   /* Past events come from the build-time sync (events.json). The script
    * already filters visibility=public and sorts past descending, but we
    * filter again here defensively — a hand-edited JSON in dev should
@@ -218,16 +172,10 @@ const EventsPage = () => {
   return (
     <div>
       <Helmet>
-        <title>
-          {isPast ? "Past Events — EuroSafeAI" : "Events — EuroSafeAI"}
-        </title>
+        <title>Events — EuroSafeAI</title>
         <meta
           name="description"
-          content={
-            isPast
-              ? "Past workshops, talks, and gatherings hosted by the EuroSafeAI team."
-              : "Upcoming workshops, talks, and gatherings hosted by the EuroSafeAI team."
-          }
+          content="Upcoming and past workshops, talks, and gatherings hosted by the EuroSafeAI team."
         />
       </Helmet>
 
@@ -260,10 +208,8 @@ const EventsPage = () => {
                 maxWidth: "640px",
               }}
             >
-              {isPast
-                ? "A look back at the workshops, talks, and meetups we've hosted with our collaborators. "
-                : "Workshops, talks, and meetups we host with our collaborators, around the world. "}
-              You can also{" "}
+              Workshops, talks, and meetups we host with our collaborators,
+              around the world. You can also{" "}
               <a
                 href={LUMA_CALENDAR_URL}
                 target="_blank"
@@ -279,90 +225,60 @@ const EventsPage = () => {
         </div>
       </section>
 
-      {/* ─── Section — labelled row, panel background like the Careers
-            "Why work with us" row. Contains tabs + iframe/cards. ─── */}
+      {/* ─── Upcoming — Luma iframe (auto-syncs) ─── */}
       <section className="events-section" style={{ background: PANEL_BG }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1200px" }}>
           <AnimatedSection>
             <div className="events-section-head">
               <h2 className="events-section-label" style={{ color: INK }}>
-                {isPast ? "Past events" : "Upcoming events"}
+                Upcoming events
               </h2>
-              <ViewTabs view={view} setView={setView} />
             </div>
           </AnimatedSection>
 
-          {/* UPCOMING — Luma iframe (auto-syncs) */}
-          {!isPast && (
-            <>
-              <AnimatedSection delay={0.05}>
-                <div
-                  className="rounded-2xl overflow-hidden bg-white"
-                  style={{
-                    border: `1px solid ${BORDER}`,
-                    boxShadow: "0 4px 24px rgba(10,31,77,0.06)",
-                  }}
-                >
-                  <iframe
-                    src={LUMA_EMBED_URL}
-                    title="EuroSafeAI upcoming events"
-                    width="100%"
-                    height="720"
-                    frameBorder={0}
-                    style={{ border: 0, display: "block" }}
-                    allowFullScreen
-                    aria-hidden="false"
-                    tabIndex={0}
-                    loading="lazy"
-                  />
-                </div>
-              </AnimatedSection>
-              <AnimatedSection delay={0.1}>
-                <p
-                  className="mt-5 text-xs text-center md:text-left"
-                  style={{ color: "rgba(10,31,77,0.55)" }}
-                >
-                  Looking for events that already happened?{" "}
-                  <button
-                    type="button"
-                    onClick={() => setView("past")}
-                    className="underline hover:opacity-80"
-                    style={{ color: ACCENT }}
-                  >
-                    See past events →
-                  </button>
-                </p>
-              </AnimatedSection>
-            </>
-          )}
+          <AnimatedSection delay={0.05}>
+            <div
+              className="rounded-2xl overflow-hidden bg-white"
+              style={{
+                border: `1px solid ${BORDER}`,
+                boxShadow: "0 4px 24px rgba(10,31,77,0.06)",
+              }}
+            >
+              <iframe
+                src={LUMA_EMBED_URL}
+                title="EuroSafeAI upcoming events"
+                width="100%"
+                height="720"
+                frameBorder={0}
+                style={{ border: 0, display: "block" }}
+                allowFullScreen
+                aria-hidden="false"
+                tabIndex={0}
+                loading="lazy"
+              />
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
-          {/* PAST — curated cards from src/data/events.ts */}
-          {isPast && (
-            <>
-              <div className="space-y-5">
-                {pastEvents.map((e, i) => (
-                  <AnimatedSection key={e.lumaId} delay={i * 0.04}>
-                    <PastEventCard event={e} />
-                  </AnimatedSection>
-                ))}
-              </div>
-              <AnimatedSection delay={0.1}>
-                <p
-                  className="mt-7 text-xs text-center md:text-left"
-                  style={{ color: "rgba(10,31,77,0.55)" }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setView("upcoming")}
-                    className="underline hover:opacity-80"
-                    style={{ color: ACCENT }}
-                  >
-                    See upcoming events →
-                  </button>
-                </p>
+      {/* ─── Past — curated cards from src/data/events.json ─── */}
+      <section className="events-section" style={{ background: "#ffffff" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1200px" }}>
+          <AnimatedSection>
+            <div className="events-section-head">
+              <h2 className="events-section-label" style={{ color: INK }}>
+                Past events
+              </h2>
+            </div>
+          </AnimatedSection>
+
+          <div className="space-y-5">
+            {pastEvents.map((e, i) => (
+              <AnimatedSection key={e.lumaId} delay={i * 0.04}>
+                <PastEventCard event={e} />
               </AnimatedSection>
-            </>
-          )}
+            ))}
+          </div>
         </div>
       </section>
 

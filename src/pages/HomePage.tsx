@@ -989,10 +989,36 @@ const HomePage = () => {
                 lineHeight: 1.7,
                 color: "rgba(10,31,77,0.65)",
                 maxWidth: "640px",
-                marginBottom: "5rem",
+                marginBottom: "1rem",
               }}
             >
               We collaborate with leading research labs, governments, and foundations to advance AI safety on a global scale.
+            </p>
+            <p
+              style={{
+                fontSize: "1.05rem",
+                lineHeight: 1.7,
+                color: "rgba(10,31,77,0.65)",
+                maxWidth: "640px",
+                marginBottom: "5rem",
+              }}
+            >
+              We are in close collaboration with other ongoing efforts in AI
+              safety, such as the Canadian AI Safety Institute (
+              <a
+                href="/institute-efforts/canada"
+                style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: "2px" }}
+              >
+                see our demo
+              </a>
+              ), and ELLIS (
+              <a
+                href="/institute-efforts/ellis"
+                style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: "2px" }}
+              >
+                see our demo
+              </a>
+              ).
             </p>
           </AnimatedSection>
         </div>
