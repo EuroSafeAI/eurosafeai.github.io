@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BookOpen, Users, Briefcase, Calendar, Mail, Menu, X, ChevronDown } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import logoIcon from "@/assets/logos/eurosafeai_icon.png";
 
 const researchFocuses = [
   { label: "Multi-Agent Safety", path: "/multi-agent-safety" },
@@ -60,9 +61,10 @@ const FloatingNav = () => {
             {/* Logo left */}
             <button
               onClick={() => { navigate("/"); window.scrollTo({ top: 0 }); }}
-              className="font-display font-bold text-lg hover:opacity-80 transition-opacity"
-              style={{ color: "#001233" }}
+              className="flex items-center gap-2 font-display font-bold text-lg hover:opacity-80 transition-opacity cursor-pointer"
+              style={{ color: "#022583" }}
             >
+              <img src={logoIcon} alt="EuroSafeAI" className="h-12 w-12 object-contain" />
               EuroSafeAI
             </button>
 
@@ -86,7 +88,7 @@ const FloatingNav = () => {
                     >
                       <button
                         onClick={() => handleNav(item)}
-                        className={`text-sm font-medium transition-colors relative pb-0.5 flex items-center gap-1 ${
+                        className={`text-sm font-medium transition-colors relative pb-0.5 flex items-center gap-1 cursor-pointer ${
                           active ? "text-primary" : "hover:opacity-70"
                         }`}
                         style={!active ? { color: "#001233" } : undefined}
@@ -122,7 +124,7 @@ const FloatingNav = () => {
                             >
                               <button
                                 onClick={() => goTo("/research")}
-                                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors border-b border-black/5 ${
+                                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors border-b border-black/5 cursor-pointer ${
                                   location.pathname === "/research"
                                     ? "text-primary bg-primary/5"
                                     : "text-muted-foreground hover:text-foreground hover:bg-black/3"
@@ -136,7 +138,7 @@ const FloatingNav = () => {
                                   <button
                                     key={focus.path}
                                     onClick={() => goTo(focus.path)}
-                                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors cursor-pointer ${
                                       focusActive
                                         ? "text-primary bg-primary/5 font-medium"
                                         : "text-muted-foreground hover:text-foreground hover:bg-black/3"
@@ -171,7 +173,7 @@ const FloatingNav = () => {
                   <button
                     key={item.label}
                     onClick={() => handleNav(item)}
-                    className={`text-sm font-medium transition-colors relative pb-0.5 ${
+                    className={`text-sm font-medium transition-colors relative pb-0.5 cursor-pointer ${
                       active ? "text-primary" : "hover:opacity-70"
                     }`}
                     style={!active ? { color: "#001233" } : undefined}
@@ -204,8 +206,10 @@ const FloatingNav = () => {
       <div className="md:hidden absolute top-4 left-4 z-60">
         <button
           onClick={() => { navigate("/"); window.scrollTo({ top: 0 }); setOpen(false); }}
-          className="font-display font-bold text-foreground text-lg"
+          className="flex items-center gap-2 font-display font-bold text-lg cursor-pointer"
+          style={{ color: "#022583" }}
         >
+          <img src={logoIcon} alt="EuroSafeAI" className="h-10 w-10 object-contain" />
           EuroSafeAI
         </button>
       </div>
