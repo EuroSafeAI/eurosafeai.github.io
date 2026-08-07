@@ -207,12 +207,6 @@ export const technicalStaff: TeamMember[] = [
     linkedin: "https://www.linkedin.com/in/damiano-amatruda/",
   }),
   define({
-    name: "David Jenny",
-    role: "Technical Member",
-    section: "team",
-    image: "/images/team/david_jenny.webp",
-  }),
-  define({
     name: "Erivan Inan",
     role: "Technical Member",
     section: "team",
@@ -284,7 +278,7 @@ export const technicalStaff: TeamMember[] = [
   }),
   define({
     name: "Yann Billeter",
-    role: "Policy Lead",
+    role: "Technical Member",
     section: "team",
     image: "/images/team/yann-billeter.webp",
   }),
