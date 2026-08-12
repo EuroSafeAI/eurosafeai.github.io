@@ -12,7 +12,6 @@ const MultiAgentSafetyPage = lazy(() => import("@/pages/MultiAgentSafetyPage"));
 const DemocracyDefensePage = lazy(() => import("@/pages/DemocracyDefensePage"));
 const FrontierAISafetyPage = lazy(() => import("@/pages/FrontierAISafetyPage"));
 const CertificatePage = lazy(() => import("@/pages/CertificatePage"));
-const CertificateDetailPage = lazy(() => import("@/pages/CertificateDetailPage"));
 const TeamPage = lazy(() => import("@/pages/TeamPage"));
 const MemberPage = lazy(() => import("@/pages/MemberPage"));
 const CareersPage = lazy(() => import("@/pages/CareersPage"));
@@ -37,9 +36,7 @@ const App = () => (
                 <Route path="/democracy-defense" element={<ErrorBoundary><DemocracyDefensePage /></ErrorBoundary>} />
                 <Route path="/frontier-ai-safety" element={<ErrorBoundary><FrontierAISafetyPage /></ErrorBoundary>} />
                 <Route path="/certificate" element={<ErrorBoundary><CertificatePage /></ErrorBoundary>} />
-                <Route path="/certificate/:slug" element={<ErrorBoundary><CertificateDetailPage /></ErrorBoundary>} />
                 <Route path="/certificates" element={<ErrorBoundary><CertificatePage /></ErrorBoundary>} />
-                <Route path="/certificates/:slug" element={<ErrorBoundary><CertificateDetailPage /></ErrorBoundary>} />
                 <Route path="/team" element={<ErrorBoundary><TeamPage /></ErrorBoundary>} />
                 <Route path="/team/:slug" element={<ErrorBoundary><MemberPage /></ErrorBoundary>} />
                 <Route path="/careers" element={<ErrorBoundary><CareersPage /></ErrorBoundary>} />

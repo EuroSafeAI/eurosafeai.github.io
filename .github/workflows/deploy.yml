@@ -1,10 +1,5 @@
 name: Deploy to GitHub Pages
 
-# Required repo secrets:
-#   CERT_SECRET   — PRNG seed for deterministic certificate stamp placement.
-#                   Must remain stable across deploys, otherwise every PDF's
-#                   stamp position and file bytes change.
-#
 # Required GitHub Pages settings (Settings → Pages):
 #   Source: "GitHub Actions" (not "branch")
 #   Custom domain: safe.eu (matches CNAME written below)
@@ -46,29 +41,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify stamp fingerprint
-        # Pins the cert visual identity. If stamp.png is re-exported with even
-        # a one-byte change, every PDF's bytes change too. CI catches that here.
-        run: |
-          actual=$(shasum -a 256 public/images/stamp.png | awk '{print $1}')
-          expected="d934c0f8303a01c745519587df62d7f222c5fce8e7f4dd07a98634e63c5a2c6c"
-          if [ "$actual" != "$expected" ]; then
-            echo "::error::public/images/stamp.png hash drifted (got $actual, want $expected)"
-            exit 1
-          fi
-
       - name: Run tests
         run: npm test
-
-      - name: Generate certificates
-        # Produces public/certificate/<id>.pdf for every model in
-        # src/data/models.json. Dimensions without a score (today: `hist` on
-        # every model) render as a neutral gray "—" card in the PDF — same
-        # visual treatment as the leaderboard's History column. As hist scores
-        # land in the data, those cards start showing real grades automatically.
-        env:
-          CERT_SECRET: ${{ secrets.CERT_SECRET }}
-        run: npm run certs
 
       - name: Sync Luma events
         # Fetches the latest event list from Luma's API and writes
@@ -79,8 +53,7 @@ jobs:
         run: npm run sync:luma
 
       - name: Build
-        # Must run AFTER `npm run certs` (PDFs land in public/certificate/)
-        # and AFTER `npm run sync:luma` (events.json is bundled by Vite).
+        # Must run AFTER `npm run sync:luma` (events.json is bundled by Vite).
         run: npm run build
 
       - name: SPA fallback (copy index.html to 404.html)

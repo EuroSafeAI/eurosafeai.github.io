@@ -1,5 +1,26 @@
 # Certificate generation contract
 
+> **SUPERSEDED — the PDF certificate pipeline is retired.**
+>
+> The evaluation pipeline was rebuilt around the four systemic risks named by
+> the EU AI Act Code of Practice (`cbrn`, `cyber`, `loss_of_control`,
+> `manipulation`), and `src/data/models.json` now carries that nested results
+> tree instead of the flat `hr` / `harm` / `hist` / `auth` scores this pipeline
+> reads. Rather than port the renderer to a schema that is still settling, the
+> PDFs were dropped: `npm run certs`, the `certs` CI step, the `stamp.png` hash
+> tripwire, the `CERT_SECRET` secret, and the `/certificate/:slug` route are all
+> gone, and `/certificate` now serves the systemic-risk heatmap only.
+>
+> Everything below describes the retired v1 pipeline. It is kept because the
+> determinism work (pinned `/ID` and `/CreationDate`, the stamp tripwire, the
+> secret-rotation reasoning) is the non-obvious part and would be expensive to
+> rediscover if certificates are reinstated on the new schema.
+>
+> **To reinstate:** the data-shape section below is the only part that is wrong.
+> Map the four risk scores onto four dimension cards, replace `calcAgg`/`calcGrade`
+> with `grade()` from `src/lib/scoring.ts` (15-band A+…F− scale), and follow the
+> "Visual redesign procedure" to fork `cert-render-v1.mjs`.
+
 This file is the boundary between the **data**, the **scoring math**, the
 **pipeline**, and the **visual rendering**. Anyone modifying any of those
 pieces should read this first — and update it if they change the contract.
