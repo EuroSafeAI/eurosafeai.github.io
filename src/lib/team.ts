@@ -268,15 +268,6 @@ export const technicalStaff: TeamMember[] = [
     website: "https://emmerson.dev",
   }),
   define({
-    name: "Van Quynh Thi Truong",
-    role: "Technical Member",
-    section: "team",
-    image: "/images/team/van-quynh-thi-truong.webp",
-    linkedin: "https://www.linkedin.com/in/vanqtruong/",
-    website: "https://www.vanquynh.com/",
-    twitter: "https://x.com/vantru0ng",
-  }),
-  define({
     name: "Yann Billeter",
     role: "Technical Member",
     section: "team",
