@@ -7,7 +7,9 @@ import type { ModelEntry } from "@/data/models.types";
 const ACCENT = "#003399";
 const INK = "#0a1f4d";
 
-const MODELS = modelsData as ModelEntry[];
+// Unrouted since the PDF certificates were retired — see scripts/CERT-CONTRACT.md.
+// Kept compiling only so it stays a usable starting point if certs come back.
+const MODELS = modelsData as unknown as ModelEntry[];
 
 const CertificateDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
