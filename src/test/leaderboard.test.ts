@@ -491,14 +491,14 @@ describe("refusal floor naming", () => {
 describe("scorer naming", () => {
   it("distinguishes LLM judges from deterministic detectors", () => {
     expect(isLlmJudge(JUDGE)).toBe(true);
-    expect(isLlmJudge("openrouter/openai/gpt-5-mini")).toBe(true);
+    expect(isLlmJudge("openrouter/openai/gpt-5.6-luna")).toBe(true);
     expect(isLlmJudge("exact_match")).toBe(false);
     expect(isLlmJudge("refusal_regex")).toBe(false);
   });
 
   it("strips the router prefix from judge names", () => {
     expect(scorerLabel(JUDGE)).toBe("Claude Sonnet 4.5");
-    expect(scorerLabel("openrouter/openai/gpt-5-mini")).toBe("GPT-5 Mini");
+    expect(scorerLabel("openrouter/openai/gpt-5.6-luna")).toBe("GPT-5.6 Luna");
   });
 
   it("gives detectors human names", () => {

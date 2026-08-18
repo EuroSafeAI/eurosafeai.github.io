@@ -85,9 +85,7 @@ export const BENCHMARK_LABELS: Record<string, string> = {
 
 const JUDGE_LABELS: Record<string, string> = {
   "openrouter/anthropic/claude-sonnet-4.5": "Claude Sonnet 4.5",
-  "openrouter/openai/gpt-5-mini": "GPT-5 Mini",
   "openrouter/openai/gpt-5.6-luna": "GPT-5.6 Luna",
-  "openrouter/google/gemini-3-flash-preview": "Gemini 3 Flash Preview",
 };
 
 const DETECTOR_LABELS: Record<string, string> = {

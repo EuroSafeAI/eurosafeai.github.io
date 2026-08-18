@@ -45,9 +45,7 @@
                                 "abstained": 31,
                                 "total": 56,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 92.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "framing": {
@@ -57,9 +55,7 @@
                                 "abstained": 31,
                                 "total": 56,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 95.95,
-                                    "openrouter/google/gemini-3-flash-preview": 95.95,
-                                    "openrouter/openai/gpt-5-mini": 93.24
+                                    "openrouter/anthropic/claude-sonnet-4.5": 95.95
                                 }
                             },
                             "identity_strip": {
@@ -69,9 +65,7 @@
                                 "abstained": 40,
                                 "total": 56,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 93.75
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "paraphrase": {
@@ -81,9 +75,7 @@
                                 "abstained": 36,
                                 "total": 56,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -93,9 +85,7 @@
                                 "abstained": 31,
                                 "total": 56,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "register": {
@@ -106,8 +96,6 @@
                                 "total": 56,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 89.47,
-                                    "openrouter/google/gemini-3-flash-preview": 90.91,
-                                    "openrouter/openai/gpt-5-mini": 90.91,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -119,8 +107,6 @@
                                 "total": 56,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0,
                                     "refusal_regex": 100.0
                                 }
                             }
@@ -140,9 +126,7 @@
                                 "abstained": 9,
                                 "total": 70,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 98.21,
-                                    "openrouter/google/gemini-3-flash-preview": 96.67,
-                                    "openrouter/openai/gpt-5-mini": 83.61
+                                    "openrouter/anthropic/claude-sonnet-4.5": 98.21
                                 }
                             },
                             "framing": {
@@ -153,8 +137,6 @@
                                 "total": 70,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 96.23,
-                                    "openrouter/google/gemini-3-flash-preview": 93.44,
-                                    "openrouter/openai/gpt-5-mini": 85.79,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -166,8 +148,6 @@
                                 "total": 70,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 98.11,
-                                    "openrouter/google/gemini-3-flash-preview": 94.92,
-                                    "openrouter/openai/gpt-5-mini": 88.14,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -179,8 +159,6 @@
                                 "total": 70,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 93.18,
-                                    "openrouter/google/gemini-3-flash-preview": 92.98,
-                                    "openrouter/openai/gpt-5-mini": 85.96,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -191,9 +169,7 @@
                                 "abstained": 6,
                                 "total": 70,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 96.88,
-                                    "openrouter/openai/gpt-5-mini": 85.94
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "register": {
@@ -204,8 +180,6 @@
                                 "total": 70,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 94.23,
-                                    "openrouter/google/gemini-3-flash-preview": 93.22,
-                                    "openrouter/openai/gpt-5-mini": 79.66,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -217,8 +191,6 @@
                                 "total": 70,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 97.06,
-                                    "openrouter/google/gemini-3-flash-preview": 97.5,
-                                    "openrouter/openai/gpt-5-mini": 92.5,
                                     "refusal_regex": 100.0
                                 }
                             }
@@ -239,9 +211,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "exact_match": 21.62,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 75.0,
-                                    "openrouter/google/gemini-3-flash-preview": 75.0,
-                                    "openrouter/openai/gpt-5-mini": 75.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 75.0
                                 }
                             },
                             "identity_strip": {
@@ -252,9 +222,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "exact_match": 17.95,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 50.0,
-                                    "openrouter/google/gemini-3-flash-preview": 50.0,
-                                    "openrouter/openai/gpt-5-mini": 50.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 50.0
                                 }
                             },
                             "paraphrase": {
@@ -265,9 +233,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "exact_match": 23.08,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -278,9 +244,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "exact_match": 9.09,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 40.0,
-                                    "openrouter/google/gemini-3-flash-preview": 33.33,
-                                    "openrouter/openai/gpt-5-mini": 36.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 40.0
                                 }
                             },
                             "register": {
@@ -291,9 +255,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "exact_match": 11.76,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 50.0,
-                                    "openrouter/google/gemini-3-flash-preview": 66.67,
-                                    "openrouter/openai/gpt-5-mini": 50.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 50.0
                                 }
                             },
                             "scenario": {
@@ -303,9 +265,7 @@
                                 "abstained": 24,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 67.65,
-                                    "openrouter/google/gemini-3-flash-preview": 38.89,
-                                    "openrouter/openai/gpt-5-mini": 19.44
+                                    "openrouter/anthropic/claude-sonnet-4.5": 67.65
                                 }
                             }
                         },
@@ -342,9 +302,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 97.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5
                                 }
                             },
                             "framing": {
@@ -354,9 +312,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 98.32,
-                                    "openrouter/google/gemini-3-flash-preview": 98.33,
-                                    "openrouter/openai/gpt-5-mini": 95.83
+                                    "openrouter/anthropic/claude-sonnet-4.5": 98.32
                                 }
                             },
                             "identity_strip": {
@@ -366,9 +322,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "paraphrase": {
@@ -378,9 +332,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 97.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -390,9 +342,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "register": {
@@ -402,9 +352,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5,
-                                    "openrouter/google/gemini-3-flash-preview": 97.5,
-                                    "openrouter/openai/gpt-5-mini": 97.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5
                                 }
                             },
                             "scenario": {
@@ -414,9 +362,7 @@
                                 "abstained": 1,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 97.44
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             }
                         }
@@ -485,9 +431,7 @@
                                 "abstained": 3,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 74.19,
-                                    "openrouter/google/gemini-3-flash-preview": 81.08,
-                                    "openrouter/openai/gpt-5-mini": 78.38
+                                    "openrouter/anthropic/claude-sonnet-4.5": 74.19
                                 }
                             }
                         },
@@ -508,8 +452,6 @@
                                 "total": 80,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 83.33,
-                                    "openrouter/google/gemini-3-flash-preview": 83.75,
-                                    "openrouter/openai/gpt-5-mini": 78.75,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -521,8 +463,6 @@
                                 "total": 80,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 86.04,
-                                    "openrouter/google/gemini-3-flash-preview": 87.5,
-                                    "openrouter/openai/gpt-5-mini": 81.25,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -534,8 +474,6 @@
                                 "total": 80,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 84.72,
-                                    "openrouter/google/gemini-3-flash-preview": 83.33,
-                                    "openrouter/openai/gpt-5-mini": 80.77,
                                     "refusal_regex": 100.0
                                 }
                             },
@@ -546,9 +484,7 @@
                                 "abstained": 0,
                                 "total": 80,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 78.67,
-                                    "openrouter/google/gemini-3-flash-preview": 81.25,
-                                    "openrouter/openai/gpt-5-mini": 75.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 78.67
                                 }
                             },
                             "reconsideration": {
@@ -558,9 +494,7 @@
                                 "abstained": 0,
                                 "total": 80,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 94.67,
-                                    "openrouter/google/gemini-3-flash-preview": 96.25,
-                                    "openrouter/openai/gpt-5-mini": 86.25
+                                    "openrouter/anthropic/claude-sonnet-4.5": 94.67
                                 }
                             },
                             "register": {
@@ -570,9 +504,7 @@
                                 "abstained": 1,
                                 "total": 80,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 86.67,
-                                    "openrouter/google/gemini-3-flash-preview": 88.61,
-                                    "openrouter/openai/gpt-5-mini": 77.22
+                                    "openrouter/anthropic/claude-sonnet-4.5": 86.67
                                 }
                             },
                             "scenario": {
@@ -583,8 +515,6 @@
                                 "total": 80,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 86.96,
-                                    "openrouter/google/gemini-3-flash-preview": 86.84,
-                                    "openrouter/openai/gpt-5-mini": 75.0,
                                     "refusal_regex": 100.0
                                 }
                             }
@@ -604,9 +534,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 74.17,
-                                    "openrouter/google/gemini-3-flash-preview": 87.78,
-                                    "openrouter/openai/gpt-5-mini": 71.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 74.17
                                 }
                             },
                             "framing": {
@@ -616,9 +544,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 75.74,
-                                    "openrouter/google/gemini-3-flash-preview": 89.54,
-                                    "openrouter/openai/gpt-5-mini": 74.91
+                                    "openrouter/anthropic/claude-sonnet-4.5": 75.74
                                 }
                             },
                             "identity_strip": {
@@ -628,9 +554,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 77.5,
-                                    "openrouter/google/gemini-3-flash-preview": 87.5,
-                                    "openrouter/openai/gpt-5-mini": 69.44
+                                    "openrouter/anthropic/claude-sonnet-4.5": 77.5
                                 }
                             },
                             "paraphrase": {
@@ -640,9 +564,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 76.11,
-                                    "openrouter/google/gemini-3-flash-preview": 88.61,
-                                    "openrouter/openai/gpt-5-mini": 71.11
+                                    "openrouter/anthropic/claude-sonnet-4.5": 76.11
                                 }
                             },
                             "reconsideration": {
@@ -652,9 +574,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 71.39,
-                                    "openrouter/google/gemini-3-flash-preview": 87.78,
-                                    "openrouter/openai/gpt-5-mini": 64.72
+                                    "openrouter/anthropic/claude-sonnet-4.5": 71.39
                                 }
                             },
                             "register": {
@@ -664,9 +584,7 @@
                                 "abstained": 0,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 74.44,
-                                    "openrouter/google/gemini-3-flash-preview": 87.22,
-                                    "openrouter/openai/gpt-5-mini": 69.17
+                                    "openrouter/anthropic/claude-sonnet-4.5": 74.44
                                 }
                             },
                             "scenario": {
@@ -676,9 +594,7 @@
                                 "abstained": 4,
                                 "total": 90,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 81.1,
-                                    "openrouter/google/gemini-3-flash-preview": 84.88,
-                                    "openrouter/openai/gpt-5-mini": 74.42
+                                    "openrouter/anthropic/claude-sonnet-4.5": 81.1
                                 }
                             }
                         }
@@ -747,9 +663,7 @@
                                 "abstained": 1,
                                 "total": 50,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 97.96,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             }
                         },
@@ -805,9 +719,7 @@
                                 "abstained": 22,
                                 "total": 140,
                                 "scorers": {
-                                    "exact_match": 85.47,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "exact_match": 85.47
                                 }
                             },
                             "reconsideration": {
@@ -818,9 +730,7 @@
                                 "total": 140,
                                 "scorers": {
                                     "exact_match": 100.0,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 90.57,
-                                    "openrouter/google/gemini-3-flash-preview": 87.74,
-                                    "openrouter/openai/gpt-5-mini": 86.79
+                                    "openrouter/anthropic/claude-sonnet-4.5": 90.57
                                 }
                             },
                             "register": {
@@ -831,9 +741,7 @@
                                 "total": 140,
                                 "scorers": {
                                     "exact_match": 86.09,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "scenario": {
@@ -843,9 +751,7 @@
                                 "abstained": 19,
                                 "total": 140,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 97.52
+                                    "openrouter/anthropic/claude-sonnet-4.5": 97.5
                                 }
                             }
                         }
@@ -941,9 +847,7 @@
                                 "abstained": 1,
                                 "total": 30,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 89.23,
-                                    "openrouter/google/gemini-3-flash-preview": 82.07,
-                                    "openrouter/openai/gpt-5-mini": 82.76
+                                    "openrouter/anthropic/claude-sonnet-4.5": 89.23
                                 }
                             }
                         }
@@ -962,9 +866,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 85.51,
-                                    "openrouter/google/gemini-3-flash-preview": 83.33,
-                                    "openrouter/openai/gpt-5-mini": 73.61
+                                    "openrouter/anthropic/claude-sonnet-4.5": 85.51
                                 }
                             },
                             "framing": {
@@ -974,9 +876,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 87.02,
-                                    "openrouter/google/gemini-3-flash-preview": 85.65,
-                                    "openrouter/openai/gpt-5-mini": 74.54
+                                    "openrouter/anthropic/claude-sonnet-4.5": 87.02
                                 }
                             },
                             "identity_strip": {
@@ -986,9 +886,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 91.43,
-                                    "openrouter/google/gemini-3-flash-preview": 80.56,
-                                    "openrouter/openai/gpt-5-mini": 79.17
+                                    "openrouter/anthropic/claude-sonnet-4.5": 91.43
                                 }
                             },
                             "paraphrase": {
@@ -998,9 +896,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 80.0,
-                                    "openrouter/google/gemini-3-flash-preview": 80.56,
-                                    "openrouter/openai/gpt-5-mini": 72.22
+                                    "openrouter/anthropic/claude-sonnet-4.5": 80.0
                                 }
                             },
                             "reconsideration": {
@@ -1010,9 +906,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 92.65,
-                                    "openrouter/google/gemini-3-flash-preview": 86.11,
-                                    "openrouter/openai/gpt-5-mini": 68.06
+                                    "openrouter/anthropic/claude-sonnet-4.5": 92.65
                                 }
                             },
                             "register": {
@@ -1022,9 +916,7 @@
                                 "abstained": 0,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 85.29,
-                                    "openrouter/google/gemini-3-flash-preview": 79.17,
-                                    "openrouter/openai/gpt-5-mini": 72.22
+                                    "openrouter/anthropic/claude-sonnet-4.5": 85.29
                                 }
                             },
                             "scenario": {
@@ -1034,9 +926,7 @@
                                 "abstained": 1,
                                 "total": 72,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 86.57,
-                                    "openrouter/google/gemini-3-flash-preview": 74.65,
-                                    "openrouter/openai/gpt-5-mini": 78.87
+                                    "openrouter/anthropic/claude-sonnet-4.5": 86.57
                                 }
                             }
                         }
@@ -1055,9 +945,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 77.97,
-                                    "openrouter/google/gemini-3-flash-preview": 86.67,
-                                    "openrouter/openai/gpt-5-mini": 81.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 77.97
                                 }
                             },
                             "framing": {
@@ -1067,9 +955,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 81.71,
-                                    "openrouter/google/gemini-3-flash-preview": 92.22,
-                                    "openrouter/openai/gpt-5-mini": 85.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 81.71
                                 }
                             },
                             "identity_strip": {
@@ -1079,9 +965,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 75.86,
-                                    "openrouter/google/gemini-3-flash-preview": 88.33,
-                                    "openrouter/openai/gpt-5-mini": 85.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 75.86
                                 }
                             },
                             "paraphrase": {
@@ -1091,9 +975,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 72.88,
-                                    "openrouter/google/gemini-3-flash-preview": 85.0,
-                                    "openrouter/openai/gpt-5-mini": 86.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 72.88
                                 }
                             },
                             "reconsideration": {
@@ -1103,9 +985,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 78.95,
-                                    "openrouter/google/gemini-3-flash-preview": 93.33,
-                                    "openrouter/openai/gpt-5-mini": 88.33
+                                    "openrouter/anthropic/claude-sonnet-4.5": 78.95
                                 }
                             },
                             "register": {
@@ -1115,9 +995,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 77.59,
-                                    "openrouter/google/gemini-3-flash-preview": 88.33,
-                                    "openrouter/openai/gpt-5-mini": 83.33
+                                    "openrouter/anthropic/claude-sonnet-4.5": 77.59
                                 }
                             },
                             "scenario": {
@@ -1127,9 +1005,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 86.21,
-                                    "openrouter/google/gemini-3-flash-preview": 98.33,
-                                    "openrouter/openai/gpt-5-mini": 91.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 86.21
                                 }
                             }
                         }
@@ -1148,9 +1024,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 50.85,
-                                    "openrouter/google/gemini-3-flash-preview": 50.0,
-                                    "openrouter/openai/gpt-5-mini": 49.58
+                                    "openrouter/anthropic/claude-sonnet-4.5": 50.85
                                 }
                             },
                             "framing": {
@@ -1160,9 +1034,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 55.54,
-                                    "openrouter/google/gemini-3-flash-preview": 53.77,
-                                    "openrouter/openai/gpt-5-mini": 52.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 55.54
                                 }
                             },
                             "identity_strip": {
@@ -1172,9 +1044,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 60.0,
-                                    "openrouter/google/gemini-3-flash-preview": 62.92,
-                                    "openrouter/openai/gpt-5-mini": 58.75
+                                    "openrouter/anthropic/claude-sonnet-4.5": 60.0
                                 }
                             },
                             "paraphrase": {
@@ -1184,9 +1054,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 60.65,
-                                    "openrouter/google/gemini-3-flash-preview": 60.0,
-                                    "openrouter/openai/gpt-5-mini": 56.25
+                                    "openrouter/anthropic/claude-sonnet-4.5": 60.65
                                 }
                             },
                             "reconsideration": {
@@ -1196,9 +1064,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 69.74,
-                                    "openrouter/google/gemini-3-flash-preview": 70.0,
-                                    "openrouter/openai/gpt-5-mini": 66.25
+                                    "openrouter/anthropic/claude-sonnet-4.5": 69.74
                                 }
                             },
                             "register": {
@@ -1208,9 +1074,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 59.82,
-                                    "openrouter/google/gemini-3-flash-preview": 61.25,
-                                    "openrouter/openai/gpt-5-mini": 55.42
+                                    "openrouter/anthropic/claude-sonnet-4.5": 59.82
                                 }
                             },
                             "scenario": {
@@ -1220,9 +1084,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 57.92,
-                                    "openrouter/google/gemini-3-flash-preview": 54.17,
-                                    "openrouter/openai/gpt-5-mini": 52.08
+                                    "openrouter/anthropic/claude-sonnet-4.5": 57.92
                                 }
                             }
                         }
@@ -1241,9 +1103,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 56.36,
-                                    "openrouter/google/gemini-3-flash-preview": 56.04,
-                                    "openrouter/openai/gpt-5-mini": 54.37
+                                    "openrouter/anthropic/claude-sonnet-4.5": 56.36
                                 }
                             },
                             "framing": {
@@ -1253,9 +1113,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 61.18,
-                                    "openrouter/google/gemini-3-flash-preview": 59.33,
-                                    "openrouter/openai/gpt-5-mini": 57.78
+                                    "openrouter/anthropic/claude-sonnet-4.5": 61.18
                                 }
                             },
                             "identity_strip": {
@@ -1265,9 +1123,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 65.09,
-                                    "openrouter/google/gemini-3-flash-preview": 65.21,
-                                    "openrouter/openai/gpt-5-mini": 63.12
+                                    "openrouter/anthropic/claude-sonnet-4.5": 65.09
                                 }
                             },
                             "paraphrase": {
@@ -1277,9 +1133,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 67.32,
-                                    "openrouter/google/gemini-3-flash-preview": 65.42,
-                                    "openrouter/openai/gpt-5-mini": 63.33
+                                    "openrouter/anthropic/claude-sonnet-4.5": 67.32
                                 }
                             },
                             "reconsideration": {
@@ -1289,9 +1143,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 71.93,
-                                    "openrouter/google/gemini-3-flash-preview": 70.21,
-                                    "openrouter/openai/gpt-5-mini": 68.12
+                                    "openrouter/anthropic/claude-sonnet-4.5": 71.93
                                 }
                             },
                             "register": {
@@ -1301,9 +1153,7 @@
                                 "abstained": 0,
                                 "total": 120,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 64.87,
-                                    "openrouter/google/gemini-3-flash-preview": 63.75,
-                                    "openrouter/openai/gpt-5-mini": 60.83
+                                    "openrouter/anthropic/claude-sonnet-4.5": 64.87
                                 }
                             }
                         },
@@ -1323,9 +1173,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 61.86,
-                                    "openrouter/google/gemini-3-flash-preview": 62.08,
-                                    "openrouter/openai/gpt-5-mini": 59.17
+                                    "openrouter/anthropic/claude-sonnet-4.5": 61.86
                                 }
                             },
                             "framing": {
@@ -1335,9 +1183,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 66.86,
-                                    "openrouter/google/gemini-3-flash-preview": 64.86,
-                                    "openrouter/openai/gpt-5-mini": 63.06
+                                    "openrouter/anthropic/claude-sonnet-4.5": 66.86
                                 }
                             },
                             "identity_strip": {
@@ -1347,9 +1193,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 70.09,
-                                    "openrouter/google/gemini-3-flash-preview": 67.5,
-                                    "openrouter/openai/gpt-5-mini": 67.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 70.09
                                 }
                             },
                             "paraphrase": {
@@ -1359,9 +1203,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 73.33,
-                                    "openrouter/google/gemini-3-flash-preview": 70.83,
-                                    "openrouter/openai/gpt-5-mini": 70.42
+                                    "openrouter/anthropic/claude-sonnet-4.5": 73.33
                                 }
                             },
                             "reconsideration": {
@@ -1371,9 +1213,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 74.12,
-                                    "openrouter/google/gemini-3-flash-preview": 70.42,
-                                    "openrouter/openai/gpt-5-mini": 70.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 74.12
                                 }
                             },
                             "register": {
@@ -1383,9 +1223,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 69.58,
-                                    "openrouter/google/gemini-3-flash-preview": 66.25,
-                                    "openrouter/openai/gpt-5-mini": 66.25
+                                    "openrouter/anthropic/claude-sonnet-4.5": 69.58
                                 }
                             },
                             "scenario": {
@@ -1395,9 +1233,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 59.91,
-                                    "openrouter/google/gemini-3-flash-preview": 62.5,
-                                    "openrouter/openai/gpt-5-mini": 57.92
+                                    "openrouter/anthropic/claude-sonnet-4.5": 59.91
                                 }
                             }
                         }
@@ -1457,8 +1293,6 @@
                                 "total": 60,
                                 "scorers": {
                                     "openrouter/anthropic/claude-sonnet-4.5": 58.33,
-                                    "openrouter/google/gemini-3-flash-preview": 58.33,
-                                    "openrouter/openai/gpt-5-mini": 58.33,
                                     "scale_parse": 50.0
                                 }
                             },
@@ -1479,9 +1313,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 52.87,
-                                    "openrouter/google/gemini-3-flash-preview": 58.33,
-                                    "openrouter/openai/gpt-5-mini": 52.78
+                                    "openrouter/anthropic/claude-sonnet-4.5": 52.87
                                 }
                             }
                         }
@@ -1511,9 +1343,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "accept_reject_token": 93.1,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 96.77,
-                                    "openrouter/google/gemini-3-flash-preview": 93.55,
-                                    "openrouter/openai/gpt-5-mini": 93.55
+                                    "openrouter/anthropic/claude-sonnet-4.5": 96.77
                                 }
                             },
                             "paraphrase": {
@@ -1524,9 +1354,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "accept_reject_token": 89.36,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 92.31
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -1547,9 +1375,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "accept_reject_token": 95.24,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 77.78,
-                                    "openrouter/google/gemini-3-flash-preview": 77.78,
-                                    "openrouter/openai/gpt-5-mini": 77.78
+                                    "openrouter/anthropic/claude-sonnet-4.5": 77.78
                                 }
                             },
                             "scenario": {
@@ -1559,9 +1385,7 @@
                                 "abstained": 2,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 96.55,
-                                    "openrouter/openai/gpt-5-mini": 89.66
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             }
                         }
@@ -1580,9 +1404,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 74.42,
-                                    "openrouter/google/gemini-3-flash-preview": 74.58,
-                                    "openrouter/openai/gpt-5-mini": 72.92
+                                    "openrouter/anthropic/claude-sonnet-4.5": 74.42
                                 }
                             },
                             "identity_strip": {
@@ -1592,9 +1414,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 77.29,
-                                    "openrouter/google/gemini-3-flash-preview": 77.71,
-                                    "openrouter/openai/gpt-5-mini": 75.67
+                                    "openrouter/anthropic/claude-sonnet-4.5": 77.29
                                 }
                             },
                             "paraphrase": {
@@ -1604,9 +1424,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 70.42,
-                                    "openrouter/google/gemini-3-flash-preview": 72.92,
-                                    "openrouter/openai/gpt-5-mini": 73.54
+                                    "openrouter/anthropic/claude-sonnet-4.5": 70.42
                                 }
                             },
                             "reconsideration": {
@@ -1616,9 +1434,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 75.42,
-                                    "openrouter/google/gemini-3-flash-preview": 77.2,
-                                    "openrouter/openai/gpt-5-mini": 68.04
+                                    "openrouter/anthropic/claude-sonnet-4.5": 75.42
                                 }
                             },
                             "register": {
@@ -1628,9 +1444,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 75.21,
-                                    "openrouter/google/gemini-3-flash-preview": 78.54,
-                                    "openrouter/openai/gpt-5-mini": 77.88
+                                    "openrouter/anthropic/claude-sonnet-4.5": 75.21
                                 }
                             },
                             "scenario": {
@@ -1640,9 +1454,7 @@
                                 "abstained": 0,
                                 "total": 40,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 84.62,
-                                    "openrouter/google/gemini-3-flash-preview": 90.0,
-                                    "openrouter/openai/gpt-5-mini": 77.5
+                                    "openrouter/anthropic/claude-sonnet-4.5": 84.62
                                 }
                             }
                         }
@@ -1661,9 +1473,7 @@
                                 "abstained": 4,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 98.21,
-                                    "openrouter/openai/gpt-5-mini": 94.64
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "framing": {
@@ -1673,9 +1483,7 @@
                                 "abstained": 3,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 99.41,
-                                    "openrouter/openai/gpt-5-mini": 96.47
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "identity_strip": {
@@ -1685,9 +1493,7 @@
                                 "abstained": 4,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 98.21,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 94.64
+                                    "openrouter/anthropic/claude-sonnet-4.5": 98.21
                                 }
                             },
                             "paraphrase": {
@@ -1697,9 +1503,7 @@
                                 "abstained": 3,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 98.25,
-                                    "openrouter/openai/gpt-5-mini": 94.74
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -1709,9 +1513,7 @@
                                 "abstained": 3,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 98.25,
-                                    "openrouter/google/gemini-3-flash-preview": 98.25,
-                                    "openrouter/openai/gpt-5-mini": 85.96
+                                    "openrouter/anthropic/claude-sonnet-4.5": 98.25
                                 }
                             },
                             "register": {
@@ -1721,9 +1523,7 @@
                                 "abstained": 6,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 90.74
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "scenario": {
@@ -1733,9 +1533,7 @@
                                 "abstained": 13,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 87.23
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             }
                         }
@@ -1765,9 +1563,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "attribution_mimicry": 94.23,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "paraphrase": {
@@ -1778,9 +1574,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "attribution_mimicry": 94.74,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "reconsideration": {
@@ -1790,9 +1584,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 100.0,
-                                    "openrouter/openai/gpt-5-mini": 100.0
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "register": {
@@ -1803,9 +1595,7 @@
                                 "total": 60,
                                 "scorers": {
                                     "attribution_mimicry": 96.15,
-                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0,
-                                    "openrouter/google/gemini-3-flash-preview": 71.43,
-                                    "openrouter/openai/gpt-5-mini": 71.43
+                                    "openrouter/anthropic/claude-sonnet-4.5": 100.0
                                 }
                             },
                             "scenario": {
@@ -1815,9 +1605,7 @@
                                 "abstained": 0,
                                 "total": 60,
                                 "scorers": {
-                                    "openrouter/anthropic/claude-sonnet-4.5": 98.33,
-                                    "openrouter/google/gemini-3-flash-preview": 98.33,
-                                    "openrouter/openai/gpt-5-mini": 98.33
+                                    "openrouter/anthropic/claude-sonnet-4.5": 98.33
                                 }
                             }
                         }
