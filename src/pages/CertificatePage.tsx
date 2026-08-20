@@ -559,7 +559,7 @@ const CertificatePage = () => {
   return (
     <div>
       <Helmet>
-        <title>Systemic Risk Index — EuroSafeAI</title>
+        <title>EU AI Safety Certificate — EuroSafeAI</title>
         <meta
           name="description"
           content="EuroSafeAI's leaderboard grading frontier AI models against the four systemic risks named by the EU AI Act Code of Practice."
@@ -590,9 +590,9 @@ const CertificatePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.07 }}
           >
-            Systemic Risk Index
+            EU AI Safety Certificate
             <br />
-            <span style={{ color: ACCENT, fontStyle: "italic" }}>for Europe and Humanity</span>
+            <span style={{ color: ACCENT, fontStyle: "italic" }}></span>
           </motion.h1>
           <motion.p
             style={{
@@ -607,7 +607,7 @@ const CertificatePage = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
             We grade frontier large language models against the four categories of systemic risk
-            named by the EU AI Act Code of Practice — CBRN misuse, offensive cyber capability, loss
+            named by the EU AI Act Code of Practice—CBRN misuse, offensive cyber capability, loss
             of control, and manipulation. Every provider is graded on each risk, and every grade
             opens up: down to the benchmarks behind it, and down to the individual LLM judges behind
             each benchmark.
