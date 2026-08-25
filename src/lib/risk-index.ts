@@ -60,3 +60,24 @@ export function adjustedRanking(models: readonly ModelEntry[]): AdjustedEntry[] 
   }
   return entries.sort((a, b) => b.adjusted - a.adjusted);
 }
+
+export interface ScatterBox {
+  width: number;
+  height: number;
+  pad: number;
+}
+
+/** Capability on x, raw safety on y, y inverted for SVG's downward axis. */
+export function scatterPoint(
+  index: number,
+  safety: number,
+  box: ScatterBox
+): { x: number; y: number } {
+  const span = box.width - 2 * box.pad;
+  const rise = box.height - 2 * box.pad;
+  const capability = Math.min(1, index / CAPABILITY_REFERENCE);
+  return {
+    x: box.pad + span * capability,
+    y: box.pad + rise * (1 - safety / 100),
+  };
+}

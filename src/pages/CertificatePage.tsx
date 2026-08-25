@@ -22,6 +22,7 @@ import {
 } from "@/lib/leaderboard";
 import { heatColor } from "@/lib/heat";
 import type { ModelEntry } from "@/data/models.types";
+import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 
 const ACCENT = "#003399";
 const INK = "#0a1f4d";
@@ -889,6 +890,10 @@ const CertificatePage = () => {
             </p>
           </div>
 
+          <div style={{ marginTop: "3rem" }}>
+            <SectionEyebrow>Capability-Adjusted Safety</SectionEyebrow>
+            <CapabilityAdjustedSection models={MODELS} />
+          </div>
         </div>
       </section>
     </div>
