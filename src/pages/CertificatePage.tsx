@@ -44,27 +44,29 @@ const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
  * stay in exact horizontal register. Any padding here would offset the header's
  * columns from the cells beneath them, so spacing lives on the cells instead.
  *
- * The width transition is plain CSS rather than framer-motion: React writes
- * these styles synchronously, so the layout is correct on the very first paint
- * with no chance of a mid-animation reflow fighting the flex solver.
+ * The whole subtree's expansion is driven by one inherited custom property,
+ * `--member-open` (registered with `@property` in index.css so the browser
+ * interpolates it as a number instead of jumping). This group sets it to 0 or
+ * 1 and transitions it; every member column beneath just reads it — so a row
+ * with many members animates one property instead of a flex-grow/flex-basis
+ * pair per element, and the layout no longer re-solves flex sizes each frame.
  */
-function columnGroupStyle(
+export function columnGroupStyle(
   leaves: number,
   cellWidth: number,
   open: boolean,
   reduced: boolean
 ): React.CSSProperties {
+  const members = leaves - 1;
   return {
-    flexGrow: leaves,
     flexShrink: 0,
-    flexBasis: leaves * cellWidth,
+    width: `calc(${cellWidth}px * (1 + ${members} * var(--member-open, 0)))`,
     minWidth: 0,
     display: "flex",
     overflow: "hidden",
     borderLeft: open ? "1px solid rgba(10,31,77,0.08)" : undefined,
-    transition: reduced
-      ? undefined
-      : `flex-grow ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}, flex-basis ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
+    ["--member-open" as string]: open ? 1 : 0,
+    transition: reduced ? undefined : `--member-open ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
   };
 }
 
@@ -73,24 +75,23 @@ function columnGroupStyle(
  * the provider is collapsed — a freshly mounted element has no previous value
  * to transition from, so keeping it mounted is what lets it slide.
  *
- * Widths come from flex-grow against a zero basis, not from an explicit width.
- * The group's basis grows as cellWidth × (1 + n·t) while each member's grow goes
- * 0 → t, so the provider cell holds at exactly cellWidth throughout: its share
- * is W/(1 + n·t), and the (1 + n·t) cancels. Members appear to slide out from
- * behind it rather than everything compressing and re-expanding.
+ * Width and opacity both read the group's inherited `--member-open` directly,
+ * so nothing here declares its own transition: the group's single animated
+ * property is what moves, and every member follows it in lockstep. The group
+ * width grows as cellWidth × (1 + n·t) while each member's width is t·cellWidth;
+ * since Cell and HeaderCell roots hold `flex: "1 0 0"`, the provider's own
+ * cell takes the remainder, cellWidth·(1 + n·t) − n·t·cellWidth = cellWidth,
+ * unchanged for every t. Members appear to slide out from behind it rather
+ * than everything compressing and re-expanding.
  */
-function memberColumnStyle(open: boolean, reduced: boolean): React.CSSProperties {
+export function memberColumnStyle(open: boolean, reduced: boolean): React.CSSProperties {
   return {
-    flexGrow: open ? 1 : 0,
     flexShrink: 0,
-    flexBasis: 0,
+    width: `calc(var(--member-open, 0) * var(--cell-width))`,
     minWidth: 0,
     display: "flex",
     overflow: "hidden",
-    opacity: open ? 1 : 0,
-    transition: reduced
-      ? undefined
-      : `flex-grow ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}, opacity ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
+    opacity: `var(--member-open, 0)`,
   };
 }
 
@@ -700,6 +701,7 @@ const CertificatePage = () => {
               role="grid"
               style={{
                 minWidth: labelWidth + totalLeaves * cellWidth,
+                ["--cell-width" as string]: `${cellWidth}px`,
                 transition: reduced ? undefined : `min-width ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
               }}
             >

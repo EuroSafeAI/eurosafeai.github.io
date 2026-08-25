@@ -1,5 +1,18 @@
 @import 'tailwindcss';
 
+/*
+ * Lets the certificate leaderboard's column expansion animate as a single
+ * inherited number instead of per-element flex-grow/flex-basis. Without this
+ * registration a custom property animates as a discrete string (it jumps);
+ * browsers that don't support @property (older Safari/Firefox) fall back to
+ * that jump with correct end-state geometry, which is an acceptable degrade.
+ */
+@property --member-open {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(.dark *));
