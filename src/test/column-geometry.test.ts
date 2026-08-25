@@ -46,39 +46,58 @@ describe("memberColumnStyle", () => {
 });
 
 /**
+ * Evaluates a `width` calc string produced by columnGroupStyle/memberColumnStyle
+ * at a concrete `--member-open` value, so the invariant test below exercises the
+ * actual production formula rather than a hand-copied restatement of it. Any
+ * edit to the arithmetic inside either function — an off-by-one in `members`,
+ * a different combination rule — changes what this evaluates to and so is
+ * caught by the invariant test, instead of silently passing a duplicated copy.
+ */
+function evaluateWidthCalc(calc: string, memberOpen: number, cellWidthPx: number): number {
+  const expr = calc
+    .trim()
+    .replace(/^calc\((.*)\)$/, "$1")
+    .replaceAll("var(--member-open, 0)", String(memberOpen))
+    .replaceAll("var(--cell-width)", String(cellWidthPx))
+    .replaceAll("px", "");
+  // eslint-disable-next-line no-new-func -- evaluating a small arithmetic
+  // expression sourced from our own calc() string, not external input.
+  return Function(`"use strict"; return (${expr});`)() as number;
+}
+
+/**
  * The whole mechanism rests on one invariant: whatever --member-open is, the
  * provider's own cell (which takes the remainder via `flex: "1 0 0"` on Cell
  * and HeaderCell) stays exactly cellWidth. If this drifted, the provider's
  * column would visibly shift under the cursor mid-animation — the exact defect
  * the flex-grow arrangement this replaces was built to prevent.
  *
- * Substitute --member-open = t into both formulas and confirm the algebra:
- *   groupWidth(t) = cellWidth * (1 + members * t)
- *   memberWidth(t) = t * cellWidth   (per member, `members` of them)
+ * This calls the real columnGroupStyle/memberColumnStyle, takes the `width`
+ * calc strings they return, and evaluates them at --member-open = 0 and = 1:
+ *   groupWidth(t) = cellWidth * (1 + members * t)      [from columnGroupStyle]
+ *   memberWidth(t) = t * cellWidth                     [from memberColumnStyle]
  *   providerCell(t) = groupWidth(t) - members * memberWidth(t) = cellWidth
+ * A formula change in either production function changes these evaluated
+ * numbers, so this test fails rather than silently passing.
  */
 describe("provider-cell invariant", () => {
   const cellWidth = 88;
   const leaves = 5;
   const members = leaves - 1;
 
-  function groupWidth(memberOpen: number): number {
-    return cellWidth * (1 + members * memberOpen);
-  }
-
-  function memberWidth(memberOpen: number): number {
-    return memberOpen * cellWidth;
+  function providerCellWidth(memberOpen: number): number {
+    const groupStyle = columnGroupStyle(leaves, cellWidth, memberOpen === 1, false);
+    const memberStyle = memberColumnStyle(memberOpen === 1, false);
+    const groupWidth = evaluateWidthCalc(groupStyle.width as string, memberOpen, cellWidth);
+    const memberWidth = evaluateWidthCalc(memberStyle.width as string, memberOpen, cellWidth);
+    return groupWidth - members * memberWidth;
   }
 
   it("holds the provider cell at cellWidth when --member-open = 0 (collapsed)", () => {
-    const t = 0;
-    const providerCell = groupWidth(t) - members * memberWidth(t);
-    expect(providerCell).toBe(cellWidth);
+    expect(providerCellWidth(0)).toBe(cellWidth);
   });
 
   it("holds the provider cell at cellWidth when --member-open = 1 (expanded)", () => {
-    const t = 1;
-    const providerCell = groupWidth(t) - members * memberWidth(t);
-    expect(providerCell).toBe(cellWidth);
+    expect(providerCellWidth(1)).toBe(cellWidth);
   });
 });
