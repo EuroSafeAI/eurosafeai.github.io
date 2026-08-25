@@ -417,6 +417,37 @@ const CertificatePage = () => {
     [expandedRisks, expandedBenches]
   );
 
+  // Scores don't depend on which provider is expanded, only on the row/column
+  // set, so this must not key off expandedProviders: keying off it would
+  // re-walk the whole score tree on every toggle, right before the
+  // expand/collapse animation's first frame.
+  const cellValues = useMemo(() => {
+    const byRow = new Map<string, {
+      provider: Map<string, { score?: number; mean?: number; coverage?: Coverage }>;
+      model: Map<string, { score?: number; mean?: number; coverage?: Coverage }>;
+    }>();
+    for (const row of rows) {
+      const provider = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
+      const model = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
+      for (const column of columns) {
+        provider.set(column.provider, {
+          score: providerScore(column.models, row),
+          mean: providerScore(column.models, row, "mean"),
+          coverage: providerCoverage(column.models, row),
+        });
+        for (const entry of column.models) {
+          model.set(entry.id, {
+            score: modelScore(entry, row),
+            mean: modelScore(entry, row, "mean"),
+            coverage: modelCoverage(entry, row),
+          });
+        }
+      }
+      byRow.set(row.key, { provider, model });
+    }
+    return byRow;
+  }, [rows, columns]);
+
   const labelWidth = isMobile ? 168 : 250;
   const cellWidth = isMobile ? 74 : 88;
   // An expanded provider keeps its own pooled column and grows its models to the
@@ -768,32 +799,29 @@ const CertificatePage = () => {
                       {columns.map((column) => {
                         const open = expandedProviders.has(column.provider);
                         const leaves = leafCount(column.provider, column.models);
-                        const pooledScore = providerScore(column.models, row);
-                        const pooledMean = providerScore(column.models, row, "mean");
-                        const pooledCoverage = providerCoverage(column.models, row);
+                        const values = cellValues.get(row.key)!;
+                        const pooled = values.provider.get(column.provider)!;
                         return (
                           <div key={column.provider} style={columnGroupStyle(leaves, cellWidth, open, reduced)}>
                             <Cell
-                              score={pooledScore}
-                              meanScore={pooledMean}
-                              coverage={pooledCoverage && coverageFraction(pooledCoverage)}
+                              score={pooled.score}
+                              meanScore={pooled.mean}
+                              coverage={pooled.coverage && coverageFraction(pooled.coverage)}
                               muted={muted}
                               height={height}
-                              label={cellLabel(row, column.provider, pooledScore, pooledMean, pooledCoverage)}
+                              label={cellLabel(row, column.provider, pooled.score, pooled.mean, pooled.coverage)}
                             />
                             {column.models.map((model) => {
-                              const score = modelScore(model, row);
-                              const meanScore = modelScore(model, row, "mean");
-                              const cov = modelCoverage(model, row);
+                              const own = values.model.get(model.id)!;
                               return (
                                 <div key={model.id} aria-hidden={!open} style={memberColumnStyle(open, reduced)}>
                                   <Cell
-                                    score={score}
-                                    meanScore={meanScore}
-                                    coverage={cov && coverageFraction(cov)}
+                                    score={own.score}
+                                    meanScore={own.mean}
+                                    coverage={own.coverage && coverageFraction(own.coverage)}
                                     muted={muted}
                                     height={height}
-                                    label={cellLabel(row, model.name, score, meanScore, cov)}
+                                    label={cellLabel(row, model.name, own.score, own.mean, own.coverage)}
                                   />
                                 </div>
                               );
