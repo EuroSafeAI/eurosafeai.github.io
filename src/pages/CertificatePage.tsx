@@ -6,11 +6,9 @@ import modelsData from "@/data/models.json";
 import { GRADES, GRADE_BAND, coverageFraction, grade, gpa, type Coverage } from "@/lib/scoring";
 import {
   BENCHMARK_LABELS,
-  RISK_DESCRIPTIONS,
   RISK_LABELS,
   buildColumns,
   buildRows,
-  judgeRowKind,
   judgeRowLabel,
   modelCoverage,
   modelScore,
@@ -28,18 +26,16 @@ import {
   ACCENT,
   INK,
   ROW_HEIGHT,
-  INDENT,
   HEADER_SCORE_HEIGHT,
   HEADER_LOGO,
   EXPAND_DURATION,
   EXPAND_CSS_EASE,
-  DIAGNOSTIC_NOTE,
-  FLOOR_NOTE,
   OVERALL_NOTE,
   COMPANY_LOGO,
   COVERAGE_FLAG,
 } from "@/components/leaderboard/constants";
 import { Cell } from "@/components/leaderboard/Cell";
+import { Chevron, RowLabel } from "@/components/leaderboard/RowLabel";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
@@ -58,24 +54,6 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
       {children}
     </span>
   </div>
-);
-
-const Chevron = ({ open, color }: { open: boolean; color: string }) => (
-  <svg
-    width={11}
-    height={11}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    aria-hidden="true"
-    style={{
-      flexShrink: 0,
-      transform: open ? "rotate(90deg)" : "none",
-      transition: "transform 0.2s ease",
-    }}
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-  </svg>
 );
 
 /**
@@ -286,92 +264,12 @@ const CertificatePage = () => {
     return `${where}: ${parts.join(", ")}`;
   };
 
-  const isExpandable = (row: Row) => row.level === "risk" || row.level === "bench";
   const isOpen = (row: Row) =>
     row.level === "risk" ? expandedRisks.has(row.key) : expandedBenches.has(row.key);
 
   const onRowToggle = (row: Row) => {
     if (row.level === "risk") setExpandedRisks((s) => toggle(s, row.key));
     else if (row.level === "bench") setExpandedBenches((s) => toggle(s, row.key));
-  };
-
-  const rowLabelCell = (row: Row) => {
-    const height = ROW_HEIGHT[row.level];
-    const diagnostic = row.level === "bench" && row.diagnostic;
-    const content = (
-      <>
-        {isExpandable(row) ? <Chevron open={isOpen(row)} color={row.level === "risk" ? ACCENT : "#9ca3af"} /> : <span style={{ width: 11 }} />}
-        <span style={{ minWidth: 0 }}>
-          <span
-            style={{
-              display: "block",
-              fontSize: row.level === "risk" ? 14 : row.level === "bench" ? 12.5 : 12,
-              fontWeight: row.level === "risk" ? 800 : row.level === "bench" ? 600 : 500,
-              color: row.level === "judge" ? "#6b7280" : INK,
-              lineHeight: 1.25,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {rowLabel(row)}
-            {diagnostic && (
-              <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 700, color: "#b45309" }}>
-                diagnostic
-              </span>
-            )}
-          </span>
-          {row.level === "risk" && !isMobile && (
-            <span style={{ display: "block", fontSize: 10.5, color: "rgba(10,31,77,0.5)", lineHeight: 1.3, marginTop: 2 }}>
-              {RISK_DESCRIPTIONS[row.risk]}
-            </span>
-          )}
-          {row.level === "judge" && !isMobile && (
-            <span style={{ display: "block", fontSize: 9.5, color: row.floor ? "#c08a3e" : "#b0b7c3", lineHeight: 1.2, marginTop: 1 }}>
-              {judgeRowKind(row)}
-            </span>
-          )}
-        </span>
-      </>
-    );
-
-    const base: React.CSSProperties = {
-      position: "sticky",
-      left: 0,
-      zIndex: 2,
-      width: labelWidth,
-      flex: `0 0 ${labelWidth}px`,
-      height,
-      display: "flex",
-      alignItems: "center",
-      gap: 7,
-      paddingLeft: 10 + INDENT[row.level],
-      paddingRight: 8,
-      background: row.level === "risk" ? "#ffffff" : "#fbfcfe",
-      borderRight: "1px solid rgba(10,31,77,0.08)",
-      textAlign: "left",
-      minWidth: 0,
-    };
-
-    if (!isExpandable(row)) {
-      const note = row.level === "judge" && row.floor ? FLOOR_NOTE : row.level === "judge" ? row.scorer : undefined;
-      return (
-        <div style={base} title={note}>
-          {content}
-        </div>
-      );
-    }
-    return (
-      <button
-        type="button"
-        onClick={() => onRowToggle(row)}
-        aria-expanded={isOpen(row)}
-        title={diagnostic ? DIAGNOSTIC_NOTE : row.level === "risk" ? RISK_DESCRIPTIONS[row.risk] : undefined}
-        style={{ ...base, border: 0, borderRight: base.borderRight as string, cursor: "pointer", font: "inherit" }}
-      >
-        {content}
-      </button>
-    );
   };
 
   return (
@@ -583,7 +481,7 @@ const CertificatePage = () => {
                         borderTop: top ? "1px solid rgba(10,31,77,0.08)" : "1px solid rgba(10,31,77,0.03)",
                       }}
                     >
-                      {rowLabelCell(row)}
+                      <RowLabel row={row} labelWidth={labelWidth} isMobile={isMobile} open={isOpen(row)} onToggle={onRowToggle} />
                       {columns.map((column) => {
                         const open = expandedProviders.has(column.provider);
                         const pooled = values.provider.get(column.provider)!;
