@@ -184,3 +184,27 @@ describe("MetricToggle", () => {
     expect(worst).toHaveFocus();
   });
 });
+
+describe("sticky label column", () => {
+  // `position: sticky` resolves against the nearest scroll container, and any
+  // overflow other than visible/clip creates one. A row that clipped with
+  // `overflow: hidden` therefore captured the sticky label cell and, having no
+  // horizontal scroll of its own, left it to travel with the content.
+  const SCROLL_CONTAINER_OVERFLOWS = ["hidden", "auto", "scroll", "overlay"];
+
+  it("clips rows without making them a scroll container", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const row of screen.getAllByRole("row")) {
+      expect(SCROLL_CONTAINER_OVERFLOWS).not.toContain(row.style.overflow);
+      expect(SCROLL_CONTAINER_OVERFLOWS).not.toContain(row.style.overflowX);
+    }
+  });
+
+  it("keeps the row header sticky at the left edge", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const header of screen.getAllByRole("rowheader")) {
+      expect(header.style.position).toBe("sticky");
+      expect(header.style.left).toBe("0px");
+    }
+  });
+});

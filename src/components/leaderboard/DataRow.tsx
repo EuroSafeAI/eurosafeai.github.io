@@ -92,7 +92,10 @@ export const DataRow: React.FC<DataRowProps> = ({
       transition={{ duration: reduced ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
       style={{
         display: "flex",
-        overflow: "hidden",
+        // `clip` rather than `hidden`: both clip the height animation, but
+        // `hidden` creates a scroll container, which would capture the sticky
+        // label cell and strand it in a row that never scrolls.
+        overflow: "clip",
         background: top ? "#ffffff" : "#fbfcfe",
         borderTop: top ? "1px solid rgba(10,31,77,0.08)" : "1px solid rgba(10,31,77,0.03)",
       }}
