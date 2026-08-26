@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RowLabel } from "@/components/leaderboard/RowLabel";
 import { Legend } from "@/components/leaderboard/Legend";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
+import { MetricToggle } from "@/components/leaderboard/MetricToggle";
+import type { Aggregation } from "@/lib/scoring";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
 import {
@@ -23,7 +26,7 @@ const benchRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "
 describe("RowLabel", () => {
   it("renders a risk row as a toggle carrying its description", () => {
     render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    const button = screen.getByRole("button");
+    const button = screen.getByRole("rowheader");
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(button.textContent).toContain("CBRN");
     expect(button.textContent).toContain("Chemical, biological");
@@ -31,29 +34,29 @@ describe("RowLabel", () => {
 
   it("hides the risk description on mobile", () => {
     render(<RowLabel row={riskRow} labelWidth={168} isMobile onToggle={() => {}} open={false} />);
-    expect(screen.getByRole("button").textContent).not.toContain("Chemical, biological");
+    expect(screen.getByRole("rowheader").textContent).not.toContain("Chemical, biological");
   });
 
   it("marks a diagnostic benchmark row", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    expect(screen.getByRole("button").textContent).toContain("diagnostic");
+    expect(screen.getByRole("rowheader").textContent).toContain("diagnostic");
   });
 
   it("calls onToggle with the row", () => {
     const onToggle = vi.fn();
     render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open={false} onToggle={onToggle} />);
-    screen.getByRole("button").click();
+    screen.getByRole("rowheader").click();
     expect(onToggle).toHaveBeenCalledWith(riskRow);
   });
 
   it("renders the benchmark gloss under the benchmark name", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    expect(screen.getByRole("button").textContent).toContain("weaponisation knowledge");
+    expect(screen.getByRole("rowheader").textContent).toContain("weaponisation knowledge");
   });
 
   it("hides the benchmark gloss on mobile", () => {
     render(<RowLabel row={benchRow} labelWidth={168} isMobile open={false} onToggle={() => {}} />);
-    expect(screen.getByRole("button").textContent).not.toContain("weaponisation knowledge");
+    expect(screen.getByRole("rowheader").textContent).not.toContain("weaponisation knowledge");
   });
 });
 
@@ -121,5 +124,54 @@ describe("metric toggle", () => {
     const before = namesNow();
     fireEvent.click(screen.getByRole("radio", { name: /average/i }));
     expect(namesNow()).not.toEqual(before);
+  });
+});
+
+describe("grid role structure", () => {
+  it("gives the row label and the corner cell a header role", () => {
+    render(<Leaderboard models={MODELS} />);
+    expect(screen.getByRole("rowheader", { name: /CBRN/ })).toBeTruthy();
+    expect(screen.getByRole("columnheader", { name: /Systemic risk/ })).toBeTruthy();
+  });
+});
+
+describe("MetricToggle", () => {
+  const Controlled = () => {
+    const [metric, setMetric] = useState<Aggregation>("worst");
+    return <MetricToggle metric={metric} onChange={setMetric} />;
+  };
+
+  it("labels the radiogroup via the visible text instead of a duplicate aria-label", () => {
+    render(<Controlled />);
+    const group = screen.getByRole("radiogroup");
+    expect(group).not.toHaveAttribute("aria-label");
+    expect(group).toHaveAttribute("aria-labelledby");
+    const label = document.getElementById(group.getAttribute("aria-labelledby")!);
+    expect(label?.textContent).toBe("Score shown");
+  });
+
+  it("gives only the checked option a tab stop — roving tabindex", () => {
+    render(<Controlled />);
+    const worst = screen.getByRole("radio", { name: "Worst case" });
+    const average = screen.getByRole("radio", { name: "Average" });
+    expect(worst).toHaveAttribute("tabindex", "0");
+    expect(average).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("moves selection and focus together on ArrowRight/ArrowLeft", () => {
+    render(<Controlled />);
+    const group = screen.getByRole("radiogroup");
+    const worst = screen.getByRole("radio", { name: "Worst case" });
+    const average = screen.getByRole("radio", { name: "Average" });
+
+    worst.focus();
+    fireEvent.keyDown(group, { key: "ArrowRight" });
+    expect(average).toHaveAttribute("aria-checked", "true");
+    expect(average).toHaveAttribute("tabindex", "0");
+    expect(average).toHaveFocus();
+
+    fireEvent.keyDown(group, { key: "ArrowLeft" });
+    expect(worst).toHaveAttribute("aria-checked", "true");
+    expect(worst).toHaveFocus();
   });
 });

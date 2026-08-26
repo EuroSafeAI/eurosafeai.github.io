@@ -16,10 +16,11 @@ import {
   overallScore,
   providerCoverage,
   providerScore,
+  rowLabel,
   scorerLabel,
   type Row,
 } from "@/lib/leaderboard";
-import { coverageFraction } from "@/lib/scoring";
+import { coverageFraction, mean } from "@/lib/scoring";
 import { RISKS, type BenchmarkResult, type ModelEntry, type Risk } from "@/data/models.types";
 import modelsData from "@/data/models.json";
 
@@ -104,8 +105,11 @@ describe("buildColumns ordering", () => {
   it("sorts providers descending by the requested metric", () => {
     for (const how of ["worst", "mean"] as const) {
       const columns = buildColumns(MODELS, how);
-      const scores = columns.map((c) =>
-        c.models.reduce((sum, m) => sum + (m.aggregate[how] ?? 0), 0) / c.models.length
+      // Matches providerAggregate: missing scores drop out of the mean's
+      // denominator rather than counting as 0, so a provider with an
+      // unscored model isn't penalised for it.
+      const scores = columns.map(
+        (c) => mean(c.models.map((m) => m.aggregate[how] ?? undefined)) ?? -1
       );
       expect([...scores].sort((a, b) => b - a)).toEqual(scores);
     }
@@ -574,5 +578,52 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
   it("gives every benchmark a distinct description", () => {
     const values = Object.values(BENCHMARK_DESCRIPTIONS);
     expect(new Set(values).size).toBe(Object.keys(BENCHMARK_DESCRIPTIONS).length);
+  });
+});
+
+describe("rowLabel", () => {
+  it("names a risk row", () => {
+    expect(rowLabel({ key: "cbrn", level: "risk", risk: "cbrn" })).toBe(RISK_LABELS.cbrn);
+  });
+
+  it("names a benchmark row", () => {
+    expect(
+      rowLabel({ key: "k", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: false })
+    ).toBe(BENCHMARK_LABELS.wmdp);
+  });
+
+  it("falls back to the bare id for an unlabelled benchmark", () => {
+    expect(
+      rowLabel({ key: "k", level: "bench", risk: "cbrn", bench: "some_future_bench", diagnostic: false })
+    ).toBe("some_future_bench");
+  });
+
+  it("names a judge row, renaming the refusal floor", () => {
+    expect(
+      rowLabel({
+        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
+        scorer: JUDGE, floor: false, diagnostic: false,
+      })
+    ).toBe("Claude Sonnet 4.5");
+    expect(
+      rowLabel({
+        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
+        scorer: "refusal_regex", floor: true, diagnostic: false,
+      })
+    ).toBe("Refusal floor");
+  });
+});
+
+describe("buildColumns ordering with a missing aggregate", () => {
+  it("drops a model's missing aggregate from its provider's mean, rather than treating it as 0", () => {
+    // OpenAI's mean is (80 + 60) / 2 = 70 if the null is excluded, but
+    // (80 + 60 + 0) / 3 ≈ 46.7 if it counted as 0 — enough to flip the order.
+    const columns = buildColumns([
+      model("o1", "OpenAI", {}, 80),
+      model("o2", "OpenAI", {}, 60),
+      model("o3", "OpenAI", {}, null),
+      model("a1", "Anthropic", {}, 65),
+    ]);
+    expect(columns.map((c) => c.provider)).toEqual(["OpenAI", "Anthropic"]);
   });
 });
