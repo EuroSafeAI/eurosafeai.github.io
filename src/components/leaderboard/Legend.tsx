@@ -37,7 +37,7 @@ export const Legend: React.FC = () => (
       across the six adversarial perturbations and those are then averaged, or{" "}
       <strong>average</strong>, which pools the same samples without that per-sample minimum.
       Switching it changes the grade, the colour, and the column order together — the
-      unselected metric stays available on hover. A large divergence between the two metrics'
+      unselected metric stays in each cell's accessible label and mouse tooltip. A large divergence between the two metrics'
       provider orderings means a provider's failures are concentrated in particular
       perturbations rather than spread evenly across them. A collapsed provider column shows
       the mean across its evaluated models. Rows marked{" "}
