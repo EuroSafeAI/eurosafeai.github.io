@@ -502,7 +502,7 @@ const CertificatePage = () => {
   return (
     <div>
       <Helmet>
-        <title>Systemic Risk Index — EuroSafeAI</title>
+        <title>AI Safety Certificate — EuroSafeAI</title>
         <meta
           name="description"
           content="EuroSafeAI's leaderboard grading frontier AI models against the four systemic risks named by the EU AI Act Code of Practice."
@@ -533,9 +533,9 @@ const CertificatePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.07 }}
           >
-            Systemic Risk Index
+            EU AI Safety Index
             <br />
-            <span style={{ color: ACCENT, fontStyle: "italic" }}>for Europe and Humanity</span>
+            <span style={{ color: ACCENT, fontStyle: "italic" }}></span>
           </motion.h1>
           <motion.p
             style={{
