@@ -26,6 +26,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     metric,
     setMetric,
     columnShifts,
+    columnShiftsInstant,
   } = useLeaderboard(models);
 
   return (
@@ -64,6 +65,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             expandedProviders={expandedProviders}
             onProviderToggle={toggleProvider}
             metric={metric}
+            columnShiftsInstant={columnShiftsInstant}
           />
 
           {/* Rows */}
@@ -82,6 +84,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
                 open={isRowOpen(row)}
                 onToggle={toggleRow}
                 metric={metric}
+                columnShiftsInstant={columnShiftsInstant}
               />
             ))}
           </AnimatePresence>

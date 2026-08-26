@@ -26,17 +26,24 @@ const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
  * `DataRow` both call this function, and writing the transform out separately
  * in each would risk the two falling out of byte-identical agreement, which
  * would drift the header out of horizontal register with the body mid-animation.
+ *
+ * `instantShift`, when true, drops `transform` from the transition list. FLIP
+ * needs two distinct writes of the same property: the *invert* (jumping to the
+ * pre-reorder offset) must be instantaneous or the browser animates the jump
+ * itself, and only the *release* (back to 0) should transition. The caller is
+ * responsible for sequencing which write happens with which flag.
  */
 export function columnGroupStyle(
   leaves: number,
   cellWidth: number,
   open: boolean,
   reduced: boolean,
-  shiftProperty?: string
+  shiftProperty?: string,
+  instantShift = false
 ): React.CSSProperties {
   const members = leaves - 1;
   const transitions = ["--member-open"];
-  if (shiftProperty) transitions.push("transform");
+  if (shiftProperty && !instantShift) transitions.push("transform");
   return {
     flexShrink: 0,
     width: `calc(${cellWidth}px * (1 + ${members} * var(--member-open, 0)))`,
