@@ -14,12 +14,18 @@ import {
 
 const INK = "#0a1f4d";
 const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
+// Desktop rows are a single line; mobile rows stack the name/bar/score line
+// above the safety/capability detail line, so they need more vertical room.
+// Both the container height and the per-row translateY step are derived from
+// this one value so they can never drift apart.
 const ROW_HEIGHT = 34;
+const MOBILE_ROW_HEIGHT = 52;
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
   const [alpha, setAlpha] = useState(CAPABILITY_EXPONENT);
   const reducedMotion = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
+  const rowHeight = isMobile ? MOBILE_ROW_HEIGHT : ROW_HEIGHT;
 
   // The scatter is alpha-independent (its axes are raw safety and capability),
   // so its ranking only needs computing once at the published exponent.
@@ -86,7 +92,7 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       <div
         style={{
           position: "relative",
-          height: stableOrder.length * ROW_HEIGHT,
+          height: stableOrder.length * rowHeight,
           marginBottom: "2rem",
         }}
       >
@@ -104,14 +110,14 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
                 top: 0,
                 left: 0,
                 right: 0,
-                height: ROW_HEIGHT,
+                height: rowHeight,
                 display: "flex",
                 flexDirection: isMobile ? "column" : "row",
                 alignItems: isMobile ? "flex-start" : "center",
                 justifyContent: "center",
                 gap: isMobile ? 2 : 12,
                 fontSize: 12.5,
-                transform: `translateY(${rank * ROW_HEIGHT}px)`,
+                transform: `translateY(${rank * rowHeight}px)`,
                 transition: reducedMotion ? "none" : "transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             >
