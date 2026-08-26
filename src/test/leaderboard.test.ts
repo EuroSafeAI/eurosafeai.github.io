@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
   RISK_DESCRIPTIONS,
   RISK_LABELS,
@@ -524,5 +525,18 @@ describe("label coverage", () => {
 
   it("exports benchmark labels as a non-empty table", () => {
     expect(Object.keys(BENCHMARK_LABELS).length).toBeGreaterThan(0);
+  });
+});
+
+describe("BENCHMARK_DESCRIPTIONS", () => {
+  it("covers exactly the benchmarks that have labels", () => {
+    expect(Object.keys(BENCHMARK_DESCRIPTIONS).sort()).toEqual(Object.keys(BENCHMARK_LABELS).sort());
+  });
+
+  it("never restates the label", () => {
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(text.trim().length).toBeGreaterThan(20);
+      expect(text.trim()).not.toBe(BENCHMARK_LABELS[key]);
+    }
   });
 });

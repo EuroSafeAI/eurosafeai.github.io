@@ -1,4 +1,5 @@
 import {
+  BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
   RISK_DESCRIPTIONS,
   RISK_LABELS,
@@ -55,6 +56,11 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
         {row.level === "risk" && !isMobile && (
           <span style={{ display: "block", fontSize: 10.5, color: "rgba(10,31,77,0.5)", lineHeight: 1.3, marginTop: 2 }}>
             {RISK_DESCRIPTIONS[row.risk]}
+          </span>
+        )}
+        {row.level === "bench" && !isMobile && (
+          <span style={{ display: "block", fontSize: 10.5, color: "rgba(10,31,77,0.5)", lineHeight: 1.3, marginTop: 2 }}>
+            {BENCHMARK_DESCRIPTIONS[row.bench]}
           </span>
         )}
         {row.level === "judge" && !isMobile && (

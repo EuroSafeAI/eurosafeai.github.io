@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { RowLabel } from "@/components/leaderboard/RowLabel";
+import { Legend } from "@/components/leaderboard/Legend";
+import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
 
 const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
@@ -31,10 +33,17 @@ describe("RowLabel", () => {
     screen.getByRole("button").click();
     expect(onToggle).toHaveBeenCalledWith(riskRow);
   });
-});
 
-import { Legend } from "@/components/leaderboard/Legend";
-import { GRADES } from "@/lib/scoring";
+  it("renders the benchmark gloss under the benchmark name", () => {
+    render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    expect(screen.getByRole("button").textContent).toContain("weaponisation knowledge");
+  });
+
+  it("hides the benchmark gloss on mobile", () => {
+    render(<RowLabel row={benchRow} labelWidth={168} isMobile open={false} onToggle={() => {}} />);
+    expect(screen.getByRole("button").textContent).not.toContain("weaponisation knowledge");
+  });
+});
 
 describe("Legend", () => {
   it("shows every grade band", () => {

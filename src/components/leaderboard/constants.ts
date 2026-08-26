@@ -1,7 +1,7 @@
 export const ACCENT = "#003399";
 export const INK = "#0a1f4d";
 
-export const ROW_HEIGHT = { risk: 58, bench: 44, judge: 38 } as const;
+export const ROW_HEIGHT = { risk: 58, bench: 58, judge: 38 } as const;
 export const INDENT = { risk: 0, bench: 18, judge: 36 } as const;
 export const HEADER_SCORE_HEIGHT = 40;
 export const HEADER_LOGO = 20;
