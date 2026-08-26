@@ -539,4 +539,9 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
       expect(text.trim()).not.toBe(BENCHMARK_LABELS[key]);
     }
   });
+
+  it("gives every benchmark a distinct description", () => {
+    const values = Object.values(BENCHMARK_DESCRIPTIONS);
+    expect(new Set(values).size).toBe(Object.keys(BENCHMARK_DESCRIPTIONS).length);
+  });
 });

@@ -14,6 +14,7 @@ import {
   type Row,
 } from "@/lib/leaderboard";
 import type { RowValues } from "./DataRow";
+import { LABEL_WIDTH, deriveCellWidth } from "./constants";
 
 export interface LeaderboardState {
   columns: Column[];
@@ -77,8 +78,8 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     return byRow;
   }, [rows, columns]);
 
-  const labelWidth = isMobile ? 168 : 250;
-  const cellWidth = isMobile ? 74 : 88;
+  const labelWidth = isMobile ? 168 : LABEL_WIDTH;
+  const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length);
   // An expanded provider keeps its own pooled column and grows its models to the
   // right of it, so nothing shifts under the cursor and a provider can be read
   // against its own members.

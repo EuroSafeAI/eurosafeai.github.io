@@ -4,6 +4,13 @@ import { RowLabel } from "@/components/leaderboard/RowLabel";
 import { Legend } from "@/components/leaderboard/Legend";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
+import {
+  deriveCellWidth,
+  LEADERBOARD_WIDTH,
+  LABEL_WIDTH,
+  CELL_MIN,
+  CELL_MAX,
+} from "@/components/leaderboard/constants";
 
 const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
 const benchRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: true };
@@ -56,5 +63,31 @@ describe("Legend", () => {
   it("explains the coverage bar", () => {
     render(<Legend />);
     expect(document.body.textContent).toContain("coverage");
+  });
+});
+
+describe("deriveCellWidth", () => {
+  const unclamped = [8, 9, 10, 11];
+
+  it("fills the container across the unclamped range", () => {
+    for (const n of unclamped) {
+      const total = LABEL_WIDTH + n * deriveCellWidth(n);
+      expect(LEADERBOARD_WIDTH - total).toBeGreaterThanOrEqual(0);
+      expect(LEADERBOARD_WIDTH - total).toBeLessThanOrEqual(n);
+    }
+  });
+
+  it("pins to the maximum when there are few providers", () => {
+    expect(deriveCellWidth(1)).toBe(CELL_MAX);
+    expect(deriveCellWidth(7)).toBe(CELL_MAX);
+  });
+
+  it("pins to the minimum when there are many, and overflows", () => {
+    expect(deriveCellWidth(20)).toBe(CELL_MIN);
+    expect(LABEL_WIDTH + 20 * deriveCellWidth(20)).toBeGreaterThan(LEADERBOARD_WIDTH);
+  });
+
+  it("gives the current roster a materially wider cell than before", () => {
+    expect(deriveCellWidth(9)).toBe(115);
   });
 });

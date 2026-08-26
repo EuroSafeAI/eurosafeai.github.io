@@ -29,8 +29,6 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
         style={{
           overflowX: "auto",
           WebkitOverflowScrolling: "touch",
-          borderRadius: 12,
-          border: "1px solid rgba(10,31,77,0.08)",
           background: "#ffffff",
         }}
       >

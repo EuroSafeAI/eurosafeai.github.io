@@ -1,7 +1,21 @@
 export const ACCENT = "#003399";
 export const INK = "#0a1f4d";
 
-export const ROW_HEIGHT = { risk: 58, bench: 58, judge: 38 } as const;
+export const ROW_HEIGHT = { risk: 64, bench: 58, judge: 42 } as const;
+
+export const LEADERBOARD_WIDTH = 1360;
+export const LABEL_WIDTH = 320;
+export const CELL_MIN = 88;
+export const CELL_MAX = 140;
+
+/**
+ * Hardcoding a cell width that happens to fill the container at today's nine
+ * providers would strand whitespace or overflow the moment a tenth appears.
+ */
+export function deriveCellWidth(providers: number): number {
+  const fitted = Math.floor((LEADERBOARD_WIDTH - LABEL_WIDTH) / providers);
+  return Math.min(CELL_MAX, Math.max(CELL_MIN, fitted));
+}
 export const INDENT = { risk: 0, bench: 18, judge: 36 } as const;
 export const HEADER_SCORE_HEIGHT = 40;
 export const HEADER_LOGO = 20;

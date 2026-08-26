@@ -6,7 +6,7 @@ import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { ACCENT, INK } from "@/components/leaderboard/constants";
+import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 
 const MODELS = modelsData as unknown as ModelEntry[];
@@ -128,8 +128,8 @@ const CertificatePage = () => {
       </section>
 
       {/* Heatmap */}
-      <section style={{ background: "#f5f7fb", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
           <Leaderboard models={MODELS} />
         </div>
       </section>
