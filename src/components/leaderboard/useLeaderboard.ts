@@ -4,18 +4,18 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import type { ModelEntry } from "@/data/models.types";
 import type { Aggregation, Coverage } from "@/lib/scoring";
 import {
+  adjustedCellScore,
+  adjustedProviderCellScore,
   buildColumns,
   buildRows,
   modelCoverage,
-  modelScore,
   providerCoverage,
-  providerScore,
   type Column,
   type Row,
 } from "@/lib/leaderboard";
 import { columnShifts } from "@/lib/column-order";
 import type { RowValues } from "./DataRow";
-import { LABEL_WIDTH, deriveCellWidth } from "./constants";
+import { LABEL_WIDTH, RAW_ALPHA, deriveCellWidth } from "./constants";
 
 export interface LeaderboardState {
   columns: Column[];
@@ -32,6 +32,8 @@ export interface LeaderboardState {
   toggleProvider: (provider: string) => void;
   metric: Aggregation;
   setMetric: (metric: Aggregation) => void;
+  alpha: number;
+  setAlpha: (alpha: number) => void;
   columnShifts: Record<string, number>;
   /** True for the one frame the shift is an un-transitioned FLIP invert. */
   columnShiftsInstant: boolean;
@@ -48,10 +50,11 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedBenches, setExpandedBenches] = useState<ReadonlySet<string>>(new Set());
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
   const [metric, setMetric] = useState<Aggregation>("worst");
+  const [alpha, setAlpha] = useState(RAW_ALPHA);
   const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
 
-  const columns = useMemo(() => buildColumns(models, metric), [models, metric]);
+  const columns = useMemo(() => buildColumns(models, metric, alpha), [models, metric, alpha]);
   const rows = useMemo(
     () => buildRows(models, expandedRisks, expandedBenches),
     [models, expandedRisks, expandedBenches]
@@ -69,14 +72,14 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
       const model = new Map<string, { score?: number; alternate?: number; coverage?: Coverage }>();
       for (const column of columns) {
         provider.set(column.provider, {
-          score: providerScore(column.models, row, metric),
-          alternate: providerScore(column.models, row, alternateMetric),
+          score: adjustedProviderCellScore(column.models, row, metric, alpha),
+          alternate: adjustedProviderCellScore(column.models, row, alternateMetric, alpha),
           coverage: providerCoverage(column.models, row),
         });
         for (const entry of column.models) {
           model.set(entry.id, {
-            score: modelScore(entry, row, metric),
-            alternate: modelScore(entry, row, alternateMetric),
+            score: adjustedCellScore(entry, row, metric, alpha),
+            alternate: adjustedCellScore(entry, row, alternateMetric, alpha),
             coverage: modelCoverage(entry, row),
           });
         }
@@ -84,7 +87,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
       byRow.set(row.key, { provider, model });
     }
     return byRow;
-  }, [rows, columns, metric]);
+  }, [rows, columns, metric, alpha]);
 
   const labelWidth = isMobile ? 168 : LABEL_WIDTH;
   const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length);
@@ -171,6 +174,8 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     toggleProvider,
     metric,
     setMetric,
+    alpha,
+    setAlpha,
     columnShifts: shifts,
     columnShiftsInstant: shiftsInstant,
   };

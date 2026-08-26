@@ -48,6 +48,19 @@ export const Legend: React.FC = () => (
       headline's pessimistic one. Read the pair as brackets on the truth.
     </p>
     <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      <strong>Capability weight</strong> conditions these grades on how much each model can
+      actually do — a model that cannot accomplish much cannot cause much. At{" "}
+      <strong>1.00 the table shows the measured evaluation results</strong>, unmodified; that
+      is where it loads. Lowering it discounts a model's unsafety by its Artificial
+      Analysis intelligence index, so a weak unsafe model falls behind a capable one at the
+      same raw score, and the provider columns re-rank. Within a column the ordering of the
+      four risks never changes — the adjustment is applied to every cell in that column
+      alike. Diagnostic rows are never adjusted: they measure whether a model{" "}
+      <em>knows</em> hazardous material rather than whether it declines to act on it, so
+      discounting them by capability would count the same thing twice. The published
+      capability-adjusted index below this table uses a weight of 0.50.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
       A bar along the bottom of a cell marks{" "}
       <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong> — the share of
       samples that yielded a gradeable result. A sample drops out when no verdict could be

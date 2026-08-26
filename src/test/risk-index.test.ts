@@ -98,3 +98,29 @@ describe("adjustedRanking", () => {
     expect(adjustedRanking(MODELS)).toEqual(adjustedRanking(MODELS, 0.5));
   });
 });
+
+describe("adjustedSafety at alpha = 1", () => {
+  // 100 - (100 - s) reintroduces floating-point error: 351 of the 16,269
+  // scores in the roster do not survive the round trip. The leaderboard rests
+  // at alpha = 1 and must show its measured numbers untouched, so the identity
+  // is short-circuited rather than computed.
+  const LOSSY = [7.94, 26.19, 21.62, 19.51, 17.95, 29.27];
+
+  it("returns raw safety exactly, not merely close", () => {
+    for (const safety of LOSSY) {
+      expect(adjustedSafety(safety, 45.3, 1)).toBe(safety);
+    }
+  });
+
+  it("covers scores the naive formula would perturb", () => {
+    for (const safety of LOSSY) {
+      expect(100 - (100 - safety) ** 1 * 1 ** 0).not.toBe(safety);
+    }
+  });
+
+  it("is independent of the capability index", () => {
+    for (const index of [0, 12.5, 45.3, 60, 99]) {
+      expect(adjustedSafety(63.4, index, 1)).toBe(63.4);
+    }
+  });
+});

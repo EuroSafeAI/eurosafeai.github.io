@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
+  adjustedCellScore,
+  adjustedProviderCellScore,
   BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
   RISK_DESCRIPTIONS,
@@ -21,6 +23,7 @@ import {
   type Row,
 } from "@/lib/leaderboard";
 import { coverageFraction, mean } from "@/lib/scoring";
+import { adjustedSafety } from "@/lib/risk-index";
 import { RISKS, type BenchmarkResult, type ModelEntry, type Risk } from "@/data/models.types";
 import modelsData from "@/data/models.json";
 
@@ -625,5 +628,81 @@ describe("buildColumns ordering with a missing aggregate", () => {
       model("a1", "Anthropic", {}, 65),
     ]);
     expect(columns.map((c) => c.provider)).toEqual(["OpenAI", "Anthropic"]);
+  });
+});
+
+describe("capability-adjusted cell scores", () => {
+  const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
+  const diagRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: true };
+  const benchRow: Row = { key: "cbrn/sosbench", level: "bench", risk: "cbrn", bench: "sosbench", diagnostic: false };
+
+  const withIndex = (m: ModelEntry, index: number): ModelEntry => ({
+    ...m,
+    aa_intelligence_index: index,
+  });
+
+  it("returns the measured score for every roster cell at alpha = 1", () => {
+    const models = modelsData as unknown as ModelEntry[];
+    for (const risk of RISKS) {
+      const row: Row = { key: risk, level: "risk", risk };
+      for (const m of models) {
+        for (const how of ["worst", "mean"] as const) {
+          expect(adjustedCellScore(m, row, how, 1)).toBe(modelScore(m, row, how));
+        }
+      }
+    }
+  });
+
+  it("discounts a weak model's unsafety more than a capable model's", () => {
+    const weak = withIndex(model("weak", "A", { sosbench: benchmark(40, {}) }), 10);
+    const capable = withIndex(model("capable", "B", { sosbench: benchmark(40, {}) }), 55);
+    const weakAdjusted = adjustedCellScore(weak, benchRow, "worst", 0.5)!;
+    const capableAdjusted = adjustedCellScore(capable, benchRow, "worst", 0.5)!;
+    expect(weakAdjusted).toBeGreaterThan(capableAdjusted);
+    expect(weakAdjusted).toBeGreaterThan(40);
+  });
+
+  it("leaves diagnostic rows raw at every alpha", () => {
+    const m = withIndex(model("d", "A", { wmdp: benchmark(40, {}, true) }), 10);
+    for (const alpha of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(adjustedCellScore(m, diagRow, "worst", alpha)).toBe(modelScore(m, diagRow, "worst"));
+    }
+  });
+
+  it("adjusts each model by its own index before pooling, not after", () => {
+    // Same safety, very different capability. Pooling first would apply one
+    // averaged index to both and land on a different number entirely.
+    const a = withIndex(model("a", "P", { sosbench: benchmark(40, {}) }), 10);
+    const b = withIndex(model("b", "P", { sosbench: benchmark(40, {}) }), 55);
+    const pooled = adjustedProviderCellScore([a, b], benchRow, "worst", 0.5)!;
+    const adjustThenPool = mean([
+      adjustedCellScore(a, benchRow, "worst", 0.5),
+      adjustedCellScore(b, benchRow, "worst", 0.5),
+    ])!;
+    const poolThenAdjust = adjustedSafety(40, (10 + 55) / 2, 0.5);
+    expect(pooled).toBeCloseTo(adjustThenPool, 10);
+    expect(pooled).not.toBeCloseTo(poolThenAdjust, 3);
+  });
+
+  it("keeps risk rows adjustable while their diagnostic children stay raw", () => {
+    const m = withIndex(model("m", "A", { sosbench: benchmark(40, {}) }), 10);
+    expect(adjustedCellScore(m, riskRow, "worst", 0.5)).not.toBe(modelScore(m, riskRow, "worst"));
+  });
+});
+
+describe("buildColumns under capability adjustment", () => {
+  it("orders identically to the raw table at alpha = 1", () => {
+    const models = modelsData as unknown as ModelEntry[];
+    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(
+      buildColumns(models, "worst").map((c) => c.provider)
+    );
+  });
+
+  it("promotes a weak-but-safe provider as alpha falls", () => {
+    const strongUnsafe = { ...model("s", "Frontier", {}, 40), aa_intelligence_index: 55 };
+    const weakUnsafe = { ...model("w", "Small", {}, 38), aa_intelligence_index: 8 };
+    const models = [strongUnsafe, weakUnsafe];
+    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(["Frontier", "Small"]);
+    expect(buildColumns(models, "worst", 0.5).map((c) => c.provider)).toEqual(["Small", "Frontier"]);
   });
 });

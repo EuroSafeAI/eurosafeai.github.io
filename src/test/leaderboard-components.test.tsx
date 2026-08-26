@@ -208,3 +208,59 @@ describe("sticky label column", () => {
     }
   });
 });
+
+describe("capability slider", () => {
+  const cellText = () =>
+    screen.getAllByRole("gridcell").map((c) => c.textContent);
+  const columnNames = () =>
+    screen.getAllByRole("columnheader").map((h) => h.textContent);
+
+  it("rests at measured safety, showing no adjustment by default", () => {
+    render(<Leaderboard models={MODELS} />);
+    const slider = screen.getByRole("slider", { name: /capability weight/i });
+    expect(slider).toHaveValue("1");
+    expect(screen.getByText("measured")).toBeInTheDocument();
+  });
+
+  it("leaves every cell untouched while the slider is at 1", () => {
+    // The guard that matters: the default table must be the evaluation
+    // results, not a derived quantity someone could screenshot as one.
+    const { unmount } = render(<Leaderboard models={MODELS} />);
+    const before = cellText();
+    unmount();
+
+    render(<Leaderboard models={MODELS} />);
+    const slider = screen.getByRole("slider", { name: /capability weight/i });
+    fireEvent.change(slider, { target: { value: "0.5" } });
+    fireEvent.change(slider, { target: { value: "1" } });
+    expect(cellText()).toEqual(before);
+  });
+
+  it("changes the grid when the weight is lowered", () => {
+    render(<Leaderboard models={MODELS} />);
+    const before = cellText();
+    fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
+      target: { value: "0.5" },
+    });
+    expect(cellText()).not.toEqual(before);
+  });
+
+  it("re-ranks the provider columns as the weight falls", () => {
+    render(<Leaderboard models={MODELS} />);
+    const before = columnNames();
+    fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
+      target: { value: "0.3" },
+    });
+    expect(columnNames()).not.toEqual(before);
+  });
+
+  it("offers a reset once adjusted, and returns to measured", () => {
+    render(<Leaderboard models={MODELS} />);
+    const before = cellText();
+    const slider = screen.getByRole("slider", { name: /capability weight/i });
+    fireEvent.change(slider, { target: { value: "0.4" } });
+    fireEvent.click(screen.getByRole("button", { name: /reset to measured/i }));
+    expect(slider).toHaveValue("1");
+    expect(cellText()).toEqual(before);
+  });
+});

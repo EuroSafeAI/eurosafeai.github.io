@@ -36,6 +36,12 @@ export function adjustedSafety(
   index: number,
   alpha: number = CAPABILITY_EXPONENT
 ): number {
+  // Algebraically the formula already collapses to `safety` here, but
+  // 100 - (100 - safety) does not round-trip in binary floating point for 351
+  // of the roster's 16,269 scores. The leaderboard rests at alpha = 1 and has
+  // to show its measured numbers untouched, so the identity is returned rather
+  // than recomputed.
+  if (alpha === 1) return safety;
   return 100 - (100 - safety) ** alpha * capabilityWeight(index) ** (1 - alpha);
 }
 

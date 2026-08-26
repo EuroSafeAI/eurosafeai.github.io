@@ -83,3 +83,11 @@ export const COMPANY_LOGO: Record<string, string> = {
  * model × benchmark pairs where the judges abstained heavily.
  */
 export const COVERAGE_FLAG = 0.95;
+
+/**
+ * The leaderboard's resting capability weight. Deliberately 1, not the bar
+ * chart's published CAPABILITY_EXPONENT: at 1 the adjustment is the identity,
+ * so the table loads showing measured evaluation results. Lowering it is an
+ * explicit act by the reader, not the default a screenshot would capture.
+ */
+export const RAW_ALPHA = 1;

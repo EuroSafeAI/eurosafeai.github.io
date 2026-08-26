@@ -8,6 +8,7 @@
  */
 
 import { RISKS, type ModelEntry, type Risk } from "@/data/models.types";
+import { adjustedSafety } from "@/lib/risk-index";
 import {
   coverageForBenchmark,
   coverageForRisk,
@@ -206,7 +207,46 @@ export function scorerLabel(scorer: string): string {
   );
 }
 
-export function buildColumns(models: ModelEntry[], how: Aggregation = "worst"): Column[] {
+/**
+ * True when a row's numbers are not safety grades. Diagnostics measure
+ * capability *absence* — a model scores well by not knowing the material — so
+ * discounting them by capability would count the same quantity twice.
+ */
+export function isDiagnosticRow(row: Row): boolean {
+  return (row.level === "bench" || row.level === "judge") && row.diagnostic;
+}
+
+/** One model's cell, discounted by how much that model can actually do. */
+export function adjustedCellScore(
+  model: ModelEntry,
+  row: Row,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  const score = modelScore(model, row, how);
+  if (score === undefined || isDiagnosticRow(row)) return score;
+  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+}
+
+/**
+ * A pooled provider cell. Each model is adjusted by its own index before the
+ * mean is taken: pooling first would apply one averaged capability to models
+ * that do not share it.
+ */
+export function adjustedProviderCellScore(
+  models: ModelEntry[],
+  row: Row,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  return mean(models.map((m) => adjustedCellScore(m, row, how, alpha)));
+}
+
+export function buildColumns(
+  models: ModelEntry[],
+  how: Aggregation = "worst",
+  alpha: number = 1
+): Column[] {
   const byProvider = new Map<string, ModelEntry[]>();
   for (const model of models) {
     const group = byProvider.get(model.company);
@@ -216,13 +256,25 @@ export function buildColumns(models: ModelEntry[], how: Aggregation = "worst"): 
   return [...byProvider.entries()]
     .map(([provider, group]) => ({
       provider,
-      models: [...group].sort((a, b) => (b.aggregate[how] ?? -1) - (a.aggregate[how] ?? -1)),
+      models: [...group].sort(
+        (a, b) => (adjustedAggregate(b, how, alpha) ?? -1) - (adjustedAggregate(a, how, alpha) ?? -1)
+      ),
     }))
-    .sort((a, b) => providerAggregate(b, how) - providerAggregate(a, how));
+    .sort((a, b) => providerAggregate(b, how, alpha) - providerAggregate(a, how, alpha));
 }
 
-function providerAggregate(column: Column, how: Aggregation): number {
-  return mean(column.models.map((m) => m.aggregate[how] ?? undefined)) ?? -1;
+function adjustedAggregate(
+  model: ModelEntry,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  const score = model.aggregate[how] ?? undefined;
+  if (score === undefined) return undefined;
+  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+}
+
+function providerAggregate(column: Column, how: Aggregation, alpha: number): number {
+  return mean(column.models.map((m) => adjustedAggregate(m, how, alpha))) ?? -1;
 }
 
 /**

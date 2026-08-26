@@ -6,6 +6,7 @@ import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
 import { MetricToggle } from "./MetricToggle";
+import { AlphaSlider } from "./AlphaSlider";
 import { useLeaderboard } from "./useLeaderboard";
 
 /** The scrollable systemic-risk heatmap, plus the legend explaining it. */
@@ -25,13 +26,25 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     toggleProvider,
     metric,
     setMetric,
+    alpha,
+    setAlpha,
     columnShifts,
     columnShiftsInstant,
   } = useLeaderboard(models);
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.6rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: "1.25rem",
+          flexWrap: "wrap",
+          marginBottom: "0.6rem",
+        }}
+      >
+        <AlphaSlider alpha={alpha} onChange={setAlpha} />
         <MetricToggle metric={metric} onChange={setMetric} />
       </div>
       <div
