@@ -48,6 +48,8 @@ function model(
     status: Object.fromEntries(
       RISKS.map((r) => [r, { status: "success" as const, completed_samples: 1, total_samples: 1 }])
     ) as ModelEntry["status"],
+    aa_intelligence_index: 50,
+    aa_model_match: `${id} (AA match)`,
   };
 }
 

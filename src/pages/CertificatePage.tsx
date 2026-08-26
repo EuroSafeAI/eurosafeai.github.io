@@ -21,6 +21,7 @@ import {
   type Row,
 } from "@/lib/leaderboard";
 import { heatColor } from "@/lib/heat";
+import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 
@@ -40,62 +41,6 @@ const HEADER_LOGO = 20;
  */
 const EXPAND_DURATION = 0.32;
 const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
-
-/**
- * Column-group geometry, shared by the header and every body row so the two
- * stay in exact horizontal register. Any padding here would offset the header's
- * columns from the cells beneath them, so spacing lives on the cells instead.
- *
- * The whole subtree's expansion is driven by one inherited custom property,
- * `--member-open` (registered with `@property` in index.css so the browser
- * interpolates it as a number instead of jumping). This group sets it to 0 or
- * 1 and transitions it; every member column beneath just reads it — so a row
- * with many members animates one property instead of a flex-grow/flex-basis
- * pair per element, and the layout no longer re-solves flex sizes each frame.
- */
-export function columnGroupStyle(
-  leaves: number,
-  cellWidth: number,
-  open: boolean,
-  reduced: boolean
-): React.CSSProperties {
-  const members = leaves - 1;
-  return {
-    flexShrink: 0,
-    width: `calc(${cellWidth}px * (1 + ${members} * var(--member-open, 0)))`,
-    minWidth: 0,
-    display: "flex",
-    overflow: "hidden",
-    borderLeft: open ? "1px solid rgba(10,31,77,0.08)" : undefined,
-    ["--member-open" as string]: open ? 1 : 0,
-    transition: reduced ? undefined : `--member-open ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
-  };
-}
-
-/**
- * A member column inside a provider group. Always rendered, at zero width when
- * the provider is collapsed — a freshly mounted element has no previous value
- * to transition from, so keeping it mounted is what lets it slide.
- *
- * Width and opacity both read the group's inherited `--member-open` directly,
- * so nothing here declares its own transition: the group's single animated
- * property is what moves, and every member follows it in lockstep. The group
- * width grows as cellWidth × (1 + n·t) while each member's width is t·cellWidth;
- * since Cell and HeaderCell roots hold `flex: "1 0 0"`, the provider's own
- * cell takes the remainder, cellWidth·(1 + n·t) − n·t·cellWidth = cellWidth,
- * unchanged for every t. Members appear to slide out from behind it rather
- * than everything compressing and re-expanding.
- */
-export function memberColumnStyle(open: boolean, reduced: boolean): React.CSSProperties {
-  return {
-    flexShrink: 0,
-    width: `calc(var(--member-open, 0) * var(--cell-width))`,
-    minWidth: 0,
-    display: "flex",
-    overflow: "hidden",
-    opacity: `var(--member-open, 0)`,
-  };
-}
 
 const DIAGNOSTIC_NOTE =
   "Diagnostic benchmark: reported for transparency but excluded from the aggregates above, because its score does not mean what a safety score means.";
@@ -707,12 +652,11 @@ const CertificatePage = () => {
                 </div>
                 {columns.map((column) => {
                   const open = expandedProviders.has(column.provider);
-                  const leaves = leafCount(column.provider, column.models);
                   return (
                     <div
                       key={column.provider}
                       style={{
-                        ...columnGroupStyle(leaves, cellWidth, open, reduced),
+                        ...columnGroupStyle(column.models.length + 1, cellWidth, open, reduced),
                         alignItems: "stretch",
                         paddingTop: "0.6rem",
                         paddingBottom: "0.15rem",
@@ -733,7 +677,7 @@ const CertificatePage = () => {
                         models={column.models}
                       />
                       {column.models.map((model) => (
-                        <div key={model.id} aria-hidden={!open} style={memberColumnStyle(open, reduced)}>
+                        <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
                           <HeaderCell name={model.name} subject={model.name} models={[model]} />
                         </div>
                       ))}
@@ -748,6 +692,7 @@ const CertificatePage = () => {
                   const height = ROW_HEIGHT[row.level];
                   const muted = isMutedRow(row);
                   const top = row.level === "risk";
+                  const values = cellValues.get(row.key)!;
                   return (
                     <motion.div
                       key={row.key}
@@ -766,11 +711,9 @@ const CertificatePage = () => {
                       {rowLabelCell(row)}
                       {columns.map((column) => {
                         const open = expandedProviders.has(column.provider);
-                        const leaves = leafCount(column.provider, column.models);
-                        const values = cellValues.get(row.key)!;
                         const pooled = values.provider.get(column.provider)!;
                         return (
-                          <div key={column.provider} style={columnGroupStyle(leaves, cellWidth, open, reduced)}>
+                          <div key={column.provider} style={columnGroupStyle(column.models.length + 1, cellWidth, open, reduced)}>
                             <Cell
                               score={pooled.score}
                               meanScore={pooled.mean}
@@ -782,7 +725,7 @@ const CertificatePage = () => {
                             {column.models.map((model) => {
                               const own = values.model.get(model.id)!;
                               return (
-                                <div key={model.id} aria-hidden={!open} style={memberColumnStyle(open, reduced)}>
+                                <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
                                   <Cell
                                     score={own.score}
                                     meanScore={own.mean}

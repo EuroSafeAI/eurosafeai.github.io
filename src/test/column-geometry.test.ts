@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { columnGroupStyle, memberColumnStyle } from "@/pages/CertificatePage";
+import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 
 describe("columnGroupStyle", () => {
   const cellWidth = 88;
@@ -29,19 +29,13 @@ describe("columnGroupStyle", () => {
 });
 
 describe("memberColumnStyle", () => {
-  it("returns the expected width calc and --member-open when collapsed", () => {
-    const style = memberColumnStyle(false, false);
+  it("returns the expected width calc", () => {
+    const style = memberColumnStyle();
     expect(style.width).toBe(`calc(var(--member-open, 0) * var(--cell-width))`);
   });
 
-  it("returns the expected width calc when expanded", () => {
-    const style = memberColumnStyle(true, false);
-    expect(style.width).toBe(`calc(var(--member-open, 0) * var(--cell-width))`);
-  });
-
-  it("never carries its own transition, reduced or not — it inherits --member-open from its group", () => {
-    expect(memberColumnStyle(true, false).transition).toBeUndefined();
-    expect(memberColumnStyle(true, true).transition).toBeUndefined();
+  it("never carries its own transition — it inherits --member-open from its group", () => {
+    expect(memberColumnStyle().transition).toBeUndefined();
   });
 });
 
@@ -57,11 +51,9 @@ function evaluateWidthCalc(calc: string, memberOpen: number, cellWidthPx: number
   const expr = calc
     .trim()
     .replace(/^calc\((.*)\)$/, "$1")
-    .replaceAll("var(--member-open, 0)", String(memberOpen))
-    .replaceAll("var(--cell-width)", String(cellWidthPx))
-    .replaceAll("px", "");
-  // eslint-disable-next-line no-new-func -- evaluating a small arithmetic
-  // expression sourced from our own calc() string, not external input.
+    .split("var(--member-open, 0)").join(String(memberOpen))
+    .split("var(--cell-width)").join(String(cellWidthPx))
+    .split("px").join("");
   return Function(`"use strict"; return (${expr});`)() as number;
 }
 
@@ -72,32 +64,43 @@ function evaluateWidthCalc(calc: string, memberOpen: number, cellWidthPx: number
  * column would visibly shift under the cursor mid-animation — the exact defect
  * the flex-grow arrangement this replaces was built to prevent.
  *
- * This calls the real columnGroupStyle/memberColumnStyle, takes the `width`
- * calc strings they return, and evaluates them at --member-open = 0 and = 1:
+ * This calls the real columnGroupStyle/memberColumnStyle the way production
+ * does: `leaves` is the provider's unconditional member count (models.length +
+ * 1), never varied with `open` — only `open` (and so --member-open) differs
+ * between the collapsed and expanded calls. It then evaluates the returned
+ * width calc strings at several values of `t` (--member-open), including
+ * midpoints, because the bug this guards against — collapse computing a
+ * different, non-t-dependent width than expand — only shows up mid-animation:
+ * both endpoints (t=0, t=1) can coincidentally agree even when the two states
+ * take different formulas to get there.
  *   groupWidth(t) = cellWidth * (1 + members * t)      [from columnGroupStyle]
  *   memberWidth(t) = t * cellWidth                     [from memberColumnStyle]
  *   providerCell(t) = groupWidth(t) - members * memberWidth(t) = cellWidth
- * A formula change in either production function changes these evaluated
- * numbers, so this test fails rather than silently passing.
  */
 describe("provider-cell invariant", () => {
   const cellWidth = 88;
-  const leaves = 5;
-  const members = leaves - 1;
+  const members = 4;
+  const leaves = members + 1;
 
-  function providerCellWidth(memberOpen: number): number {
-    const groupStyle = columnGroupStyle(leaves, cellWidth, memberOpen === 1, false);
-    const memberStyle = memberColumnStyle(memberOpen === 1, false);
+  function providerCellWidth(open: boolean, memberOpen: number): number {
+    const groupStyle = columnGroupStyle(leaves, cellWidth, open, false);
+    const memberStyle = memberColumnStyle();
     const groupWidth = evaluateWidthCalc(groupStyle.width as string, memberOpen, cellWidth);
     const memberWidth = evaluateWidthCalc(memberStyle.width as string, memberOpen, cellWidth);
     return groupWidth - members * memberWidth;
   }
 
-  it("holds the provider cell at cellWidth when --member-open = 0 (collapsed)", () => {
-    expect(providerCellWidth(0)).toBe(cellWidth);
-  });
+  it.each([0, 0.25, 0.5, 0.75, 1])(
+    "holds the provider cell at cellWidth while collapsing, at t=%s",
+    (t) => {
+      expect(providerCellWidth(false, t)).toBe(cellWidth);
+    }
+  );
 
-  it("holds the provider cell at cellWidth when --member-open = 1 (expanded)", () => {
-    expect(providerCellWidth(1)).toBe(cellWidth);
-  });
+  it.each([0, 0.25, 0.5, 0.75, 1])(
+    "holds the provider cell at cellWidth while expanding, at t=%s",
+    (t) => {
+      expect(providerCellWidth(true, t)).toBe(cellWidth);
+    }
+  );
 });
