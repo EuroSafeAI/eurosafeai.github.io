@@ -64,6 +64,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
     </>
   );
 
+  // Cell positioning/appearance: applies to the rowheader whether or not it wraps a button.
   const base: React.CSSProperties = {
     position: "sticky",
     left: 0,
@@ -71,35 +72,53 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
     width: labelWidth,
     flex: `0 0 ${labelWidth}px`,
     height,
-    display: "flex",
-    alignItems: "center",
-    gap: 7,
-    paddingLeft: 10 + INDENT[row.level],
-    paddingRight: 8,
     background: row.level === "risk" ? "#ffffff" : "#fbfcfe",
     borderRight: "1px solid rgba(10,31,77,0.08)",
     textAlign: "left",
     minWidth: 0,
   };
 
+  // Content layout: shared by the non-expandable cell and the button that fills the expandable one.
+  const layout: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 7,
+    paddingLeft: 10 + INDENT[row.level],
+    paddingRight: 8,
+  };
+
   if (!isExpandable(row)) {
     const note = row.level === "judge" && row.floor ? FLOOR_NOTE : row.level === "judge" ? row.scorer : undefined;
     return (
-      <div role="rowheader" style={base} title={note}>
+      <div role="rowheader" style={{ ...base, ...layout }} title={note}>
         {content}
       </div>
     );
   }
   return (
-    <button
-      type="button"
-      role="rowheader"
-      onClick={() => onToggle(row)}
-      aria-expanded={open}
-      title={diagnostic ? DIAGNOSTIC_NOTE : row.level === "risk" ? RISK_DESCRIPTIONS[row.risk] : undefined}
-      style={{ ...base, border: 0, borderRight: base.borderRight as string, cursor: "pointer", font: "inherit" }}
-    >
-      {content}
-    </button>
+    // role="rowheader" belongs on this container, not the button ARIA-in-HTML forbids
+    // overriding a <button>'s role to "rowheader"; nesting a plain button inside keeps
+    // both the grid's structural semantics and the button's native semantics intact.
+    <div role="rowheader" style={base}>
+      <button
+        type="button"
+        onClick={() => onToggle(row)}
+        aria-expanded={open}
+        title={diagnostic ? DIAGNOSTIC_NOTE : row.level === "risk" ? RISK_DESCRIPTIONS[row.risk] : undefined}
+        style={{
+          ...layout,
+          width: "100%",
+          height: "100%",
+          border: 0,
+          font: "inherit",
+          cursor: "pointer",
+          background: "transparent",
+          textAlign: "left",
+          color: "inherit",
+        }}
+      >
+        {content}
+      </button>
+    </div>
   );
 };

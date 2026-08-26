@@ -26,10 +26,19 @@ const benchRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "
 describe("RowLabel", () => {
   it("renders a risk row as a toggle carrying its description", () => {
     render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    const button = screen.getByRole("rowheader");
+    const button = screen.getByRole("button");
     expect(button).toHaveAttribute("aria-expanded", "false");
     expect(button.textContent).toContain("CBRN");
     expect(button.textContent).toContain("Chemical, biological");
+  });
+
+  it("wraps the toggle button in a rowheader cell without overriding its role", () => {
+    render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open onToggle={() => {}} />);
+    const cell = screen.getByRole("rowheader");
+    const button = screen.getByRole("button");
+    expect(cell).toContainElement(button);
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(button).not.toHaveAttribute("role");
   });
 
   it("hides the risk description on mobile", () => {
@@ -45,7 +54,7 @@ describe("RowLabel", () => {
   it("calls onToggle with the row", () => {
     const onToggle = vi.fn();
     render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open={false} onToggle={onToggle} />);
-    screen.getByRole("rowheader").click();
+    screen.getByRole("button").click();
     expect(onToggle).toHaveBeenCalledWith(riskRow);
   });
 
