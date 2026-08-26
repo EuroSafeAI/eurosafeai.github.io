@@ -24,32 +24,24 @@ import { heatColor } from "@/lib/heat";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-
-const ACCENT = "#003399";
-const INK = "#0a1f4d";
+import {
+  ACCENT,
+  INK,
+  ROW_HEIGHT,
+  INDENT,
+  HEADER_SCORE_HEIGHT,
+  HEADER_LOGO,
+  EXPAND_DURATION,
+  EXPAND_CSS_EASE,
+  DIAGNOSTIC_NOTE,
+  FLOOR_NOTE,
+  OVERALL_NOTE,
+  COMPANY_LOGO,
+  COVERAGE_FLAG,
+} from "@/components/leaderboard/constants";
+import { Cell } from "@/components/leaderboard/Cell";
 
 const MODELS = modelsData as unknown as ModelEntry[];
-
-const ROW_HEIGHT = { risk: 58, bench: 44, judge: 38 } as const;
-const INDENT = { risk: 0, bench: 18, judge: 36 } as const;
-const HEADER_SCORE_HEIGHT = 40;
-const HEADER_LOGO = 20;
-
-/**
- * Shared easing/duration so the vertical row reveals (framer-motion) and the
- * horizontal column expansion (CSS) move on the same curve.
- */
-const EXPAND_DURATION = 0.32;
-const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
-
-const DIAGNOSTIC_NOTE =
-  "Diagnostic benchmark: reported for transparency but excluded from the aggregates above, because its score does not mean what a safety score means.";
-
-const FLOOR_NOTE =
-  "Optimistic bound: this benchmark's score recomputed with every unscored sample counted as safe. The headline above drops those samples instead. The two bracket the truth — a response the provider's filter blocked outright is arguably the safest outcome, but the pipeline cannot grade what it never saw.";
-
-const OVERALL_NOTE =
-  "Overall: the mean of the four systemic-risk scores below, as the evaluation pipeline computes it.";
 
 const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
@@ -85,123 +77,6 @@ const Chevron = ({ open, color }: { open: boolean; color: string }) => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
   </svg>
 );
-
-/**
- * Keyed on the `company` string the pipeline writes. Spellings have shifted
- * across runs ("Mistral AI" → "Mistral", "Zhipu AI" → "Z.ai"), so both are
- * kept — a miss costs only the logo, and the provider name still renders.
- */
-const COMPANY_LOGO: Record<string, string> = {
-  "OpenAI": "/logos/openai.svg",
-  "Google": "/logos/google.svg",
-  "Google DeepMind": "/logos/deepmind.svg",
-  "Anthropic": "/logos/anthropic.svg",
-  "Meta": "/logos/meta.svg",
-  "xAI": "/logos/xai.png",
-  "Alibaba": "/logos/qwen.svg",
-  "Alibaba (Qwen)": "/logos/qwen.svg",
-  "DeepSeek": "/logos/deepseek.svg",
-  "Moonshot AI": "/logos/kimi.png",
-  "Z.ai": "/logos/zhipu.svg",
-  "Zhipu AI": "/logos/zhipu.svg",
-  "MiniMax / Xiaomi": "/logos/minimax.png",
-  "Mistral": "/logos/mistral.png",
-  "Mistral AI": "/logos/mistral.png",
-  "Microsoft": "/logos/microsoft.png",
-};
-
-/**
- * Coverage below this reads as a caveat on the grade rather than noise, so the
- * cell grows an under-bar showing how much of the suite actually got scored.
- * Most cells sit at or near 100%; the ones that don't are concentrated in a few
- * model × benchmark pairs where the judges abstained heavily.
- */
-const COVERAGE_FLAG = 0.95;
-
-const CoverageBar = ({ fraction, onDark }: { fraction: number; onDark: boolean }) => (
-  <span
-    aria-hidden="true"
-    style={{
-      position: "absolute",
-      left: 4,
-      right: 4,
-      bottom: 3,
-      height: 2,
-      borderRadius: 2,
-      background: onDark ? "rgba(255,255,255,0.25)" : "rgba(10,31,77,0.15)",
-      overflow: "hidden",
-    }}
-  >
-    <span
-      style={{
-        display: "block",
-        width: `${Math.max(2, fraction * 100)}%`,
-        height: "100%",
-        borderRadius: 2,
-        background: onDark ? "rgba(255,255,255,0.85)" : "rgba(10,31,77,0.55)",
-      }}
-    />
-  </span>
-);
-
-const Cell = ({
-  score,
-  meanScore,
-  coverage,
-  label,
-  muted,
-  height,
-}: {
-  score: number | undefined;
-  /** The same cell pooled without the per-sample minimum; absent on judge rows. */
-  meanScore: number | undefined;
-  coverage: number | undefined;
-  label: string;
-  muted: boolean;
-  height: number;
-}) => {
-  const heat = score === undefined ? undefined : heatColor(score);
-  const onDark = heat?.color === "#ffffff";
-  // No score means nothing to caveat — an em-dash cell must not advertise coverage.
-  const flagged = score !== undefined && coverage !== undefined && coverage < COVERAGE_FLAG;
-  return (
-    <div
-      role="gridcell"
-      aria-label={label}
-      title={label}
-      style={{
-        position: "relative",
-        flex: "1 0 0",
-        minWidth: 0,
-        height: height - 4,
-        margin: 2,
-        borderRadius: 5,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 1,
-        paddingBottom: flagged ? 4 : 0,
-        background: score === undefined ? "#f3f4f6" : muted ? "#e5e7eb" : heat!.background,
-        color: score === undefined || muted ? "#9ca3af" : heat!.color,
-        fontVariantNumeric: "tabular-nums",
-      }}
-    >
-      <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.01em", lineHeight: 1 }}>
-        {score === undefined ? "—" : grade(score)}
-      </span>
-      {score !== undefined && (
-        <span style={{ fontSize: 10, fontWeight: 600, lineHeight: 1, whiteSpace: "nowrap" }}>
-          {score.toFixed(1)}
-          {meanScore !== undefined && (
-            <span style={{ opacity: 0.62, fontWeight: 500 }}> · {meanScore.toFixed(1)}</span>
-          )}
-        </span>
-      )}
-      {flagged && <CoverageBar fraction={coverage} onDark={onDark} />}
-    </div>
-  );
-};
 
 /**
  * One column heading: the provider or model name with its Overall score beneath.
