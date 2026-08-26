@@ -46,7 +46,10 @@ export interface AdjustedEntry {
   index: number;
 }
 
-export function adjustedRanking(models: readonly ModelEntry[]): AdjustedEntry[] {
+export function adjustedRanking(
+  models: readonly ModelEntry[],
+  alpha: number = CAPABILITY_EXPONENT
+): AdjustedEntry[] {
   const entries: AdjustedEntry[] = [];
   for (const model of models) {
     const safety = scoreOverall(model);
@@ -55,7 +58,7 @@ export function adjustedRanking(models: readonly ModelEntry[]): AdjustedEntry[] 
       model,
       safety,
       index: model.aa_intelligence_index,
-      adjusted: adjustedSafety(safety, model.aa_intelligence_index),
+      adjusted: adjustedSafety(safety, model.aa_intelligence_index, alpha),
     });
   }
   return entries.sort((a, b) => b.adjusted - a.adjusted);

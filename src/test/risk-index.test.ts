@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
+import { scoreOverall } from "@/lib/scoring";
 import {
   CAPABILITY_REFERENCE,
   adjustedRanking,
@@ -73,5 +74,27 @@ describe("adjustedRanking", () => {
     const sonnet = adjustedRanking(MODELS).find((e) => e.model.id === "claude-sonnet-5")!;
     expect(sonnet.safety).toBeCloseTo(73.09, 2);
     expect(sonnet.index).toBeCloseTo(55.3, 2);
+  });
+
+  it("orders by raw safety alone at alpha = 1", () => {
+    const actual = adjustedRanking(MODELS, 1).map((e) => e.model.id);
+    const bySafety = [...MODELS]
+      .filter((m) => scoreOverall(m) !== undefined)
+      .sort((a, b) => scoreOverall(b)! - scoreOverall(a)!)
+      .map((m) => m.id);
+    expect(actual).toEqual(bySafety);
+  });
+
+  it("orders by inverse capability alone at alpha = 0", () => {
+    const actual = adjustedRanking(MODELS, 0).map((e) => e.model.id);
+    const byInverseCapability = [...MODELS]
+      .filter((m) => scoreOverall(m) !== undefined)
+      .sort((a, b) => a.aa_intelligence_index - b.aa_intelligence_index)
+      .map((m) => m.id);
+    expect(actual).toEqual(byInverseCapability);
+  });
+
+  it("defaults to the published exponent, matching the pinned alpha = 0.5 fixture", () => {
+    expect(adjustedRanking(MODELS)).toEqual(adjustedRanking(MODELS, 0.5));
   });
 });
