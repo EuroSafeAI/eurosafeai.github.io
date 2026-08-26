@@ -110,7 +110,6 @@ const HeaderCell = ({
       <div style={{ width: "100%", display: "flex" }}>
         <Cell
           score={score}
-          alternate={alternate}
           coverage={cov && coverageFraction(cov)}
           muted={false}
           height={HEADER_SCORE_HEIGHT}
@@ -135,6 +134,7 @@ export interface HeaderRowProps {
   expandedProviders: ReadonlySet<string>;
   onProviderToggle: (provider: string) => void;
   metric: Aggregation;
+  columnShiftsInstant: boolean;
 }
 
 /** The sticky provider/model header row above the grid body. */
@@ -146,6 +146,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
   expandedProviders,
   onProviderToggle,
   metric,
+  columnShiftsInstant,
 }) => (
   <div
     role="row"
@@ -156,6 +157,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
     }}
   >
     <div
+      role="columnheader"
       style={{
         position: "sticky",
         left: 0,
@@ -185,8 +187,16 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
       return (
         <div
           key={column.provider}
+          role="presentation"
           style={{
-            ...columnGroupStyle(column.models.length + 1, cellWidth, open, reduced, shiftVar(column.provider)),
+            ...columnGroupStyle(
+              column.models.length + 1,
+              cellWidth,
+              open,
+              reduced,
+              shiftVar(column.provider),
+              columnShiftsInstant
+            ),
             alignItems: "stretch",
             paddingTop: "0.6rem",
             paddingBottom: "0.15rem",
@@ -208,7 +218,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             metric={metric}
           />
           {column.models.map((model) => (
-            <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
+            <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
               <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} />
             </div>
           ))}

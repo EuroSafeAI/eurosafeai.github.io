@@ -85,7 +85,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
   if (!isExpandable(row)) {
     const note = row.level === "judge" && row.floor ? FLOOR_NOTE : row.level === "judge" ? row.scorer : undefined;
     return (
-      <div style={base} title={note}>
+      <div role="rowheader" style={base} title={note}>
         {content}
       </div>
     );
@@ -93,6 +93,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
   return (
     <button
       type="button"
+      role="rowheader"
       onClick={() => onToggle(row)}
       aria-expanded={open}
       title={diagnostic ? DIAGNOSTIC_NOTE : row.level === "risk" ? RISK_DESCRIPTIONS[row.risk] : undefined}

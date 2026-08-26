@@ -30,8 +30,6 @@ const CoverageBar = ({ fraction, onDark }: { fraction: number; onDark: boolean }
 
 export interface CellProps {
   score: number | undefined;
-  /** The metric not currently selected — reaches the reader only through `title`. */
-  alternate: number | undefined;
   coverage: number | undefined;
   label: string;
   muted: boolean;
@@ -40,7 +38,6 @@ export interface CellProps {
 
 export const Cell: React.FC<CellProps> = ({
   score,
-  alternate: _alternate,
   coverage,
   label,
   muted,

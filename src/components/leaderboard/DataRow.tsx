@@ -62,6 +62,7 @@ export interface DataRowProps {
   open: boolean;
   onToggle: (row: Row) => void;
   metric: Aggregation;
+  columnShiftsInstant: boolean;
 }
 
 /** One animated grid row: the row label plus every provider/model cell. */
@@ -77,6 +78,7 @@ export const DataRow: React.FC<DataRowProps> = ({
   open,
   onToggle,
   metric,
+  columnShiftsInstant,
 }) => {
   const height = ROW_HEIGHT[row.level];
   const muted = isMutedRow(row);
@@ -107,12 +109,12 @@ export const DataRow: React.FC<DataRowProps> = ({
               cellWidth,
               columnOpen,
               reduced,
-              shiftVar(column.provider)
+              shiftVar(column.provider),
+              columnShiftsInstant
             )}
           >
             <Cell
               score={pooled.score}
-              alternate={pooled.alternate}
               coverage={pooled.coverage && coverageFraction(pooled.coverage)}
               muted={muted}
               height={height}
@@ -124,7 +126,6 @@ export const DataRow: React.FC<DataRowProps> = ({
                 <div key={model.id} aria-hidden={!columnOpen} style={memberColumnStyle()}>
                   <Cell
                     score={own.score}
-                    alternate={own.alternate}
                     coverage={own.coverage && coverageFraction(own.coverage)}
                     muted={muted}
                     height={height}
