@@ -242,6 +242,25 @@ export function adjustedProviderCellScore(
   return mean(models.map((m) => adjustedCellScore(m, row, how, alpha)));
 }
 
+/**
+ * A column heading's Overall score under capability adjustment. Adjusts each
+ * model's own overall before pooling, matching how the cells beneath it are
+ * built — pooling first would apply one averaged capability to models that do
+ * not share it.
+ */
+export function adjustedOverallScore(
+  models: ModelEntry[],
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  return mean(
+    models.map((m) => {
+      const score = scoreOverall(m, how);
+      return score === undefined ? undefined : adjustedSafety(score, m.aa_intelligence_index, alpha);
+    })
+  );
+}
+
 export function buildColumns(
   models: ModelEntry[],
   how: Aggregation = "worst",

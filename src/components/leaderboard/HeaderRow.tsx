@@ -1,4 +1,4 @@
-import { overallCoverage, overallScore, type Column } from "@/lib/leaderboard";
+import { adjustedOverallScore, overallCoverage, type Column } from "@/lib/leaderboard";
 import { coverageFraction, grade, type Aggregation } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import { shiftVar } from "@/lib/column-order";
@@ -17,6 +17,7 @@ const HeaderCell = ({
   name,
   subject,
   models,
+  alpha,
   emphasis = false,
   open,
   onToggle,
@@ -27,6 +28,7 @@ const HeaderCell = ({
   name: string;
   subject: string;
   models: ModelEntry[];
+  alpha: number;
   emphasis?: boolean;
   open?: boolean;
   onToggle?: () => void;
@@ -34,8 +36,8 @@ const HeaderCell = ({
   metric: Aggregation;
 }) => {
   const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
-  const score = overallScore(models, metric);
-  const alternate = overallScore(models, alternateMetric);
+  const score = adjustedOverallScore(models, metric, alpha);
+  const alternate = adjustedOverallScore(models, alternateMetric, alpha);
   const cov = overallCoverage(models);
   const headline = metric === "worst" ? "worst case" : "average";
   const other = metric === "worst" ? "average" : "worst case";
@@ -127,6 +129,7 @@ const HeaderCell = ({
 };
 
 export interface HeaderRowProps {
+  alpha: number;
   columns: Column[];
   labelWidth: number;
   cellWidth: number;
@@ -139,6 +142,7 @@ export interface HeaderRowProps {
 
 /** The sticky provider/model header row above the grid body. */
 export const HeaderRow: React.FC<HeaderRowProps> = ({
+  alpha,
   columns,
   labelWidth,
   cellWidth,
@@ -215,11 +219,12 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             }
             subject={column.provider}
             models={column.models}
+            alpha={alpha}
             metric={metric}
           />
           {column.models.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
-              <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} />
+              <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
             </div>
           ))}
         </div>

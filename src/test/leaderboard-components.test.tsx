@@ -264,3 +264,63 @@ describe("capability slider", () => {
     expect(cellText()).toEqual(before);
   });
 });
+
+describe("capability slider and the column aggregates", () => {
+  const setAlpha = (value: string) =>
+    fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
+      target: { value },
+    });
+
+  // Keyed by provider, never positional: lowering alpha also re-orders the
+  // columns, so comparing the header list in document order would differ even
+  // if every Overall score were left raw.
+  const overallByProvider = () => {
+    const byProvider: Record<string, string> = {};
+    for (const header of screen.getAllByRole("columnheader")) {
+      // The sticky corner is a columnheader too and carries no score.
+      const score = header.querySelector<HTMLElement>('[role="gridcell"]');
+      if (!score) continue;
+      const name = header.textContent!.replace(score.textContent ?? "", "").trim();
+      byProvider[name] = score.textContent ?? "";
+    }
+    expect(Object.keys(byProvider).length).toBeGreaterThan(1);
+    return byProvider;
+  };
+
+  it("adjusts each column's Overall score, not just the risk cells", () => {
+    render(<Leaderboard models={MODELS} />);
+    const measured = overallByProvider();
+    setAlpha("0.5");
+    const adjusted = overallByProvider();
+    expect(Object.keys(adjusted).sort()).toEqual(Object.keys(measured).sort());
+    for (const provider of Object.keys(measured)) {
+      expect(adjusted[provider]).not.toBe(measured[provider]);
+    }
+  });
+
+  it("returns the measured Overall scores when reset to 1", () => {
+    render(<Leaderboard models={MODELS} />);
+    const measured = overallByProvider();
+    setAlpha("0.35");
+    setAlpha("1");
+    expect(overallByProvider()).toEqual(measured);
+  });
+});
+
+describe("capability slider layout stability", () => {
+  // The trailing slot swaps between "measured" and a "reset to measured"
+  // button. In a right-aligned row an intrinsic width change there shifts
+  // every control to its left, so the slot reserves a fixed width instead.
+  it("reserves a fixed-width trailing slot in both states", () => {
+    const { rerender } = render(<Leaderboard models={MODELS} />);
+    const slot = () => document.querySelector<HTMLElement>("[data-alpha-status]")!;
+    const rawWidth = slot().style.width;
+    expect(rawWidth).not.toBe("");
+
+    fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
+      target: { value: "0.5" },
+    });
+    rerender(<Leaderboard models={MODELS} />);
+    expect(slot().style.width).toBe(rawWidth);
+  });
+});

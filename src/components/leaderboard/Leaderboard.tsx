@@ -71,6 +71,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
         >
           {/* Provider header */}
           <HeaderRow
+          alpha={alpha}
             columns={columns}
             labelWidth={labelWidth}
             cellWidth={cellWidth}
