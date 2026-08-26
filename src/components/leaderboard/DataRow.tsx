@@ -1,0 +1,138 @@
+import { motion } from "framer-motion";
+import {
+  BENCHMARK_LABELS,
+  RISK_LABELS,
+  judgeRowLabel,
+  type Column,
+  type Row,
+} from "@/lib/leaderboard";
+import { coverageFraction, grade, type Coverage } from "@/lib/scoring";
+import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
+import { ROW_HEIGHT } from "./constants";
+import { Cell } from "./Cell";
+import { RowLabel } from "./RowLabel";
+
+export interface CellData {
+  score?: number;
+  mean?: number;
+  coverage?: Coverage;
+}
+export interface RowValues {
+  provider: Map<string, CellData>;
+  model: Map<string, CellData>;
+}
+
+const rowLabel = (row: Row) => {
+  if (row.level === "risk") return RISK_LABELS[row.risk];
+  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
+  return judgeRowLabel(row);
+};
+
+/** Diagnostic rows are greyed: their numbers aren't safety grades. */
+const isMutedRow = (row: Row) =>
+  (row.level === "bench" || row.level === "judge") && row.diagnostic;
+
+const cellLabel = (
+  row: Row,
+  subject: string,
+  score: number | undefined,
+  meanScore: number | undefined,
+  coverage: Coverage | undefined
+) => {
+  const where = `${rowLabel(row)}, ${subject}`;
+  if (score === undefined) return `${where}: no score`;
+
+  const parts: string[] = [];
+  if (row.level === "judge" && row.floor) {
+    parts.push(`${grade(score)}, ${score.toFixed(1)} out of 100 with unscored samples counted safe`);
+    if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
+  } else {
+    parts.push(`${grade(score)}, worst case ${score.toFixed(1)} out of 100`);
+    if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
+  }
+  if (coverage && coverage.total > 0) {
+    parts.push(
+      `coverage ${Math.round(100 * coverageFraction(coverage))}% (${coverage.scored} of ${coverage.total} samples scored)`
+    );
+  }
+  return `${where}: ${parts.join(", ")}`;
+};
+
+export interface DataRowProps {
+  row: Row;
+  columns: Column[];
+  values: RowValues;
+  labelWidth: number;
+  cellWidth: number;
+  reduced: boolean;
+  isMobile: boolean;
+  expandedProviders: ReadonlySet<string>;
+  open: boolean;
+  onToggle: (row: Row) => void;
+}
+
+/** One animated grid row: the row label plus every provider/model cell. */
+export const DataRow: React.FC<DataRowProps> = ({
+  row,
+  columns,
+  values,
+  labelWidth,
+  cellWidth,
+  reduced,
+  isMobile,
+  expandedProviders,
+  open,
+  onToggle,
+}) => {
+  const height = ROW_HEIGHT[row.level];
+  const muted = isMutedRow(row);
+  const top = row.level === "risk";
+  return (
+    <motion.div
+      role="row"
+      initial={reduced || top ? false : { height: 0, opacity: 0 }}
+      animate={{ height, opacity: 1 }}
+      exit={reduced ? { height: 0, opacity: 0, transition: { duration: 0 } } : { height: 0, opacity: 0 }}
+      transition={{ duration: reduced ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        display: "flex",
+        overflow: "hidden",
+        background: top ? "#ffffff" : "#fbfcfe",
+        borderTop: top ? "1px solid rgba(10,31,77,0.08)" : "1px solid rgba(10,31,77,0.03)",
+      }}
+    >
+      <RowLabel row={row} labelWidth={labelWidth} isMobile={isMobile} open={open} onToggle={onToggle} />
+      {columns.map((column) => {
+        const columnOpen = expandedProviders.has(column.provider);
+        const pooled = values.provider.get(column.provider)!;
+        return (
+          <div key={column.provider} style={columnGroupStyle(column.models.length + 1, cellWidth, columnOpen, reduced)}>
+            <Cell
+              score={pooled.score}
+              meanScore={pooled.mean}
+              coverage={pooled.coverage && coverageFraction(pooled.coverage)}
+              muted={muted}
+              height={height}
+              label={cellLabel(row, column.provider, pooled.score, pooled.mean, pooled.coverage)}
+            />
+            {column.models.map((model) => {
+              const own = values.model.get(model.id)!;
+              return (
+                <div key={model.id} aria-hidden={!columnOpen} style={memberColumnStyle()}>
+                  <Cell
+                    score={own.score}
+                    meanScore={own.mean}
+                    coverage={own.coverage && coverageFraction(own.coverage)}
+                    muted={muted}
+                    height={height}
+                    label={cellLabel(row, model.name, own.score, own.mean, own.coverage)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </motion.div>
+  );
+};

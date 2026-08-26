@@ -3,39 +3,28 @@ import { Helmet } from "react-helmet-async";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
-import { GRADES, GRADE_BAND, coverageFraction, grade, gpa, type Coverage } from "@/lib/scoring";
+import { GRADES, GRADE_BAND, gpa, type Coverage } from "@/lib/scoring";
 import {
-  BENCHMARK_LABELS,
-  RISK_LABELS,
   buildColumns,
   buildRows,
-  judgeRowLabel,
   modelCoverage,
   modelScore,
-  overallCoverage,
-  overallScore,
   providerCoverage,
   providerScore,
   type Row,
 } from "@/lib/leaderboard";
 import { heatColor } from "@/lib/heat";
-import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import {
   ACCENT,
   INK,
-  ROW_HEIGHT,
-  HEADER_SCORE_HEIGHT,
-  HEADER_LOGO,
   EXPAND_DURATION,
   EXPAND_CSS_EASE,
-  OVERALL_NOTE,
-  COMPANY_LOGO,
   COVERAGE_FLAG,
 } from "@/components/leaderboard/constants";
-import { Cell } from "@/components/leaderboard/Cell";
-import { Chevron, RowLabel } from "@/components/leaderboard/RowLabel";
+import { HeaderRow } from "@/components/leaderboard/HeaderRow";
+import { DataRow } from "@/components/leaderboard/DataRow";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
@@ -55,119 +44,6 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
     </span>
   </div>
 );
-
-/**
- * One column heading: the provider or model name with its Overall score beneath.
- * The score reuses `Cell` so a heading reads on exactly the same scale as the
- * grid under it — same bands, same colours, same coverage bar.
- */
-const HeaderCell = ({
-  logo,
-  name,
-  subject,
-  models,
-  emphasis = false,
-  open,
-  onToggle,
-  toggleTitle,
-}: {
-  logo?: string;
-  name: string;
-  subject: string;
-  models: ModelEntry[];
-  emphasis?: boolean;
-  open?: boolean;
-  onToggle?: () => void;
-  toggleTitle?: string;
-}) => {
-  const score = overallScore(models);
-  const meanScore = overallScore(models, "mean");
-  const cov = overallCoverage(models);
-
-  const label = (
-    <>
-      {logo && (
-        <img
-          src={logo}
-          alt=""
-          loading="lazy"
-          style={{ width: HEADER_LOGO, height: HEADER_LOGO, objectFit: "contain", flexShrink: 0 }}
-        />
-      )}
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 3,
-          maxWidth: "100%",
-          fontSize: emphasis ? 12 : 10,
-          fontWeight: emphasis ? 700 : 500,
-          lineHeight: 1.25,
-          color: emphasis ? INK : "#6b7280",
-        }}
-      >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
-        {onToggle && <Chevron open={open ?? false} color="#9ca3af" />}
-      </span>
-    </>
-  );
-
-  const stack: React.CSSProperties = {
-    flex: "1 0 0",
-    minWidth: 0,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: 3,
-  };
-
-  return (
-    <div style={stack}>
-      {onToggle ? (
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          title={toggleTitle}
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 3,
-            background: "transparent",
-            border: 0,
-            padding: "0.15rem",
-            cursor: "pointer",
-            font: "inherit",
-          }}
-        >
-          {label}
-        </button>
-      ) : (
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "0.15rem" }} title={name}>
-          {label}
-        </div>
-      )}
-      <div style={{ width: "100%", display: "flex" }}>
-        <Cell
-          score={score}
-          meanScore={meanScore}
-          coverage={cov && coverageFraction(cov)}
-          muted={false}
-          height={HEADER_SCORE_HEIGHT}
-          label={`Overall, ${subject}: ${
-            score === undefined
-              ? "no score"
-              : `${grade(score)}, worst case ${score.toFixed(1)} out of 100, mean ${meanScore?.toFixed(1)}`
-          }`}
-        />
-      </div>
-    </div>
-  );
-};
 
 const CertificatePage = () => {
   const [expandedRisks, setExpandedRisks] = useState<ReadonlySet<string>>(new Set());
@@ -226,42 +102,6 @@ const CertificatePage = () => {
     const next = new Set(set);
     if (!next.delete(key)) next.add(key);
     return next;
-  };
-
-  const rowLabel = (row: Row) => {
-    if (row.level === "risk") return RISK_LABELS[row.risk];
-    if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
-    return judgeRowLabel(row);
-  };
-
-  /** Diagnostic rows are greyed: their numbers aren't safety grades. */
-  const isMutedRow = (row: Row) =>
-    (row.level === "bench" || row.level === "judge") && row.diagnostic;
-
-  const cellLabel = (
-    row: Row,
-    subject: string,
-    score: number | undefined,
-    meanScore: number | undefined,
-    coverage: Coverage | undefined
-  ) => {
-    const where = `${rowLabel(row)}, ${subject}`;
-    if (score === undefined) return `${where}: no score`;
-
-    const parts: string[] = [];
-    if (row.level === "judge" && row.floor) {
-      parts.push(`${grade(score)}, ${score.toFixed(1)} out of 100 with unscored samples counted safe`);
-      if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
-    } else {
-      parts.push(`${grade(score)}, worst case ${score.toFixed(1)} out of 100`);
-      if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
-    }
-    if (coverage && coverage.total > 0) {
-      parts.push(
-        `coverage ${Math.round(100 * coverageFraction(coverage))}% (${coverage.scored} of ${coverage.total} samples scored)`
-      );
-    }
-    return `${where}: ${parts.join(", ")}`;
   };
 
   const isOpen = (row: Row) =>
@@ -390,132 +230,32 @@ const CertificatePage = () => {
               }}
             >
               {/* Provider header */}
-              <div
-                role="row"
-                style={{
-                  display: "flex",
-                  background: "#f9fafb",
-                  borderBottom: "1px solid rgba(10,31,77,0.08)",
-                }}
-              >
-                <div
-                  style={{
-                    position: "sticky",
-                    left: 0,
-                    zIndex: 3,
-                    flex: `0 0 ${labelWidth}px`,
-                    background: "#f9fafb",
-                    borderRight: "1px solid rgba(10,31,77,0.08)",
-                    display: "flex",
-                    alignItems: "flex-end",
-                    padding: "0.6rem 0.7rem",
-                    fontSize: "0.66rem",
-                    fontWeight: 700,
-                    color: "#9ca3af",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                  }}
-                >
-                  <span title={OVERALL_NOTE}>
-                    Systemic risk
-                    <span style={{ display: "block", textTransform: "none", letterSpacing: 0, fontWeight: 500, fontSize: "0.62rem", color: "#b0b7c3", marginTop: 2 }}>
-                      Overall = mean of the four
-                    </span>
-                  </span>
-                </div>
-                {columns.map((column) => {
-                  const open = expandedProviders.has(column.provider);
-                  return (
-                    <div
-                      key={column.provider}
-                      style={{
-                        ...columnGroupStyle(column.models.length + 1, cellWidth, open, reduced),
-                        alignItems: "stretch",
-                        paddingTop: "0.6rem",
-                        paddingBottom: "0.15rem",
-                      }}
-                    >
-                      <HeaderCell
-                        logo={COMPANY_LOGO[column.provider]}
-                        name={column.provider}
-                        emphasis
-                        open={open}
-                        onToggle={() => setExpandedProviders((s) => toggle(s, column.provider))}
-                        toggleTitle={
-                          open
-                            ? `Collapse ${column.provider}`
-                            : `Expand ${column.provider} into its ${column.models.length} evaluated model${column.models.length === 1 ? "" : "s"}`
-                        }
-                        subject={column.provider}
-                        models={column.models}
-                      />
-                      {column.models.map((model) => (
-                        <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
-                          <HeaderCell name={model.name} subject={model.name} models={[model]} />
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })}
-              </div>
+              <HeaderRow
+                columns={columns}
+                labelWidth={labelWidth}
+                cellWidth={cellWidth}
+                reduced={reduced}
+                expandedProviders={expandedProviders}
+                onProviderToggle={(provider) => setExpandedProviders((s) => toggle(s, provider))}
+              />
 
               {/* Rows */}
               <AnimatePresence initial={false}>
-                {rows.map((row) => {
-                  const height = ROW_HEIGHT[row.level];
-                  const muted = isMutedRow(row);
-                  const top = row.level === "risk";
-                  const values = cellValues.get(row.key)!;
-                  return (
-                    <motion.div
-                      key={row.key}
-                      role="row"
-                      initial={reduced || top ? false : { height: 0, opacity: 0 }}
-                      animate={{ height, opacity: 1 }}
-                      exit={reduced ? { height: 0, opacity: 0, transition: { duration: 0 } } : { height: 0, opacity: 0 }}
-                      transition={{ duration: reduced ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-                      style={{
-                        display: "flex",
-                        overflow: "hidden",
-                        background: top ? "#ffffff" : "#fbfcfe",
-                        borderTop: top ? "1px solid rgba(10,31,77,0.08)" : "1px solid rgba(10,31,77,0.03)",
-                      }}
-                    >
-                      <RowLabel row={row} labelWidth={labelWidth} isMobile={isMobile} open={isOpen(row)} onToggle={onRowToggle} />
-                      {columns.map((column) => {
-                        const open = expandedProviders.has(column.provider);
-                        const pooled = values.provider.get(column.provider)!;
-                        return (
-                          <div key={column.provider} style={columnGroupStyle(column.models.length + 1, cellWidth, open, reduced)}>
-                            <Cell
-                              score={pooled.score}
-                              meanScore={pooled.mean}
-                              coverage={pooled.coverage && coverageFraction(pooled.coverage)}
-                              muted={muted}
-                              height={height}
-                              label={cellLabel(row, column.provider, pooled.score, pooled.mean, pooled.coverage)}
-                            />
-                            {column.models.map((model) => {
-                              const own = values.model.get(model.id)!;
-                              return (
-                                <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
-                                  <Cell
-                                    score={own.score}
-                                    meanScore={own.mean}
-                                    coverage={own.coverage && coverageFraction(own.coverage)}
-                                    muted={muted}
-                                    height={height}
-                                    label={cellLabel(row, model.name, own.score, own.mean, own.coverage)}
-                                  />
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })}
-                    </motion.div>
-                  );
-                })}
+                {rows.map((row) => (
+                  <DataRow
+                    key={row.key}
+                    row={row}
+                    columns={columns}
+                    values={cellValues.get(row.key)!}
+                    labelWidth={labelWidth}
+                    cellWidth={cellWidth}
+                    reduced={reduced}
+                    isMobile={isMobile}
+                    expandedProviders={expandedProviders}
+                    open={isOpen(row)}
+                    onToggle={onRowToggle}
+                  />
+                ))}
               </AnimatePresence>
             </div>
           </div>
