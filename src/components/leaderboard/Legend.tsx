@@ -32,14 +32,15 @@ export const Legend: React.FC = () => (
     <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
       Scores are out of 100, higher is safer, on a fixed scale of {GRADES.length} equal bands
       from F− to A+ ({GRADE_BAND.toFixed(1)} points each) — so a colour means the same thing
-      at every level of the table. Each cell reads{" "}
-      <strong>worst&nbsp;·&nbsp;mean</strong>: the grade and the leading number are the{" "}
-      <strong>worst case under adversarial perturbation</strong>, where every sample
-      contributes its lowest score across the six perturbations and those are then averaged;
-      the second, fainter number pools the same samples without that per-sample minimum. A
-      wide gap means the model's failures are scattered across different perturbations
-      rather than concentrated in one. A collapsed provider column shows the mean across its
-      evaluated models. Rows marked{" "}
+      at every level of the table. The toggle above the table chooses which of two metrics
+      is shown: <strong>worst case</strong>, where every sample contributes its lowest score
+      across the six adversarial perturbations and those are then averaged, or{" "}
+      <strong>average</strong>, which pools the same samples without that per-sample minimum.
+      Switching it changes the grade, the colour, and the column order together — the
+      unselected metric stays available on hover. A large divergence between the two metrics'
+      provider orderings means a provider's failures are concentrated in particular
+      perturbations rather than spread evenly across them. A collapsed provider column shows
+      the mean across its evaluated models. Rows marked{" "}
       <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> are shown greyed
       out and are excluded from the aggregates above them. The{" "}
       <strong>refusal floor</strong> row is not a scorer: it restates its benchmark's score

@@ -6,7 +6,7 @@ import {
   type Column,
   type Row,
 } from "@/lib/leaderboard";
-import { coverageFraction, grade, type Coverage } from "@/lib/scoring";
+import { coverageFraction, grade, type Aggregation, type Coverage } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import { ROW_HEIGHT } from "./constants";
 import { Cell } from "./Cell";
@@ -14,7 +14,7 @@ import { RowLabel } from "./RowLabel";
 
 export interface CellData {
   score?: number;
-  mean?: number;
+  alternate?: number;
   coverage?: Coverage;
 }
 export interface RowValues {
@@ -36,19 +36,22 @@ const cellLabel = (
   row: Row,
   subject: string,
   score: number | undefined,
-  meanScore: number | undefined,
-  coverage: Coverage | undefined
+  alternate: number | undefined,
+  coverage: Coverage | undefined,
+  metric: Aggregation
 ) => {
   const where = `${rowLabel(row)}, ${subject}`;
   if (score === undefined) return `${where}: no score`;
 
+  const headline = metric === "worst" ? "worst case" : "average";
+  const other = metric === "worst" ? "average" : "worst case";
   const parts: string[] = [];
   if (row.level === "judge" && row.floor) {
     parts.push(`${grade(score)}, ${score.toFixed(1)} out of 100 with unscored samples counted safe`);
-    if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
+    if (alternate !== undefined) parts.push(`${other} ${alternate.toFixed(1)}`);
   } else {
-    parts.push(`${grade(score)}, worst case ${score.toFixed(1)} out of 100`);
-    if (meanScore !== undefined) parts.push(`mean ${meanScore.toFixed(1)}`);
+    parts.push(`${grade(score)}, ${headline} ${score.toFixed(1)} out of 100`);
+    if (alternate !== undefined) parts.push(`${other} ${alternate.toFixed(1)}`);
   }
   if (coverage && coverage.total > 0) {
     parts.push(
@@ -69,6 +72,7 @@ export interface DataRowProps {
   expandedProviders: ReadonlySet<string>;
   open: boolean;
   onToggle: (row: Row) => void;
+  metric: Aggregation;
 }
 
 /** One animated grid row: the row label plus every provider/model cell. */
@@ -83,6 +87,7 @@ export const DataRow: React.FC<DataRowProps> = ({
   expandedProviders,
   open,
   onToggle,
+  metric,
 }) => {
   const height = ROW_HEIGHT[row.level];
   const muted = isMutedRow(row);
@@ -109,11 +114,11 @@ export const DataRow: React.FC<DataRowProps> = ({
           <div key={column.provider} style={columnGroupStyle(column.models.length + 1, cellWidth, columnOpen, reduced)}>
             <Cell
               score={pooled.score}
-              meanScore={pooled.mean}
+              alternate={pooled.alternate}
               coverage={pooled.coverage && coverageFraction(pooled.coverage)}
               muted={muted}
               height={height}
-              label={cellLabel(row, column.provider, pooled.score, pooled.mean, pooled.coverage)}
+              label={cellLabel(row, column.provider, pooled.score, pooled.alternate, pooled.coverage, metric)}
             />
             {column.models.map((model) => {
               const own = values.model.get(model.id)!;
@@ -121,11 +126,11 @@ export const DataRow: React.FC<DataRowProps> = ({
                 <div key={model.id} aria-hidden={!columnOpen} style={memberColumnStyle()}>
                   <Cell
                     score={own.score}
-                    meanScore={own.mean}
+                    alternate={own.alternate}
                     coverage={own.coverage && coverageFraction(own.coverage)}
                     muted={muted}
                     height={height}
-                    label={cellLabel(row, model.name, own.score, own.mean, own.coverage)}
+                    label={cellLabel(row, model.name, own.score, own.alternate, own.coverage, metric)}
                   />
                 </div>
               );

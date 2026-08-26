@@ -30,7 +30,8 @@ const CoverageBar = ({ fraction, onDark }: { fraction: number; onDark: boolean }
 
 export interface CellProps {
   score: number | undefined;
-  meanScore: number | undefined;
+  /** The metric not currently selected — reaches the reader only through `title`. */
+  alternate: number | undefined;
   coverage: number | undefined;
   label: string;
   muted: boolean;
@@ -39,7 +40,7 @@ export interface CellProps {
 
 export const Cell: React.FC<CellProps> = ({
   score,
-  meanScore,
+  alternate: _alternate,
   coverage,
   label,
   muted,
@@ -78,9 +79,6 @@ export const Cell: React.FC<CellProps> = ({
       {score !== undefined && (
         <span style={{ fontSize: 10, fontWeight: 600, lineHeight: 1, whiteSpace: "nowrap" }}>
           {score.toFixed(1)}
-          {meanScore !== undefined && (
-            <span style={{ opacity: 0.62, fontWeight: 500 }}> · {meanScore.toFixed(1)}</span>
-          )}
         </span>
       )}
       {flagged && <CoverageBar fraction={coverage} onDark={onDark} />}

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { ModelEntry } from "@/data/models.types";
-import type { Coverage } from "@/lib/scoring";
+import type { Aggregation, Coverage } from "@/lib/scoring";
 import {
   buildColumns,
   buildRows,
@@ -29,6 +29,8 @@ export interface LeaderboardState {
   isRowOpen: (row: Row) => boolean;
   toggleRow: (row: Row) => void;
   toggleProvider: (provider: string) => void;
+  metric: Aggregation;
+  setMetric: (metric: Aggregation) => void;
 }
 
 const toggle = (set: ReadonlySet<string>, key: string): ReadonlySet<string> => {
@@ -41,10 +43,11 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedRisks, setExpandedRisks] = useState<ReadonlySet<string>>(new Set());
   const [expandedBenches, setExpandedBenches] = useState<ReadonlySet<string>>(new Set());
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
+  const [metric, setMetric] = useState<Aggregation>("worst");
   const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
 
-  const columns = useMemo(() => buildColumns(models), [models]);
+  const columns = useMemo(() => buildColumns(models, metric), [models, metric]);
   const rows = useMemo(
     () => buildRows(models, expandedRisks, expandedBenches),
     [models, expandedRisks, expandedBenches]
@@ -55,20 +58,21 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   // re-walk the whole score tree on every toggle, right before the
   // expand/collapse animation's first frame.
   const cellValues = useMemo(() => {
+    const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
     const byRow = new Map<string, RowValues>();
     for (const row of rows) {
-      const provider = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
-      const model = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
+      const provider = new Map<string, { score?: number; alternate?: number; coverage?: Coverage }>();
+      const model = new Map<string, { score?: number; alternate?: number; coverage?: Coverage }>();
       for (const column of columns) {
         provider.set(column.provider, {
-          score: providerScore(column.models, row),
-          mean: providerScore(column.models, row, "mean"),
+          score: providerScore(column.models, row, metric),
+          alternate: providerScore(column.models, row, alternateMetric),
           coverage: providerCoverage(column.models, row),
         });
         for (const entry of column.models) {
           model.set(entry.id, {
-            score: modelScore(entry, row),
-            mean: modelScore(entry, row, "mean"),
+            score: modelScore(entry, row, metric),
+            alternate: modelScore(entry, row, alternateMetric),
             coverage: modelCoverage(entry, row),
           });
         }
@@ -76,7 +80,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
       byRow.set(row.key, { provider, model });
     }
     return byRow;
-  }, [rows, columns]);
+  }, [rows, columns, metric]);
 
   const labelWidth = isMobile ? 168 : LABEL_WIDTH;
   const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length);
@@ -111,5 +115,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     isRowOpen,
     toggleRow,
     toggleProvider,
+    metric,
+    setMetric,
   };
 }

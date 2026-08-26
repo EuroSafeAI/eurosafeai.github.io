@@ -1,5 +1,5 @@
 import { overallCoverage, overallScore, type Column } from "@/lib/leaderboard";
-import { coverageFraction, grade } from "@/lib/scoring";
+import { coverageFraction, grade, type Aggregation } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import type { ModelEntry } from "@/data/models.types";
 import { COMPANY_LOGO, HEADER_LOGO, HEADER_SCORE_HEIGHT, INK, OVERALL_NOTE } from "./constants";
@@ -20,6 +20,7 @@ const HeaderCell = ({
   open,
   onToggle,
   toggleTitle,
+  metric,
 }: {
   logo?: string;
   name: string;
@@ -29,10 +30,14 @@ const HeaderCell = ({
   open?: boolean;
   onToggle?: () => void;
   toggleTitle?: string;
+  metric: Aggregation;
 }) => {
-  const score = overallScore(models);
-  const meanScore = overallScore(models, "mean");
+  const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
+  const score = overallScore(models, metric);
+  const alternate = overallScore(models, alternateMetric);
   const cov = overallCoverage(models);
+  const headline = metric === "worst" ? "worst case" : "average";
+  const other = metric === "worst" ? "average" : "worst case";
 
   const label = (
     <>
@@ -74,7 +79,7 @@ const HeaderCell = ({
   };
 
   return (
-    <div style={stack}>
+    <div role="columnheader" style={stack}>
       {onToggle ? (
         <button
           type="button"
@@ -104,14 +109,16 @@ const HeaderCell = ({
       <div style={{ width: "100%", display: "flex" }}>
         <Cell
           score={score}
-          meanScore={meanScore}
+          alternate={alternate}
           coverage={cov && coverageFraction(cov)}
           muted={false}
           height={HEADER_SCORE_HEIGHT}
           label={`Overall, ${subject}: ${
             score === undefined
               ? "no score"
-              : `${grade(score)}, worst case ${score.toFixed(1)} out of 100, mean ${meanScore?.toFixed(1)}`
+              : `${grade(score)}, ${headline} ${score.toFixed(1)} out of 100${
+                  alternate !== undefined ? `, ${other} ${alternate.toFixed(1)}` : ""
+                }`
           }`}
         />
       </div>
@@ -126,6 +133,7 @@ export interface HeaderRowProps {
   reduced: boolean;
   expandedProviders: ReadonlySet<string>;
   onProviderToggle: (provider: string) => void;
+  metric: Aggregation;
 }
 
 /** The sticky provider/model header row above the grid body. */
@@ -136,6 +144,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
   reduced,
   expandedProviders,
   onProviderToggle,
+  metric,
 }) => (
   <div
     role="row"
@@ -166,7 +175,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
       <span title={OVERALL_NOTE}>
         Systemic risk
         <span style={{ display: "block", textTransform: "none", letterSpacing: 0, fontWeight: 500, fontSize: "0.62rem", color: "#b0b7c3", marginTop: 2 }}>
-          Overall = mean of the four
+          {metric === "worst" ? "Worst case" : "Average"} · mean of the four
         </span>
       </span>
     </div>
@@ -195,10 +204,11 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             }
             subject={column.provider}
             models={column.models}
+            metric={metric}
           />
           {column.models.map((model) => (
             <div key={model.id} aria-hidden={!open} style={memberColumnStyle()}>
-              <HeaderCell name={model.name} subject={model.name} models={[model]} />
+              <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} />
             </div>
           ))}
         </div>

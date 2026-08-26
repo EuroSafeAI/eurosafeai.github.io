@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { RowLabel } from "@/components/leaderboard/RowLabel";
 import { Legend } from "@/components/leaderboard/Legend";
+import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
 import {
@@ -11,6 +12,10 @@ import {
   CELL_MIN,
   CELL_MAX,
 } from "@/components/leaderboard/constants";
+import modelsData from "@/data/models.json";
+import type { ModelEntry } from "@/data/models.types";
+
+const MODELS = modelsData as unknown as ModelEntry[];
 
 const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
 const benchRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: true };
@@ -89,5 +94,31 @@ describe("deriveCellWidth", () => {
 
   it("gives the current roster a materially wider cell than before", () => {
     expect(deriveCellWidth(9)).toBe(115);
+  });
+});
+
+describe("metric toggle", () => {
+  it("shows one number per cell, not a worst-dot-mean pair", () => {
+    render(<Leaderboard models={MODELS} />);
+    const cells = screen.getAllByRole("gridcell");
+    const scored = cells.filter((c) => !c.textContent?.includes("—"));
+    expect(scored.length).toBeGreaterThan(0);
+    for (const cell of scored) {
+      expect(cell.textContent).not.toContain("·");
+    }
+  });
+
+  it("keeps the unselected metric in the cell's title", () => {
+    render(<Leaderboard models={MODELS} />);
+    const labelled = screen.getAllByRole("gridcell").find((c) => c.getAttribute("title")?.includes("out of 100"));
+    expect(labelled?.getAttribute("title")).toContain("average");
+  });
+
+  it("reorders the provider columns when the metric changes", () => {
+    render(<Leaderboard models={MODELS} />);
+    const namesNow = () => screen.getAllByRole("columnheader").map((h) => h.textContent);
+    const before = namesNow();
+    fireEvent.click(screen.getByRole("radio", { name: /average/i }));
+    expect(namesNow()).not.toEqual(before);
   });
 });

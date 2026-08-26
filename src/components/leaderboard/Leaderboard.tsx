@@ -4,6 +4,7 @@ import { EXPAND_DURATION, EXPAND_CSS_EASE } from "./constants";
 import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
+import { MetricToggle } from "./MetricToggle";
 import { useLeaderboard } from "./useLeaderboard";
 
 /** The scrollable systemic-risk heatmap, plus the legend explaining it. */
@@ -21,10 +22,15 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     isRowOpen,
     toggleRow,
     toggleProvider,
+    metric,
+    setMetric,
   } = useLeaderboard(models);
 
   return (
     <>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.6rem" }}>
+        <MetricToggle metric={metric} onChange={setMetric} />
+      </div>
       <div
         style={{
           overflowX: "auto",
@@ -50,6 +56,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             reduced={reduced}
             expandedProviders={expandedProviders}
             onProviderToggle={toggleProvider}
+            metric={metric}
           />
 
           {/* Rows */}
@@ -67,6 +74,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
                 expandedProviders={expandedProviders}
                 open={isRowOpen(row)}
                 onToggle={toggleRow}
+                metric={metric}
               />
             ))}
           </AnimatePresence>
