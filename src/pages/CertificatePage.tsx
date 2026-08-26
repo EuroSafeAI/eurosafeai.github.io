@@ -1,30 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
-import { GRADES, GRADE_BAND, gpa, type Coverage } from "@/lib/scoring";
-import {
-  buildColumns,
-  buildRows,
-  modelCoverage,
-  modelScore,
-  providerCoverage,
-  providerScore,
-  type Row,
-} from "@/lib/leaderboard";
-import { heatColor } from "@/lib/heat";
+import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import {
-  ACCENT,
-  INK,
-  EXPAND_DURATION,
-  EXPAND_CSS_EASE,
-  COVERAGE_FLAG,
-} from "@/components/leaderboard/constants";
-import { HeaderRow } from "@/components/leaderboard/HeaderRow";
-import { DataRow } from "@/components/leaderboard/DataRow";
+import { ACCENT, INK } from "@/components/leaderboard/constants";
+import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
@@ -46,71 +29,8 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
 );
 
 const CertificatePage = () => {
-  const [expandedRisks, setExpandedRisks] = useState<ReadonlySet<string>>(new Set());
-  const [expandedBenches, setExpandedBenches] = useState<ReadonlySet<string>>(new Set());
-  const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
-  const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
-
-  const columns = useMemo(() => buildColumns(MODELS), []);
-  const rows = useMemo(
-    () => buildRows(MODELS, expandedRisks, expandedBenches),
-    [expandedRisks, expandedBenches]
-  );
-
-  // Scores don't depend on which provider is expanded, only on the row/column
-  // set, so this must not key off expandedProviders: keying off it would
-  // re-walk the whole score tree on every toggle, right before the
-  // expand/collapse animation's first frame.
-  const cellValues = useMemo(() => {
-    const byRow = new Map<string, {
-      provider: Map<string, { score?: number; mean?: number; coverage?: Coverage }>;
-      model: Map<string, { score?: number; mean?: number; coverage?: Coverage }>;
-    }>();
-    for (const row of rows) {
-      const provider = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
-      const model = new Map<string, { score?: number; mean?: number; coverage?: Coverage }>();
-      for (const column of columns) {
-        provider.set(column.provider, {
-          score: providerScore(column.models, row),
-          mean: providerScore(column.models, row, "mean"),
-          coverage: providerCoverage(column.models, row),
-        });
-        for (const entry of column.models) {
-          model.set(entry.id, {
-            score: modelScore(entry, row),
-            mean: modelScore(entry, row, "mean"),
-            coverage: modelCoverage(entry, row),
-          });
-        }
-      }
-      byRow.set(row.key, { provider, model });
-    }
-    return byRow;
-  }, [rows, columns]);
-
-  const labelWidth = isMobile ? 168 : 250;
-  const cellWidth = isMobile ? 74 : 88;
-  // An expanded provider keeps its own pooled column and grows its models to the
-  // right of it, so nothing shifts under the cursor and a provider can be read
-  // against its own members.
-  const leafCount = (provider: string, models: ModelEntry[]) =>
-    expandedProviders.has(provider) ? models.length + 1 : 1;
-  const totalLeaves = columns.reduce((n, c) => n + leafCount(c.provider, c.models), 0);
-
-  const toggle = (set: ReadonlySet<string>, key: string): ReadonlySet<string> => {
-    const next = new Set(set);
-    if (!next.delete(key)) next.add(key);
-    return next;
-  };
-
-  const isOpen = (row: Row) =>
-    row.level === "risk" ? expandedRisks.has(row.key) : expandedBenches.has(row.key);
-
-  const onRowToggle = (row: Row) => {
-    if (row.level === "risk") setExpandedRisks((s) => toggle(s, row.key));
-    else if (row.level === "bench") setExpandedBenches((s) => toggle(s, row.key));
-  };
+  const providerCount = useMemo(() => buildColumns(MODELS).length, []);
 
   return (
     <div>
@@ -202,7 +122,7 @@ const CertificatePage = () => {
       <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px", padding: "0.85rem 1.5rem" }}>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)" }}>
-            {MODELS.length} models · {columns.length} providers · 4 systemic risks
+            {MODELS.length} models · {providerCount} providers · 4 systemic risks
           </p>
         </div>
       </section>
@@ -210,111 +130,7 @@ const CertificatePage = () => {
       {/* Heatmap */}
       <section style={{ background: "#f5f7fb", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <div
-            style={{
-              overflowX: "auto",
-              WebkitOverflowScrolling: "touch",
-              borderRadius: 12,
-              border: "1px solid rgba(10,31,77,0.08)",
-              background: "#ffffff",
-            }}
-          >
-            {/* minWidth eases alongside the column groups; letting it jump would make
-                the collapsed columns twitch as the leftover slack is redistributed. */}
-            <div
-              role="grid"
-              style={{
-                minWidth: labelWidth + totalLeaves * cellWidth,
-                ["--cell-width" as string]: `${cellWidth}px`,
-                transition: reduced ? undefined : `min-width ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
-              }}
-            >
-              {/* Provider header */}
-              <HeaderRow
-                columns={columns}
-                labelWidth={labelWidth}
-                cellWidth={cellWidth}
-                reduced={reduced}
-                expandedProviders={expandedProviders}
-                onProviderToggle={(provider) => setExpandedProviders((s) => toggle(s, provider))}
-              />
-
-              {/* Rows */}
-              <AnimatePresence initial={false}>
-                {rows.map((row) => (
-                  <DataRow
-                    key={row.key}
-                    row={row}
-                    columns={columns}
-                    values={cellValues.get(row.key)!}
-                    labelWidth={labelWidth}
-                    cellWidth={cellWidth}
-                    reduced={reduced}
-                    isMobile={isMobile}
-                    expandedProviders={expandedProviders}
-                    open={isOpen(row)}
-                    onToggle={onRowToggle}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Legend */}
-          <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginRight: 4 }}>Grade:</span>
-              {GRADES.map((g, i) => {
-                const midpoint = (i + 0.5) * GRADE_BAND;
-                const heat = heatColor(midpoint);
-                return (
-                  <span
-                    key={g}
-                    title={`${g} — ${(i * GRADE_BAND).toFixed(1)}–${((i + 1) * GRADE_BAND).toFixed(1)} · GPA ${gpa(midpoint).toFixed(1)}`}
-                    style={{
-                      background: heat.background,
-                      color: heat.color,
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "0.2rem 0.45rem",
-                      borderRadius: 4,
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {g}
-                  </span>
-                );
-              })}
-            </div>
-            <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
-              Scores are out of 100, higher is safer, on a fixed scale of {GRADES.length} equal bands
-              from F− to A+ ({GRADE_BAND.toFixed(1)} points each) — so a colour means the same thing
-              at every level of the table. Each cell reads{" "}
-              <strong>worst&nbsp;·&nbsp;mean</strong>: the grade and the leading number are the{" "}
-              <strong>worst case under adversarial perturbation</strong>, where every sample
-              contributes its lowest score across the six perturbations and those are then averaged;
-              the second, fainter number pools the same samples without that per-sample minimum. A
-              wide gap means the model's failures are scattered across different perturbations
-              rather than concentrated in one. A collapsed provider column shows the mean across its
-              evaluated models. Rows marked{" "}
-              <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> are shown greyed
-              out and are excluded from the aggregates above them. The{" "}
-              <strong>refusal floor</strong> row is not a scorer: it restates its benchmark's score
-              with every unscored sample counted as safe, giving an optimistic bound against the
-              headline's pessimistic one. Read the pair as brackets on the truth.
-            </p>
-            <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
-              A bar along the bottom of a cell marks{" "}
-              <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong> — the share of
-              samples that yielded a gradeable result. A sample drops out when no verdict could be
-              formed, most often because the evaluated model's own provider blocked the response
-              before it was generated, leaving nothing to grade. Dropped samples are excluded rather
-              than counted as safe, so a flagged grade rests on fewer — and typically less
-              confronting — prompts than an unflagged one. Hover for the exact count. Coverage is
-              recorded per perturbation condition rather than per scorer, so every judge within a
-              benchmark shares one figure.
-            </p>
-          </div>
+          <Leaderboard models={MODELS} />
         </div>
       </section>
 

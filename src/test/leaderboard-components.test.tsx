@@ -32,3 +32,20 @@ describe("RowLabel", () => {
     expect(onToggle).toHaveBeenCalledWith(riskRow);
   });
 });
+
+import { Legend } from "@/components/leaderboard/Legend";
+import { GRADES } from "@/lib/scoring";
+
+describe("Legend", () => {
+  it("shows every grade band", () => {
+    render(<Legend />);
+    // The explanatory prose also names F- and A+, so a single-match query
+    // would throw for a reason that has nothing to do with the chips.
+    for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
+  });
+
+  it("explains the coverage bar", () => {
+    render(<Legend />);
+    expect(document.body.textContent).toContain("coverage");
+  });
+});
