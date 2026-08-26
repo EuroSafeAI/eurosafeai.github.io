@@ -1,7 +1,19 @@
 export const ACCENT = "#003399";
 export const INK = "#0a1f4d";
 
-export const ROW_HEIGHT = { risk: 64, bench: 58, judge: 42 } as const;
+/**
+ * `bench` must fit the row-label button's two lines of text: the name (one
+ * line, ellipsized) plus the gloss (wraps). The gloss column is LABEL_WIDTH
+ * (320) minus the button's horizontal chrome — paddingLeft 10 + INDENT.bench
+ * 18, paddingRight 8, the chevron 11, and its 7px gap — leaving ~266px at
+ * fontSize 10.5 / lineHeight 1.3. At roughly 50 characters per line that's
+ * ~53 characters short of the longest gloss (160 chars, human_rights_persona_gap
+ * in src/lib/leaderboard.ts), which needs up to 4 wrapped lines once word
+ * boundaries are accounted for (three 50-char lines only fit 150).
+ * Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px marginTop
+ * + 4 gloss lines (10.5 * 1.3 = 13.65 each) = 72.225, rounded up for margin.
+ */
+export const ROW_HEIGHT = { risk: 64, bench: 76, judge: 42 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
