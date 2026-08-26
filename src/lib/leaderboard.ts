@@ -185,6 +185,13 @@ export function judgeRowLabel(row: Extract<Row, { level: "judge" }>): string {
   return row.floor ? "Refusal floor" : scorerLabel(row.scorer);
 }
 
+/** The display text for a row's own level — risk, benchmark, or judge/scorer. */
+export function rowLabel(row: Row): string {
+  if (row.level === "risk") return RISK_LABELS[row.risk];
+  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
+  return judgeRowLabel(row);
+}
+
 export function judgeRowKind(row: Extract<Row, { level: "judge" }>): string {
   if (row.floor) return "unscored counted safe";
   return isLlmJudge(row.scorer) ? "LLM judge" : "deterministic scorer";

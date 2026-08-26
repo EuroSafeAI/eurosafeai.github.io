@@ -1,20 +1,12 @@
 import {
   BENCHMARK_DESCRIPTIONS,
-  BENCHMARK_LABELS,
   RISK_DESCRIPTIONS,
-  RISK_LABELS,
   judgeRowKind,
-  judgeRowLabel,
+  rowLabel,
   type Row,
 } from "@/lib/leaderboard";
 import { ACCENT, DIAGNOSTIC_NOTE, FLOOR_NOTE, INDENT, INK, ROW_HEIGHT } from "./constants";
 import { Chevron } from "./Chevron";
-
-const rowLabel = (row: Row) => {
-  if (row.level === "risk") return RISK_LABELS[row.risk];
-  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
-  return judgeRowLabel(row);
-};
 
 const isExpandable = (row: Row) => row.level === "risk" || row.level === "bench";
 

@@ -1,11 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  BENCHMARK_LABELS,
-  RISK_LABELS,
-  judgeRowLabel,
-  type Column,
-  type Row,
-} from "@/lib/leaderboard";
+import { rowLabel, type Column, type Row } from "@/lib/leaderboard";
 import { coverageFraction, grade, type Aggregation, type Coverage } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import { shiftVar } from "@/lib/column-order";
@@ -22,12 +16,6 @@ export interface RowValues {
   provider: Map<string, CellData>;
   model: Map<string, CellData>;
 }
-
-const rowLabel = (row: Row) => {
-  if (row.level === "risk") return RISK_LABELS[row.risk];
-  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
-  return judgeRowLabel(row);
-};
 
 /** Diagnostic rows are greyed: their numbers aren't safety grades. */
 const isMutedRow = (row: Row) =>
