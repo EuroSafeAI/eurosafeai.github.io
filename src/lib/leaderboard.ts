@@ -199,7 +199,7 @@ export function scorerLabel(scorer: string): string {
   );
 }
 
-export function buildColumns(models: ModelEntry[]): Column[] {
+export function buildColumns(models: ModelEntry[], how: Aggregation = "worst"): Column[] {
   const byProvider = new Map<string, ModelEntry[]>();
   for (const model of models) {
     const group = byProvider.get(model.company);
@@ -207,12 +207,15 @@ export function buildColumns(models: ModelEntry[]): Column[] {
     else byProvider.set(model.company, [model]);
   }
   return [...byProvider.entries()]
-    .map(([provider, group]) => ({ provider, models: group }))
-    .sort((a, b) => providerAggregate(b) - providerAggregate(a));
+    .map(([provider, group]) => ({
+      provider,
+      models: [...group].sort((a, b) => (b.aggregate[how] ?? -1) - (a.aggregate[how] ?? -1)),
+    }))
+    .sort((a, b) => providerAggregate(b, how) - providerAggregate(a, how));
 }
 
-function providerAggregate(column: Column): number {
-  return mean(column.models.map((m) => m.aggregate.worst ?? undefined)) ?? -1;
+function providerAggregate(column: Column, how: Aggregation): number {
+  return mean(column.models.map((m) => m.aggregate[how] ?? undefined)) ?? -1;
 }
 
 /**

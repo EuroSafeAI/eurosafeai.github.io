@@ -21,6 +21,7 @@ import {
 } from "@/lib/leaderboard";
 import { coverageFraction } from "@/lib/scoring";
 import { RISKS, type BenchmarkResult, type ModelEntry, type Risk } from "@/data/models.types";
+import modelsData from "@/data/models.json";
 
 /**
  * Minimal ModelEntry with one risk populated. Everything the leaderboard reads
@@ -93,6 +94,36 @@ describe("buildColumns", () => {
       model("o1", "OpenAI", {}, 75),
     ]);
     expect(columns.map((c) => c.provider)).toEqual(["OpenAI", "Anthropic"]);
+  });
+});
+
+describe("buildColumns ordering", () => {
+  const MODELS = modelsData as unknown as ModelEntry[];
+  const orderOf = (how: "worst" | "mean") => buildColumns(MODELS, how).map((c) => c.provider);
+
+  it("sorts providers descending by the requested metric", () => {
+    for (const how of ["worst", "mean"] as const) {
+      const columns = buildColumns(MODELS, how);
+      const scores = columns.map((c) =>
+        c.models.reduce((sum, m) => sum + (m.aggregate[how] ?? 0), 0) / c.models.length
+      );
+      expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+    }
+  });
+
+  it("sorts models within a provider by the same metric", () => {
+    for (const column of buildColumns(MODELS, "mean")) {
+      const scores = column.models.map((m) => m.aggregate.mean ?? 0);
+      expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+    }
+  });
+
+  it("produces a different order for the two metrics", () => {
+    expect(orderOf("worst")).not.toEqual(orderOf("mean"));
+  });
+
+  it("defaults to worst case", () => {
+    expect(buildColumns(MODELS).map((c) => c.provider)).toEqual(orderOf("worst"));
   });
 });
 
