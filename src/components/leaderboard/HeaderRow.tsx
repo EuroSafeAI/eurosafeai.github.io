@@ -1,6 +1,7 @@
 import { overallCoverage, overallScore, type Column } from "@/lib/leaderboard";
 import { coverageFraction, grade, type Aggregation } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
+import { shiftVar } from "@/lib/column-order";
 import type { ModelEntry } from "@/data/models.types";
 import { COMPANY_LOGO, HEADER_LOGO, HEADER_SCORE_HEIGHT, INK, OVERALL_NOTE } from "./constants";
 import { Cell } from "./Cell";
@@ -185,7 +186,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         <div
           key={column.provider}
           style={{
-            ...columnGroupStyle(column.models.length + 1, cellWidth, open, reduced),
+            ...columnGroupStyle(column.models.length + 1, cellWidth, open, reduced, shiftVar(column.provider)),
             alignItems: "stretch",
             paddingTop: "0.6rem",
             paddingBottom: "0.15rem",

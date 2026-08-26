@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { ModelEntry } from "@/data/models.types";
@@ -13,6 +13,7 @@ import {
   type Column,
   type Row,
 } from "@/lib/leaderboard";
+import { columnShifts } from "@/lib/column-order";
 import type { RowValues } from "./DataRow";
 import { LABEL_WIDTH, deriveCellWidth } from "./constants";
 
@@ -31,6 +32,7 @@ export interface LeaderboardState {
   toggleProvider: (provider: string) => void;
   metric: Aggregation;
   setMetric: (metric: Aggregation) => void;
+  columnShifts: Record<string, number>;
 }
 
 const toggle = (set: ReadonlySet<string>, key: string): ReadonlySet<string> => {
@@ -91,6 +93,29 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     expandedProviders.has(provider) ? providerModels.length + 1 : 1;
   const totalLeaves = columns.reduce((n, c) => n + leafCount(c.provider, c.models), 0);
 
+  // FLIP: capture where each provider column was before the metric-driven
+  // reorder, apply that as an inverse transform, then release it on the next
+  // frame so the browser animates the column sliding to its new position
+  // instead of the header/body just snapping there.
+  const widthOf = (provider: string) => {
+    const column = columns.find((c) => c.provider === provider);
+    const leaves = expandedProviders.has(provider) ? (column?.models.length ?? 0) + 1 : 1;
+    return leaves * cellWidth;
+  };
+  const order = columns.map((c) => c.provider);
+  const previousOrderRef = useRef(order);
+  const [shifts, setShifts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const previous = previousOrderRef.current;
+    previousOrderRef.current = order;
+    if (reduced || previous.join() === order.join()) return;
+    setShifts(columnShifts(previous, order, widthOf));
+    const frame = requestAnimationFrame(() => setShifts({}));
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order.join(), reduced]);
+
   const isRowOpen = (row: Row) =>
     row.level === "risk" ? expandedRisks.has(row.key) : expandedBenches.has(row.key);
 
@@ -117,5 +142,6 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     toggleProvider,
     metric,
     setMetric,
+    columnShifts: shifts,
   };
 }

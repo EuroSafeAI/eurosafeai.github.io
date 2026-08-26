@@ -26,6 +26,18 @@ describe("columnGroupStyle", () => {
     const style = columnGroupStyle(leaves, cellWidth, true, true);
     expect(style.transition).toBeUndefined();
   });
+
+  it("sets a transform reading the shift property when one is given", () => {
+    const style = columnGroupStyle(leaves, cellWidth, false, false, "--col-shift-a");
+    expect(style.transform).toBe("translateX(var(--col-shift-a, 0px))");
+    expect(style.transition).toContain("transform");
+  });
+
+  it("omits the transform, and its transition, without a shift property", () => {
+    const style = columnGroupStyle(leaves, cellWidth, false, false);
+    expect(style.transform).toBeUndefined();
+    expect(style.transition).not.toContain("transform");
+  });
 });
 
 describe("memberColumnStyle", () => {

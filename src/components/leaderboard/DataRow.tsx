@@ -8,6 +8,7 @@ import {
 } from "@/lib/leaderboard";
 import { coverageFraction, grade, type Aggregation, type Coverage } from "@/lib/scoring";
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
+import { shiftVar } from "@/lib/column-order";
 import { ROW_HEIGHT } from "./constants";
 import { Cell } from "./Cell";
 import { RowLabel } from "./RowLabel";
@@ -111,7 +112,16 @@ export const DataRow: React.FC<DataRowProps> = ({
         const columnOpen = expandedProviders.has(column.provider);
         const pooled = values.provider.get(column.provider)!;
         return (
-          <div key={column.provider} style={columnGroupStyle(column.models.length + 1, cellWidth, columnOpen, reduced)}>
+          <div
+            key={column.provider}
+            style={columnGroupStyle(
+              column.models.length + 1,
+              cellWidth,
+              columnOpen,
+              reduced,
+              shiftVar(column.provider)
+            )}
+          >
             <Cell
               score={pooled.score}
               alternate={pooled.alternate}

@@ -105,6 +105,7 @@ describe("metric toggle", () => {
     expect(scored.length).toBeGreaterThan(0);
     for (const cell of scored) {
       expect(cell.textContent).not.toContain("·");
+      expect(cell.textContent).toMatch(/\d+\.\d/);
     }
   });
 

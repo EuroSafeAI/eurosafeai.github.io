@@ -1,5 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import type { ModelEntry } from "@/data/models.types";
+import { shiftVar } from "@/lib/column-order";
 import { EXPAND_DURATION, EXPAND_CSS_EASE } from "./constants";
 import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
@@ -24,6 +25,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     toggleProvider,
     metric,
     setMetric,
+    columnShifts,
   } = useLeaderboard(models);
 
   return (
@@ -46,6 +48,11 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             minWidth: labelWidth + totalLeaves * cellWidth,
             ["--cell-width" as string]: `${cellWidth}px`,
             transition: reduced ? undefined : `min-width ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
+            // Published once here, on the shared ancestor of the header and body,
+            // so both inherit identical values and cannot drift out of register.
+            ...Object.fromEntries(
+              columns.map((column) => [shiftVar(column.provider), `${columnShifts[column.provider] ?? 0}px`])
+            ),
           }}
         >
           {/* Provider header */}

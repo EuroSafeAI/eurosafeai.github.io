@@ -19,14 +19,24 @@ const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
  * emitted width would stop referencing `--member-open` at all, and only the
  * member columns (which do reference it) would animate — collapsing the group
  * in a single frame while its members are still sliding shut inside it.
+ *
+ * `shiftProperty`, when given, names a custom property (see `shiftVar` in
+ * `column-order.ts`) holding the group's FLIP offset for a metric reorder. It
+ * must be the single place the transform is written: `HeaderRow` and
+ * `DataRow` both call this function, and writing the transform out separately
+ * in each would risk the two falling out of byte-identical agreement, which
+ * would drift the header out of horizontal register with the body mid-animation.
  */
 export function columnGroupStyle(
   leaves: number,
   cellWidth: number,
   open: boolean,
-  reduced: boolean
+  reduced: boolean,
+  shiftProperty?: string
 ): React.CSSProperties {
   const members = leaves - 1;
+  const transitions = ["--member-open"];
+  if (shiftProperty) transitions.push("transform");
   return {
     flexShrink: 0,
     width: `calc(${cellWidth}px * (1 + ${members} * var(--member-open, 0)))`,
@@ -35,7 +45,10 @@ export function columnGroupStyle(
     overflow: "hidden",
     borderLeft: open ? "1px solid rgba(10,31,77,0.08)" : undefined,
     ["--member-open" as string]: open ? 1 : 0,
-    transition: reduced ? undefined : `--member-open ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`,
+    transform: shiftProperty ? `translateX(var(${shiftProperty}, 0px))` : undefined,
+    transition: reduced
+      ? undefined
+      : transitions.map((p) => `${p} ${EXPAND_DURATION}s ${EXPAND_CSS_EASE}`).join(", "),
   };
 }
 
