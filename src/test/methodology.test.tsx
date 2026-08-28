@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import CertificatePage from "@/pages/CertificatePage";
 import { HelmetProvider } from "react-helmet-async";
 
@@ -41,5 +41,49 @@ describe("the page's substantive claims", () => {
     renderPage();
     const missing = SUBSTANTIVE_CLAIMS.filter((claim) => !claim.test(pageText()));
     expect(missing.map(String)).toEqual([]);
+  });
+});
+
+import { fireEvent } from "@testing-library/react";
+import { Methodology } from "@/components/Methodology";
+import { COVERAGE_FLAG } from "@/components/leaderboard/constants";
+
+const TOPICS = [
+  /how these scores are made/i,
+  /reading the grid/i,
+  /coverage and what's missing/i,
+  /capability adjustment/i,
+];
+
+describe("Methodology", () => {
+  it("offers every topic", () => {
+    render(<Methodology />);
+    for (const topic of TOPICS) {
+      expect(screen.getByRole("button", { name: topic })).toBeInTheDocument();
+    }
+  });
+
+  it("starts with every topic collapsed", () => {
+    render(<Methodology />);
+    for (const topic of TOPICS) {
+      expect(screen.getByRole("button", { name: topic })).toHaveAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+  });
+
+  it("opens a topic when its trigger is clicked", () => {
+    render(<Methodology />);
+    const trigger = screen.getByRole("button", { name: TOPICS[0] });
+    fireEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("scales the coverage fraction into a percentage", () => {
+    render(<Methodology />);
+    fireEvent.click(screen.getByRole("button", { name: /coverage/i }));
+    expect(document.body.textContent).toContain(`${Math.round(COVERAGE_FLAG * 100)}%`);
+    expect(document.body.textContent).not.toContain("0.95%");
   });
 });
