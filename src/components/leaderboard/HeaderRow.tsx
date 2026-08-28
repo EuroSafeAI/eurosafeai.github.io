@@ -130,6 +130,7 @@ const HeaderCell = ({
 
 export interface HeaderRowProps {
   alpha: number;
+  membersOf: (column: Column) => ModelEntry[];
   columns: Column[];
   labelWidth: number;
   cellWidth: number;
@@ -143,6 +144,7 @@ export interface HeaderRowProps {
 /** The sticky provider/model header row above the grid body. */
 export const HeaderRow: React.FC<HeaderRowProps> = ({
   alpha,
+  membersOf,
   columns,
   labelWidth,
   cellWidth,
@@ -187,14 +189,19 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
       </span>
     </div>
     {columns.map((column) => {
-      const open = expandedProviders.has(column.provider);
+      const members = membersOf(column);
+      const expandable = members.length > 0;
+      const open = expandable && expandedProviders.has(column.provider);
+      // A model column carries its organisation's logo for provenance; an
+      // organisation column is already named for it.
+      const logo = COMPANY_LOGO[column.provider] ?? COMPANY_LOGO[column.models[0]?.company];
       return (
         <div
           key={column.provider}
           role="presentation"
           style={{
             ...columnGroupStyle(
-              column.models.length + 1,
+              members.length + 1,
               cellWidth,
               open,
               reduced,
@@ -207,22 +214,22 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
           }}
         >
           <HeaderCell
-            logo={COMPANY_LOGO[column.provider]}
+            logo={logo}
             name={column.provider}
             emphasis
-            open={open}
-            onToggle={() => onProviderToggle(column.provider)}
+            open={expandable ? open : undefined}
+            onToggle={expandable ? () => onProviderToggle(column.provider) : undefined}
             toggleTitle={
               open
                 ? `Collapse ${column.provider}`
-                : `Expand ${column.provider} into its ${column.models.length} evaluated model${column.models.length === 1 ? "" : "s"}`
+                : `Expand ${column.provider} into its ${members.length} evaluated model${members.length === 1 ? "" : "s"}`
             }
             subject={column.provider}
             models={column.models}
             alpha={alpha}
             metric={metric}
           />
-          {column.models.map((model) => (
+          {members.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
               <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
             </div>

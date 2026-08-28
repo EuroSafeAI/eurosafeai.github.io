@@ -706,3 +706,37 @@ describe("buildColumns under capability adjustment", () => {
     expect(buildColumns(models, "worst", 0.5).map((c) => c.provider)).toEqual(["Small", "Frontier"]);
   });
 });
+
+describe("buildColumns grouping", () => {
+  const roster = modelsData as unknown as ModelEntry[];
+
+  it("groups by organisation by default, unchanged from before the toggle", () => {
+    expect(buildColumns(roster, "worst", 1, "org")).toEqual(buildColumns(roster, "worst", 1));
+  });
+
+  it("emits one column per model when grouping by model", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    expect(columns).toHaveLength(roster.length);
+    for (const column of columns) expect(column.models).toHaveLength(1);
+    expect(new Set(columns.map((c) => c.provider)).size).toBe(roster.length);
+  });
+
+  it("ranks model columns by adjusted score, so the capability slider re-ranks them", () => {
+    const raw = buildColumns(roster, "worst", 1, "model").map((c) => c.provider);
+    const adjusted = buildColumns(roster, "worst", 0.4, "model").map((c) => c.provider);
+    expect(new Set(adjusted)).toEqual(new Set(raw));
+    expect(adjusted).not.toEqual(raw);
+  });
+
+  it("orders model columns by descending score at alpha = 1", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    const scores = columns.map((c) => c.models[0].aggregate.worst ?? -1);
+    expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+  });
+
+  it("names a model column for the model, not its company", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    const names = new Set(columns.map((c) => c.provider));
+    for (const m of roster) expect(names.has(m.name)).toBe(true);
+  });
+});

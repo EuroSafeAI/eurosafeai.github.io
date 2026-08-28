@@ -261,16 +261,27 @@ export function adjustedOverallScore(
   );
 }
 
+/**
+ * Whether a column is one organisation (expandable into its models) or one
+ * model standing alone.
+ */
+export type Grouping = "org" | "model";
+
 export function buildColumns(
   models: ModelEntry[],
   how: Aggregation = "worst",
-  alpha: number = 1
+  alpha: number = 1,
+  grouping: Grouping = "org"
 ): Column[] {
   const byProvider = new Map<string, ModelEntry[]>();
   for (const model of models) {
-    const group = byProvider.get(model.company);
+    // Grouping by model gives every entry its own key, so the rest of this
+    // function ranks single-model columns by exactly the rule it uses for
+    // organisations — nothing downstream needs to know which mode it is in.
+    const key = grouping === "model" ? model.name : model.company;
+    const group = byProvider.get(key);
     if (group) group.push(model);
-    else byProvider.set(model.company, [model]);
+    else byProvider.set(key, [model]);
   }
   return [...byProvider.entries()]
     .map(([provider, group]) => ({

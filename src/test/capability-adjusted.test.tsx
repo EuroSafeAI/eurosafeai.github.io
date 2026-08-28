@@ -1,12 +1,9 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { CAPABILITY_EXPONENT, CAPABILITY_REFERENCE, adjustedRanking, scatterPoint } from "@/lib/risk-index";
+import { describe, it, expect } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { CAPABILITY_REFERENCE, adjustedRanking, scatterPoint } from "@/lib/risk-index";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
-
-vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: vi.fn(() => false) }));
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
@@ -26,132 +23,51 @@ describe("scatterPoint", () => {
   });
 });
 
-function rowFor(name: string): HTMLElement {
-  const nameNodes = screen.getAllByText(name);
-  const row = nameNodes
-    .map((node) => node.closest<HTMLElement>("div[title]"))
-    .find((node) => node !== null);
-  expect(row).toBeTruthy();
-  return row!;
-}
 
-function assertAdjacency(models: ModelEntry[], alpha: number) {
-  const ranking = adjustedRanking(models, alpha);
-  expect(ranking.length).toBe(16);
-  for (const entry of ranking) {
-    const rowText = rowFor(entry.model.name).textContent ?? "";
-    expect(rowText).toContain(entry.adjusted.toFixed(1));
-    expect(rowText).toContain(entry.safety.toFixed(1));
-    expect(rowText).toContain(entry.index.toFixed(1));
-  }
-}
 
 describe("CapabilityAdjustedSection", () => {
-  it("shows every ranked model's raw safety and capability index beside its adjusted score", () => {
+  it("plots one point per scored model", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    assertAdjacency(MODELS, CAPABILITY_EXPONENT);
+    const plot = screen.getByRole("img", { name: /capability/i });
+    expect(plot.querySelectorAll("circle")).toHaveLength(adjustedRanking(MODELS).length);
   });
 
-  it("keeps capability adjacent to the adjusted score at a non-default alpha", () => {
+  it("places each point by raw safety and capability, not by the adjusted score", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    fireEvent.change(screen.getByRole("slider"), { target: { value: "0.9" } });
-    assertAdjacency(MODELS, 0.9);
+    const circles = [...screen.getByRole("img", { name: /capability/i }).querySelectorAll("circle")];
+    const at = (name: string) => circles.find((c) => c.textContent?.includes(name))!;
+    const entries = adjustedRanking(MODELS);
+    const mostCapable = [...entries].sort((a, b) => b.index - a.index)[0];
+    const leastCapable = [...entries].sort((a, b) => a.index - b.index)[0];
+    const safest = [...entries].sort((a, b) => b.safety - a.safety)[0];
+    const leastSafe = [...entries].sort((a, b) => a.safety - b.safety)[0];
+
+    // x rises with capability; y falls with safety, since SVG y grows downward.
+    expect(Number(at(mostCapable.model.name).getAttribute("cx"))).toBeGreaterThan(
+      Number(at(leastCapable.model.name).getAttribute("cx"))
+    );
+    expect(Number(at(safest.model.name).getAttribute("cy"))).toBeLessThan(
+      Number(at(leastSafe.model.name).getAttribute("cy"))
+    );
   });
 
-  it("moving the slider changes the displayed adjusted values and the row order", () => {
+  it("names each point's adjusted score, safety and capability", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-
-    const defaultRanking = adjustedRanking(MODELS, CAPABILITY_EXPONENT);
-    const top = defaultRanking[0];
-    expect(rowFor(top.model.name).getAttribute("data-rank")).toBe("0");
-
-    fireEvent.change(screen.getByRole("slider"), { target: { value: "1" } });
-
-    const safetyRanking = adjustedRanking(MODELS, 1);
-    for (const entry of safetyRanking) {
-      const row = rowFor(entry.model.name);
-      expect(row.textContent).toContain(entry.adjusted.toFixed(1));
-      expect(row.getAttribute("data-rank")).toBe(String(safetyRanking.indexOf(entry)));
-    }
-    expect(safetyRanking.map((e) => e.model.id)).not.toEqual(defaultRanking.map((e) => e.model.id));
+    const entry = adjustedRanking(MODELS)[0];
+    expect(screen.getByText(new RegExp(`${entry.model.name}: adjusted`))).toBeInTheDocument();
   });
 
-  it("resets to the published ranking and hides the reset control at the default", () => {
+  // The ranked bars and their alpha slider moved into the leaderboard, which
+  // shows the same ranking against all four risks. This section is now the
+  // fixed published reference the page cites, so it carries no control.
+  it("carries no slider of its own", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-
-    expect(screen.queryByRole("button", { name: /reset/i })).toBeNull();
-
-    fireEvent.change(screen.getByRole("slider"), { target: { value: "0" } });
-    expect(screen.getByRole("button", { name: /reset/i })).toBeTruthy();
-
-    fireEvent.click(screen.getByRole("button", { name: /reset/i }));
-
-    expect(screen.queryByRole("button", { name: /reset/i })).toBeNull();
-    expect((screen.getByRole("slider") as HTMLInputElement).value).toBe(String(CAPABILITY_EXPONENT));
-
-    const defaultRanking = adjustedRanking(MODELS, CAPABILITY_EXPONENT);
-    for (const entry of defaultRanking) {
-      const row = rowFor(entry.model.name);
-      expect(row.textContent).toContain(entry.adjusted.toFixed(1));
-    }
+    expect(screen.queryByRole("slider")).not.toBeInTheDocument();
   });
 
-  it("keeps the scatter's circles fixed in place as alpha changes", () => {
-    const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
-
-    const positionsAt = () =>
-      Array.from(container.querySelectorAll("circle")).map((circle) => ({
-        cx: circle.getAttribute("cx"),
-        cy: circle.getAttribute("cy"),
-      }));
-
-    const before = positionsAt();
-    expect(before.length).toBe(16);
-
-    fireEvent.change(screen.getByRole("slider"), { target: { value: "0" } });
-    expect(positionsAt()).toEqual(before);
-
-    fireEvent.change(screen.getByRole("slider"), { target: { value: "1" } });
-    expect(positionsAt()).toEqual(before);
-  });
-
-  describe.each([
-    ["desktop", false],
-    ["mobile", true],
-  ])("row height consistency (%s)", (_label, mobile) => {
-    afterEach(() => {
-      vi.mocked(useIsMobile).mockReturnValue(false);
-    });
-
-    it("derives the container height and the translateY step from the same row height", () => {
-      vi.mocked(useIsMobile).mockReturnValue(mobile);
-      render(<CapabilityAdjustedSection models={MODELS} />);
-
-      const ranking = adjustedRanking(MODELS, CAPABILITY_EXPONENT);
-      const lastRankedRow = rowFor(ranking[ranking.length - 1].model.name);
-      const container = lastRankedRow.parentElement!;
-
-      const rowHeight = parseFloat(lastRankedRow.style.height);
-      expect(rowHeight).toBeGreaterThan(0);
-      expect(container.style.height).toBe(`${ranking.length * rowHeight}px`);
-
-      const rank = Number(lastRankedRow.getAttribute("data-rank"));
-      expect(lastRankedRow.style.transform).toBe(`translateY(${rank * rowHeight}px)`);
-    });
-  });
-
-  it("gives mobile rows more vertical room than desktop rows, for the stacked detail line", () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
-    const { unmount: unmountDesktop } = render(<CapabilityAdjustedSection models={MODELS} />);
-    const ranking = adjustedRanking(MODELS, CAPABILITY_EXPONENT);
-    const desktopRowHeight = parseFloat(rowFor(ranking[0].model.name).style.height);
-    unmountDesktop();
-
-    vi.mocked(useIsMobile).mockReturnValue(true);
+  it("no longer renders the ranked bar list", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const mobileRowHeight = parseFloat(rowFor(ranking[0].model.name).style.height);
-
-    expect(mobileRowHeight).toBeGreaterThan(desktopRowHeight);
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    expect(screen.queryByText(/reset to published/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/α sensitivity/i)).not.toBeInTheDocument();
   });
 });

@@ -324,3 +324,69 @@ describe("capability slider layout stability", () => {
     expect(slot().style.width).toBe(rawWidth);
   });
 });
+
+describe("grouping toggle", () => {
+  const groupBy = (label: RegExp) =>
+    fireEvent.click(screen.getByRole("radio", { name: label }));
+  const scoredHeaders = () =>
+    screen.getAllByRole("columnheader").filter((h) => h.querySelector('[role="gridcell"]'));
+  const expandToggles = () =>
+    scoredHeaders().filter((h) => h.querySelector("button[aria-expanded]"));
+
+  it("defaults to organisation columns, expandable as before", () => {
+    render(<Leaderboard models={MODELS} />);
+    expect(screen.getByRole("radio", { name: /organisation/i })).toHaveAttribute(
+      "aria-checked",
+      "true"
+    );
+    expect(scoredHeaders()).toHaveLength(9);
+    // The toggle's accessible name is the provider name (its title attribute
+    // is not used once the button has text), so identify it by its state.
+    expect(expandToggles()).toHaveLength(9);
+  });
+
+  it("shows one column per model when grouped by model", () => {
+    render(<Leaderboard models={MODELS} />);
+    groupBy(/^model$/i);
+    expect(scoredHeaders()).toHaveLength(MODELS.length);
+  });
+
+  it("offers nothing to expand in model view", () => {
+    render(<Leaderboard models={MODELS} />);
+    groupBy(/^model$/i);
+    expect(expandToggles()).toHaveLength(0);
+  });
+
+  it("keeps each model's organisation visible", () => {
+    render(<Leaderboard models={MODELS} />);
+    groupBy(/^model$/i);
+    const logos = scoredHeaders().filter((h) => h.querySelector("img"));
+    expect(logos).toHaveLength(scoredHeaders().length);
+  });
+
+  it("re-ranks model columns when the capability weight changes", () => {
+    render(<Leaderboard models={MODELS} />);
+    groupBy(/^model$/i);
+    const before = scoredHeaders().map((h) => h.textContent);
+    fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
+      target: { value: "0.4" },
+    });
+    expect(scoredHeaders().map((h) => h.textContent)).not.toEqual(before);
+  });
+
+  it("returns to the organisation view unchanged", () => {
+    render(<Leaderboard models={MODELS} />);
+    const before = scoredHeaders().map((h) => h.textContent);
+    groupBy(/^model$/i);
+    groupBy(/organisation/i);
+    expect(scoredHeaders().map((h) => h.textContent)).toEqual(before);
+  });
+
+  it("never applies a NaN transform when the column set is swapped", () => {
+    render(<Leaderboard models={MODELS} />);
+    groupBy(/^model$/i);
+    for (const group of document.querySelectorAll<HTMLElement>('[role="row"] > div')) {
+      expect(group.style.transform ?? "").not.toContain("NaN");
+    }
+  });
+});

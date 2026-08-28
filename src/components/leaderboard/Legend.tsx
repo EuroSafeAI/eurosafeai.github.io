@@ -61,6 +61,12 @@ export const Legend: React.FC = () => (
       capability-adjusted index below this table uses a weight of 0.50.
     </p>
     <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      <strong>Group by</strong> switches the columns between one per organisation — expandable
+      into the models it covers, with the organisation's own column showing the mean across
+      them — and one per model, ranked individually. The model view is wider than the page and
+      scrolls sideways; the row labels stay pinned to the left edge as it does.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
       A bar along the bottom of a cell marks{" "}
       <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong> — the share of
       samples that yielded a gradeable result. A sample drops out when no verdict could be

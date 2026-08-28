@@ -6,6 +6,7 @@ import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
+import { CAPABILITY_EXPONENT } from "@/lib/risk-index";
 import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 
@@ -163,7 +164,13 @@ const CertificatePage = () => {
           </div>
 
           <div style={{ marginTop: "3rem" }}>
-            <SectionEyebrow>Capability-Adjusted Safety</SectionEyebrow>
+            <SectionEyebrow>Safety Against Capability</SectionEyebrow>
+            <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.25rem", maxWidth: 760 }}>
+              Every evaluated model plotted by what it can do against how safely it does it, with
+              each point coloured by its capability-adjusted grade at the published weight of{" "}
+              {CAPABILITY_EXPONENT.toFixed(2)}. The leaderboard above ranks the same adjustment
+              interactively; this is the fixed reference it is measured against.
+            </p>
             <CapabilityAdjustedSection models={MODELS} />
           </div>
         </div>

@@ -17,6 +17,14 @@ export function columnShifts(
     }
     return at;
   };
+  // A column present in one order but not the other has no previous position
+  // to invert from, so there is nothing to animate: switching org/model
+  // grouping replaces the whole set rather than reordering it. Subtracting an
+  // absent position would emit NaN transforms and blank every column.
+  const sameSet =
+    before.length === after.length && new Set(before).size === new Set([...before, ...after]).size;
+  if (!sameSet) return {};
+
   const from = positions(before);
   const to = positions(after);
   const shifts: Record<string, number> = {};

@@ -4,6 +4,7 @@ import { coverageFraction, grade, type Aggregation, type Coverage } from "@/lib/
 import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
 import { shiftVar } from "@/lib/column-order";
 import { ROW_HEIGHT } from "./constants";
+import type { ModelEntry } from "@/data/models.types";
 import { Cell } from "./Cell";
 import { RowLabel } from "./RowLabel";
 
@@ -59,6 +60,7 @@ export interface DataRowProps {
   reduced: boolean;
   isMobile: boolean;
   expandedProviders: ReadonlySet<string>;
+  membersOf: (column: Column) => ModelEntry[];
   open: boolean;
   onToggle: (row: Row) => void;
   metric: Aggregation;
@@ -75,6 +77,7 @@ export const DataRow: React.FC<DataRowProps> = ({
   reduced,
   isMobile,
   expandedProviders,
+  membersOf,
   open,
   onToggle,
   metric,
@@ -102,13 +105,14 @@ export const DataRow: React.FC<DataRowProps> = ({
     >
       <RowLabel row={row} labelWidth={labelWidth} isMobile={isMobile} open={open} onToggle={onToggle} />
       {columns.map((column) => {
-        const columnOpen = expandedProviders.has(column.provider);
+        const members = membersOf(column);
+        const columnOpen = members.length > 0 && expandedProviders.has(column.provider);
         const pooled = values.provider.get(column.provider)!;
         return (
           <div
             key={column.provider}
             style={columnGroupStyle(
-              column.models.length + 1,
+              members.length + 1,
               cellWidth,
               columnOpen,
               reduced,
@@ -123,7 +127,7 @@ export const DataRow: React.FC<DataRowProps> = ({
               height={height}
               label={cellLabel(row, column.provider, pooled.score, pooled.alternate, pooled.coverage, metric)}
             />
-            {column.models.map((model) => {
+            {members.map((model) => {
               const own = values.model.get(model.id)!;
               return (
                 <div key={model.id} aria-hidden={!columnOpen} style={memberColumnStyle()}>

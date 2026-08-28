@@ -11,6 +11,7 @@ import {
   modelCoverage,
   providerCoverage,
   type Column,
+  type Grouping,
   type Row,
 } from "@/lib/leaderboard";
 import { columnShifts } from "@/lib/column-order";
@@ -34,6 +35,10 @@ export interface LeaderboardState {
   setMetric: (metric: Aggregation) => void;
   alpha: number;
   setAlpha: (alpha: number) => void;
+  grouping: Grouping;
+  setGrouping: (grouping: Grouping) => void;
+  /** What a column expands into: its models by organisation, nothing by model. */
+  membersOf: (column: Column) => ModelEntry[];
   columnShifts: Record<string, number>;
   /** True for the one frame the shift is an un-transitioned FLIP invert. */
   columnShiftsInstant: boolean;
@@ -51,10 +56,20 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
   const [metric, setMetric] = useState<Aggregation>("worst");
   const [alpha, setAlpha] = useState(RAW_ALPHA);
+  const [grouping, setGrouping] = useState<Grouping>("org");
   const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
 
-  const columns = useMemo(() => buildColumns(models, metric, alpha), [models, metric, alpha]);
+  const columns = useMemo(
+    () => buildColumns(models, metric, alpha, grouping),
+    [models, metric, alpha, grouping]
+  );
+
+  // A model column is already the model, so it has nothing to expand into.
+  // This depends on the grouping mode only, never on whether a column is
+  // currently open — the leaf count fed to columnGroupStyle must stay constant
+  // while a column expands, or the group snaps shut in a single frame.
+  const membersOf = (column: Column) => (grouping === "org" ? column.models : []);
   const rows = useMemo(
     () => buildRows(models, expandedRisks, expandedBenches),
     [models, expandedRisks, expandedBenches]
@@ -95,7 +110,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   // right of it, so nothing shifts under the cursor and a provider can be read
   // against its own members.
   const leafCount = (provider: string, providerModels: ModelEntry[]) =>
-    expandedProviders.has(provider) ? providerModels.length + 1 : 1;
+    expandedProviders.has(provider) && grouping === "org" ? providerModels.length + 1 : 1;
   const totalLeaves = columns.reduce((n, c) => n + leafCount(c.provider, c.models), 0);
 
   // FLIP: capture where each provider column was before the metric-driven
@@ -176,6 +191,9 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     setMetric,
     alpha,
     setAlpha,
+    grouping,
+    setGrouping,
+    membersOf,
     columnShifts: shifts,
     columnShiftsInstant: shiftsInstant,
   };

@@ -33,3 +33,31 @@ describe("columnShifts", () => {
     expect(shiftVar("Z.ai")).toBe("--col-shift-Z-ai");
   });
 });
+
+describe("columnShifts when the column set changes", () => {
+  const uniform = () => 100;
+
+  it("returns no shifts when the set is replaced rather than reordered", () => {
+    // Switching org/model grouping swaps 9 organisation columns for 16 model
+    // columns. Every name is new, so there is no previous position to invert
+    // from; computing one anyway yields NaN transforms.
+    const shifts = columnShifts(["Anthropic", "OpenAI"], ["Claude Sonnet 5", "GPT-5.6 Luna"], uniform);
+    expect(shifts).toEqual({});
+  });
+
+  it("returns no shifts when the set only partly overlaps", () => {
+    expect(columnShifts(["a", "b"], ["b", "c"], uniform)).toEqual({});
+  });
+
+  it("still shifts a genuine reorder of the same set", () => {
+    expect(columnShifts(["a", "b"], ["b", "a"], uniform)).toEqual({ a: -100, b: 100 });
+  });
+
+  it("never emits NaN", () => {
+    for (const after of [["x"], ["a", "b", "c"], ["b", "a"]]) {
+      for (const shift of Object.values(columnShifts(["a", "b"], after, uniform))) {
+        expect(Number.isFinite(shift)).toBe(true);
+      }
+    }
+  });
+});
