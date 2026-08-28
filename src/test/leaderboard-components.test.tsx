@@ -390,3 +390,51 @@ describe("grouping toggle", () => {
     }
   });
 });
+
+describe("column header names", () => {
+  // Only the name element: a header also holds its score, whose digits are
+  // legitimately nowrap.
+  const nameSpans = () => {
+    const spans = [...document.querySelectorAll<HTMLElement>("[data-column-name]")];
+    expect(spans.length).toBeGreaterThan(0);
+    return spans;
+  };
+
+  it("never truncates a name in the organisation view", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const span of nameSpans()) {
+      expect(span.style.whiteSpace).not.toBe("nowrap");
+      expect(span.style.textOverflow).not.toBe("ellipsis");
+      expect(span.style.webkitLineClamp ?? "").toBe("");
+    }
+  });
+
+  it("never truncates a name in the model view", () => {
+    render(<Leaderboard models={MODELS} />);
+    fireEvent.click(screen.getByRole("radio", { name: /^model$/i }));
+    for (const span of nameSpans()) {
+      expect(span.style.whiteSpace).not.toBe("nowrap");
+      expect(span.style.textOverflow).not.toBe("ellipsis");
+    }
+  });
+
+  it("never truncates an expanded model's name inside its organisation", () => {
+    render(<Leaderboard models={MODELS} />);
+    const toggle = screen
+      .getAllByRole("columnheader")
+      .map((h) => h.querySelector<HTMLElement>("button[aria-expanded]"))
+      .find(Boolean)!;
+    fireEvent.click(toggle);
+    for (const span of nameSpans()) {
+      expect(span.style.whiteSpace).not.toBe("nowrap");
+      expect(span.style.textOverflow).not.toBe("ellipsis");
+    }
+  });
+
+  it("still carries the full name for assistive technology and hover", () => {
+    render(<Leaderboard models={MODELS} />);
+    fireEvent.click(screen.getByRole("radio", { name: /^model$/i }));
+    const longest = [...MODELS].sort((a, b) => b.name.length - a.name.length)[0];
+    expect(screen.getByText(longest.name)).toBeInTheDocument();
+  });
+});

@@ -55,7 +55,7 @@ const HeaderCell = ({
       <span
         style={{
           display: "flex",
-          alignItems: "center",
+          alignItems: "baseline",
           justifyContent: "center",
           gap: 3,
           maxWidth: "100%",
@@ -65,7 +65,13 @@ const HeaderCell = ({
           color: emphasis ? INK : "#6b7280",
         }}
       >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</span>
+        {/* Wraps rather than truncating: at the model view's cell width most
+            names need two lines, and an ellipsis there hides which model a
+            column is. The header grows to its tallest name instead, which
+            degrades visibly rather than silently if a longer name arrives. */}
+        <span data-column-name style={{ minWidth: 0, textAlign: "center", overflowWrap: "break-word" }}>
+          {name}
+        </span>
         {onToggle && <Chevron open={open ?? false} color="#9ca3af" />}
       </span>
     </>
