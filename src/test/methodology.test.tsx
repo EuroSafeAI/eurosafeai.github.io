@@ -49,6 +49,24 @@ describe("the page's substantive claims", () => {
     const missing = SUBSTANTIVE_CLAIMS.filter((claim) => !claim.test(pageText()));
     expect(missing.map(String)).toEqual([]);
   });
+
+  it("never skips a heading level", () => {
+    renderPage();
+    // Radix's AccordionHeader hardcodes h3, and its triggers are mounted
+    // whether or not their content is expanded, but expand anyway so this
+    // assertion covers the same reachable-content state as the claims test.
+    for (const trigger of screen.getAllByRole("button", { expanded: false })) {
+      fireEvent.click(trigger);
+    }
+    const levels = screen
+      .getAllByRole("heading")
+      .map((heading) => Number(heading.tagName[1]));
+    let previous = levels[0];
+    for (const level of levels) {
+      expect(level - previous).toBeLessThanOrEqual(1);
+      previous = level;
+    }
+  });
 });
 
 const TOPICS = [
