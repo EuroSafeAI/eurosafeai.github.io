@@ -9,11 +9,18 @@ import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { CAPABILITY_EXPONENT } from "@/lib/risk-index";
 import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
+import { Methodology } from "@/components/Methodology";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
-const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
+const SectionEyebrow = ({
+  as: Tag = "div",
+  children,
+}: {
+  as?: "div" | "h2";
+  children: React.ReactNode;
+}) => (
+  <Tag style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
     <span style={{ width: "36px", height: "2px", background: "#0a2a66" }} />
     <span
       style={{
@@ -26,7 +33,7 @@ const SectionEyebrow = ({ children }: { children: React.ReactNode }) => (
     >
       {children}
     </span>
-  </div>
+  </Tag>
 );
 
 const CertificatePage = () => {
@@ -139,28 +146,8 @@ const CertificatePage = () => {
       <section style={{ background: "#ffffff", borderTop: "1px solid rgba(10,31,77,0.06)", padding: "4rem 0" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <div style={{ maxWidth: 760 }}>
-            <SectionEyebrow>About This Index</SectionEyebrow>
-            <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(10,31,77,0.7)", marginBottom: "1rem" }}>
-              The four rows of this table are the systemic risks the EU AI Act's Code of Practice
-              requires providers of general-purpose AI to assess: CBRN misuse, offensive cyber
-              capability, loss of control, and manipulation. Each is evaluated by a merged suite of
-              public benchmarks, re-scored under one common polarity so that every number means "how
-              safe", and re-run under six families of adversarial perturbation — paraphrase,
-              register shift, identity stripping, framing, reconsideration pressure, and agentic
-              scenarios.
-            </p>
-            <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(10,31,77,0.7)", marginBottom: "1rem" }}>
-              A model's score for a risk is its <strong>worst case</strong>, pooled per sample across
-              those perturbations — a safeguard that only holds when it is unprovoked is not a
-              safeguard. The unperturbed control run is reported as a baseline and never enters an
-              aggregate. Free-text responses are graded by an ensemble of LLM judges; expanding a
-              benchmark row shows what each judge concluded on its own, so a grade can be traced to
-              the judgements that produced it.
-            </p>
-            <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "2rem" }}>
-              Full methodology, dataset descriptions, and reproducibility information are published
-              alongside the evaluation pipeline.
-            </p>
+            <SectionEyebrow as="h2">Methodology</SectionEyebrow>
+            <Methodology />
           </div>
 
           <div style={{ marginTop: "3rem" }}>

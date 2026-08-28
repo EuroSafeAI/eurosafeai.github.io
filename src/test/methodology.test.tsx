@@ -41,6 +41,11 @@ const pageText = () => (document.body.textContent ?? "").replace(/\s+/g, " ");
 describe("the page's substantive claims", () => {
   it("makes every one of them somewhere", () => {
     renderPage();
+    // Radix unmounts collapsed content, so open every topic before reading the
+    // page: the claims must be reachable, not necessarily visible on load.
+    for (const trigger of screen.getAllByRole("button", { expanded: false })) {
+      fireEvent.click(trigger);
+    }
     const missing = SUBSTANTIVE_CLAIMS.filter((claim) => !claim.test(pageText()));
     expect(missing.map(String)).toEqual([]);
   });

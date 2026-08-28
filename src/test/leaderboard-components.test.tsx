@@ -14,6 +14,7 @@ import {
   LABEL_WIDTH,
   CELL_MIN,
   CELL_MAX,
+  COVERAGE_FLAG,
 } from "@/components/leaderboard/constants";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -80,6 +81,27 @@ describe("Legend", () => {
   it("explains the coverage bar", () => {
     render(<Legend />);
     expect(document.body.textContent).toContain("coverage");
+  });
+});
+
+describe("the legend after the cut", () => {
+  it("keeps the grade key and the scale", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
+    expect(document.body.textContent).toContain(`${GRADES.length} equal bands`);
+  });
+
+  it("keeps the coverage flag, scaled to a percentage", () => {
+    render(<Leaderboard models={MODELS} />);
+    expect(document.body.textContent).toContain(`${Math.round(COVERAGE_FLAG * 100)}%`);
+  });
+
+  it("is short enough to actually be read", () => {
+    render(<Leaderboard models={MODELS} />);
+    const words = (document.body.textContent ?? "").trim().split(/\s+/).length;
+    // The grid's own cell text dominates this count; the assertion exists to
+    // catch a legend that grows back, not to police an exact length.
+    expect(words).toBeLessThan(1200);
   });
 });
 
