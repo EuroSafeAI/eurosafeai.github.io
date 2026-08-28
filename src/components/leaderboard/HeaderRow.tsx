@@ -1,9 +1,17 @@
 import { adjustedOverallScore, overallCoverage, type Column } from "@/lib/leaderboard";
 import { coverageFraction, grade, type Aggregation } from "@/lib/scoring";
-import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
+import { columnGroupStyle, memberColumnStyle, memberContentStyle } from "@/lib/column-geometry";
 import { shiftVar } from "@/lib/column-order";
 import type { ModelEntry } from "@/data/models.types";
-import { COMPANY_LOGO, HEADER_LOGO, HEADER_SCORE_HEIGHT, INK, OVERALL_NOTE } from "./constants";
+import {
+  COMPANY_LOGO,
+  HEADER_LOGO,
+  HEADER_NAME_LINES,
+  HEADER_NAME_LINE_HEIGHT,
+  HEADER_SCORE_HEIGHT,
+  INK,
+  OVERALL_NOTE,
+} from "./constants";
 import { Cell } from "./Cell";
 import { Chevron } from "./Chevron";
 
@@ -55,13 +63,13 @@ const HeaderCell = ({
       <span
         style={{
           display: "flex",
-          alignItems: "baseline",
+          alignItems: "flex-start",
           justifyContent: "center",
           gap: 3,
-          maxWidth: "100%",
+          width: "100%",
           fontSize: emphasis ? 12 : 10,
           fontWeight: emphasis ? 700 : 500,
-          lineHeight: 1.25,
+          lineHeight: HEADER_NAME_LINE_HEIGHT,
           color: emphasis ? INK : "#6b7280",
         }}
       >
@@ -69,7 +77,21 @@ const HeaderCell = ({
             names need two lines, and an ellipsis there hides which model a
             column is. The header grows to its tallest name instead, which
             degrades visibly rather than silently if a longer name arrives. */}
-        <span data-column-name style={{ minWidth: 0, textAlign: "center", overflowWrap: "break-word" }}>
+        <span
+          data-column-name
+          style={{
+            minWidth: 0,
+            textAlign: "center",
+            overflowWrap: "break-word",
+            // A fixed reservation, not a maximum: a one-line name occupies the
+            // same box as a two-line one, which is what keeps the logos above
+            // them level and the header a constant height.
+            height: `${HEADER_NAME_LINES * HEADER_NAME_LINE_HEIGHT}em`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {name}
         </span>
         {onToggle && <Chevron open={open ?? false} color="#9ca3af" />}
@@ -237,7 +259,9 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
           />
           {members.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
-              <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
+              <div data-member-content style={memberContentStyle()}>
+                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
+              </div>
             </div>
           ))}
         </div>

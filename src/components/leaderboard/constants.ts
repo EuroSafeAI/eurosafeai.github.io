@@ -33,6 +33,15 @@ export const HEADER_SCORE_HEIGHT = 40;
 export const HEADER_LOGO = 20;
 
 /**
+ * Lines reserved for a column's name. Every name gets the same height whether
+ * it uses one line or two, so the header is a constant height and the logos
+ * above the names sit on one baseline instead of floating with the text.
+ * Two lines holds every name in the roster at the model view's cell width.
+ */
+export const HEADER_NAME_LINES = 2;
+export const HEADER_NAME_LINE_HEIGHT = 1.25;
+
+/**
  * Shared easing/duration so the vertical row reveals (framer-motion) and the
  * horizontal column expansion (CSS) move on the same curve.
  *

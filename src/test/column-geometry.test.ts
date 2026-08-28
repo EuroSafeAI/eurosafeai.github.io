@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { columnGroupStyle, memberColumnStyle } from "@/lib/column-geometry";
+import { columnGroupStyle, memberColumnStyle, memberContentStyle } from "@/lib/column-geometry";
 
 describe("columnGroupStyle", () => {
   const cellWidth = 88;
@@ -115,4 +115,18 @@ describe("provider-cell invariant", () => {
       expect(providerCellWidth(true, t)).toBe(cellWidth);
     }
   );
+});
+
+describe("memberContentStyle", () => {
+  // A member column's own width animates from 0, so laying its content out at
+  // that width would re-wrap the text on every frame — and at zero width a
+  // wrapping name collapses to one character per line, growing the header row
+  // to the height of its tallest content even while nothing is expanded.
+  it("lays content out at a full cell width regardless of the column's width", () => {
+    expect(memberContentStyle().width).toBe("var(--cell-width)");
+  });
+
+  it("does not shrink with its container", () => {
+    expect(memberContentStyle().flexShrink).toBe(0);
+  });
 });

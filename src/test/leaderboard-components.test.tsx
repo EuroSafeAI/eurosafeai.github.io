@@ -438,3 +438,28 @@ describe("column header names", () => {
     expect(screen.getByText(longest.name)).toBeInTheDocument();
   });
 });
+
+describe("column header geometry", () => {
+  const names = () => [...document.querySelectorAll<HTMLElement>("[data-column-name]")];
+
+  it("reserves the same height for every name, so logos share a baseline", () => {
+    render(<Leaderboard models={MODELS} />);
+    const heights = new Set(names().map((n) => n.style.height));
+    expect(heights.size).toBe(1);
+    expect([...heights][0]).not.toBe("");
+  });
+
+  it("keeps that reservation in the model view", () => {
+    render(<Leaderboard models={MODELS} />);
+    const orgHeight = names()[0].style.height;
+    fireEvent.click(screen.getByRole("radio", { name: /^model$/i }));
+    for (const name of names()) expect(name.style.height).toBe(orgHeight);
+  });
+
+  it("gives a collapsed member column's content a fixed layout width", () => {
+    render(<Leaderboard models={MODELS} />);
+    const contents = [...document.querySelectorAll<HTMLElement>("[data-member-content]")];
+    expect(contents.length).toBeGreaterThan(0);
+    for (const content of contents) expect(content.style.width).toBe("var(--cell-width)");
+  });
+});

@@ -83,3 +83,19 @@ export function memberColumnStyle(): React.CSSProperties {
     opacity: `var(--member-open, 0)`,
   };
 }
+
+/**
+ * The content inside a member column. The column's own width animates from 0
+ * to one cell, so anything laid out at that width re-wraps on every frame of
+ * the expand — and at zero width a wrapping name collapses to one character
+ * per line, growing the header row to that height even while the provider is
+ * closed. Pinning the content to a full cell width keeps its layout fixed:
+ * the column clips it, and it slides out from behind the provider's own cell.
+ */
+export function memberContentStyle(): React.CSSProperties {
+  return {
+    width: "var(--cell-width)",
+    flexShrink: 0,
+    display: "flex",
+  };
+}
