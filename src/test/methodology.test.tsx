@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import CertificatePage from "@/pages/CertificatePage";
 import { HelmetProvider } from "react-helmet-async";
+import { Methodology } from "@/components/Methodology";
+import { COVERAGE_FLAG } from "@/components/leaderboard/constants";
 
 /**
  * Claims the page must keep making, whatever else changes about how it reads.
@@ -44,10 +46,6 @@ describe("the page's substantive claims", () => {
   });
 });
 
-import { fireEvent } from "@testing-library/react";
-import { Methodology } from "@/components/Methodology";
-import { COVERAGE_FLAG } from "@/components/leaderboard/constants";
-
 const TOPICS = [
   /how these scores are made/i,
   /reading the grid/i,
@@ -76,8 +74,14 @@ describe("Methodology", () => {
   it("opens a topic when its trigger is clicked", () => {
     render(<Methodology />);
     const trigger = screen.getByRole("button", { name: TOPICS[0] });
+
+    // "CBRN misuse" appears nowhere else in the component, so its presence
+    // is proof the collapsed prose genuinely mounted rather than having
+    // been in the document (but visually hidden) all along.
+    expect(document.body.textContent).not.toContain("CBRN misuse");
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(document.body.textContent).toContain("CBRN misuse");
   });
 
   it("scales the coverage fraction into a percentage", () => {
