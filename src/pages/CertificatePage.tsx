@@ -90,11 +90,9 @@ const CertificatePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
-            We grade frontier large language models against the four categories of systemic risk
-            named by the EU AI Act Code of Practice — CBRN misuse, offensive cyber capability, loss
-            of control, and manipulation. Every provider is graded on each risk, and every grade
-            opens up: down to the benchmarks behind it, and down to the individual LLM judges behind
-            each benchmark.
+            We grade frontier language models against the four systemic risks named in the EU AI
+            Act Code of Practice: CBRN misuse, offensive cyber, loss of control, and manipulation.
+            Every grade opens down to the benchmarks and the individual judges behind it.
           </motion.p>
           <motion.div
             style={{
@@ -119,19 +117,26 @@ const CertificatePage = () => {
             </svg>
             <span>
               <strong style={{ fontWeight: 700 }}>Preliminary data.</strong> Scores are indicative and
-              based on ongoing research. Methodology and results will be revised as evaluations are
-              peer-reviewed.
+              will be revised as evaluations are peer-reviewed.
             </span>
           </motion.div>
         </div>
       </section>
 
-      {/* Counts */}
-      <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: "1100px", padding: "0.85rem 1.5rem" }}>
-          <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)" }}>
+      {/* The Field */}
+      <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)", padding: "2.5rem 0 3rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+          <SectionEyebrow as="h2">The Field</SectionEyebrow>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
+            Every evaluated model, plotted by what it can do against how safely it does it. Colour
+            is the capability-adjusted grade at the published weight of{" "}
+            {CAPABILITY_EXPONENT.toFixed(2)} — the fixed reference the leaderboard's slider moves
+            around.
+          </p>
+          <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks
           </p>
+          <CapabilityAdjustedSection models={MODELS} />
         </div>
       </section>
 
@@ -148,17 +153,6 @@ const CertificatePage = () => {
           <div style={{ maxWidth: 760 }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
             <Methodology />
-          </div>
-
-          <div style={{ marginTop: "3rem" }}>
-            <SectionEyebrow>Safety Against Capability</SectionEyebrow>
-            <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.25rem", maxWidth: 760 }}>
-              Every evaluated model plotted by what it can do against how safely it does it, with
-              each point coloured by its capability-adjusted grade at the published weight of{" "}
-              {CAPABILITY_EXPONENT.toFixed(2)}. The leaderboard above ranks the same adjustment
-              interactively; this is the fixed reference it is measured against.
-            </p>
-            <CapabilityAdjustedSection models={MODELS} />
           </div>
         </div>
       </section>

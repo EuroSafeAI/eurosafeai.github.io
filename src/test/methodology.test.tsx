@@ -114,3 +114,26 @@ describe("Methodology", () => {
     expect(document.body.textContent).not.toContain("0.95%");
   });
 });
+
+describe("page order", () => {
+  it("puts the scatter above the grid", () => {
+    renderPage();
+    const scatter = screen.getByRole("img", { name: /capability/i });
+    const grid = screen.getByRole("grid");
+    // Node.compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING === 4.
+    expect(scatter.compareDocumentPosition(grid) & 4).toBeTruthy();
+  });
+
+  it("states the counts exactly once", () => {
+    renderPage();
+    // Match the strip itself, not the phrase "systemic risks", which also
+    // occurs in the meta description and in the methodology copy.
+    const matches = pageText().match(/\d+ models · \d+ providers · 4 systemic risks/g) ?? [];
+    expect(matches).toHaveLength(1);
+  });
+
+  it("keeps the preliminary-data warning visible without opening anything", () => {
+    renderPage();
+    expect(screen.getByText(/preliminary data/i)).toBeInTheDocument();
+  });
+});
