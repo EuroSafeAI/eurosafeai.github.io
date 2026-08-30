@@ -6,7 +6,7 @@ import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { CAPABILITY_EXPONENT } from "@/lib/risk-index";
+import { PUBLISHED_CAPABILITY_WEIGHT } from "@/lib/capability-adjusted-safety";
 import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { Methodology } from "@/components/Methodology";
@@ -130,7 +130,7 @@ const CertificatePage = () => {
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
             Every evaluated model, plotted by what it can do against how safely it does it. Colour
             is the capability-adjusted grade at the published weight of{" "}
-            {CAPABILITY_EXPONENT.toFixed(2)} — the fixed reference the leaderboard's slider moves
+            {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} — the fixed reference the leaderboard's slider moves
             around.
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>

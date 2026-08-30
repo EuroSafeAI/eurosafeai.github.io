@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CAPABILITY_REFERENCE, adjustedRanking, scatterPoint } from "@/lib/risk-index";
+import { CAPABILITY_MIDPOINT, adjustedRanking, scatterPoint } from "@/lib/capability-adjusted-safety";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -14,12 +14,20 @@ describe("scatterPoint", () => {
     expect(scatterPoint(0, 0, BOX)).toEqual({ x: 40, y: 280 });
   });
 
-  it("puts full capability and full safety at the top right", () => {
-    expect(scatterPoint(CAPABILITY_REFERENCE, 100, BOX)).toEqual({ x: 560, y: 40 });
+  it("puts a half-capable, perfectly safe model at the middle of the top edge", () => {
+    const { x, y } = scatterPoint(CAPABILITY_MIDPOINT, 100, BOX);
+    expect(x).toBeCloseTo(BOX.pad + (BOX.width - 2 * BOX.pad) / 2, 6);
+    expect(y).toBeCloseTo(BOX.pad, 6);
   });
 
-  it("clamps an index above the reference to the right edge", () => {
-    expect(scatterPoint(CAPABILITY_REFERENCE * 2, 50, BOX).x).toBe(560);
+  it("keeps every model inside the plot, however capable", () => {
+    // Capability is asymptotic, so no index reaches the right edge and the
+    // frontier can keep climbing without points piling up on the boundary.
+    const right = BOX.width - BOX.pad;
+    for (const index of [CAPABILITY_MIDPOINT * 2, 1000, 1e9]) {
+      expect(scatterPoint(index, 50, BOX).x).toBeLessThan(right);
+    }
+    expect(scatterPoint(1e9, 50, BOX).x).toBeGreaterThan(right - 1);
   });
 });
 
@@ -57,7 +65,7 @@ describe("CapabilityAdjustedSection", () => {
     expect(screen.getByText(new RegExp(`${entry.model.name}: adjusted`))).toBeInTheDocument();
   });
 
-  // The ranked bars and their alpha slider moved into the leaderboard, which
+  // The ranked bars and their capability-weight slider moved into the leaderboard, which
   // shows the same ranking against all four risks. This section is now the
   // fixed published reference the page cites, so it carries no control.
   it("carries no slider of its own", () => {

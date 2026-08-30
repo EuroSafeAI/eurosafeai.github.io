@@ -16,7 +16,7 @@ import {
 } from "@/lib/leaderboard";
 import { columnShifts } from "@/lib/column-order";
 import type { RowValues } from "./DataRow";
-import { LABEL_WIDTH, RAW_ALPHA, deriveCellWidth } from "./constants";
+import { LABEL_WIDTH, RAW_CAPABILITY_WEIGHT, deriveCellWidth } from "./constants";
 
 export interface LeaderboardState {
   columns: Column[];
@@ -33,8 +33,8 @@ export interface LeaderboardState {
   toggleProvider: (provider: string) => void;
   metric: Aggregation;
   setMetric: (metric: Aggregation) => void;
-  alpha: number;
-  setAlpha: (alpha: number) => void;
+  capabilityWeight: number;
+  setCapabilityWeight: (weight: number) => void;
   grouping: Grouping;
   setGrouping: (grouping: Grouping) => void;
   /** What a column expands into: its models by organisation, nothing by model. */
@@ -55,14 +55,14 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedBenches, setExpandedBenches] = useState<ReadonlySet<string>>(new Set());
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
   const [metric, setMetric] = useState<Aggregation>("worst");
-  const [alpha, setAlpha] = useState(RAW_ALPHA);
+  const [capabilityWeight, setCapabilityWeight] = useState(RAW_CAPABILITY_WEIGHT);
   const [grouping, setGrouping] = useState<Grouping>("org");
   const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
 
   const columns = useMemo(
-    () => buildColumns(models, metric, alpha, grouping),
-    [models, metric, alpha, grouping]
+    () => buildColumns(models, metric, capabilityWeight, grouping),
+    [models, metric, capabilityWeight, grouping]
   );
 
   // A model column is already the model, so it has nothing to expand into.
@@ -87,14 +87,14 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
       const model = new Map<string, { score?: number; alternate?: number; coverage?: Coverage }>();
       for (const column of columns) {
         provider.set(column.provider, {
-          score: adjustedProviderCellScore(column.models, row, metric, alpha),
-          alternate: adjustedProviderCellScore(column.models, row, alternateMetric, alpha),
+          score: adjustedProviderCellScore(column.models, row, metric, capabilityWeight),
+          alternate: adjustedProviderCellScore(column.models, row, alternateMetric, capabilityWeight),
           coverage: providerCoverage(column.models, row),
         });
         for (const entry of column.models) {
           model.set(entry.id, {
-            score: adjustedCellScore(entry, row, metric, alpha),
-            alternate: adjustedCellScore(entry, row, alternateMetric, alpha),
+            score: adjustedCellScore(entry, row, metric, capabilityWeight),
+            alternate: adjustedCellScore(entry, row, alternateMetric, capabilityWeight),
             coverage: modelCoverage(entry, row),
           });
         }
@@ -102,7 +102,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
       byRow.set(row.key, { provider, model });
     }
     return byRow;
-  }, [rows, columns, metric, alpha]);
+  }, [rows, columns, metric, capabilityWeight]);
 
   const labelWidth = isMobile ? 168 : LABEL_WIDTH;
   const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length);
@@ -189,8 +189,8 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     toggleProvider,
     metric,
     setMetric,
-    alpha,
-    setAlpha,
+    capabilityWeight,
+    setCapabilityWeight,
     grouping,
     setGrouping,
     membersOf,

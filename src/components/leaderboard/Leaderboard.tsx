@@ -6,7 +6,7 @@ import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
 import { MetricToggle } from "./MetricToggle";
-import { AlphaSlider } from "./AlphaSlider";
+import { CapabilityWeightSlider } from "./CapabilityWeightSlider";
 import { GroupingToggle } from "./GroupingToggle";
 import { useLeaderboard } from "./useLeaderboard";
 
@@ -27,8 +27,8 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     toggleProvider,
     metric,
     setMetric,
-    alpha,
-    setAlpha,
+    capabilityWeight,
+    setCapabilityWeight,
     grouping,
     setGrouping,
     membersOf,
@@ -48,7 +48,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
           marginBottom: "0.6rem",
         }}
       >
-        <AlphaSlider alpha={alpha} onChange={setAlpha} />
+        <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
         <GroupingToggle grouping={grouping} onChange={setGrouping} />
         <MetricToggle metric={metric} onChange={setMetric} />
       </div>
@@ -76,7 +76,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
         >
           {/* Provider header */}
           <HeaderRow
-          alpha={alpha}
+          weight={capabilityWeight}
           membersOf={membersOf}
             columns={columns}
             labelWidth={labelWidth}

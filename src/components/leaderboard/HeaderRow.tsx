@@ -25,7 +25,7 @@ const HeaderCell = ({
   name,
   subject,
   models,
-  alpha,
+  weight,
   emphasis = false,
   open,
   onToggle,
@@ -36,7 +36,7 @@ const HeaderCell = ({
   name: string;
   subject: string;
   models: ModelEntry[];
-  alpha: number;
+  weight: number;
   emphasis?: boolean;
   open?: boolean;
   onToggle?: () => void;
@@ -44,8 +44,8 @@ const HeaderCell = ({
   metric: Aggregation;
 }) => {
   const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
-  const score = adjustedOverallScore(models, metric, alpha);
-  const alternate = adjustedOverallScore(models, alternateMetric, alpha);
+  const score = adjustedOverallScore(models, metric, weight);
+  const alternate = adjustedOverallScore(models, alternateMetric, weight);
   const cov = overallCoverage(models);
   const headline = metric === "worst" ? "worst case" : "average";
   const other = metric === "worst" ? "average" : "worst case";
@@ -157,7 +157,7 @@ const HeaderCell = ({
 };
 
 export interface HeaderRowProps {
-  alpha: number;
+  weight: number;
   membersOf: (column: Column) => ModelEntry[];
   columns: Column[];
   labelWidth: number;
@@ -171,7 +171,7 @@ export interface HeaderRowProps {
 
 /** The sticky provider/model header row above the grid body. */
 export const HeaderRow: React.FC<HeaderRowProps> = ({
-  alpha,
+  weight,
   membersOf,
   columns,
   labelWidth,
@@ -254,13 +254,13 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             }
             subject={column.provider}
             models={column.models}
-            alpha={alpha}
+            weight={weight}
             metric={metric}
           />
           {members.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
               <div data-member-content style={memberContentStyle()}>
-                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
+                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} weight={weight} />
               </div>
             </div>
           ))}

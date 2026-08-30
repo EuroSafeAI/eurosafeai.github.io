@@ -2,19 +2,19 @@ import { useMemo } from "react";
 import type { ModelEntry } from "@/data/models.types";
 import { heatColor } from "@/lib/heat";
 import {
-  CAPABILITY_EXPONENT,
-  CAPABILITY_REFERENCE,
+  PUBLISHED_CAPABILITY_WEIGHT,
+  CAPABILITY_MIDPOINT,
   adjustedRanking,
   scatterPoint,
   type ScatterBox,
-} from "@/lib/risk-index";
+} from "@/lib/capability-adjusted-safety";
 
 const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
   // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
-  const ranking = useMemo(() => adjustedRanking(models, CAPABILITY_EXPONENT), [models]);
+  const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
 
   return (
     <div>
@@ -28,7 +28,7 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <text x={BOX.width - BOX.pad} y={BOX.height - BOX.pad + 26} textAnchor="end" fontSize={11} fill="#6b7280">
-          capability (Artificial Analysis index, {CAPABILITY_REFERENCE} = full)
+          capability (Artificial Analysis index, {CAPABILITY_MIDPOINT} = full)
         </text>
         <text x={BOX.pad} y={BOX.pad - 16} fontSize={11} fill="#6b7280">
           raw safety
@@ -55,18 +55,21 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
         Capability-adjusted safety conditions each model's worst-case safety score on how much the
         model can actually do, using its Artificial Analysis intelligence index:{" "}
         <strong>
-          100 − (100 − safety)^{CAPABILITY_EXPONENT} · min(100, 100·index/{CAPABILITY_REFERENCE})
-          ^{(1 - CAPABILITY_EXPONENT).toFixed(1)}
+          safety^{(1 - PUBLISHED_CAPABILITY_WEIGHT).toFixed(1)} · (100 − capability)
+          ^{PUBLISHED_CAPABILITY_WEIGHT.toFixed(1)}
         </strong>
-        . Higher is safer, on the same scale as the table below. α = {CAPABILITY_EXPONENT.toFixed(2)} is the
-        published figure; the slider below lets you explore how much the ranking depends on that
-        choice, without changing what is published. At α = 1 the number is raw safety; at α = 0 it
-        is pure capability, inverted. Two consequences are deliberate and worth stating plainly. A
+        , where capability rescales the index as 100·index/(index + {CAPABILITY_MIDPOINT}). Both
+        terms run 0–100 and both mean "higher is better": how safely the model behaved, and how
+        little reach it has. Higher is safer, on the same scale as the table below. A capability
+        weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} is the published figure; the slider
+        below lets you explore how much the ranking depends on that choice, without changing what
+        is published. At a weight of 0 the number is measured safety; at 1 it is capability alone.
+        Two consequences are deliberate and worth stating plainly. A
         more capable model can rank below a weaker one at equal safety, because the same failure
         reaches further. And a low-capability model's high score is a statement about reach, not
         about conduct — it describes how much harm the model could do, not how well it behaved,
         which is why every score here is shown beside the raw safety and capability figures that
-        produced it, at every value of α.
+        produced it, at every weight.
       </p>
     </div>
   );

@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { COVERAGE_FLAG, INK } from "@/components/leaderboard/constants";
-import { CAPABILITY_EXPONENT } from "@/lib/risk-index";
+import { PUBLISHED_CAPABILITY_WEIGHT } from "@/lib/capability-adjusted-safety";
 
 const bodyStyle: React.CSSProperties = {
   color: "#6b7280",
@@ -107,10 +107,10 @@ export const Methodology: React.FC = () => (
             Analysis intelligence index.
           </p>
           <p>
-            At 1.00 — where the table loads — no adjustment is applied and the grid shows the
-            measured evaluation results. Moving the slider down discounts each model's shortfall
-            from perfect safety by its capability, so a weak unsafe model rises above a capable
-            one with the same measured score, and the columns re-rank.
+            At 0.00 — where the table loads — capability carries no weight and the grid shows the
+            measured evaluation results. Raising it gives capability more of the say, so a weak
+            unsafe model rises above a capable one with the same measured score, and the columns
+            re-rank. At 1.00 the measured score drops out entirely and only reach remains.
           </p>
           <p>
             Within a column the four risks keep their order: the same adjustment applies to every
@@ -118,7 +118,7 @@ export const Methodology: React.FC = () => (
             knows hazardous material rather than whether it declines to act on it, so discounting
             them by capability would count the same thing twice.
           </p>
-          <p>The scatter above uses the published weight of {CAPABILITY_EXPONENT.toFixed(2)}.</p>
+          <p>The scatter above uses the published weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}.</p>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
