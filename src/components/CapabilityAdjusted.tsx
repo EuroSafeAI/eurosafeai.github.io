@@ -22,7 +22,7 @@ const REGION_COLOUR: Record<string, string> = {
   EU: "#f59e0b",
 };
 const REGION_FALLBACK = "#6b7280";
-const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
+const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
   // Plotted at the published exponent: the leaderboard below carries the
@@ -35,8 +35,12 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
   );
 
   return (
-    <div>
-
+    // Two columns so the plot can use the leaderboard's full width and the
+    // explanation sits beside it rather than pushing the grid down the page.
+    // flexWrap with a basis rather than a JS breakpoint: the columns stack on
+    // their own once there is no room for both.
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "flex-start" }}>
+      <div style={{ flex: "1 1 560px", minWidth: 0 }}>
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
@@ -80,15 +84,17 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
           </span>
         ))}
       </div>
+      </div>
 
-      <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760, marginTop: "1.5rem" }}>
+      <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 520 }}>
+      <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginTop: 0 }}>
         A safety score measures how often a model refuses a harmful request. It does not measure
         what happens when it complies. A model that rarely refuses but cannot produce anything
         usable is a nuisance; one that almost always refuses, then writes working attack code on
         the exception, is a systemic risk. The EU AI Act draws the same line, presuming systemic
         risk from high-impact capabilities rather than from behaviour alone.
       </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
         So capability has to be measured and combined in, not inferred from how a model behaves.
         This score does that, weighing how safely a model acted against how little it can reach:
       </p>
@@ -104,23 +110,24 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
         safety<sup>{(1 - PUBLISHED_CAPABILITY_WEIGHT).toFixed(2)}</sup> ×  (100 −
         capability)<sup>{PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}</sup>
       </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
         Capability rescales the Artificial Analysis intelligence index onto 0 to 100, as
         100·index / (index + {CAPABILITY_MIDPOINT}). Both terms mean higher is better, so the
         result does too, on the same scale as the table below.
       </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
         {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} is the published weight. The slider below the
         table changes it without changing what is published: at 0 the score is measured safety
         alone, at 1 it is capability alone.
       </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760 }}>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
         Two consequences are deliberate. A more capable model can rank below a weaker one at
         equal safety, because the same failure reaches further. And a low-capability model's high
         score is a statement about reach, not about conduct: how much harm it could do, not how
         well it behaved. Every score appears beside the raw safety and capability figures behind
         it.
       </p>
+      </div>
     </div>
   );
 };

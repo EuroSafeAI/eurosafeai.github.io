@@ -124,7 +124,7 @@ const CertificatePage = () => {
 
       {/* The Field */}
       <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)", padding: "2.5rem 0 3rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
             Each dot is one model, placed by its Artificial Analysis intelligence index (left to

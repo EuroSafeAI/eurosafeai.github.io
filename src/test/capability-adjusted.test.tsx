@@ -78,3 +78,26 @@ describe("CapabilityAdjustedSection", () => {
     expect(screen.queryByText(/α sensitivity/i)).not.toBeInTheDocument();
   });
 });
+
+describe("scatter layout", () => {
+  it("puts the plot and its explanation side by side, not stacked", () => {
+    // Stacked, the prose pushed the leaderboard roughly a screen further down
+    // while the right of the page sat empty. jsdom has no layout engine, so
+    // this pins the contract rather than the rendered result.
+    const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
+    const row = container.firstElementChild as HTMLElement;
+    expect(row.style.display).toBe("flex");
+    expect(row.style.flexWrap).toBe("wrap");
+
+    const columns = [...row.children] as HTMLElement[];
+    expect(columns).toHaveLength(2);
+    expect(columns[0].querySelector("svg")).not.toBeNull();
+    expect(columns[1].textContent).toContain("does not measure what happens when it complies");
+  });
+
+  it("lets the columns stack on their own rather than at a scripted breakpoint", () => {
+    const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
+    const columns = [...(container.firstElementChild as HTMLElement).children] as HTMLElement[];
+    for (const column of columns) expect(column.style.flex).toMatch(/^1 1 \d+px$/);
+  });
+});
