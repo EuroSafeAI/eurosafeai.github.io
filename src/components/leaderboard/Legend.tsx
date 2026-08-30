@@ -34,8 +34,12 @@ export const Legend: React.FC = () => (
       F− to A+ — so a colour means the same thing at every level of the table. Each cell shows
       the selected metric; the other is in its tooltip. Greyed rows are{" "}
       <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and excluded from
-      the aggregates above them. A bar under a cell flags{" "}
-      <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>.
+      the aggregates above them. The refusal floor row restates its benchmark's score with every
+      unscored sample counted as safe, an optimistic bound against the headline's pessimistic
+      one. A bar under a cell flags{" "}
+      <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
+      excluded rather than counted as safe, so a flagged grade rests on fewer — and typically
+      less confronting — prompts than an unflagged one.
     </p>
   </div>
 );
