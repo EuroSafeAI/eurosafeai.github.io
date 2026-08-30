@@ -22,7 +22,7 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
-        aria-label="Raw safety against capability, one point per model"
+        aria-label="Raw safety against capability, coloured by capability-adjusted grade, one point per model"
         style={{ width: "100%", maxWidth: BOX.width, height: "auto" }}
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
