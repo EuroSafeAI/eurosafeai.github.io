@@ -12,7 +12,7 @@ import {
 const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
-  // Plotted at the published exponent: the leaderboard above carries the
+  // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, CAPABILITY_EXPONENT), [models]);
 
@@ -58,8 +58,8 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
           100 − (100 − safety)^{CAPABILITY_EXPONENT} · min(100, 100·index/{CAPABILITY_REFERENCE})
           ^{(1 - CAPABILITY_EXPONENT).toFixed(1)}
         </strong>
-        . Higher is safer, on the same scale as the table above. α = {CAPABILITY_EXPONENT} is the
-        published figure; the slider above lets you explore how much the ranking depends on that
+        . Higher is safer, on the same scale as the table below. α = {CAPABILITY_EXPONENT} is the
+        published figure; the slider below lets you explore how much the ranking depends on that
         choice, without changing what is published. At α = 1 the number is raw safety; at α = 0 it
         is pure capability, inverted. Two consequences are deliberate and worth stating plainly. A
         more capable model can rank below a weaker one at equal safety, because the same failure
