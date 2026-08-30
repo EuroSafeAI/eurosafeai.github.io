@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
+  adjustedCellScore,
+  adjustedProviderCellScore,
+  BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
   RISK_DESCRIPTIONS,
   RISK_LABELS,
@@ -15,11 +18,14 @@ import {
   overallScore,
   providerCoverage,
   providerScore,
+  rowLabel,
   scorerLabel,
   type Row,
 } from "@/lib/leaderboard";
-import { coverageFraction } from "@/lib/scoring";
+import { coverageFraction, mean } from "@/lib/scoring";
+import { adjustedSafety } from "@/lib/risk-index";
 import { RISKS, type BenchmarkResult, type ModelEntry, type Risk } from "@/data/models.types";
+import modelsData from "@/data/models.json";
 
 /**
  * Minimal ModelEntry with one risk populated. Everything the leaderboard reads
@@ -48,6 +54,8 @@ function model(
     status: Object.fromEntries(
       RISKS.map((r) => [r, { status: "success" as const, completed_samples: 1, total_samples: 1 }])
     ) as ModelEntry["status"],
+    aa_intelligence_index: 50,
+    aa_model_match: `${id} (AA match)`,
   };
 }
 
@@ -90,6 +98,39 @@ describe("buildColumns", () => {
       model("o1", "OpenAI", {}, 75),
     ]);
     expect(columns.map((c) => c.provider)).toEqual(["OpenAI", "Anthropic"]);
+  });
+});
+
+describe("buildColumns ordering", () => {
+  const MODELS = modelsData as unknown as ModelEntry[];
+  const orderOf = (how: "worst" | "mean") => buildColumns(MODELS, how).map((c) => c.provider);
+
+  it("sorts providers descending by the requested metric", () => {
+    for (const how of ["worst", "mean"] as const) {
+      const columns = buildColumns(MODELS, how);
+      // Matches providerAggregate: missing scores drop out of the mean's
+      // denominator rather than counting as 0, so a provider with an
+      // unscored model isn't penalised for it.
+      const scores = columns.map(
+        (c) => mean(c.models.map((m) => m.aggregate[how] ?? undefined)) ?? -1
+      );
+      expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+    }
+  });
+
+  it("sorts models within a provider by the same metric", () => {
+    for (const column of buildColumns(MODELS, "mean")) {
+      const scores = column.models.map((m) => m.aggregate.mean ?? 0);
+      expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+    }
+  });
+
+  it("produces a different order for the two metrics", () => {
+    expect(orderOf("worst")).not.toEqual(orderOf("mean"));
+  });
+
+  it("defaults to worst case", () => {
+    expect(buildColumns(MODELS).map((c) => c.provider)).toEqual(orderOf("worst"));
   });
 });
 
@@ -522,5 +563,180 @@ describe("label coverage", () => {
 
   it("exports benchmark labels as a non-empty table", () => {
     expect(Object.keys(BENCHMARK_LABELS).length).toBeGreaterThan(0);
+  });
+});
+
+describe("BENCHMARK_DESCRIPTIONS", () => {
+  it("covers exactly the benchmarks that have labels", () => {
+    expect(Object.keys(BENCHMARK_DESCRIPTIONS).sort()).toEqual(Object.keys(BENCHMARK_LABELS).sort());
+  });
+
+  it("never restates the label", () => {
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(text.trim().length).toBeGreaterThan(20);
+      expect(text.trim()).not.toBe(BENCHMARK_LABELS[key]);
+    }
+  });
+
+  it("gives every benchmark a distinct description", () => {
+    const values = Object.values(BENCHMARK_DESCRIPTIONS);
+    expect(new Set(values).size).toBe(Object.keys(BENCHMARK_DESCRIPTIONS).length);
+  });
+});
+
+describe("rowLabel", () => {
+  it("names a risk row", () => {
+    expect(rowLabel({ key: "cbrn", level: "risk", risk: "cbrn" })).toBe(RISK_LABELS.cbrn);
+  });
+
+  it("names a benchmark row", () => {
+    expect(
+      rowLabel({ key: "k", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: false })
+    ).toBe(BENCHMARK_LABELS.wmdp);
+  });
+
+  it("falls back to the bare id for an unlabelled benchmark", () => {
+    expect(
+      rowLabel({ key: "k", level: "bench", risk: "cbrn", bench: "some_future_bench", diagnostic: false })
+    ).toBe("some_future_bench");
+  });
+
+  it("names a judge row, renaming the refusal floor", () => {
+    expect(
+      rowLabel({
+        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
+        scorer: JUDGE, floor: false, diagnostic: false,
+      })
+    ).toBe("Claude Sonnet 4.5");
+    expect(
+      rowLabel({
+        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
+        scorer: "refusal_regex", floor: true, diagnostic: false,
+      })
+    ).toBe("Refusal floor");
+  });
+});
+
+describe("buildColumns ordering with a missing aggregate", () => {
+  it("drops a model's missing aggregate from its provider's mean, rather than treating it as 0", () => {
+    // OpenAI's mean is (80 + 60) / 2 = 70 if the null is excluded, but
+    // (80 + 60 + 0) / 3 ≈ 46.7 if it counted as 0 — enough to flip the order.
+    const columns = buildColumns([
+      model("o1", "OpenAI", {}, 80),
+      model("o2", "OpenAI", {}, 60),
+      model("o3", "OpenAI", {}, null),
+      model("a1", "Anthropic", {}, 65),
+    ]);
+    expect(columns.map((c) => c.provider)).toEqual(["OpenAI", "Anthropic"]);
+  });
+});
+
+describe("capability-adjusted cell scores", () => {
+  const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
+  const diagRow: Row = { key: "cbrn/wmdp", level: "bench", risk: "cbrn", bench: "wmdp", diagnostic: true };
+  const benchRow: Row = { key: "cbrn/sosbench", level: "bench", risk: "cbrn", bench: "sosbench", diagnostic: false };
+
+  const withIndex = (m: ModelEntry, index: number): ModelEntry => ({
+    ...m,
+    aa_intelligence_index: index,
+  });
+
+  it("returns the measured score for every roster cell at alpha = 1", () => {
+    const models = modelsData as unknown as ModelEntry[];
+    for (const risk of RISKS) {
+      const row: Row = { key: risk, level: "risk", risk };
+      for (const m of models) {
+        for (const how of ["worst", "mean"] as const) {
+          expect(adjustedCellScore(m, row, how, 1)).toBe(modelScore(m, row, how));
+        }
+      }
+    }
+  });
+
+  it("discounts a weak model's unsafety more than a capable model's", () => {
+    const weak = withIndex(model("weak", "A", { sosbench: benchmark(40, {}) }), 10);
+    const capable = withIndex(model("capable", "B", { sosbench: benchmark(40, {}) }), 55);
+    const weakAdjusted = adjustedCellScore(weak, benchRow, "worst", 0.5)!;
+    const capableAdjusted = adjustedCellScore(capable, benchRow, "worst", 0.5)!;
+    expect(weakAdjusted).toBeGreaterThan(capableAdjusted);
+    expect(weakAdjusted).toBeGreaterThan(40);
+  });
+
+  it("leaves diagnostic rows raw at every alpha", () => {
+    const m = withIndex(model("d", "A", { wmdp: benchmark(40, {}, true) }), 10);
+    for (const alpha of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(adjustedCellScore(m, diagRow, "worst", alpha)).toBe(modelScore(m, diagRow, "worst"));
+    }
+  });
+
+  it("adjusts each model by its own index before pooling, not after", () => {
+    // Same safety, very different capability. Pooling first would apply one
+    // averaged index to both and land on a different number entirely.
+    const a = withIndex(model("a", "P", { sosbench: benchmark(40, {}) }), 10);
+    const b = withIndex(model("b", "P", { sosbench: benchmark(40, {}) }), 55);
+    const pooled = adjustedProviderCellScore([a, b], benchRow, "worst", 0.5)!;
+    const adjustThenPool = mean([
+      adjustedCellScore(a, benchRow, "worst", 0.5),
+      adjustedCellScore(b, benchRow, "worst", 0.5),
+    ])!;
+    const poolThenAdjust = adjustedSafety(40, (10 + 55) / 2, 0.5);
+    expect(pooled).toBeCloseTo(adjustThenPool, 10);
+    expect(pooled).not.toBeCloseTo(poolThenAdjust, 3);
+  });
+
+  it("keeps risk rows adjustable while their diagnostic children stay raw", () => {
+    const m = withIndex(model("m", "A", { sosbench: benchmark(40, {}) }), 10);
+    expect(adjustedCellScore(m, riskRow, "worst", 0.5)).not.toBe(modelScore(m, riskRow, "worst"));
+  });
+});
+
+describe("buildColumns under capability adjustment", () => {
+  it("orders identically to the raw table at alpha = 1", () => {
+    const models = modelsData as unknown as ModelEntry[];
+    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(
+      buildColumns(models, "worst").map((c) => c.provider)
+    );
+  });
+
+  it("promotes a weak-but-safe provider as alpha falls", () => {
+    const strongUnsafe = { ...model("s", "Frontier", {}, 40), aa_intelligence_index: 55 };
+    const weakUnsafe = { ...model("w", "Small", {}, 38), aa_intelligence_index: 8 };
+    const models = [strongUnsafe, weakUnsafe];
+    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(["Frontier", "Small"]);
+    expect(buildColumns(models, "worst", 0.5).map((c) => c.provider)).toEqual(["Small", "Frontier"]);
+  });
+});
+
+describe("buildColumns grouping", () => {
+  const roster = modelsData as unknown as ModelEntry[];
+
+  it("groups by organisation by default, unchanged from before the toggle", () => {
+    expect(buildColumns(roster, "worst", 1, "org")).toEqual(buildColumns(roster, "worst", 1));
+  });
+
+  it("emits one column per model when grouping by model", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    expect(columns).toHaveLength(roster.length);
+    for (const column of columns) expect(column.models).toHaveLength(1);
+    expect(new Set(columns.map((c) => c.provider)).size).toBe(roster.length);
+  });
+
+  it("ranks model columns by adjusted score, so the capability slider re-ranks them", () => {
+    const raw = buildColumns(roster, "worst", 1, "model").map((c) => c.provider);
+    const adjusted = buildColumns(roster, "worst", 0.4, "model").map((c) => c.provider);
+    expect(new Set(adjusted)).toEqual(new Set(raw));
+    expect(adjusted).not.toEqual(raw);
+  });
+
+  it("orders model columns by descending score at alpha = 1", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    const scores = columns.map((c) => c.models[0].aggregate.worst ?? -1);
+    expect([...scores].sort((a, b) => b - a)).toEqual(scores);
+  });
+
+  it("names a model column for the model, not its company", () => {
+    const columns = buildColumns(roster, "worst", 1, "model");
+    const names = new Set(columns.map((c) => c.provider));
+    for (const m of roster) expect(names.has(m.name)).toBe(true);
   });
 });

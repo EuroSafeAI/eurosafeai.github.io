@@ -8,6 +8,7 @@
  */
 
 import { RISKS, type ModelEntry, type Risk } from "@/data/models.types";
+import { adjustedSafety } from "@/lib/risk-index";
 import {
   coverageForBenchmark,
   coverageForRisk,
@@ -83,6 +84,60 @@ export const BENCHMARK_LABELS: Record<string, string> = {
   sycophancy_mimicry: "Sycophancy (Mimicry)",
 };
 
+/**
+ * What the model was asked to do, and what counts as failing — in the words a
+ * reader who has never met the benchmark needs. Derived from the pipeline's
+ * source definitions (datasets/prepare/cluster/sources/*.py); the citation on
+ * each line is where the claim comes from and is why these can be checked
+ * rather than taken on trust.
+ */
+export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
+  // cbrn.py
+  harmbench:
+    "Direct requests to carry out chemical or biological harm; only that category enters this risk. Failing means carrying the request out.",
+  sosbench:
+    "Requests for operationally useful CBRN help. Failing means content that materially increases the requester's capability, including in visible reasoning.",
+  wmdp:
+    "Multiple-choice questions on weaponisation knowledge: whether the model knows hazardous material, not whether it declines to act on it.",
+  // cyber.py
+  cysecbench:
+    "Requests for offensive cyber capability, rated from refusal to a fully working answer, so a vague reply is not scored as a usable exploit.",
+  cyberseceval_mitre:
+    "Requests mapped to MITRE ATT&CK techniques; failing means assisting the technique.",
+  agentharm:
+    "Cybercrime and fraud tasks. No tools are granted, so what is measured is whether the model takes the job on, not whether it completes it.",
+  cyber_false_refusal:
+    "Benign security questions. Failing means refusing legitimate work — the opposite error to the rest of this risk.",
+  injecagent:
+    "A poisoned tool response planted in the agent's scratchpad. Failing means acting on the injected instruction instead of the user's.",
+  // loss_of_control.py
+  advanced_ai_risk:
+    "Forced-choice questions asking directly whether the model wants power, resources, survival, or to coordinate with other AIs against its principals.",
+  // manipulation.py
+  social_harm:
+    "Requests for harmful social or political content. Failing means producing it rather than declining or redirecting.",
+  historical_revisionism:
+    "Prompts inviting the model to distort documented history; judged as a binary truth call.",
+  human_rights_udhr:
+    "Prompts arguing to limit a right named in the Universal Declaration, scored on how far the response endorses the limitation.",
+  human_rights_echr:
+    "The same, for rights named in the European Convention on Human Rights.",
+  human_rights_persona_gap:
+    "Not a benchmark: the difference between how the model answers the same human-rights prompts under two personas. A gap means the answer depends on who is asking.",
+  authoritarian_values:
+    "Authoritarian-personality (F-scale) statements; agreeing indicates authoritarian preference and scores low.",
+  leader_favorability:
+    "Approval questions about political leaders, probing whether the model's appraisal shifts with who is being appraised.",
+  role_model_bias:
+    "Asks the model to name role models, measuring the political share of who it puts forward.",
+  darkbench:
+    "Conversational dark patterns — brand bias, sycophancy, user retention — phrased as DarkBench's own questions about the chatbot.",
+  persusafety:
+    "The model is assigned a persuader role for an unethical task under success pressure and asked to commit; accepting is the failure.",
+  sycophancy_mimicry:
+    "A quote attributed to the wrong author. Failing means going along with the misattribution rather than correcting it.",
+};
+
 const JUDGE_LABELS: Record<string, string> = {
   "openrouter/anthropic/claude-sonnet-4.5": "Claude Sonnet 4.5",
   "openrouter/openai/gpt-5.6-luna": "GPT-5.6 Luna",
@@ -131,6 +186,13 @@ export function judgeRowLabel(row: Extract<Row, { level: "judge" }>): string {
   return row.floor ? "Refusal floor" : scorerLabel(row.scorer);
 }
 
+/** The display text for a row's own level — risk, benchmark, or judge/scorer. */
+export function rowLabel(row: Row): string {
+  if (row.level === "risk") return RISK_LABELS[row.risk];
+  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
+  return judgeRowLabel(row);
+}
+
 export function judgeRowKind(row: Extract<Row, { level: "judge" }>): string {
   if (row.floor) return "unscored counted safe";
   return isLlmJudge(row.scorer) ? "LLM judge" : "deterministic scorer";
@@ -145,20 +207,104 @@ export function scorerLabel(scorer: string): string {
   );
 }
 
-export function buildColumns(models: ModelEntry[]): Column[] {
-  const byProvider = new Map<string, ModelEntry[]>();
-  for (const model of models) {
-    const group = byProvider.get(model.company);
-    if (group) group.push(model);
-    else byProvider.set(model.company, [model]);
-  }
-  return [...byProvider.entries()]
-    .map(([provider, group]) => ({ provider, models: group }))
-    .sort((a, b) => providerAggregate(b) - providerAggregate(a));
+/**
+ * True when a row's numbers are not safety grades. Diagnostics measure
+ * capability *absence* — a model scores well by not knowing the material — so
+ * discounting them by capability would count the same quantity twice.
+ */
+export function isDiagnosticRow(row: Row): boolean {
+  return (row.level === "bench" || row.level === "judge") && row.diagnostic;
 }
 
-function providerAggregate(column: Column): number {
-  return mean(column.models.map((m) => m.aggregate.worst ?? undefined)) ?? -1;
+/** One model's cell, discounted by how much that model can actually do. */
+export function adjustedCellScore(
+  model: ModelEntry,
+  row: Row,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  const score = modelScore(model, row, how);
+  if (score === undefined || isDiagnosticRow(row)) return score;
+  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+}
+
+/**
+ * A pooled provider cell. Each model is adjusted by its own index before the
+ * mean is taken: pooling first would apply one averaged capability to models
+ * that do not share it.
+ */
+export function adjustedProviderCellScore(
+  models: ModelEntry[],
+  row: Row,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  return mean(models.map((m) => adjustedCellScore(m, row, how, alpha)));
+}
+
+/**
+ * A column heading's Overall score under capability adjustment. Adjusts each
+ * model's own overall before pooling, matching how the cells beneath it are
+ * built — pooling first would apply one averaged capability to models that do
+ * not share it.
+ */
+export function adjustedOverallScore(
+  models: ModelEntry[],
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  return mean(
+    models.map((m) => {
+      const score = scoreOverall(m, how);
+      return score === undefined ? undefined : adjustedSafety(score, m.aa_intelligence_index, alpha);
+    })
+  );
+}
+
+/**
+ * Whether a column is one organisation (expandable into its models) or one
+ * model standing alone.
+ */
+export type Grouping = "org" | "model";
+
+export function buildColumns(
+  models: ModelEntry[],
+  how: Aggregation = "worst",
+  alpha: number = 1,
+  grouping: Grouping = "org"
+): Column[] {
+  const byProvider = new Map<string, ModelEntry[]>();
+  for (const model of models) {
+    // Grouping by model gives every entry its own key, so the rest of this
+    // function ranks single-model columns by exactly the rule it uses for
+    // organisations — nothing downstream needs to know which mode it is in.
+    const key = grouping === "model" ? model.name : model.company;
+    const group = byProvider.get(key);
+    if (group) group.push(model);
+    else byProvider.set(key, [model]);
+  }
+  return [...byProvider.entries()]
+    .map(([provider, group]) => ({
+      provider,
+      models: [...group].sort(
+        (a, b) => (adjustedAggregate(b, how, alpha) ?? -1) - (adjustedAggregate(a, how, alpha) ?? -1)
+      ),
+    }))
+    .sort((a, b) => providerAggregate(b, how, alpha) - providerAggregate(a, how, alpha));
+}
+
+function adjustedAggregate(
+  model: ModelEntry,
+  how: Aggregation,
+  alpha: number
+): number | undefined {
+  const score = model.aggregate[how] ?? undefined;
+  if (score === undefined) return undefined;
+  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+}
+
+function providerAggregate(column: Column, how: Aggregation, alpha: number): number {
+  return mean(column.models.map((m) => adjustedAggregate(m, how, alpha))) ?? -1;
 }
 
 /**

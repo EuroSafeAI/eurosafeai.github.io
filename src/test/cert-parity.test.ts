@@ -175,3 +175,56 @@ describe("models.json — label coverage", () => {
     }
   });
 });
+
+/**
+ * The published roster and the retired judges are pruned site-side after each
+ * verbatim refresh from the pipeline, so nothing upstream enforces them. This
+ * block is what makes the next refresh fail loudly instead of silently
+ * republishing what we removed.
+ */
+const PUBLISHED_IDS = [
+  "claude-sonnet-5",
+  "claude-haiku-4.5",
+  "gpt-5.6-luna-pro",
+  "gemma-4-31b-it",
+  "gemini-3.6-flash",
+  "llama-3.1-8b-instruct",
+  "glm-5.2",
+  "glm-5",
+  "qwen3.7-flash",
+  "grok-4.5",
+  "grok-4.3",
+  "deepseek-v4-flash",
+  "deepseek-v4-pro",
+  "mistral-medium-3-5",
+  "mistral-small-2603",
+  "gpt-oss-120b",
+];
+
+const RETIRED_SCORERS = [
+  "openrouter/openai/gpt-5-mini",
+  "openrouter/google/gemini-3-flash-preview",
+];
+
+describe("models.json — the site-side prune", () => {
+  it("publishes exactly the expected roster", () => {
+    expect([...MODELS.map((m) => m.id)].sort()).toEqual([...PUBLISHED_IDS].sort());
+  });
+
+  it("carries no retired scorer keys", () => {
+    const serialised = JSON.stringify(modelsData);
+    for (const scorer of RETIRED_SCORERS) {
+      expect(serialised.includes(`"${scorer}"`), `${scorer} is back`).toBe(false);
+    }
+  });
+
+  it("gives every model an Artificial Analysis intelligence index and match", () => {
+    for (const m of MODELS) {
+      expect(m.aa_intelligence_index, `${m.id}.aa_intelligence_index`).toBeTypeOf("number");
+      expect(m.aa_intelligence_index, `${m.id}.aa_intelligence_index`).toBeGreaterThan(0);
+      expect(m.aa_intelligence_index, `${m.id}.aa_intelligence_index`).toBeLessThanOrEqual(100);
+      expect(m.aa_model_match, `${m.id}.aa_model_match`).toBeTypeOf("string");
+      expect(m.aa_model_match.length, `${m.id}.aa_model_match`).toBeGreaterThan(0);
+    }
+  });
+});

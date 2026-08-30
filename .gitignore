@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+docs/
 
 node_modules
 dist
@@ -35,7 +36,7 @@ src/data/events.json
 # Claude Code session artifacts
 .claude/
 next-env.d.ts
-tsconfig.tsbuildinfo
+*.tsbuildinfo
 .next/
 
 # Local env / secrets

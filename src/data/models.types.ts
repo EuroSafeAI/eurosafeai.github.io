@@ -88,4 +88,8 @@ export interface ModelEntry {
   aggregate: Aggregate;
   results: Record<Risk, RiskResult>;
   status: Record<Risk, RiskStatus>;
+  /** Artificial Analysis intelligence index, matched upstream by the certificate pipeline's scripts/match_aa_index.py. */
+  aa_intelligence_index: number;
+  /** The AA variant this model was matched to, e.g. "Gemini 3.6 Flash (high)". */
+  aa_model_match: string;
 }

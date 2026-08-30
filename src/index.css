@@ -1,5 +1,18 @@
 @import 'tailwindcss';
 
+/*
+ * Lets the certificate leaderboard's column expansion animate as a single
+ * inherited number instead of per-element flex-grow/flex-basis. Without this
+ * registration a custom property animates as a discrete string (it jumps);
+ * browsers that don't support @property (older Safari/Firefox) fall back to
+ * that jump with correct end-state geometry, which is an acceptable degrade.
+ */
+@property --member-open {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(.dark *));
@@ -232,4 +245,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .mission-bar, .mission-threshold, .mission-north-rays { animation: none !important; }
+}
+
+/* Leaderboard metric toggle: a visible ring for keyboard focus, absent on a
+   mouse/touch click, since the roving-tabindex radios have no border to
+   otherwise show which option currently has focus. */
+.leaderboard-metric-toggle-option:focus-visible {
+  outline: 2px solid #003399;
 }
