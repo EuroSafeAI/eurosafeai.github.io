@@ -1,21 +1,38 @@
 import { useMemo } from "react";
 import type { ModelEntry } from "@/data/models.types";
-import { heatColor } from "@/lib/heat";
 import {
   PUBLISHED_CAPABILITY_WEIGHT,
   CAPABILITY_MIDPOINT,
   adjustedRanking,
+  indexDomain,
   scatterPoint,
   type ScatterBox,
 } from "@/lib/capability-adjusted-safety";
 
 const INK = "#0a1f4d";
+
+/**
+ * Where a model was built. An independent dimension: unlike the adjusted
+ * grade, it cannot be read off the two axes, so it is worth the plot's only
+ * spare visual channel.
+ */
+const REGION_COLOUR: Record<string, string> = {
+  US: "#2563eb",
+  China: "#dc2626",
+  EU: "#f59e0b",
+};
+const REGION_FALLBACK = "#6b7280";
 const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
   // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
+  const domain = useMemo(() => indexDomain(models), [models]);
+  const regions = useMemo(
+    () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
+    [models]
+  );
 
   return (
     <div>
@@ -23,25 +40,26 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
-        aria-label="Raw safety against capability, coloured by capability-adjusted grade, one point per model"
+        aria-label="Raw safety against the Artificial Analysis intelligence index, one point per model, coloured by region"
         style={{ width: "100%", maxWidth: BOX.width, height: "auto" }}
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <text x={BOX.width - BOX.pad} y={BOX.height - BOX.pad + 26} textAnchor="end" fontSize={11} fill="#6b7280">
-          capability (Artificial Analysis index, {CAPABILITY_MIDPOINT} = full)
+          Artificial Analysis intelligence index ({domain.min.toFixed(0)} to{" "}
+          {domain.max.toFixed(0)})
         </text>
         <text x={BOX.pad} y={BOX.pad - 16} fontSize={11} fill="#6b7280">
           raw safety
         </text>
         {ranking.map((entry) => {
-          const { x, y } = scatterPoint(entry.index, entry.safety, BOX);
-          const heat = heatColor(entry.adjusted);
+          const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
+          const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
           return (
             <g key={entry.model.id}>
-              <circle cx={x} cy={y} r={6} fill={heat.background} stroke="#ffffff" strokeWidth={1.5}>
+              <circle cx={x} cy={y} r={6} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
                 <title>
-                  {`${entry.model.name}: adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, capability ${entry.index.toFixed(1)}`}
+                  {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                 </title>
               </circle>
               <text x={x + 9} y={y + 4} fontSize={9.5} fill="#6b7280">
@@ -51,6 +69,17 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
           );
         })}
       </svg>
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
+        {regions.map((region) => (
+          <span key={region} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
+            <span
+              aria-hidden
+              style={{ width: 9, height: 9, borderRadius: "50%", background: REGION_COLOUR[region] }}
+            />
+            {region}
+          </span>
+        ))}
+      </div>
 
       <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760, marginTop: "1.5rem" }}>
         A model that cannot do much cannot do much harm. This score combines how safely a model

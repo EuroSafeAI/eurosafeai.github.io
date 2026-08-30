@@ -4,6 +4,8 @@ import {
   PUBLISHED_CAPABILITY_WEIGHT,
   adjustedSafety,
   capabilityScore,
+  indexDomain,
+  scatterPoint,
 } from "@/lib/capability-adjusted-safety";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -85,5 +87,55 @@ describe("adjustedSafety", () => {
   it("moves monotonically as the weight rises", () => {
     const series = [0, 0.2, 0.4, 0.6, 0.8, 1].map((w) => adjustedSafety(40, 8, w));
     expect([...series].sort((a, b) => a - b)).toEqual(series);
+  });
+});
+
+describe("indexDomain", () => {
+  it("brackets every model in the roster", () => {
+    const { min, max } = indexDomain(MODELS);
+    for (const m of MODELS) {
+      expect(m.aa_intelligence_index).toBeGreaterThanOrEqual(min);
+      expect(m.aa_intelligence_index).toBeLessThanOrEqual(max);
+    }
+  });
+
+  it("leaves margin so no model sits exactly on an axis edge", () => {
+    const { min, max } = indexDomain(MODELS);
+    const indices = MODELS.map((m) => m.aa_intelligence_index);
+    expect(min).toBeLessThan(Math.min(...indices));
+    expect(max).toBeGreaterThan(Math.max(...indices));
+  });
+
+  it("never inverts, even for a single model", () => {
+    const { min, max } = indexDomain([MODELS[0]]);
+    expect(max).toBeGreaterThan(min);
+  });
+});
+
+describe("scatterPoint", () => {
+  const BOX = { width: 640, height: 340, pad: 44 };
+  const DOMAIN = { min: 0, max: 60 };
+
+  it("puts the domain's lower bound at the left edge and its upper at the right", () => {
+    expect(scatterPoint(0, 50, BOX, DOMAIN).x).toBeCloseTo(BOX.pad, 6);
+    expect(scatterPoint(60, 50, BOX, DOMAIN).x).toBeCloseTo(BOX.width - BOX.pad, 6);
+  });
+
+  it("plots the raw index linearly, not the rescaled capability", () => {
+    // Half the domain must land at half the width. The capability rescale is
+    // concave, so it would landleft of centre and the axis would misreport it.
+    expect(scatterPoint(30, 50, BOX, DOMAIN).x).toBeCloseTo(BOX.pad + (BOX.width - 2 * BOX.pad) / 2, 6);
+  });
+
+  it("puts full safety at the top and zero safety at the bottom", () => {
+    expect(scatterPoint(30, 100, BOX, DOMAIN).y).toBeCloseTo(BOX.pad, 6);
+    expect(scatterPoint(30, 0, BOX, DOMAIN).y).toBeCloseTo(BOX.height - BOX.pad, 6);
+  });
+
+  it("spreads the real roster across most of the plot", () => {
+    const domain = indexDomain(MODELS);
+    const xs = MODELS.map((m) => scatterPoint(m.aa_intelligence_index, 50, BOX, domain).x);
+    const usable = BOX.width - 2 * BOX.pad;
+    expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(usable * 0.75);
   });
 });

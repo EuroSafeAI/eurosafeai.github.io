@@ -83,16 +83,45 @@ export interface ScatterBox {
   pad: number;
 }
 
-/** Capability on x, raw safety on y, y inverted for SVG's downward axis. */
+export interface IndexDomain {
+  min: number;
+  max: number;
+}
+
+/** Padding either side of the roster, as a share of its spread. */
+const DOMAIN_MARGIN = 0.08;
+
+/**
+ * The x-axis range for the scatter, fitted to the roster so the models fill
+ * the plot instead of huddling in one corner.
+ *
+ * Deliberately NOT capabilityScore's 0-100 scale: that rescaling is
+ * asymptotic because the formula needs a ceiling it can never reach, which
+ * would leave the right of the plot permanently empty. An axis should show
+ * the data. The trade is that the domain moves when the roster changes, so
+ * the axis label states its range.
+ */
+export function indexDomain(models: readonly ModelEntry[]): IndexDomain {
+  const indices = models.map((m) => m.aa_intelligence_index);
+  const low = Math.min(...indices);
+  const high = Math.max(...indices);
+  // A single model would give a zero spread and divide by zero downstream.
+  const margin = Math.max((high - low) * DOMAIN_MARGIN, 1);
+  return { min: low - margin, max: high + margin };
+}
+
+/** Intelligence index on x, raw safety on y, y inverted for SVG's downward axis. */
 export function scatterPoint(
   index: number,
   safety: number,
-  box: ScatterBox
+  box: ScatterBox,
+  domain: IndexDomain
 ): { x: number; y: number } {
   const span = box.width - 2 * box.pad;
   const rise = box.height - 2 * box.pad;
+  const across = (index - domain.min) / (domain.max - domain.min);
   return {
-    x: box.pad + span * (capabilityScore(index) / 100),
+    x: box.pad + span * across,
     y: box.pad + rise * (1 - safety / 100),
   };
 }

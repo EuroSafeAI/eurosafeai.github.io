@@ -6,7 +6,6 @@ import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { PUBLISHED_CAPABILITY_WEIGHT } from "@/lib/capability-adjusted-safety";
 import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { Methodology } from "@/components/Methodology";
@@ -128,9 +127,10 @@ const CertificatePage = () => {
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Each dot is one model, placed by how much it can do (left to right) and how safely it
-            does it (bottom to top). Colour is its capability-adjusted grade at the published
-            weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}.
+            Each dot is one model, placed by its Artificial Analysis intelligence index (left to
+            right) and its measured safety (bottom to top). Colour shows where the model was
+            built. The capability-adjusted score below combines these two axes; here they are
+            shown separately, before any adjustment.
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks

@@ -124,7 +124,7 @@ describe("Methodology", () => {
 describe("page order", () => {
   it("puts the scatter above the grid", () => {
     renderPage();
-    const scatter = screen.getByRole("img", { name: /capability/i });
+    const scatter = screen.getByRole("img", { name: /intelligence index/i });
     const grid = screen.getByRole("grid");
     // Node.compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING === 4.
     expect(scatter.compareDocumentPosition(grid) & 4).toBeTruthy();

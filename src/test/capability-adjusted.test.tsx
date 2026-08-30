@@ -1,48 +1,22 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CAPABILITY_MIDPOINT, adjustedRanking, scatterPoint } from "@/lib/capability-adjusted-safety";
+import { adjustedRanking } from "@/lib/capability-adjusted-safety";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
-const BOX = { width: 600, height: 320, pad: 40 };
-
-describe("scatterPoint", () => {
-  it("puts the origin at the bottom left of the plot area", () => {
-    expect(scatterPoint(0, 0, BOX)).toEqual({ x: 40, y: 280 });
-  });
-
-  it("puts a half-capable, perfectly safe model at the middle of the top edge", () => {
-    const { x, y } = scatterPoint(CAPABILITY_MIDPOINT, 100, BOX);
-    expect(x).toBeCloseTo(BOX.pad + (BOX.width - 2 * BOX.pad) / 2, 6);
-    expect(y).toBeCloseTo(BOX.pad, 6);
-  });
-
-  it("keeps every model inside the plot, however capable", () => {
-    // Capability is asymptotic, so no index reaches the right edge and the
-    // frontier can keep climbing without points piling up on the boundary.
-    const right = BOX.width - BOX.pad;
-    for (const index of [CAPABILITY_MIDPOINT * 2, 1000, 1e9]) {
-      expect(scatterPoint(index, 50, BOX).x).toBeLessThan(right);
-    }
-    expect(scatterPoint(1e9, 50, BOX).x).toBeGreaterThan(right - 1);
-  });
-});
-
-
-
 describe("CapabilityAdjustedSection", () => {
   it("plots one point per scored model", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const plot = screen.getByRole("img", { name: /capability/i });
+    const plot = screen.getByRole("img", { name: /intelligence index/i });
     expect(plot.querySelectorAll("circle")).toHaveLength(adjustedRanking(MODELS).length);
   });
 
-  it("places each point by raw safety and capability, not by the adjusted score", () => {
+  it("places each point by raw safety and intelligence index, not by the adjusted score", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const circles = [...screen.getByRole("img", { name: /capability/i }).querySelectorAll("circle")];
+    const circles = [...screen.getByRole("img", { name: /intelligence index/i }).querySelectorAll("circle")];
     const at = (name: string) => circles.find((c) => c.textContent?.includes(name))!;
     const entries = adjustedRanking(MODELS);
     const mostCapable = [...entries].sort((a, b) => b.index - a.index)[0];
@@ -59,10 +33,35 @@ describe("CapabilityAdjustedSection", () => {
     );
   });
 
-  it("names each point's adjusted score, safety and capability", () => {
+  it("names each point's region, adjusted score, safety and index", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
     const entry = adjustedRanking(MODELS)[0];
-    expect(screen.getByText(new RegExp(`${entry.model.name}: adjusted`))).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(`${entry.model.name} \\(${entry.model.region}\\): adjusted`))
+    ).toBeInTheDocument();
+  });
+
+  it("colours points by region rather than by a value read off the axes", () => {
+    // The adjusted grade is a pure function of the two axes, so colouring by
+    // it would encode nothing the position does not already say. Region is
+    // independent of both.
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const circles = [...screen.getByRole("img", { name: /intelligence index/i }).querySelectorAll("circle")];
+    const colourOf = (name: string) =>
+      circles.find((c) => c.textContent?.includes(name))!.getAttribute("fill");
+    const byRegion = new Map<string, string[]>();
+    for (const m of MODELS) {
+      byRegion.set(m.region, [...(byRegion.get(m.region) ?? []), colourOf(m.name)!]);
+    }
+    for (const [, colours] of byRegion) expect(new Set(colours).size).toBe(1);
+    expect(new Set([...byRegion.values()].map((c) => c[0])).size).toBe(byRegion.size);
+  });
+
+  it("shows a key for every region plotted", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    for (const region of new Set(MODELS.map((m) => m.region))) {
+      expect(screen.getByText(region)).toBeInTheDocument();
+    }
   });
 
   // The ranked bars and their capability-weight slider moved into the leaderboard, which
