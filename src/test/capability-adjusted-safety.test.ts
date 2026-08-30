@@ -5,6 +5,7 @@ import {
   adjustedSafety,
   capabilityScore,
   indexDomain,
+  safetyCapabilityCorrelation,
   scatterPoint,
 } from "@/lib/capability-adjusted-safety";
 import modelsData from "@/data/models.json";
@@ -137,5 +138,37 @@ describe("scatterPoint", () => {
     const xs = MODELS.map((m) => scatterPoint(m.aa_intelligence_index, 50, BOX, domain).x);
     const usable = BOX.width - 2 * BOX.pad;
     expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(usable * 0.75);
+  });
+});
+
+describe("safetyCapabilityCorrelation", () => {
+  it("is undefined when there is nothing to correlate", () => {
+    expect(safetyCapabilityCorrelation([])).toBeUndefined();
+    expect(safetyCapabilityCorrelation([MODELS[0]])).toBeUndefined();
+  });
+
+  it("returns 1 for a roster where safety rises exactly with capability", () => {
+    const rising = MODELS.slice(0, 4).map((m, i) => ({
+      ...m,
+      aa_intelligence_index: 10 * (i + 1),
+      aggregate: { ...m.aggregate, worst: 20 * (i + 1) },
+    }));
+    expect(safetyCapabilityCorrelation(rising)).toBeCloseTo(1, 10);
+  });
+
+  it("returns -1 when they move exactly opposite", () => {
+    const falling = MODELS.slice(0, 4).map((m, i) => ({
+      ...m,
+      aa_intelligence_index: 10 * (i + 1),
+      aggregate: { ...m.aggregate, worst: 100 - 20 * (i + 1) },
+    }));
+    expect(safetyCapabilityCorrelation(falling)).toBeCloseTo(-1, 10);
+  });
+
+  it("shows the real roster's safety scores are a poor stand-in for capability", () => {
+    // The page argues capability must be measured rather than inferred from
+    // safety. That argument only holds while the two are loosely coupled.
+    const r = safetyCapabilityCorrelation(MODELS)!;
+    expect(Math.abs(r)).toBeLessThan(0.8);
   });
 });

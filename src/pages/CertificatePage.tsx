@@ -151,7 +151,7 @@ const CertificatePage = () => {
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <div style={{ maxWidth: 760 }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
-            <Methodology />
+            <Methodology models={MODELS} />
           </div>
         </div>
       </section>

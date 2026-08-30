@@ -125,3 +125,30 @@ export function scatterPoint(
     y: box.pad + rise * (1 - safety / 100),
   };
 }
+
+/**
+ * Pearson correlation between the intelligence index and worst-case safety
+ * across a roster.
+ *
+ * Published on the page rather than asserted: the claim that a safety score
+ * is a poor stand-in for capability is empirical, and it should be recomputed
+ * from whatever roster is on screen instead of quoted from a run that has
+ * since been replaced.
+ */
+export function safetyCapabilityCorrelation(models: readonly ModelEntry[]): number | undefined {
+  const pairs = models
+    .map((m) => [m.aa_intelligence_index, scoreOverall(m)] as const)
+    .filter((p): p is readonly [number, number] => p[1] !== undefined);
+  if (pairs.length < 2) return undefined;
+
+  const mean = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length;
+  const xs = pairs.map((p) => p[0]);
+  const ys = pairs.map((p) => p[1]);
+  const mx = mean(xs);
+  const my = mean(ys);
+  const covariance = pairs.reduce((sum, [x, y]) => sum + (x - mx) * (y - my), 0);
+  const spread = Math.sqrt(
+    xs.reduce((s, x) => s + (x - mx) ** 2, 0) * ys.reduce((s, y) => s + (y - my) ** 2, 0)
+  );
+  return spread === 0 ? undefined : covariance / spread;
+}

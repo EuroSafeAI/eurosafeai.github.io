@@ -82,8 +82,15 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       </div>
 
       <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760, marginTop: "1.5rem" }}>
-        A model that cannot do much cannot do much harm. This score combines how safely a model
-        behaved with how little it can reach:
+        A safety score measures how often a model refuses a harmful request. It does not measure
+        what happens when it complies. A model that rarely refuses but cannot produce anything
+        usable is a nuisance; one that almost always refuses, then writes working attack code on
+        the exception, is a systemic risk. The EU AI Act draws the same line, presuming systemic
+        risk from high-impact capabilities rather than from behaviour alone.
+      </p>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+        So capability has to be measured and combined in, not inferred from how a model behaves.
+        This score does that, weighing how safely a model acted against how little it can reach:
       </p>
       <p
         style={{

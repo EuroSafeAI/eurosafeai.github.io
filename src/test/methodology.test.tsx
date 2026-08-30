@@ -3,6 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import CertificatePage from "@/pages/CertificatePage";
 import { HelmetProvider } from "react-helmet-async";
 import { Methodology } from "@/components/Methodology";
+import modelsData from "@/data/models.json";
+import type { ModelEntry } from "@/data/models.types";
+
+const MODELS = modelsData as unknown as ModelEntry[];
 import { COVERAGE_FLAG } from "@/components/leaderboard/constants";
 
 /**
@@ -31,6 +35,12 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   /a safeguard that only holds when it is unprovoked/i,
   /a statement about reach, not about conduct/i,
   /a more capable model can rank below a weaker one/i,
+  // Why capability is in a systemic-risk measure at all. Without these the
+  // page shows an adjustment it never justifies, and a reader is entitled to
+  // ask why a safety leaderboard is weighted by something other than safety.
+  /does not measure what happens when it complies/i,
+  /high-impact capabilities/i,
+  /drops that side of the estimate/i,
 ];
 
 const renderPage = () =>
@@ -84,14 +94,14 @@ const TOPICS = [
 
 describe("Methodology", () => {
   it("offers every topic", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     for (const topic of TOPICS) {
       expect(screen.getByRole("button", { name: topic })).toBeInTheDocument();
     }
   });
 
   it("starts with every topic collapsed", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     for (const topic of TOPICS) {
       expect(screen.getByRole("button", { name: topic })).toHaveAttribute(
         "aria-expanded",
@@ -101,7 +111,7 @@ describe("Methodology", () => {
   });
 
   it("opens a topic when its trigger is clicked", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     const trigger = screen.getByRole("button", { name: TOPICS[0] });
 
     // "CBRN misuse" appears nowhere else in the component, so its presence
@@ -114,7 +124,7 @@ describe("Methodology", () => {
   });
 
   it("scales the coverage fraction into a percentage", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     fireEvent.click(screen.getByRole("button", { name: /coverage/i }));
     expect(document.body.textContent).toContain(`${Math.round(COVERAGE_FLAG * 100)}%`);
     expect(document.body.textContent).not.toContain("0.95%");
