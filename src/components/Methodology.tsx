@@ -118,7 +118,7 @@ export const Methodology: React.FC = () => (
             knows hazardous material rather than whether it declines to act on it, so discounting
             them by capability would count the same thing twice.
           </p>
-          <p>The scatter above uses the published weight of {CAPABILITY_EXPONENT}.</p>
+          <p>The scatter above uses the published weight of {CAPABILITY_EXPONENT.toFixed(2)}.</p>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
