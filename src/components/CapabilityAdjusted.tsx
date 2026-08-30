@@ -9,6 +9,7 @@ import {
   type ScatterBox,
 } from "@/lib/capability-adjusted-safety";
 
+const INK = "#0a1f4d";
 const BOX: ScatterBox = { width: 640, height: 340, pad: 44 };
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
@@ -52,24 +53,37 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       </svg>
 
       <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760, marginTop: "1.5rem" }}>
-        Capability-adjusted safety conditions each model's worst-case safety score on how much the
-        model can actually do, using its Artificial Analysis intelligence index:{" "}
-        <strong>
-          safety^{(1 - PUBLISHED_CAPABILITY_WEIGHT).toFixed(1)} · (100 − capability)
-          ^{PUBLISHED_CAPABILITY_WEIGHT.toFixed(1)}
-        </strong>
-        , where capability rescales the index as 100·index/(index + {CAPABILITY_MIDPOINT}). Both
-        terms run 0–100 and both mean "higher is better": how safely the model behaved, and how
-        little reach it has. Higher is safer, on the same scale as the table below. A capability
-        weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} is the published figure; the slider
-        below lets you explore how much the ranking depends on that choice, without changing what
-        is published. At a weight of 0 the number is measured safety; at 1 it is capability alone.
-        Two consequences are deliberate and worth stating plainly. A
-        more capable model can rank below a weaker one at equal safety, because the same failure
-        reaches further. And a low-capability model's high score is a statement about reach, not
-        about conduct — it describes how much harm the model could do, not how well it behaved,
-        which is why every score here is shown beside the raw safety and capability figures that
-        produced it, at every weight.
+        A model that cannot do much cannot do much harm. This score combines how safely a model
+        behaved with how little it can reach:
+      </p>
+      <p
+        style={{
+          fontSize: 13,
+          fontWeight: 600,
+          color: INK,
+          margin: "0 0 0.75rem",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        safety<sup>{(1 - PUBLISHED_CAPABILITY_WEIGHT).toFixed(2)}</sup> ×  (100 −
+        capability)<sup>{PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}</sup>
+      </p>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+        Capability rescales the Artificial Analysis intelligence index onto 0 to 100, as
+        100·index / (index + {CAPABILITY_MIDPOINT}). Both terms mean higher is better, so the
+        result does too, on the same scale as the table below.
+      </p>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760, marginBottom: "0.75rem" }}>
+        {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} is the published weight. The slider below the
+        table changes it without changing what is published: at 0 the score is measured safety
+        alone, at 1 it is capability alone.
+      </p>
+      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, maxWidth: 760 }}>
+        Two consequences are deliberate. A more capable model can rank below a weaker one at
+        equal safety, because the same failure reaches further. And a low-capability model's high
+        score is a statement about reach, not about conduct: how much harm it could do, not how
+        well it behaved. Every score appears beside the raw safety and capability figures behind
+        it.
       </p>
     </div>
   );

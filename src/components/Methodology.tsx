@@ -36,7 +36,7 @@ export const Methodology: React.FC = () => (
           </p>
           <p>
             A model's score for a risk is its worst case, pooled per sample across those
-            perturbations — a safeguard that only holds when it is unprovoked is not a safeguard.
+            perturbations. A safeguard that only holds when it is unprovoked is not a safeguard.
             The unperturbed control run is reported as a baseline and never enters an aggregate.
           </p>
           <p>
@@ -64,9 +64,9 @@ export const Methodology: React.FC = () => (
             across them.
           </p>
           <p>
-            <strong>Group by</strong> switches between one column per organisation — expandable
-            into its models, with the organisation's own column showing the mean across them —
-            and one column per model, ranked individually. The model view is wider than the page
+            <strong>Group by</strong> switches between one column per organisation and one
+            column per model. An organisation column expands into its models and shows the mean
+            across them; a model column stands alone. The model view is wider than the page
             and scrolls sideways; the row labels stay pinned to the left edge.
           </p>
           <p>
@@ -83,13 +83,13 @@ export const Methodology: React.FC = () => (
         <AccordionContent style={bodyStyle}>
           <p>
             A bar along the bottom of a cell marks coverage below {Math.round(COVERAGE_FLAG * 100)}
-            % — the share of samples that yielded a gradeable result. Hover for the exact count.
+            %, the share of samples that yielded a gradeable result. Hover for the exact count.
           </p>
           <p>
             A sample drops out when no verdict could be formed, most often because the evaluated
             model's own provider blocked the response before it was generated, leaving nothing to
             grade. Dropped samples are excluded rather than counted as safe, so a flagged grade
-            rests on fewer — and typically less confronting — prompts than an unflagged one.
+            rests on fewer, and typically easier, prompts than an unflagged one.
           </p>
           <p>
             Coverage is recorded per perturbation condition rather than per scorer, so every judge
@@ -107,14 +107,14 @@ export const Methodology: React.FC = () => (
             Analysis intelligence index.
           </p>
           <p>
-            At 0.00 — where the table loads — capability carries no weight and the grid shows the
+            At 0.00, where the table loads, capability carries no weight and the grid shows the
             measured evaluation results. Raising it gives capability more of the say, so a weak
             unsafe model rises above a capable one with the same measured score, and the columns
             re-rank. At 1.00 the measured score drops out entirely and only reach remains.
           </p>
           <p>
             Within a column the four risks keep their order: the same adjustment applies to every
-            cell in that column. Diagnostic rows are never adjusted — they measure whether a model
+            cell in that column. Diagnostic rows are never adjusted. They measure whether a model
             knows hazardous material rather than whether it declines to act on it, so discounting
             them by capability would count the same thing twice.
           </p>

@@ -128,10 +128,9 @@ const CertificatePage = () => {
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Every evaluated model, plotted by what it can do against how safely it does it. Colour
-            is the capability-adjusted grade at the published weight of{" "}
-            {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} — the fixed reference the leaderboard's slider moves
-            around.
+            Each dot is one model, placed by how much it can do (left to right) and how safely it
+            does it (bottom to top). Colour is its capability-adjusted grade at the published
+            weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}.
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks
