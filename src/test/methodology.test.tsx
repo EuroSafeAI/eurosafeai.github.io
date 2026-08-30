@@ -15,17 +15,22 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   /paraphrase/i,
   /register shift/i,
   /identity stripping/i,
-  /framing/i,
+  /\bframing\b/i,
   /reconsideration pressure/i,
   /agentic scenarios/i,
   /never enters an aggregate/i,
   /ensemble of LLM judges/i,
-  /counted as safe/i,
+  /refusal floor/i,
+  /optimistic bound/i,
   /excluded from the aggregates/i,
   /excluded rather than counted as safe/i,
   /per perturbation condition rather than per scorer/i,
   /higher is safer/i,
   /peer-reviewed/i,
+  /diagnostic rows are never adjusted/i,
+  /a safeguard that only holds when it is unprovoked/i,
+  /a statement about reach, not about conduct/i,
+  /a more capable model can rank below a weaker one/i,
 ];
 
 const renderPage = () =>
@@ -61,6 +66,7 @@ describe("the page's substantive claims", () => {
     const levels = screen
       .getAllByRole("heading")
       .map((heading) => Number(heading.tagName[1]));
+    expect(levels[0]).toBe(1);
     let previous = levels[0];
     for (const level of levels) {
       expect(level - previous).toBeLessThanOrEqual(1);
