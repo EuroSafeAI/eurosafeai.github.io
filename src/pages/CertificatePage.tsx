@@ -43,7 +43,7 @@ const CertificatePage = () => {
   return (
     <div>
       <Helmet>
-        <title>AI Safety Certificate — EuroSafeAI</title>
+        <title>EU AI Safety Index — EuroSafeAI</title>
         <meta
           name="description"
           content="EuroSafeAI's leaderboard grading frontier AI models against the four systemic risks named by the EU AI Act Code of Practice."
