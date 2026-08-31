@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useElementWidth } from "@/hooks/use-element-width";
 import type { ModelEntry } from "@/data/models.types";
-import { ACCENT } from "@/components/leaderboard/constants";
+import { ACCENT, COMPANY_LOGO } from "@/components/leaderboard/constants";
 import {
   indexDomain,
   axisTicks,
@@ -41,6 +41,8 @@ const LABEL_LINE_HEIGHT = 12;
 const DOT_RADIUS = 6;
 const LABEL_OFFSET = 11;
 const CROSS_RADIUS = 5;
+const LOGO_SIZE = 15;
+const LOGO_RADIUS = 11;
 
 export const CapabilityAdjustedSection = ({
   models,
@@ -209,11 +211,25 @@ export const CapabilityAdjustedSection = ({
                   out so the two do not read as separate observations. */}
               <g opacity={isOpen ? 0 : 1} style={{ transition: reduced ? undefined : "opacity 0.25s ease" }}>
                 <line x1={x} y1={y} x2={x} y2={averageY} stroke={colour} strokeWidth={1.25} opacity={0.4} />
-                <circle cx={x} cy={y} r={7} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
+                {/* The logo carries identity better than a dot plus a label,
+                    and the ring keeps the region readable now that fill is
+                    no longer available to say it. */}
+                <circle cx={x} cy={y} r={LOGO_RADIUS} fill="#ffffff" stroke={colour} strokeWidth={2}>
                   <title>
                     {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, worst case ${point.safety.toFixed(1)}, average ${point.averageSafety.toFixed(1)}, intelligence index ${point.index.toFixed(1)}`}
                   </title>
                 </circle>
+                {COMPANY_LOGO[point.provider] && (
+                  <image
+                    href={COMPANY_LOGO[point.provider]}
+                    x={x - LOGO_SIZE / 2}
+                    y={y - LOGO_SIZE / 2}
+                    width={LOGO_SIZE}
+                    height={LOGO_SIZE}
+                    preserveAspectRatio="xMidYMid meet"
+                    pointerEvents="none"
+                  />
+                )}
                 <g stroke={colour} strokeWidth={1.75} opacity={0.85}>
                   <line x1={x - 4} y1={averageY - 4} x2={x + 4} y2={averageY + 4} />
                   <line x1={x - 4} y1={averageY + 4} x2={x + 4} y2={averageY - 4} />
@@ -245,6 +261,24 @@ export const CapabilityAdjustedSection = ({
                       opacity={0.4}
                       style={{ transition: ease }}
                     />
+                    {/* The average marker. Its absence left each opened model
+                        with a line running up to nothing. */}
+                    <g stroke={mc} strokeWidth={1.75} opacity={0.85} style={{ transition: ease }}>
+                      <line
+                        x1={(isOpen ? at.x : x) - 4}
+                        y1={(isOpen ? atAvg.y : averageY) - 4}
+                        x2={(isOpen ? at.x : x) + 4}
+                        y2={(isOpen ? atAvg.y : averageY) + 4}
+                        style={{ transition: ease }}
+                      />
+                      <line
+                        x1={(isOpen ? at.x : x) - 4}
+                        y1={(isOpen ? atAvg.y : averageY) + 4}
+                        x2={(isOpen ? at.x : x) + 4}
+                        y2={(isOpen ? atAvg.y : averageY) - 4}
+                        style={{ transition: ease }}
+                      />
+                    </g>
                     <circle
                       cx={isOpen ? at.x : x}
                       cy={isOpen ? at.y : y}
