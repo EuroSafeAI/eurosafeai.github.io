@@ -27,7 +27,14 @@ const REGION_FALLBACK = "#6b7280";
 const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
 const LABEL_LINE_HEIGHT = 11;
 
-export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
+export const CapabilityAdjustedSection = ({
+  models,
+  highlight,
+}: {
+  models: ModelEntry[];
+  /** A provider or model name to pick out, mirroring the grid below. */
+  highlight?: string | null;
+}) => {
   // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
@@ -131,9 +138,15 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
           const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
           const textY = labelY[i];
           const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
+          // The grid groups by organisation or by model, so a highlight can
+          // name either. Matching both means one prop serves both modes.
+          const picked =
+            !highlight ||
+            entry.model.company === highlight ||
+            entry.model.name === highlight;
           return (
-            <g key={entry.model.id}>
-              <circle cx={x} cy={y} r={6} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
+            <g key={entry.model.id} opacity={picked ? 1 : 0.18} data-picked={picked}>
+              <circle cx={x} cy={y} r={picked && highlight ? 8 : 6} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
                 <title>
                   {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                 </title>

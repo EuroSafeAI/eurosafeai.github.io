@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -43,6 +43,8 @@ const CertificatePage = () => {
   // Derived, not asserted: the claim above depends on the frontier staying
   // flat, which is a property of the roster rather than a law.
   const capabilityCost = useMemo(() => capabilityCostOf(MODELS), []);
+  // Hovering a column in the grid picks the same models out of the plot above.
+  const [highlight, setHighlight] = useState<string | null>(null);
 
   return (
     <div>
@@ -161,7 +163,7 @@ const CertificatePage = () => {
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks
           </p>
-          <CapabilityAdjustedSection models={MODELS} />
+          <CapabilityAdjustedSection models={MODELS} highlight={highlight} />
         </div>
       </section>
 
@@ -187,7 +189,7 @@ const CertificatePage = () => {
             Every provider graded on each systemic risk. Each grade opens down to the benchmarks
             behind it, and down to the individual judges behind each benchmark.
           </p>
-          <Leaderboard models={MODELS} />
+          <Leaderboard models={MODELS} onHighlight={setHighlight} />
         </div>
       </section>
 

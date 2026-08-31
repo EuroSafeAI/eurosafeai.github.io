@@ -11,7 +11,10 @@ import { GroupingToggle } from "./GroupingToggle";
 import { useLeaderboard } from "./useLeaderboard";
 
 /** The scrollable systemic-risk heatmap, plus the legend explaining it. */
-export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
+export const Leaderboard: React.FC<{
+  models: ModelEntry[];
+  onHighlight?: (provider: string | null) => void;
+}> = ({ models, onHighlight }) => {
   const {
     columns,
     rows,
@@ -79,6 +82,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
           <HeaderRow
           weight={capabilityWeight}
           membersOf={membersOf}
+          onHighlight={onHighlight}
             columns={columns}
             labelWidth={labelWidth}
             cellWidth={cellWidth}

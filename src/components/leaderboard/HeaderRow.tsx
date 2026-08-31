@@ -158,6 +158,8 @@ const HeaderCell = ({
 };
 
 export interface HeaderRowProps {
+  /** The column under the pointer or keyboard, for views that mirror it. */
+  onHighlight?: (provider: string | null) => void;
   weight: number;
   membersOf: (column: Column) => ModelEntry[];
   columns: Column[];
@@ -173,6 +175,7 @@ export interface HeaderRowProps {
 /** The sticky provider/model header row above the grid body. */
 export const HeaderRow: React.FC<HeaderRowProps> = ({
   weight,
+  onHighlight,
   membersOf,
   columns,
   labelWidth,
@@ -235,6 +238,12 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         <div
           key={column.provider}
           role="presentation"
+          onMouseEnter={() => onHighlight?.(column.provider)}
+          onMouseLeave={() => onHighlight?.(null)}
+          // Focus as well as hover: the column headings are reachable by
+          // keyboard and the mirroring should not be pointer-only.
+          onFocus={() => onHighlight?.(column.provider)}
+          onBlur={() => onHighlight?.(null)}
           style={{
             ...columnGroupStyle(
               members.length + 1,

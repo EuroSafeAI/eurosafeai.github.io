@@ -159,3 +159,32 @@ describe("page order", () => {
     expect(screen.getByText(/preliminary data/i)).toBeInTheDocument();
   });
 });
+
+describe("the plot mirrors the grid", () => {
+  const pickedCount = () =>
+    [...document.querySelectorAll('g[data-picked="true"]')].length;
+
+  it("dims the plot to one organisation when its column is hovered", () => {
+    renderPage();
+    const before = pickedCount();
+    const anthropic = screen
+      .getAllByRole("columnheader")
+      .find((h) => h.textContent?.includes("Anthropic"))!;
+    fireEvent.mouseEnter(anthropic.closest('[role="presentation"]')!);
+    const after = pickedCount();
+    expect(after).toBeLessThan(before);
+    expect(after).toBeGreaterThan(0);
+  });
+
+  it("restores every point when the pointer leaves", () => {
+    renderPage();
+    const before = pickedCount();
+    const group = screen
+      .getAllByRole("columnheader")
+      .find((h) => h.textContent?.includes("Anthropic"))!
+      .closest('[role="presentation"]')!;
+    fireEvent.mouseEnter(group);
+    fireEvent.mouseLeave(group);
+    expect(pickedCount()).toBe(before);
+  });
+});

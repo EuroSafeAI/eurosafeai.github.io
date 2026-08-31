@@ -143,3 +143,34 @@ describe("plot reference furniture", () => {
     expect(document.body.textContent).toMatch(/medians of this roster, not thresholds/i);
   });
 });
+
+describe("mirroring the grid's hover", () => {
+  const dots = () =>
+    [...screen.getByRole("img", { name: /intelligence index/i }).querySelectorAll("g[data-picked]")];
+
+  it("shows every model when nothing is highlighted", () => {
+    render(<CapabilityAdjustedSection models={MODELS} highlight={null} />);
+    expect(dots().every((g) => g.getAttribute("data-picked") === "true")).toBe(true);
+  });
+
+  it("picks out an organisation's models and dims the rest", () => {
+    render(<CapabilityAdjustedSection models={MODELS} highlight="Anthropic" />);
+    const picked = dots().filter((g) => g.getAttribute("data-picked") === "true");
+    expect(picked).toHaveLength(MODELS.filter((m) => m.company === "Anthropic").length);
+    const dimmed = dots().find((g) => g.getAttribute("data-picked") === "false")!;
+    expect(Number(dimmed.getAttribute("opacity"))).toBeLessThan(0.5);
+  });
+
+  it("picks out a single model too, since the grid can group either way", () => {
+    const one = MODELS[0];
+    render(<CapabilityAdjustedSection models={MODELS} highlight={one.name} />);
+    const picked = dots().filter((g) => g.getAttribute("data-picked") === "true");
+    expect(picked).toHaveLength(1);
+    expect(picked[0].textContent).toContain(one.name);
+  });
+
+  it("dims nothing for a name that matches no model", () => {
+    render(<CapabilityAdjustedSection models={MODELS} highlight="Nobody" />);
+    expect(dots().every((g) => g.getAttribute("data-picked") === "false")).toBe(true);
+  });
+});
