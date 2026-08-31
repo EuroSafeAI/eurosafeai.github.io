@@ -1,0 +1,64 @@
+{
+  "updatedAt": "2026-08-31T00:00:00.000Z",
+  "jobs": [
+    {
+      "slug": "junior-researcher-agent-collusion",
+      "title": "Junior Researcher, Agent Collusion and Transparency",
+      "team": "Research",
+      "location": "Zurich, Switzerland",
+      "workMode": "hybrid",
+      "employmentType": "full-time",
+      "status": "open",
+      "postedAt": "2026-08-31",
+      "openings": 2,
+      "summary": "Two positions at EuroSafeAI on a funded project asking whether limiting what AI agents can see about each other prevents collusion or only changes how it happens. The work combines proofs in Lean, tournaments between agent populations, and behavioural experiments with LLM agents.",
+      "descriptionHeading": "The project",
+      "description": [
+        "When agents can read each other's source code, they can make credible commitments and reach equilibria that are unreachable otherwise. That is the result open-source game theory is built on (Critch, Dennis and Russell, 2022, [arXiv:2208.07006](https://arxiv.org/abs/2208.07006)), and it is usually read as good news for cooperation. It is also the mechanism by which agents can coordinate against an overseer. The intuitive fix is to reduce what agents can see about each other. Whether that fix works is open, and the answer matters for how systems of many agents get deployed.",
+        "We study this across three transparency regimes.",
+        "Full transparency. Agents have complete access to each other's source code, the setting where coordination is most viable. We extend our existing Lean library of verified agents (CUPOD/DUPOC and related program equilibrium strategies) and test whether mechanism-level interventions, such as asymmetric visibility, randomised pairing, population mechanisms and audits, suppress collusion without destroying desirable cooperation. This strand also includes a bounded CUPOD versus DUPOC result of ours, Open Problem 3 in Critch et al., where we have a machine-checked proof and want the assumptions it rests on audited.",
+        "Partial transparency. Disclosure becomes a strategic choice rather than an imposed constraint. Agents decide what to reveal and what to withhold, at a cost, in environments such as debate, trust calibration games, and the Prisoner's Dilemma. We locate the point on the spectrum from weight access to output-only where the mechanisms above stop working.",
+        "Zero transparency. Agents cannot inspect each other and must infer objectives from behaviour alone. Here we test whether coordination emerges anyway, through implicit codewords in action sequences, timing and metadata signals, or alternating sacrifice patterns, and how that depends on modelling depth.",
+        "Open-source game theory is one of three research directions on [AI Safety for Mathematicians](https://mathforaisafety.org/research/open-source-game-theory), the resource maintained by Fields Medalist Jacob Tsimerman, alongside interpretability and heuristic estimators. The CUPOD and DUPOC agents that page builds up to are the ones formalised in our library. You would be joining an existing codebase rather than starting from nothing: a verified library of programs in Lean 4, an agentic proof pipeline, and work presented at AI4Math@ICML 2026."
+      ],
+      "responsibilities": [
+        "Formalise agents, verifiers, and collusion mechanisms in Lean, and extend the proof harness.",
+        "Run tournaments between verifiers, simulate populations of them, and measure collusion rates and stability conditions.",
+        "Design and run behavioural experiments with open-weight and API-accessed frontier models, instrumented so that reasoning traces, disclosure decisions, and payoffs are recoverable afterwards.",
+        "Compare what agents actually do against what the formal results allow, and say where the difference is real.",
+        "Coauthor the papers, the datasets, and the released code."
+      ],
+      "requirements": [
+        "A degree in computer science, mathematics, economics, or a related field, with research experience beyond coursework: a thesis, a publication, or a substantial open source project.",
+        "Working knowledge of game theory: equilibrium concepts, repeated games, and what a mechanism design argument looks like.",
+        "Strong Python, and the discipline to write experiment code that someone else can run six months later.",
+        "Familiarity with at least one of: proof assistants, simulation of agent populations, hands-on work with LLMs. You need to be strong in one of these and willing to learn the others.",
+        "Enough statistics to design a test that would show a difference in collusion rates, and to say whether one is real.",
+        "Clear written communication. Much of our output is text and much of our collaboration is asynchronous."
+      ],
+      "niceToHave": [
+        "Lean specifically, or experience formalising an argument that was first written on paper.",
+        "Exposure to program equilibrium, open source game theory, or bounded rationality models of agents reasoning about agents.",
+        "Practical experience running LLM agents at scale: scaffolds, tool use, inference cost management.",
+        "Background in evaluations or red teaming."
+      ],
+      "niceToHaveNote": "We work best with people who share the concern this project sits inside: that advanced AI systems may escape meaningful human oversight, and that capabilities keep rising. We would rather hear your actual view on that than a neutral one.",
+      "aboutUs": [
+        "EuroSafeAI is a Swiss nonprofit working on safety and security for advanced AI systems, founded in 2026 and based in Zurich. We are committed to making sure AI goes well for everyone, and we do not think that outcome is guaranteed. This project is funded by a grant from the UK AI Security Institute. EuroSafeAI was co-founded by Zhijing Jin, who directs the organisation alongside her lab at the University of Toronto.",
+        "We are small, and that is the main thing to know about working here. The core team is a handful of people, with a wider group of student contributors working alongside them. There is no layer between you and the people setting the research direction. Day to day you would work with Pepijn Cobben, who co-founded EuroSafeAI and runs this project, and we would expect you to shape the work rather than only execute it. Everything we produce is public: papers, datasets and code, with named authorship."
+      ],
+      "practicalities": [
+        "One-year contract, renewable for a further six months. The gross salary would be between CHF 60,000 to 86,000 per year, depending on experience. Based in Zurich, hybrid. Compute is not a constraint on this project: experiments are scoped by what is worth running rather than by what we can afford. Start 1 October 2026, or earlier. You should be eligible to work in Switzerland; remote from your own country is possible for the right person, with hours that overlap ours."
+      ],
+      "closingNote": "Apply if the role fits you, even if you don't tick every box.",
+      "compensation": {
+        "min": 60000,
+        "max": 86000,
+        "currency": "CHF",
+        "period": "year",
+        "note": "Gross annual salary, placed within the band based on experience."
+      },
+      "contactEmail": "careers@safe.eu"
+    }
+  ]
+}

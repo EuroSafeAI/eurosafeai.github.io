@@ -55,6 +55,7 @@ npm run dev          # local dev server on http://localhost:8080
 | `/frontier-ai-safety` | `src/pages/FrontierAISafetyPage.tsx` |
 | `/team`, `/team/:slug` | `src/pages/TeamPage.tsx`, `src/pages/MemberPage.tsx` |
 | `/careers` | `src/pages/CareersPage.tsx` |
+| `/careers/:slug` | `src/pages/CareersJobPage.tsx` |
 | `/blog`, `/blog/:slug` | `src/pages/BlogPage.tsx`, `src/pages/BlogPostPage.tsx` |
 | `/certificate`, `/certificate/:slug` | `src/pages/CertificatePage.tsx`, `src/pages/CertificateDetailPage.tsx` |
 | `/certificates`, `/certificates/:slug` | Aliases that resolve to the `/certificate*` pages |
@@ -78,11 +79,14 @@ src/
 ├── lib/
 │   ├── papers.ts        Single source of truth for all publications
 │   ├── team.ts          Team roster + author-name resolution
+│   ├── jobs.ts          Job-board accessors, visibility rules, JobPosting JSON-LD
 │   ├── scoring.ts       calcAgg / calcGrade (mirrored in cert generator)
 │   └── utils.ts         cn() helper
 ├── data/
 │   ├── models.json      Frontier-model evaluation scores (drives the leaderboard)
 │   ├── models.types.ts  TypeScript shape for entries in models.json
+│   ├── jobs.json        Open roles (drives /careers and /careers/:slug)
+│   ├── jobs.types.ts    TypeScript shape for entries in jobs.json
 │   └── blogPosts.ts     Blog post content
 ├── hooks/               useIsMobile, useToast
 ├── assets/              Imported logos, illustrations
@@ -139,6 +143,32 @@ Pushing to `main` triggers `.github/workflows/deploy.yml`:
 | A new team member | `src/lib/team.ts` — append to `leadership`, `technicalStaff`, or `advisors`; drop the headshot at `public/images/team/<slug>.webp` |
 | A new blog post | `src/data/blogPosts.ts` — append a `BlogPost` entry |
 | A new model in the leaderboard | `src/data/models.json` — append, then `npm test` and `npm run certs` |
+| A new open role | `src/data/jobs.json` — append a `Job` entry (see below) |
+
+---
+
+## Careers board
+
+`/careers` and `/careers/:slug` are driven entirely by `src/data/jobs.json`. Adding, editing, or closing a role is a data edit — no page code changes.
+
+**Publishing a role**
+
+1. Append a `Job` object to `jobs.json` (the shape is documented field-by-field in `src/data/jobs.types.ts`). Start it at `"status": "draft"`.
+2. `npm run dev` — drafts render on the board and at their real URL, badged, in local development only.
+3. `npm test` — validates slugs, dates, required fields, and the generated structured data.
+4. Flip to `"status": "open"` and push. Set `"status": "closed"` when the role ends; the detail page keeps resolving so inbound links don't 404, but it leaves the board and drops its `JobPosting` markup.
+
+**Status semantics**
+
+| Status | On the board | At `/careers/:slug` | Indexed |
+|---|---|---|---|
+| `draft` | dev only | dev only | no |
+| `open` | yes | yes | yes, with `JobPosting` JSON-LD |
+| `closed` | no | yes, with a closed notice | `noindex` |
+
+**Applications** currently open a prefilled `mailto:` — the same fallback `ContactPage` uses. Setting `applyUrl` on a role switches the apply buttons to a hosted intake form with no code change; that field is the seam for a real intake endpoint (see `getApplyHref` in `src/lib/jobs.ts`).
+
+**Do not put applicant data in this repo.** Everything under `src/` is compiled into a public bundle served from a public GitHub Pages site. Candidate names, CVs, interview notes, and rejection reasons belong in a separate, private, auth-gated system.
 
 ---
 
