@@ -1,6 +1,7 @@
 import type { ModelEntry } from "@/data/models.types";
 import { safetyCapabilityCorrelation } from "@/lib/capability-adjusted-safety";
 import { GRADES, GRADE_BAND } from "@/lib/scoring";
+import { ACCENT } from "@/components/leaderboard/constants";
 import {
   Accordion,
   AccordionContent,
@@ -140,7 +141,8 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             correlate at {correlation?.toFixed(2) ?? "no measurable degree"}, on a scale where
             1.00 would mean they rise and fall together. Knowing how safely a model behaves says
             little about how far its failures reach. The slider above the table weighs the two together,
-            using the Artificial Analysis intelligence index.
+            using the{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index.
           </p>
           <p>
             At 0.00, where the table loads, capability carries no weight and the grid shows the

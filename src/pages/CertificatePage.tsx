@@ -155,7 +155,8 @@ const CertificatePage = () => {
               : "In this field, capability comes at a cost in safety."}
           </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Each dot is one model, placed by its Artificial Analysis intelligence index (left to
+            Each dot is one model, placed by its{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index (left to
             right) and its measured safety (bottom to top). Colour shows where the model was
             built. The capability-adjusted score below combines these two axes; here they are
             shown separately, before any adjustment.

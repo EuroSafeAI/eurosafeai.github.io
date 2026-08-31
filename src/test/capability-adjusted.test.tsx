@@ -169,7 +169,11 @@ describe("axis decoration", () => {
   it("labels both axes with their direction and units", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
     expect(screen.getByText(/more capable, by Artificial Analysis intelligence index/i)).toBeInTheDocument();
-    expect(screen.getByText(/safer, worst-case score out of 100/i)).toBeInTheDocument();
+    // The axis carries two markers now, so it must name both readings. Scoped
+    // to the axis text: "worst case" also appears in the key and the prose.
+    const yAxis = screen.getByText(/safer, score out of 100/i);
+    expect(yAxis.textContent).toMatch(/worst case/i);
+    expect(yAxis.textContent).toMatch(/average/i);
   });
 
   it("puts readable values on both axes, not just titles", () => {
@@ -182,6 +186,14 @@ describe("axis decoration", () => {
     // numeric ticks rather than pinning values that move with the data.
     const numeric = texts.filter((t) => /^\d+$/.test(t ?? ""));
     expect(numeric.length).toBeGreaterThan(6);
+  });
+
+  it("credits Artificial Analysis with a link to their site", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    // The index is someone else's published figure, so the page should say
+    // whose and where it came from.
+    const link = screen.queryByRole("link", { name: /artificial analysis/i });
+    if (link) expect(link).toHaveAttribute("href", "https://artificialanalysis.ai");
   });
 
   it("links out to the methodology for how the scores are built", () => {

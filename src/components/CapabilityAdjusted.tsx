@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { useElementWidth } from "@/hooks/use-element-width";
 import type { ModelEntry } from "@/data/models.types";
 import { ACCENT } from "@/components/leaderboard/constants";
 import {
@@ -25,7 +26,18 @@ const REGION_COLOUR: Record<string, string> = {
   EU: "#f59e0b",
 };
 const REGION_FALLBACK = "#6b7280";
-const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
+/**
+ * The plot's height is fixed and its width tracks its column.
+ *
+ * A fixed viewBox scaled to fill the column made the plot grow *taller* as the
+ * page widened, 573px at 1680 and 699px at 1920, which is what stopped it
+ * fitting on screen beside the grid. Matching the coordinate system to the
+ * rendered box keeps the height constant and spreads the points sideways
+ * instead, and stops the labels scaling up with it.
+ */
+const PLOT_HEIGHT = 420;
+const PLOT_PAD = 48;
+const FALLBACK_WIDTH = 820;
 const LABEL_LINE_HEIGHT = 12;
 const DOT_RADIUS = 6;
 const LABEL_OFFSET = 11;
@@ -40,6 +52,12 @@ export const CapabilityAdjustedSection = ({
   highlight?: string | null;
 }) => {
   const reduced = useReducedMotion() ?? false;
+  const [column, setColumn] = useState<HTMLElement | null>(null);
+  const measured = useElementWidth(column);
+  const BOX: ScatterBox = useMemo(
+    () => ({ width: Math.max(FALLBACK_WIDTH, measured ?? FALLBACK_WIDTH), height: PLOT_HEIGHT, pad: PLOT_PAD }),
+    [measured]
+  );
   // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
@@ -75,7 +93,7 @@ export const CapabilityAdjustedSection = ({
     ];
     const y = spreadLabels(boxes, LABEL_LINE_HEIGHT, obstacles);
     return ranking.map((_, i) => ({ y: y[i], onLeft: onLeft[i] }));
-  }, [ranking, domain]);
+  }, [ranking, domain, BOX]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
     [models]
@@ -87,14 +105,14 @@ export const CapabilityAdjustedSection = ({
     // flexWrap with a basis rather than a JS breakpoint: the columns stack on
     // their own once there is no room for both.
     <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "flex-start" }}>
-      <div style={{ flex: "1 1 620px", minWidth: 0 }}>
+      <div ref={setColumn} style={{ flex: "1 1 620px", minWidth: 0 }}>
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
         aria-label="Raw safety against the Artificial Analysis intelligence index, one point per model, coloured by region"
         // No maxWidth: the viewBox is a coordinate system, not a size cap, and
         // capping it left the plot floating in its column.
-        style={{ width: "100%", height: "auto" }}
+        style={{ width: "100%", height: PLOT_HEIGHT }}
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
@@ -127,7 +145,7 @@ export const CapabilityAdjustedSection = ({
           more capable, by Artificial Analysis intelligence index
         </text>
         <text x={BOX.pad - 9} y={BOX.pad - 14} textAnchor="start" fontSize={11} fontWeight={600} fill="#6b7280">
-          safer, worst-case score out of 100
+          safer, score out of 100 (worst case ● and average ✕)
         </text>
         {medians && (
           <g>
