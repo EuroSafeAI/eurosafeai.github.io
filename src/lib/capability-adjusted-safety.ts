@@ -278,3 +278,40 @@ export function capabilityCost(models: readonly ModelEntry[]): CapabilityCost | 
   const gap = bestOverall - bestAtHighCapability;
   return { bestOverall, bestAtHighCapability, gap, forcesATradeoff: gap > TRADEOFF_POINTS };
 }
+
+/**
+ * Round tick values spanning a domain.
+ *
+ * Steps come from the 1, 2, 5, 10 family, so a reader gets numbers they can
+ * hold in their head rather than whatever the data's range happened to divide
+ * into. Ticks stay inside the domain: one drawn beyond the axis has nowhere
+ * to sit.
+ */
+export function axisTicks(min: number, max: number, target: number): number[] {
+  if (!(max > min)) return [min];
+
+  const build = (step: number) => {
+    const ticks: number[] = [];
+    for (let value = Math.ceil(min / step) * step; value <= max + 1e-9; value += step) {
+      ticks.push(Number(value.toFixed(6)));
+    }
+    return ticks;
+  };
+
+  // 2.5 belongs in the family: without it a 0-100 axis steps by 50, which is
+  // too coarse to read a position from.
+  const rough = (max - min) / Math.max(1, target - 1);
+  const magnitude = 10 ** Math.floor(Math.log10(rough));
+  const candidates = [0.5, 1, 2, 2.5, 5, 10].map((m) => m * magnitude);
+
+  // Closest tick count to the target, rather than the first step wide enough:
+  // that rounded up every time and left axes with two labels on them.
+  let best = build(candidates[0]);
+  for (const step of candidates.slice(1)) {
+    const ticks = build(step);
+    if (ticks.length >= 2 && Math.abs(ticks.length - target) < Math.abs(best.length - target)) {
+      best = ticks;
+    }
+  }
+  return best;
+}

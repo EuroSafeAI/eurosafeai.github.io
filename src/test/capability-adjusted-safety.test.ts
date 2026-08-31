@@ -4,6 +4,7 @@ import {
   PUBLISHED_CAPABILITY_WEIGHT,
   adjustedSafety,
   attainableFrontier,
+  axisTicks,
   capabilityCost,
   capabilityScore,
   indexDomain,
@@ -324,5 +325,39 @@ describe("capabilityCost", () => {
 
   it("is undefined when there is nothing to compare", () => {
     expect(capabilityCost([])).toBeUndefined();
+  });
+});
+
+describe("axisTicks", () => {
+  it("returns round numbers a reader can hold in their head", () => {
+    expect(axisTicks(0, 100, 5)).toEqual([0, 25, 50, 75, 100]);
+  });
+
+  it("stays inside the domain it is given", () => {
+    const ticks = axisTicks(3.5, 59.7, 5);
+    for (const tick of ticks) {
+      expect(tick).toBeGreaterThanOrEqual(3.5);
+      expect(tick).toBeLessThanOrEqual(59.7);
+    }
+  });
+
+  it("is evenly spaced and ascending", () => {
+    const ticks = axisTicks(3.5, 59.7, 5);
+    expect(ticks.length).toBeGreaterThanOrEqual(2);
+    const step = ticks[1] - ticks[0];
+    for (let i = 1; i < ticks.length; i += 1) {
+      expect(ticks[i] - ticks[i - 1]).toBeCloseTo(step, 6);
+      expect(ticks[i]).toBeGreaterThan(ticks[i - 1]);
+    }
+  });
+
+  it("uses a step from the 1, 2, 5, 10 family rather than an arbitrary one", () => {
+    const step = axisTicks(0, 57, 5)[1] - axisTicks(0, 57, 5)[0];
+    const mantissa = step / 10 ** Math.floor(Math.log10(step));
+    expect([1, 2, 5, 10]).toContain(Math.round(mantissa));
+  });
+
+  it("copes with a degenerate domain rather than looping", () => {
+    expect(axisTicks(5, 5, 5)).toEqual([5]);
   });
 });

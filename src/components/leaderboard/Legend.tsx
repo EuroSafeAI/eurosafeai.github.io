@@ -1,6 +1,6 @@
 import { GRADES, GRADE_BAND, gpa } from "@/lib/scoring";
 import { heatColor } from "@/lib/heat";
-import { COVERAGE_FLAG } from "./constants";
+import { ACCENT, COVERAGE_FLAG } from "./constants";
 
 /** The grade-chip key and explanatory prose shown beneath the heatmap. */
 export const Legend: React.FC = () => (
@@ -43,7 +43,11 @@ export const Legend: React.FC = () => (
       A bar under a cell flags{" "}
       <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
       excluded rather than counted as safe, so a flagged grade rests on fewer, and typically
-      easier, prompts than an unflagged one.
+      easier, prompts than an unflagged one.{" "}
+      <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>
+        How these scores are calculated
+      </a>
+      .
     </p>
   </div>
 );

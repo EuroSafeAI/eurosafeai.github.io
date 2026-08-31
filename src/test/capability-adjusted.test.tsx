@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { adjustedRanking, attainableFrontier } from "@/lib/capability-adjusted-safety";
+import { adjustedRanking } from "@/lib/capability-adjusted-safety";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -119,23 +119,11 @@ describe("plot reference furniture", () => {
     expect(Number(shade.getAttribute("height"))).toBeGreaterThan(0);
   });
 
-  it("draws the frontier through exactly the undominated models", () => {
+  it("draws no line between models", () => {
+    // Connecting points implies a path through them. These are independent
+    // observations, not a series.
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const points = plot().querySelector("polyline")!.getAttribute("points")!.trim().split(" ");
-    expect(points).toHaveLength(attainableFrontier(MODELS).length);
-  });
-
-  it("places each frontier vertex on its own model's point", () => {
-    // A polyline through the right count of wrong places would still pass the
-    // test above.
-    render(<CapabilityAdjustedSection models={MODELS} />);
-    const drawn = plot().querySelector("polyline")!.getAttribute("points")!.trim().split(" ");
-    const circles = [...plot().querySelectorAll("circle")];
-    for (const model of attainableFrontier(MODELS)) {
-      const dot = circles.find((c) => c.textContent?.includes(model.name))!;
-      const at = `${dot.getAttribute("cx")},${dot.getAttribute("cy")}`;
-      expect(drawn).toContain(at);
-    }
+    expect(plot().querySelector("polyline")).toBeNull();
   });
 
   it("says the reference lines are medians, not thresholds", () => {
@@ -172,5 +160,39 @@ describe("mirroring the grid's hover", () => {
   it("dims nothing for a name that matches no model", () => {
     render(<CapabilityAdjustedSection models={MODELS} highlight="Nobody" />);
     expect(dots().every((g) => g.getAttribute("data-picked") === "false")).toBe(true);
+  });
+});
+
+describe("axis decoration", () => {
+  const plot = () => screen.getByRole("img", { name: /intelligence index/i });
+
+  it("labels both axes with their direction and units", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    expect(screen.getByText(/more capable, by Artificial Analysis intelligence index/i)).toBeInTheDocument();
+    expect(screen.getByText(/safer, worst-case score out of 100/i)).toBeInTheDocument();
+  });
+
+  it("puts readable values on both axes, not just titles", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const texts = [...plot().querySelectorAll("text")].map((t) => t.textContent?.trim());
+    for (const safety of ["0", "25", "50", "75", "100"]) {
+      expect(texts).toContain(safety);
+    }
+    // The capability axis is fitted to the roster, so assert it carries some
+    // numeric ticks rather than pinning values that move with the data.
+    const numeric = texts.filter((t) => /^\d+$/.test(t ?? ""));
+    expect(numeric.length).toBeGreaterThan(6);
+  });
+
+  it("links out to the methodology for how the scores are built", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const link = screen.getByRole("link", { name: /methodology/i });
+    expect(link).toHaveAttribute("href", "#methodology");
+  });
+
+  it("eases the highlight instead of snapping it", () => {
+    render(<CapabilityAdjustedSection models={MODELS} highlight="Anthropic" />);
+    const group = plot().querySelector("g[data-picked]") as HTMLElement;
+    expect(group.style.transition).toContain("opacity");
   });
 });

@@ -1,11 +1,12 @@
 import { useMemo } from "react";
+import { useReducedMotion } from "framer-motion";
 import type { ModelEntry } from "@/data/models.types";
-import { scoreOverall } from "@/lib/scoring";
+import { ACCENT } from "@/components/leaderboard/constants";
 import {
   PUBLISHED_CAPABILITY_WEIGHT,
   adjustedRanking,
-  attainableFrontier,
   indexDomain,
+  axisTicks,
   planeMedians,
   spreadLabels,
   scatterPoint,
@@ -35,12 +36,12 @@ export const CapabilityAdjustedSection = ({
   /** A provider or model name to pick out, mirroring the grid below. */
   highlight?: string | null;
 }) => {
+  const reduced = useReducedMotion() ?? false;
   // Plotted at the published exponent: the leaderboard below carries the
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
   const domain = useMemo(() => indexDomain(models), [models]);
   const medians = useMemo(() => planeMedians(models), [models]);
-  const frontier = useMemo(() => attainableFrontier(models), [models]);
 
   // Label positions are stepped apart where they would collide. Roughly 5px
   // per character is enough to spot an overlap; exact text metrics are not
@@ -74,12 +75,36 @@ export const CapabilityAdjustedSection = ({
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
-        <text x={BOX.width - BOX.pad} y={BOX.height - BOX.pad + 26} textAnchor="end" fontSize={11} fill="#6b7280">
-          Artificial Analysis intelligence index ({domain.min.toFixed(0)} to{" "}
-          {domain.max.toFixed(0)})
+        {/* Ticks and gridlines: the axes carried a title each and no values,
+            so a point's position could not be read off them. */}
+        {axisTicks(domain.min, domain.max, 6).map((tick) => {
+          const { x } = scatterPoint(tick, 0, BOX, domain);
+          return (
+            <g key={`x-${tick}`}>
+              <line x1={x} y1={BOX.height - BOX.pad} x2={x} y2={BOX.height - BOX.pad + 5} stroke="rgba(10,31,77,0.3)" />
+              <text x={x} y={BOX.height - BOX.pad + 17} textAnchor="middle" fontSize={10} fill="#9ca3af">
+                {tick.toFixed(0)}
+              </text>
+            </g>
+          );
+        })}
+        {axisTicks(0, 100, 5).map((tick) => {
+          const { y } = scatterPoint(domain.min, tick, BOX, domain);
+          return (
+            <g key={`y-${tick}`}>
+              <line x1={BOX.pad} y1={y} x2={BOX.width - BOX.pad} y2={y} stroke="rgba(10,31,77,0.05)" />
+              <line x1={BOX.pad - 5} y1={y} x2={BOX.pad} y2={y} stroke="rgba(10,31,77,0.3)" />
+              <text x={BOX.pad - 9} y={y + 3.5} textAnchor="end" fontSize={10} fill="#9ca3af">
+                {tick.toFixed(0)}
+              </text>
+            </g>
+          );
+        })}
+        <text x={BOX.width - BOX.pad} y={BOX.height - BOX.pad + 34} textAnchor="end" fontSize={11} fontWeight={600} fill="#6b7280">
+          more capable, by Artificial Analysis intelligence index
         </text>
-        <text x={BOX.pad} y={BOX.pad - 16} fontSize={11} fill="#6b7280">
-          raw safety
+        <text x={BOX.pad - 9} y={BOX.pad - 14} textAnchor="start" fontSize={11} fontWeight={600} fill="#6b7280">
+          safer, worst-case score out of 100
         </text>
         {medians && (
           <g>
@@ -120,20 +145,6 @@ export const CapabilityAdjustedSection = ({
             </text>
           </g>
         )}
-        {frontier.length > 1 && (
-          <polyline
-            points={frontier
-              .map((m) => {
-                const point = scatterPoint(m.aa_intelligence_index, scoreOverall(m)!, BOX, domain);
-                return `${point.x},${point.y}`;
-              })
-              .join(" ")}
-            fill="none"
-            stroke="rgba(10,31,77,0.3)"
-            strokeWidth={1.5}
-            strokeDasharray="6 3"
-          />
-        )}
         {ranking.map((entry, i) => {
           const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
           const textY = labelY[i];
@@ -145,8 +156,20 @@ export const CapabilityAdjustedSection = ({
             entry.model.company === highlight ||
             entry.model.name === highlight;
           return (
-            <g key={entry.model.id} opacity={picked ? 1 : 0.18} data-picked={picked}>
-              <circle cx={x} cy={y} r={picked && highlight ? 8 : 6} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
+            <g
+              key={entry.model.id}
+              opacity={picked ? 1 : 0.18}
+              data-picked={picked}
+              // Eased rather than instant: a hover that snaps the whole plot
+              // reads as a glitch, and the eye needs a moment to follow which
+              // points survived.
+              style={{ transition: reduced ? undefined : "opacity 0.22s ease" }}
+            >
+              <circle
+                cx={x}
+                cy={y}
+                r={picked && highlight ? 8 : 6}
+                style={{ transition: reduced ? undefined : "r 0.22s ease" }} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
                 <title>
                   {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                 </title>
@@ -164,15 +187,8 @@ export const CapabilityAdjustedSection = ({
         })}
       </svg>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem", alignItems: "center" }}>
-        {/* The dashed line and the shaded corner are the two marks a reader
-            cannot infer from the axes, so they are named here rather than
-            only in the prose beside the plot. */}
-        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
-          <svg width={22} height={9} aria-hidden>
-            <line x1={0} y1={5} x2={22} y2={5} stroke="rgba(10,31,77,0.45)" strokeWidth={1.5} strokeDasharray="6 3" />
-          </svg>
-          best safety achieved at each capability
-        </span>
+        {/* The shaded corner is the one mark a reader cannot infer from the
+            axes, so it is named here rather than only in the prose. */}
         <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
           <span aria-hidden style={{ width: 14, height: 10, background: "rgba(220,38,38,0.12)", borderRadius: 2 }} />
           more capable, less safe than the median
@@ -198,15 +214,12 @@ export const CapabilityAdjustedSection = ({
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
           The shaded corner holds the models that are more capable and less safe than half the
-          field. The dashed line traces those nothing else beats on both counts: it stays close to
-          flat, so the safest model at high capability gives up almost nothing against the safest
-          at low capability. A capable model scoring badly here is a choice, not a cost of being
-          capable.
+          field.
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
           Both reference lines are medians of this roster, not thresholds, so they move as models
-          are added. Combining the two axes into one capability-adjusted grade is explained under
-          Methodology.
+          are added. Combining the two axes into one capability-adjusted grade is explained under{" "}
+          <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Methodology</a>.
         </p>
       </div>
     </div>

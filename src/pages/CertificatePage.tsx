@@ -196,7 +196,7 @@ const CertificatePage = () => {
       {/* About / Methodology */}
       <section style={{ background: "#f5f7fb", padding: isMobile ? "2.5rem 0 3rem" : "3.5rem 0 4rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <div style={{ maxWidth: 760 }}>
+          <div id="methodology" style={{ maxWidth: 760, scrollMarginTop: "2rem" }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
             <Methodology models={MODELS} />
           </div>
