@@ -217,7 +217,24 @@ export interface LabelBox {
  * already placed, which keeps the result deterministic: the same roster always
  * produces the same plot.
  */
-export function spreadLabels(boxes: readonly LabelBox[], lineHeight: number): number[] {
+/**
+ * Vertical clearance between a label's baseline and a point it passes over.
+ * The dot's radius alone is not enough: text extends above its baseline, so a
+ * label cleared by exactly r still cut through the dot on the rendered plot.
+ */
+const OBSTACLE_CLEARANCE = 6;
+
+export interface LabelObstacle {
+  x: number;
+  y: number;
+  r: number;
+}
+
+export function spreadLabels(
+  boxes: readonly LabelBox[],
+  lineHeight: number,
+  obstacles: readonly LabelObstacle[] = []
+): number[] {
   const order = boxes.map((_, index) => index).sort((a, b) => boxes[a].y - boxes[b].y);
   const placed: number[] = new Array(boxes.length);
 
@@ -227,6 +244,16 @@ export function spreadLabels(boxes: readonly LabelBox[], lineHeight: number): nu
     let moved = true;
     while (moved) {
       moved = false;
+      // Points as well as other labels. A label running through a different
+      // model's dot was the overlap actually visible on the plot, and
+      // comparing labels only never caught it.
+      for (const dot of obstacles) {
+        const spans = dot.x >= box.x - dot.r && dot.x <= box.x + box.width + dot.r;
+        if (spans && Math.abs(y - dot.y) < dot.r + OBSTACLE_CLEARANCE) {
+          y = dot.y + dot.r + OBSTACLE_CLEARANCE;
+          moved = true;
+        }
+      }
       for (const other of order) {
         if (other === index || placed[other] === undefined) continue;
         const overlapsHorizontally =

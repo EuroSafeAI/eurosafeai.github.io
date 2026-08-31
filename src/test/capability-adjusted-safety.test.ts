@@ -384,3 +384,42 @@ describe("safetyBand", () => {
     expect(safetyBand(bare)).toBeUndefined();
   });
 });
+
+describe("spreadLabels avoiding dots", () => {
+  const gap = 11;
+
+  it("moves a label that a nearby point would strike through", () => {
+    // The real failure on the plot: a label was not hitting another label, it
+    // was running straight through a different model's dot.
+    const boxes = [{ x: 0, y: 20, width: 60 }];
+    const dots = [{ x: 30, y: 20, r: 6 }];
+    expect(spreadLabels(boxes, gap, dots)[0]).not.toBe(20);
+  });
+
+  it("leaves a label alone when the point is clear of its span", () => {
+    const boxes = [{ x: 0, y: 20, width: 60 }];
+    expect(spreadLabels(boxes, gap, [{ x: 300, y: 20, r: 6 }])[0]).toBe(20);
+  });
+
+  it("ignores a point far above or below the text", () => {
+    const boxes = [{ x: 0, y: 20, width: 60 }];
+    expect(spreadLabels(boxes, gap, [{ x: 30, y: 200, r: 6 }])[0]).toBe(20);
+  });
+
+  it("clears every dot on the real roster", () => {
+    const domain = indexDomain(MODELS);
+    const box = { width: 820, height: 430, pad: 48 };
+    const points = MODELS.map((m) => scatterPoint(m.aa_intelligence_index, m.aggregate.worst!, box, domain));
+    const boxes = MODELS.map((m, i) => ({ x: points[i].x + 12, y: points[i].y + 4, width: m.name.length * 6 }));
+    const dots = points.map((p) => ({ x: p.x, y: p.y, r: 6 }));
+    const placed = spreadLabels(boxes, gap, dots);
+    for (let i = 0; i < boxes.length; i += 1) {
+      for (const dot of dots) {
+        const spans = dot.x >= boxes[i].x - dot.r && dot.x <= boxes[i].x + boxes[i].width + dot.r;
+        // Radius plus the text's rise above its baseline. Clearing by the
+        // radius alone still struck through the dot on the rendered plot.
+        if (spans) expect(Math.abs(placed[i] - dot.y)).toBeGreaterThanOrEqual(dot.r + 5);
+      }
+    }
+  });
+});

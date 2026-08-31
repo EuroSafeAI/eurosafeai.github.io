@@ -27,7 +27,8 @@ const REGION_COLOUR: Record<string, string> = {
 };
 const REGION_FALLBACK = "#6b7280";
 const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
-const LABEL_LINE_HEIGHT = 11;
+const LABEL_LINE_HEIGHT = 12;
+const DOT_RADIUS = 6;
 
 export const CapabilityAdjustedSection = ({
   models,
@@ -48,11 +49,15 @@ export const CapabilityAdjustedSection = ({
   // per character is enough to spot an overlap; exact text metrics are not
   // available without measuring in the DOM, and would not change the outcome.
   const labelY = useMemo(() => {
-    const boxes = ranking.map((entry) => {
-      const point = scatterPoint(entry.index, entry.safety, BOX, domain);
-      return { x: point.x + 9, y: point.y + 4, width: entry.model.name.length * 5 };
-    });
-    return spreadLabels(boxes, LABEL_LINE_HEIGHT);
+    const points = ranking.map((entry) => scatterPoint(entry.index, entry.safety, BOX, domain));
+    const boxes = ranking.map((entry, i) => ({
+      x: points[i].x + 11,
+      y: points[i].y + 4,
+      // 6px per character, measured against the rendered plot: 5 under-counted
+      // and let collisions through.
+      width: entry.model.name.length * 6,
+    }));
+    return spreadLabels(boxes, LABEL_LINE_HEIGHT, points.map((p) => ({ ...p, r: DOT_RADIUS })));
   }, [ranking, domain]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
@@ -182,7 +187,7 @@ export const CapabilityAdjustedSection = ({
               {band && (
                 <line
                   x1={x}
-                  y1={scatterPoint(entry.index, band.low, BOX, domain).y}
+                  y1={y}
                   x2={x}
                   y2={scatterPoint(entry.index, band.high, BOX, domain).y}
                   stroke={colour}
@@ -196,7 +201,7 @@ export const CapabilityAdjustedSection = ({
               {Math.abs(textY - (y + 4)) > 1 && (
                 <line x1={x + 6} y1={y} x2={x + 8} y2={textY - 3} stroke="rgba(10,31,77,0.25)" />
               )}
-              <text x={x + 9} y={textY} fontSize={9.5} fill="#6b7280">
+              <text x={x + 11} y={textY} fontSize={9.5} fill="#6b7280">
                 {entry.model.name}
               </text>
             </g>
