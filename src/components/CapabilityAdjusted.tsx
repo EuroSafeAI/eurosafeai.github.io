@@ -4,11 +4,10 @@ import { useElementWidth } from "@/hooks/use-element-width";
 import type { ModelEntry } from "@/data/models.types";
 import { ACCENT } from "@/components/leaderboard/constants";
 import {
-  PUBLISHED_CAPABILITY_WEIGHT,
-  adjustedRanking,
   indexDomain,
   axisTicks,
   planeMedians,
+  providerPoints,
   spreadLabels,
   scatterPoint,
   type ScatterBox,
@@ -59,19 +58,22 @@ export const CapabilityAdjustedSection = ({
     [measured]
   );
   // Plotted at the published exponent: the leaderboard below carries the
-  // interactive weight, and this stays the fixed reference it is cited as.
-  const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
   const domain = useMemo(() => indexDomain(models), [models]);
+  const providers = useMemo(() => providerPoints(models), [models]);
+  const [hovered, setHovered] = useState<string | null>(null);
+  // The grid's hover opens the same provider, so the two views agree about
+  // what is currently being looked at.
+  const open = hovered ?? highlight ?? null;
   const medians = useMemo(() => planeMedians(models), [models]);
 
   // Label positions are stepped apart where they would collide. Roughly 5px
   // per character is enough to spot an overlap; exact text metrics are not
   // available without measuring in the DOM, and would not change the outcome.
   const labels = useMemo(() => {
-    const points = ranking.map((entry) => scatterPoint(entry.index, entry.safety, BOX, domain));
+    const points = providers.map((p) => scatterPoint(p.index, p.safety, BOX, domain));
     // 6px per character, measured against the rendered plot: 5 under-counted
     // and let collisions through.
-    const widths = ranking.map((entry) => entry.model.name.length * 6);
+    const widths = providers.map((p) => p.provider.length * 6);
 
     // Left when the right would run past the plot, which four labels did.
     const onLeft = points.map((point, i) => point.x + LABEL_OFFSET + widths[i] > BOX.width - BOX.pad);
@@ -85,15 +87,15 @@ export const CapabilityAdjustedSection = ({
     // crowded upper half of the plot.
     const obstacles = [
       ...points.map((p) => ({ ...p, r: DOT_RADIUS })),
-      ...ranking.map((entry) => ({
-        x: scatterPoint(entry.index, entry.averageSafety, BOX, domain).x,
-        y: scatterPoint(entry.index, entry.averageSafety, BOX, domain).y,
+      ...providers.map((p) => ({
+        x: scatterPoint(p.index, p.averageSafety, BOX, domain).x,
+        y: scatterPoint(p.index, p.averageSafety, BOX, domain).y,
         r: CROSS_RADIUS,
       })),
     ];
     const y = spreadLabels(boxes, LABEL_LINE_HEIGHT, obstacles);
-    return ranking.map((_, i) => ({ y: y[i], onLeft: onLeft[i] }));
-  }, [ranking, domain, BOX]);
+    return providers.map((_, i) => ({ y: y[i], onLeft: onLeft[i] }));
+  }, [providers, domain, BOX]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
     [models]
@@ -186,47 +188,90 @@ export const CapabilityAdjustedSection = ({
             </text>
           </g>
         )}
-        {ranking.map((entry, i) => {
-          const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
+        {providers.map((point, i) => {
+          const isOpen = open === point.provider;
+          const { x, y } = scatterPoint(point.index, point.safety, BOX, domain);
+          const averageY = scatterPoint(point.index, point.averageSafety, BOX, domain).y;
           const { y: textY, onLeft } = labels[i];
-          const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
-          // The grid groups by organisation or by model, so a highlight can
-          // name either. Matching both means one prop serves both modes.
-          const averageY = scatterPoint(entry.index, entry.averageSafety, BOX, domain).y;
-          const picked =
-            !highlight ||
-            entry.model.company === highlight ||
-            entry.model.name === highlight;
+          const colour = REGION_COLOUR[point.models[0].model.region] ?? REGION_FALLBACK;
+          const dim = open !== null && !isOpen;
+          const ease = reduced ? undefined : "opacity 0.25s ease, cx 0.3s ease, cy 0.3s ease, r 0.25s ease";
+
           return (
             <g
-              key={entry.model.id}
-              opacity={picked ? 1 : 0.18}
-              data-picked={picked}
-              // Eased rather than instant: a hover that snaps the whole plot
-              // reads as a glitch, and the eye needs a moment to follow which
-              // points survived.
-              style={{ transition: reduced ? undefined : "opacity 0.22s ease" }}
+              key={point.provider}
+              opacity={dim ? 0.15 : 1}
+              style={{ transition: reduced ? undefined : "opacity 0.25s ease" }}
+              onMouseEnter={() => setHovered(point.provider)}
+              onMouseLeave={() => setHovered(null)}
             >
-              <circle
-                cx={x}
-                cy={y}
-                r={picked && highlight ? 8 : 6}
-                style={{ transition: reduced ? undefined : "r 0.22s ease" }} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
-                <title>
-                  {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, average ${entry.averageSafety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}, adjusted ${entry.adjusted.toFixed(1)}`}
-                </title>
-              </circle>
-              {/* Two readings of the same model: the score it holds under the
-                  worst pressure applied, and its average across conditions.
-                  Joined so the pair reads as one model rather than two. */}
-              <line x1={x} y1={y} x2={x} y2={averageY} stroke={colour} strokeWidth={1.25} opacity={0.4} />
-              <g stroke={colour} strokeWidth={1.75} opacity={0.85}>
-                <line x1={x - 4} y1={averageY - 4} x2={x + 4} y2={averageY + 4} />
-                <line x1={x - 4} y1={averageY + 4} x2={x + 4} y2={averageY - 4} />
+              {/* The provider's own marker pair, hidden while its models are
+                  out so the two do not read as separate observations. */}
+              <g opacity={isOpen ? 0 : 1} style={{ transition: reduced ? undefined : "opacity 0.25s ease" }}>
+                <line x1={x} y1={y} x2={x} y2={averageY} stroke={colour} strokeWidth={1.25} opacity={0.4} />
+                <circle cx={x} cy={y} r={7} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
+                  <title>
+                    {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, worst case ${point.safety.toFixed(1)}, average ${point.averageSafety.toFixed(1)}, intelligence index ${point.index.toFixed(1)}`}
+                  </title>
+                </circle>
+                <g stroke={colour} strokeWidth={1.75} opacity={0.85}>
+                  <line x1={x - 4} y1={averageY - 4} x2={x + 4} y2={averageY + 4} />
+                  <line x1={x - 4} y1={averageY + 4} x2={x + 4} y2={averageY - 4} />
+                </g>
               </g>
-              {/* A leader line where the label had to move, so it stays
-                  attached to the dot it names. */}
-              {Math.abs(textY - (y + 4)) > 1 && (
+
+              {/* Its models, parked on the provider's marker until it opens.
+                  Always mounted so the move is a transition rather than a
+                  mount, which cannot be animated. */}
+              {point.models.map((entry) => {
+                const at = scatterPoint(entry.index, entry.safety, BOX, domain);
+                const atAvg = scatterPoint(entry.index, entry.averageSafety, BOX, domain);
+                const mc = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
+                return (
+                  <g
+                    key={entry.model.id}
+                    opacity={isOpen ? 1 : 0}
+                    style={{ transition: ease }}
+                    data-model={entry.model.id}
+                    data-open={isOpen}
+                  >
+                    <line
+                      x1={isOpen ? at.x : x}
+                      y1={isOpen ? at.y : y}
+                      x2={isOpen ? at.x : x}
+                      y2={isOpen ? atAvg.y : averageY}
+                      stroke={mc}
+                      strokeWidth={1.25}
+                      opacity={0.4}
+                      style={{ transition: ease }}
+                    />
+                    <circle
+                      cx={isOpen ? at.x : x}
+                      cy={isOpen ? at.y : y}
+                      r={6}
+                      fill={mc}
+                      stroke="#ffffff"
+                      strokeWidth={1.5}
+                      style={{ transition: ease }}
+                    >
+                      <title>
+                        {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, average ${entry.averageSafety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
+                      </title>
+                    </circle>
+                    <text
+                      x={(isOpen ? at.x : x) + 10}
+                      y={(isOpen ? at.y : y) + 4}
+                      fontSize={9}
+                      fill="#6b7280"
+                      style={{ transition: ease }}
+                    >
+                      {entry.model.name}
+                    </text>
+                  </g>
+                );
+              })}
+
+              {Math.abs(textY - (y + 4)) > 1 && !isOpen && (
                 <line
                   x1={onLeft ? x - 6 : x + 6}
                   y1={y}
@@ -239,10 +284,13 @@ export const CapabilityAdjustedSection = ({
                 x={onLeft ? x - LABEL_OFFSET : x + LABEL_OFFSET}
                 y={textY}
                 textAnchor={onLeft ? "end" : "start"}
-                fontSize={9.5}
-                fill="#6b7280"
+                fontSize={10.5}
+                fontWeight={600}
+                fill="#4b5563"
+                opacity={isOpen ? 0 : 1}
+                style={{ transition: reduced ? undefined : "opacity 0.25s ease" }}
               >
-                {entry.model.name}
+                {point.provider}
               </text>
             </g>
           );

@@ -9,6 +9,7 @@ import {
   capabilityScore,
   indexDomain,
   planeMedians,
+  providerPoints,
   spreadLabels,
   safetyCapabilityCorrelation,
   scatterPoint,
@@ -398,5 +399,40 @@ describe("spreadLabels avoiding dots", () => {
         if (spans) expect(Math.abs(placed[i] - dot.y)).toBeGreaterThanOrEqual(dot.r + 5);
       }
     }
+  });
+});
+
+describe("providerPoints", () => {
+  it("returns one point per organisation, not per model", () => {
+    const points = providerPoints(MODELS);
+    expect(points).toHaveLength(new Set(MODELS.map((m) => m.company)).size);
+    expect(points.length).toBeLessThan(MODELS.length);
+  });
+
+  it("places a provider at the mean of its models on both axes", () => {
+    const anthropic = providerPoints(MODELS).find((p) => p.provider === "Anthropic")!;
+    const mine = MODELS.filter((m) => m.company === "Anthropic");
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    expect(anthropic.index).toBeCloseTo(mean(mine.map((m) => m.aa_intelligence_index)), 6);
+    expect(anthropic.safety).toBeCloseTo(mean(mine.map((m) => scoreOverall(m)!)), 6);
+  });
+
+  it("carries its models so the point can expand into them", () => {
+    for (const point of providerPoints(MODELS)) {
+      expect(point.models.length).toBeGreaterThan(0);
+      for (const entry of point.models) expect(entry.model.company).toBe(point.provider);
+    }
+    const total = providerPoints(MODELS).reduce((n, p) => n + p.models.length, 0);
+    expect(total).toBe(MODELS.length);
+  });
+
+  it("keeps the average at or above the worst case, as the markers assume", () => {
+    for (const point of providerPoints(MODELS)) {
+      expect(point.averageSafety).toBeGreaterThanOrEqual(point.safety);
+    }
+  });
+
+  it("is empty for an empty roster", () => {
+    expect(providerPoints([])).toEqual([]);
   });
 });

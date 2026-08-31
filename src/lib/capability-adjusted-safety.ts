@@ -347,3 +347,39 @@ export function axisTicks(min: number, max: number, target: number): number[] {
   return best;
 }
 
+
+export interface ProviderPoint {
+  provider: string;
+  index: number;
+  safety: number;
+  averageSafety: number;
+  models: AdjustedEntry[];
+}
+
+/**
+ * One point per organisation, at the mean of its models on both axes.
+ *
+ * Sixteen labelled models crowd the plot; nine organisations do not. Each
+ * point carries the models behind it so hovering can open it up, which keeps
+ * the detail available without spending the default view on it.
+ */
+export function providerPoints(
+  models: readonly ModelEntry[],
+  weight: number = PUBLISHED_CAPABILITY_WEIGHT
+): ProviderPoint[] {
+  const byProvider = new Map<string, AdjustedEntry[]>();
+  for (const entry of adjustedRanking(models, weight)) {
+    const group = byProvider.get(entry.model.company);
+    if (group) group.push(entry);
+    else byProvider.set(entry.model.company, [entry]);
+  }
+
+  const mean = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length;
+  return [...byProvider.entries()].map(([provider, entries]) => ({
+    provider,
+    index: mean(entries.map((e) => e.index)),
+    safety: mean(entries.map((e) => e.safety)),
+    averageSafety: mean(entries.map((e) => e.averageSafety)),
+    models: entries,
+  }));
+}

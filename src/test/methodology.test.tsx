@@ -166,30 +166,28 @@ describe("page order", () => {
 });
 
 describe("the plot mirrors the grid", () => {
-  const pickedCount = () =>
-    [...document.querySelectorAll('g[data-picked="true"]')].length;
+  const openModels = () =>
+    [...document.querySelectorAll('g[data-model][data-open="true"]')].length;
 
-  it("dims the plot to one organisation when its column is hovered", () => {
-    renderPage();
-    const before = pickedCount();
-    const anthropic = screen
+  const hoverColumn = (name: string) => {
+    const header = screen
       .getAllByRole("columnheader")
-      .find((h) => h.textContent?.includes("Anthropic"))!;
-    fireEvent.mouseEnter(anthropic.closest('[role="presentation"]')!);
-    const after = pickedCount();
-    expect(after).toBeLessThan(before);
-    expect(after).toBeGreaterThan(0);
+      .find((h) => h.textContent?.includes(name))!;
+    return header.closest('[role="presentation"]')!;
+  };
+
+  it("opens a provider's models on the plot when its column is hovered", () => {
+    renderPage();
+    expect(openModels()).toBe(0);
+    fireEvent.mouseEnter(hoverColumn("Anthropic"));
+    expect(openModels()).toBeGreaterThan(0);
   });
 
-  it("restores every point when the pointer leaves", () => {
+  it("closes them again when the pointer leaves", () => {
     renderPage();
-    const before = pickedCount();
-    const group = screen
-      .getAllByRole("columnheader")
-      .find((h) => h.textContent?.includes("Anthropic"))!
-      .closest('[role="presentation"]')!;
+    const group = hoverColumn("Anthropic");
     fireEvent.mouseEnter(group);
     fireEvent.mouseLeave(group);
-    expect(pickedCount()).toBe(before);
+    expect(openModels()).toBe(0);
   });
 });
