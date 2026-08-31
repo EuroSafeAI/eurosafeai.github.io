@@ -41,6 +41,12 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   /does not measure what happens when it complies/i,
   /high-impact capabilities/i,
   /drops that side of the estimate/i,
+  // The findings band. Card 2's metric qualifier is the whole mitigation for
+  // the fact that the ceiling finding inverts under the average metric, so it
+  // matters more than the numbers beside it.
+  /under worst-case grading/i,
+  /lost to adversarial pressure/i,
+  /weakest risk/i,
 ];
 
 const renderPage = () =>

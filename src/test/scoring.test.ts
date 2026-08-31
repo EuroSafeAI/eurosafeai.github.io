@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { GRADES, GRADE_BAND, grade, gpa, mean, toScore } from "@/lib/scoring";
+import { GRADES, GRADE_BAND, grade, gpa, mean, median, toScore } from "@/lib/scoring";
 
 describe("grade scale", () => {
   it("spans A+ down to F− in 15 equal bands", () => {
@@ -84,5 +84,34 @@ describe("mean", () => {
 
   it("does not round — display rounding is the caller's job", () => {
     expect(mean([1, 2])).toBeCloseTo(1.5);
+  });
+});
+
+describe("median", () => {
+  it("returns the middle value for an odd count", () => {
+    expect(median([3, 1, 2])).toBe(2);
+  });
+
+  it("averages the two middle values for an even count", () => {
+    // The case a naive midpoint index gets wrong. On the real roster that
+    // error reports 58.0 where the median is 55.6.
+    expect(median([1, 2, 3, 4])).toBe(2.5);
+  });
+
+  it("does not depend on input order", () => {
+    expect(median([4, 1, 3, 2])).toBe(median([1, 2, 3, 4]));
+  });
+
+  it("ignores undefined values rather than counting them", () => {
+    expect(median([1, undefined, 2, undefined, 3])).toBe(2);
+  });
+
+  it("is undefined when nothing is defined", () => {
+    expect(median([])).toBeUndefined();
+    expect(median([undefined, undefined])).toBeUndefined();
+  });
+
+  it("handles a single value", () => {
+    expect(median([7])).toBe(7);
   });
 });

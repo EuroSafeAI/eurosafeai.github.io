@@ -62,6 +62,20 @@ export function mean(values: readonly (number | undefined)[]): number | undefine
  * in one — which is why both are shown (pipeline/utils/results.py: "when the
  * two diverge, one transform is carrying the result").
  */
+/**
+ * Median of the defined values.
+ *
+ * An even count averages the two middle values rather than taking either one:
+ * the roster has 16 models, where a naive midpoint index reports 58.0 against
+ * a true median of 55.6.
+ */
+export function median(values: readonly (number | undefined)[]): number | undefined {
+  const defined = values.filter((v): v is number => v !== undefined).sort((a, b) => a - b);
+  if (defined.length === 0) return undefined;
+  const middle = Math.floor(defined.length / 2);
+  return defined.length % 2 === 1 ? defined[middle] : (defined[middle - 1] + defined[middle]) / 2;
+}
+
 export type Aggregation = "worst" | "mean";
 
 export function scoreForRisk(

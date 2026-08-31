@@ -8,6 +8,7 @@ import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
+import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
 
 const MODELS = modelsData as unknown as ModelEntry[];
@@ -20,14 +21,14 @@ const SectionEyebrow = ({
   children: React.ReactNode;
 }) => (
   <Tag style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
-    <span style={{ width: "36px", height: "2px", background: "#0a2a66" }} />
+    <span style={{ width: "36px", height: "2px", background: ACCENT }} />
     <span
       style={{
         fontSize: "0.72rem",
         fontWeight: 700,
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: "#0a2a66",
+        color: ACCENT,
       }}
     >
       {children}
@@ -122,8 +123,16 @@ const CertificatePage = () => {
         </div>
       </section>
 
+      {/* Key Findings */}
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "3rem 0 3.5rem" : "5rem 0 6rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+          <SectionEyebrow as="h2">Key Findings</SectionEyebrow>
+          <KeyFindings models={MODELS} />
+        </div>
+      </section>
+
       {/* The Field */}
-      <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)", padding: "2.5rem 0 3rem" }}>
+      <section style={{ background: "#ffffff", padding: isMobile ? "3rem 0 3.5rem" : "5rem 0 6rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
@@ -139,15 +148,20 @@ const CertificatePage = () => {
         </div>
       </section>
 
-      {/* Heatmap */}
-      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
+      {/* Leaderboard */}
+      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 3rem" : "5rem 0 6rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
+          <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
+            Every provider graded on each systemic risk. Each grade opens down to the benchmarks
+            behind it, and down to the individual judges behind each benchmark.
+          </p>
           <Leaderboard models={MODELS} />
         </div>
       </section>
 
       {/* About / Methodology */}
-      <section style={{ background: "#ffffff", borderTop: "1px solid rgba(10,31,77,0.06)", padding: "4rem 0" }}>
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "3.5rem 0 4rem" : "6rem 0 7rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <div style={{ maxWidth: 760 }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
