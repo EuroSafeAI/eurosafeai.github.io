@@ -33,11 +33,11 @@ describe("CapabilityAdjustedSection", () => {
     );
   });
 
-  it("names each point's region, adjusted score, safety and index", () => {
+  it("names each point's region and both of its readings", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
     const entry = adjustedRanking(MODELS)[0];
     expect(
-      screen.getByText(new RegExp(`${entry.model.name} \\(${entry.model.region}\\): adjusted`))
+      screen.getByText(new RegExp(`${entry.model.name} \\(${entry.model.region}\\): worst case`))
     ).toBeInTheDocument();
   });
 
@@ -197,29 +197,37 @@ describe("axis decoration", () => {
   });
 });
 
-describe("uncertainty bands", () => {
+describe("worst and average markers", () => {
   const plot = () => screen.getByRole("img", { name: /intelligence index/i });
 
-  it("draws one band per model", () => {
+  it("marks each model twice, at its worst case and its average", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const bands = [...plot().querySelectorAll("line")].filter(
-      (l) => l.getAttribute("x1") === l.getAttribute("x2") && l.getAttribute("stroke-width") === "2"
+    expect(plot().querySelectorAll("circle")).toHaveLength(MODELS.length);
+    // Two strokes per cross.
+    const crosses = [...plot().querySelectorAll("g[stroke-width='1.75'] line")];
+    expect(crosses).toHaveLength(MODELS.length * 2);
+  });
+
+  it("puts the average marker above the worst-case marker", () => {
+    // Worst case takes each sample's minimum, so it can never exceed the
+    // average. If this inverted, the pair would read backwards.
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    for (const entry of adjustedRanking(MODELS)) {
+      expect(entry.averageSafety).toBeGreaterThanOrEqual(entry.safety);
+    }
+  });
+
+  it("joins each pair so they read as one model", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const joins = [...plot().querySelectorAll("line")].filter(
+      (l) => l.getAttribute("stroke-width") === "1.25"
     );
-    expect(bands).toHaveLength(MODELS.length);
+    expect(joins).toHaveLength(MODELS.length);
   });
 
-  it("spans the model's real family range, not a fixed height", () => {
+  it("says what the two markers are", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const heights = [...plot().querySelectorAll("line")]
-      .filter((l) => l.getAttribute("stroke-width") === "2")
-      .map((l) => Math.abs(Number(l.getAttribute("y1")) - Number(l.getAttribute("y2"))));
-    // The roster's family spread runs from about 11 to 42 points, so a
-    // constant-height bar would be a bug rather than a coincidence.
-    expect(new Set(heights.map((h) => h.toFixed(1))).size).toBeGreaterThan(5);
-  });
-
-  it("says capability carries no band, and why", () => {
-    render(<CapabilityAdjustedSection models={MODELS} />);
-    expect(document.body.textContent).toMatch(/Capability carries no such bar/i);
+    expect(document.body.textContent).toMatch(/worst case/i);
+    expect(document.body.textContent).toMatch(/average/i);
   });
 });

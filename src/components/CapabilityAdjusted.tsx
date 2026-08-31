@@ -8,7 +8,6 @@ import {
   indexDomain,
   axisTicks,
   planeMedians,
-  safetyBand,
   spreadLabels,
   scatterPoint,
   type ScatterBox,
@@ -29,6 +28,8 @@ const REGION_FALLBACK = "#6b7280";
 const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
 const LABEL_LINE_HEIGHT = 12;
 const DOT_RADIUS = 6;
+const LABEL_OFFSET = 11;
+const CROSS_RADIUS = 5;
 
 export const CapabilityAdjustedSection = ({
   models,
@@ -48,16 +49,32 @@ export const CapabilityAdjustedSection = ({
   // Label positions are stepped apart where they would collide. Roughly 5px
   // per character is enough to spot an overlap; exact text metrics are not
   // available without measuring in the DOM, and would not change the outcome.
-  const labelY = useMemo(() => {
+  const labels = useMemo(() => {
     const points = ranking.map((entry) => scatterPoint(entry.index, entry.safety, BOX, domain));
-    const boxes = ranking.map((entry, i) => ({
-      x: points[i].x + 11,
-      y: points[i].y + 4,
-      // 6px per character, measured against the rendered plot: 5 under-counted
-      // and let collisions through.
-      width: entry.model.name.length * 6,
+    // 6px per character, measured against the rendered plot: 5 under-counted
+    // and let collisions through.
+    const widths = ranking.map((entry) => entry.model.name.length * 6);
+
+    // Left when the right would run past the plot, which four labels did.
+    const onLeft = points.map((point, i) => point.x + LABEL_OFFSET + widths[i] > BOX.width - BOX.pad);
+    const boxes = points.map((point, i) => ({
+      x: onLeft[i] ? point.x - LABEL_OFFSET - widths[i] : point.x + LABEL_OFFSET,
+      y: point.y + 4,
+      width: widths[i],
     }));
-    return spreadLabels(boxes, LABEL_LINE_HEIGHT, points.map((p) => ({ ...p, r: DOT_RADIUS })));
+    // Both markers are obstacles. Avoiding only the worst-case dots left
+    // labels struck through by the crosses, which sit above them in the
+    // crowded upper half of the plot.
+    const obstacles = [
+      ...points.map((p) => ({ ...p, r: DOT_RADIUS })),
+      ...ranking.map((entry) => ({
+        x: scatterPoint(entry.index, entry.averageSafety, BOX, domain).x,
+        y: scatterPoint(entry.index, entry.averageSafety, BOX, domain).y,
+        r: CROSS_RADIUS,
+      })),
+    ];
+    const y = spreadLabels(boxes, LABEL_LINE_HEIGHT, obstacles);
+    return ranking.map((_, i) => ({ y: y[i], onLeft: onLeft[i] }));
   }, [ranking, domain]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
@@ -153,11 +170,11 @@ export const CapabilityAdjustedSection = ({
         )}
         {ranking.map((entry, i) => {
           const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
-          const textY = labelY[i];
+          const { y: textY, onLeft } = labels[i];
           const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
           // The grid groups by organisation or by model, so a highlight can
           // name either. Matching both means one prop serves both modes.
-          const band = safetyBand(entry.model);
+          const averageY = scatterPoint(entry.index, entry.averageSafety, BOX, domain).y;
           const picked =
             !highlight ||
             entry.model.company === highlight ||
@@ -178,30 +195,35 @@ export const CapabilityAdjustedSection = ({
                 r={picked && highlight ? 8 : 6}
                 style={{ transition: reduced ? undefined : "r 0.22s ease" }} fill={colour} stroke="#ffffff" strokeWidth={1.5}>
                 <title>
-                  {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
+                  {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, average ${entry.averageSafety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}, adjusted ${entry.adjusted.toFixed(1)}`}
                 </title>
               </circle>
-              {/* How far this model's safety moves across the six attack
-                  families. Drawn behind the dot, which sits at or below it
-                  because the worst case takes each sample's minimum. */}
-              {band && (
-                <line
-                  x1={x}
-                  y1={y}
-                  x2={x}
-                  y2={scatterPoint(entry.index, band.high, BOX, domain).y}
-                  stroke={colour}
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  opacity={0.35}
-                />
-              )}
+              {/* Two readings of the same model: the score it holds under the
+                  worst pressure applied, and its average across conditions.
+                  Joined so the pair reads as one model rather than two. */}
+              <line x1={x} y1={y} x2={x} y2={averageY} stroke={colour} strokeWidth={1.25} opacity={0.4} />
+              <g stroke={colour} strokeWidth={1.75} opacity={0.85}>
+                <line x1={x - 4} y1={averageY - 4} x2={x + 4} y2={averageY + 4} />
+                <line x1={x - 4} y1={averageY + 4} x2={x + 4} y2={averageY - 4} />
+              </g>
               {/* A leader line where the label had to move, so it stays
                   attached to the dot it names. */}
               {Math.abs(textY - (y + 4)) > 1 && (
-                <line x1={x + 6} y1={y} x2={x + 8} y2={textY - 3} stroke="rgba(10,31,77,0.25)" />
+                <line
+                  x1={onLeft ? x - 6 : x + 6}
+                  y1={y}
+                  x2={onLeft ? x - 8 : x + 8}
+                  y2={textY - 3}
+                  stroke="rgba(10,31,77,0.25)"
+                />
               )}
-              <text x={x + 11} y={textY} fontSize={9.5} fill="#6b7280">
+              <text
+                x={onLeft ? x - LABEL_OFFSET : x + LABEL_OFFSET}
+                y={textY}
+                textAnchor={onLeft ? "end" : "start"}
+                fontSize={9.5}
+                fill="#6b7280"
+              >
                 {entry.model.name}
               </text>
             </g>
@@ -209,6 +231,21 @@ export const CapabilityAdjustedSection = ({
         })}
       </svg>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem", alignItems: "center" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
+          <svg width={14} height={12} aria-hidden>
+            <circle cx={6} cy={6} r={5} fill="#6b7280" />
+          </svg>
+          worst case
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
+          <svg width={14} height={12} aria-hidden>
+            <g stroke="#6b7280" strokeWidth={1.75}>
+              <line x1={2} y1={2} x2={10} y2={10} />
+              <line x1={2} y1={10} x2={10} y2={2} />
+            </g>
+          </svg>
+          average
+        </span>
         {/* The shaded corner is the one mark a reader cannot infer from the
             axes, so it is named here rather than only in the prose. */}
         <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
@@ -236,11 +273,11 @@ export const CapabilityAdjustedSection = ({
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
           The shaded corner holds the models that are more capable and less safe than half the
-          field. Each vertical bar spans how far that model's safety moves across the six
-          adversarial families: a long bar means the score depends heavily on which attack it
-          faces. The dot sits at or below its bar, because the plotted score takes each sample's
-          worst result rather than any single family's average. Capability carries no such bar;
-          it is a single published figure, not a measurement made here.
+          field. Each model is marked twice: a filled dot at its worst case, and a cross at its
+          average. The gap between them is what adversarial pressure costs that model, and the
+          dot can never sit above the cross, because the worst case takes each sample's lowest
+          result. Capability is marked once; it is a single published figure, not a measurement
+          made here.
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
           Both reference lines are medians of this roster, not thresholds, so they move as models
