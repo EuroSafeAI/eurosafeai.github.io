@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
+import { publishedRoster } from "@/lib/roster";
 import { buildColumns } from "@/lib/leaderboard";
 import { capabilityCost as capabilityCostOf } from "@/lib/capability-adjusted-safety";
 import type { ModelEntry } from "@/data/models.types";
@@ -12,7 +13,7 @@ import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
 
-const MODELS = modelsData as unknown as ModelEntry[];
+const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
 
 const SectionEyebrow = ({
   as: Tag = "div",

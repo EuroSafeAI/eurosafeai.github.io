@@ -35,6 +35,11 @@ export const Legend: React.FC = () => (
       metric; the other is in its tooltip.
     </p>
     <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
+      least one risk evaluation fail: its grade for that risk comes from the samples that did
+      complete, and that row does not open into benchmarks or judges.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
       Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
       excluded from the aggregates above them. The refusal floor row counts every unscored
       sample as safe, so it reads high by construction. Treat it as an optimistic bound.

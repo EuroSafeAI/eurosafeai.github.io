@@ -6,7 +6,8 @@
  */
 import { describe, it, expect } from "vitest";
 import modelsData from "@/data/models.json";
-import { RISKS, CONDITIONS, type ModelEntry } from "@/data/models.types";
+import { publishedRoster } from "@/lib/roster";
+import { CONDITIONS, RISKS, type ModelEntry, type Risk } from "@/data/models.types";
 import {
   BENCHMARK_LABELS,
   RISK_LABELS,
@@ -15,7 +16,17 @@ import {
   scorerLabel,
 } from "@/lib/leaderboard";
 
-const MODELS = modelsData as unknown as ModelEntry[];
+// The promoted roster, because that is what the site publishes. Checking the
+// raw export instead would pass over a model whose scores the site fills in.
+/**
+ * Model/risk pairs whose evaluation actually produced results. A risk whose
+ * run failed carries no baseline, conditions or benchmarks, so asserting the
+ * full shape over it would fail for a reason that is not a defect.
+ */
+const evaluated = (m: ModelEntry, risk: Risk) =>
+  Object.keys(m.results[risk]?.benchmarks ?? {}).length > 0;
+
+const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
 
 /** Scorer keys the pipeline is known to emit. A new one is a schema change. */
 const KNOWN_DETECTORS = [
@@ -49,6 +60,7 @@ describe("models.json — top level", () => {
   it("carries all four systemic risks in scores, results and status", () => {
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         expect(m.scores[risk], `${m.id}.scores.${risk}`).toBeTypeOf("number");
         expect(m.results[risk], `${m.id}.results.${risk}`).toBeDefined();
         expect(m.status[risk]?.status, `${m.id}.status.${risk}`).toBeTypeOf("string");
@@ -63,6 +75,7 @@ describe("models.json — the invariant the page depends on", () => {
     // flat block. If these ever diverge, the page contradicts the certificate.
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         const worst = m.results[risk].aggregate.worst;
         const expected = worst === null ? -1 : worst;
         expect(m.scores[risk], `${m.id}.scores.${risk}`).toBe(expected);
@@ -78,6 +91,7 @@ describe("models.json — leaf values", () => {
       expect(ok(m.aggregate.worst), `${m.id}.aggregate.worst`).toBe(true);
       expect(ok(m.aggregate.mean), `${m.id}.aggregate.mean`).toBe(true);
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         const r = m.results[risk];
         const at = `${m.id}.${risk}`;
         expect(ok(r.aggregate.worst), `${at}.aggregate.worst`).toBe(true);
@@ -101,6 +115,7 @@ describe("models.json — leaf values", () => {
   it("uses only known condition names", () => {
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         for (const [bench, b] of Object.entries(m.results[risk].benchmarks)) {
           for (const cond of Object.keys(b.conditions)) {
             expect(CONDITIONS, `${m.id}.${risk}.${bench}: unknown condition`).toContain(cond);
@@ -120,6 +135,7 @@ describe("models.json — the refusal floor", () => {
     let seen = 0;
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         for (const [bench, b] of Object.entries(m.results[risk].benchmarks)) {
           for (const [cond, c] of Object.entries(b.conditions)) {
             const v = c.scorers.refusal_regex;
@@ -135,7 +151,7 @@ describe("models.json — the refusal floor", () => {
 
   it("still carries a varying native refusal_regex on cyber_false_refusal", () => {
     const values = MODELS.flatMap((m) =>
-      Object.values(m.results.cyber.benchmarks.cyber_false_refusal?.conditions ?? {})
+      Object.values(m.results.cyber?.benchmarks?.cyber_false_refusal?.conditions ?? {})
         .map((c) => c.scorers.refusal_regex)
         .filter((v): v is number => v !== undefined)
     );
@@ -152,6 +168,7 @@ describe("models.json — label coverage", () => {
   it("has a display name for every benchmark in the data", () => {
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         for (const bench of Object.keys(m.results[risk].benchmarks)) {
           expect(BENCHMARK_LABELS[bench], `unlabelled benchmark: ${bench}`).toBeTruthy();
         }
@@ -162,6 +179,7 @@ describe("models.json — label coverage", () => {
   it("recognises every scorer key as either an LLM judge or a known detector", () => {
     for (const m of MODELS) {
       for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
         for (const b of Object.values(m.results[risk].benchmarks)) {
           for (const c of Object.values(b.conditions)) {
             for (const scorer of Object.keys(c.scorers)) {
@@ -199,7 +217,12 @@ const PUBLISHED_IDS = [
   "mistral-medium-3-5",
   "mistral-small-2603",
   "gpt-oss-120b",
+  "llama-4-maverick",
+  "gpt-5.6-sol",
 ];
+
+/** Present in the pipeline export but deliberately not published, and why. */
+const WITHHELD: Record<string, string> = {};
 
 const RETIRED_SCORERS = [
   "openrouter/openai/gpt-5-mini",
@@ -209,6 +232,24 @@ const RETIRED_SCORERS = [
 describe("models.json — the site-side prune", () => {
   it("publishes exactly the expected roster", () => {
     expect([...MODELS.map((m) => m.id)].sort()).toEqual([...PUBLISHED_IDS].sort());
+  });
+
+  it("withholds models that are not comparable, for a stated reason", () => {
+    for (const id of Object.keys(WITHHELD)) {
+      expect(MODELS.some((m) => m.id === id), `${id} should not be published`).toBe(false);
+    }
+  });
+
+  it("gives every published model a score for every risk", () => {
+    // Not the same as every run succeeding: gpt-5.6-sol's CBRN and cyber runs
+    // failed and its scores come from the samples that did complete. What must
+    // hold is that no risk is simply absent from a published grade.
+    for (const m of MODELS) {
+      for (const risk of RISKS) {
+        if (!evaluated(m, risk)) continue;
+        expect(typeof m.scores[risk], `${m.id}.${risk}`).toBe("number");
+      }
+    }
   });
 
   it("carries no retired scorer keys", () => {
