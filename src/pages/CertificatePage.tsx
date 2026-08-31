@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
+import { capabilityCost as capabilityCostOf } from "@/lib/capability-adjusted-safety";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { ACCENT, INK } from "@/components/leaderboard/constants";
@@ -39,6 +40,9 @@ const SectionEyebrow = ({
 const CertificatePage = () => {
   const isMobile = useIsMobile();
   const providerCount = useMemo(() => buildColumns(MODELS).length, []);
+  // Derived, not asserted: the claim above depends on the frontier staying
+  // flat, which is a property of the roster rather than a law.
+  const capabilityCost = useMemo(() => capabilityCostOf(MODELS), []);
 
   return (
     <div>
@@ -135,6 +139,19 @@ const CertificatePage = () => {
       <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
         <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
+          <p style={{
+            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.015em",
+            lineHeight: 1.25,
+            maxWidth: 820,
+            marginBottom: "1.25rem",
+          }}>
+            {capabilityCost && !capabilityCost.forcesATradeoff
+              ? "Safety is not the price of capability. Most models pay it anyway."
+              : "In this field, capability comes at a cost in safety."}
+          </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
             Each dot is one model, placed by its Artificial Analysis intelligence index (left to
             right) and its measured safety (bottom to top). Colour shows where the model was
@@ -155,12 +172,23 @@ const CertificatePage = () => {
             rather than a panel sitting on it. */}
         <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
+          <p style={{
+            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.015em",
+            lineHeight: 1.25,
+            maxWidth: 820,
+            marginBottom: "0.75rem",
+          }}>
+            Every model, every risk, graded under adversarial pressure.
+          </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
             Every provider graded on each systemic risk. Each grade opens down to the benchmarks
             behind it, and down to the individual judges behind each benchmark.
           </p>
+          <Leaderboard models={MODELS} />
         </div>
-        <Leaderboard models={MODELS} />
       </section>
 
       {/* About / Methodology */}

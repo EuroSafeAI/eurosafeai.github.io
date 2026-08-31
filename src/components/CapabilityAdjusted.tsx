@@ -7,6 +7,7 @@ import {
   attainableFrontier,
   indexDomain,
   planeMedians,
+  spreadLabels,
   scatterPoint,
   type ScatterBox,
 } from "@/lib/capability-adjusted-safety";
@@ -24,6 +25,7 @@ const REGION_COLOUR: Record<string, string> = {
 };
 const REGION_FALLBACK = "#6b7280";
 const BOX: ScatterBox = { width: 820, height: 430, pad: 48 };
+const LABEL_LINE_HEIGHT = 11;
 
 export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) => {
   // Plotted at the published exponent: the leaderboard below carries the
@@ -32,6 +34,17 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
   const domain = useMemo(() => indexDomain(models), [models]);
   const medians = useMemo(() => planeMedians(models), [models]);
   const frontier = useMemo(() => attainableFrontier(models), [models]);
+
+  // Label positions are stepped apart where they would collide. Roughly 5px
+  // per character is enough to spot an overlap; exact text metrics are not
+  // available without measuring in the DOM, and would not change the outcome.
+  const labelY = useMemo(() => {
+    const boxes = ranking.map((entry) => {
+      const point = scatterPoint(entry.index, entry.safety, BOX, domain);
+      return { x: point.x + 9, y: point.y + 4, width: entry.model.name.length * 5 };
+    });
+    return spreadLabels(boxes, LABEL_LINE_HEIGHT);
+  }, [ranking, domain]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
     [models]
@@ -114,8 +127,9 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
             strokeDasharray="6 3"
           />
         )}
-        {ranking.map((entry) => {
+        {ranking.map((entry, i) => {
           const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
+          const textY = labelY[i];
           const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
           return (
             <g key={entry.model.id}>
@@ -124,14 +138,32 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
                   {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                 </title>
               </circle>
-              <text x={x + 9} y={y + 4} fontSize={9.5} fill="#6b7280">
+              {/* A leader line where the label had to move, so it stays
+                  attached to the dot it names. */}
+              {Math.abs(textY - (y + 4)) > 1 && (
+                <line x1={x + 6} y1={y} x2={x + 8} y2={textY - 3} stroke="rgba(10,31,77,0.25)" />
+              )}
+              <text x={x + 9} y={textY} fontSize={9.5} fill="#6b7280">
                 {entry.model.name}
               </text>
             </g>
           );
         })}
       </svg>
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem", alignItems: "center" }}>
+        {/* The dashed line and the shaded corner are the two marks a reader
+            cannot infer from the axes, so they are named here rather than
+            only in the prose beside the plot. */}
+        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
+          <svg width={22} height={9} aria-hidden>
+            <line x1={0} y1={5} x2={22} y2={5} stroke="rgba(10,31,77,0.45)" strokeWidth={1.5} strokeDasharray="6 3" />
+          </svg>
+          best safety achieved at each capability
+        </span>
+        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
+          <span aria-hidden style={{ width: 14, height: 10, background: "rgba(220,38,38,0.12)", borderRadius: 2 }} />
+          more capable, less safe than the median
+        </span>
         {regions.map((region) => (
           <span key={region} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
             <span

@@ -201,3 +201,80 @@ export function attainableFrontier(models: readonly ModelEntry[]): ModelEntry[] 
     .map((entry) => entry.model)
     .sort((a, b) => a.aa_intelligence_index - b.aa_intelligence_index);
 }
+
+export interface LabelBox {
+  x: number;
+  y: number;
+  width: number;
+}
+
+/**
+ * Vertical positions for point labels, stepped apart where they would collide.
+ *
+ * Only labels whose horizontal spans actually overlap can collide, so labels
+ * at opposite ends of the plot keep their exact position however close their
+ * heights. Placement runs top down and pushes a colliding label below the one
+ * already placed, which keeps the result deterministic: the same roster always
+ * produces the same plot.
+ */
+export function spreadLabels(boxes: readonly LabelBox[], lineHeight: number): number[] {
+  const order = boxes.map((_, index) => index).sort((a, b) => boxes[a].y - boxes[b].y);
+  const placed: number[] = new Array(boxes.length);
+
+  for (const index of order) {
+    const box = boxes[index];
+    let y = box.y;
+    let moved = true;
+    while (moved) {
+      moved = false;
+      for (const other of order) {
+        if (other === index || placed[other] === undefined) continue;
+        const overlapsHorizontally =
+          box.x < boxes[other].x + boxes[other].width && box.x + box.width > boxes[other].x;
+        if (overlapsHorizontally && Math.abs(y - placed[other]) < lineHeight) {
+          y = placed[other] + lineHeight;
+          moved = true;
+        }
+      }
+    }
+    placed[index] = y;
+  }
+  return placed;
+}
+
+/** Beyond this many points, the field is treated as forcing a real tradeoff. */
+const TRADEOFF_POINTS = 5;
+
+export interface CapabilityCost {
+  bestOverall: number;
+  bestAtHighCapability: number;
+  gap: number;
+  forcesATradeoff: boolean;
+}
+
+/**
+ * What safety costs at the capable end of the field.
+ *
+ * Compares the best safety score achieved above the median capability against
+ * the best achieved anywhere. A small gap means capable models can be as safe
+ * as any other, so a capable model scoring badly is a choice. The page states
+ * that, and the flag exists so the claim is checked against the roster rather
+ * than asserted: a future field really could force the tradeoff.
+ */
+export function capabilityCost(models: readonly ModelEntry[]): CapabilityCost | undefined {
+  const medians = planeMedians(models);
+  if (!medians) return undefined;
+
+  const safety = (model: ModelEntry) => scoreOverall(model);
+  const all = models.map(safety).filter((s): s is number => s !== undefined);
+  const capable = models
+    .filter((m) => m.aa_intelligence_index >= medians.index)
+    .map(safety)
+    .filter((s): s is number => s !== undefined);
+  if (all.length === 0 || capable.length === 0) return undefined;
+
+  const bestOverall = Math.max(...all);
+  const bestAtHighCapability = Math.max(...capable);
+  const gap = bestOverall - bestAtHighCapability;
+  return { bestOverall, bestAtHighCapability, gap, forcesATradeoff: gap > TRADEOFF_POINTS };
+}

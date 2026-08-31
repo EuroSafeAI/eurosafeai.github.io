@@ -46,7 +46,7 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   // matters more than the numbers beside it.
   /under worst-case grading/i,
   /lost to adversarial pressure/i,
-  /weakest risk/i,
+  /highest risk/i,
 ];
 
 const renderPage = () =>

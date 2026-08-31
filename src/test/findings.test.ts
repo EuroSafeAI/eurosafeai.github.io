@@ -3,7 +3,7 @@ import {
   CLEARS_AT,
   adversarialCostSummary,
   ceilingSummary,
-  weakestRisk,
+  highestRisk,
 } from "@/lib/findings";
 import { scoreOverall, scoreForRisk } from "@/lib/scoring";
 import { RISKS, type ModelEntry, type Risk } from "@/data/models.types";
@@ -128,13 +128,13 @@ describe("ceilingSummary", () => {
   });
 });
 
-describe("weakestRisk", () => {
+describe("highestRisk", () => {
   it("finds the lowest-scoring risk area", () => {
     const roster = [
       synthetic("a", 60, 60, { manipulation: { worst: 20, mean: 20 } }),
       synthetic("b", 60, 60, { manipulation: { worst: 30, mean: 30 } }),
     ];
-    const finding = weakestRisk(roster)!;
+    const finding = highestRisk(roster)!;
     expect(finding.risk).toBe("manipulation");
     expect(finding.worstMean).toBe(25);
     expect(finding.belowHalf).toBe(2);
@@ -149,19 +149,19 @@ describe("weakestRisk", () => {
         cyber: { worst: 90, mean: 10 },
       }),
     ];
-    const finding = weakestRisk(roster)!;
+    const finding = highestRisk(roster)!;
     expect(finding.consistentAcrossMetrics).toBe(false);
   });
 
-  it("reports true when the same risk is weakest under both", () => {
+  it("reports true when the same risk ranks last under both", () => {
     const roster = [
       synthetic("a", 60, 60, { manipulation: { worst: 10, mean: 15 } }),
     ];
-    expect(weakestRisk(roster)!.consistentAcrossMetrics).toBe(true);
+    expect(highestRisk(roster)!.consistentAcrossMetrics).toBe(true);
   });
 
   it("holds on the real roster, so the page's unconditional wording stays true", () => {
-    const finding = weakestRisk(MODELS)!;
+    const finding = highestRisk(MODELS)!;
     expect(finding.consistentAcrossMetrics).toBe(true);
     expect(finding.belowHalf).toBe(
       MODELS.filter((m) => scoreForRisk(m, finding.risk, "worst")! < 50).length
@@ -169,7 +169,7 @@ describe("weakestRisk", () => {
   });
 
   it("is undefined for an empty roster", () => {
-    expect(weakestRisk([])).toBeUndefined();
+    expect(highestRisk([])).toBeUndefined();
   });
 });
 

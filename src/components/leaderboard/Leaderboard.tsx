@@ -47,7 +47,6 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
           gap: "1.25rem",
           flexWrap: "wrap",
           marginBottom: "0.6rem",
-          padding: "0 2.5rem",
         }}
       >
         <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />

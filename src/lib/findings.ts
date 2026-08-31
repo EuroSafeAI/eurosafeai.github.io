@@ -4,8 +4,8 @@
  * Every figure here is derived rather than typed, following
  * safetyCapabilityCorrelation in capability-adjusted-safety.ts. The principle
  * extends further than that one does, though: an *invariant* can go stale as
- * easily as a number. "Manipulation is weakest under both metrics" is true of
- * today's roster, not a law, so weakestRisk recomputes it and the page's copy
+ * easily as a number. "Manipulation is the highest risk under both metrics" is true of
+ * today's roster, not a law, so highestRisk recomputes it and the page's copy
  * branches on the answer instead of asserting it.
  */
 import type { ModelEntry, Risk } from "@/data/models.types";
@@ -97,7 +97,7 @@ export function ceilingSummary(
   };
 }
 
-export interface WeakestRisk {
+export interface HighestRisk {
   risk: Risk;
   worstMean: number;
   meanMean: number;
@@ -110,8 +110,12 @@ export interface WeakestRisk {
 const fieldMean = (models: readonly ModelEntry[], risk: Risk, how: Aggregation) =>
   mean(models.map((model) => scoreForRisk(model, risk, how)));
 
-/** The systemic risk the field handles least well. */
-export function weakestRisk(models: readonly ModelEntry[]): WeakestRisk | undefined {
+/**
+ * The systemic risk the field handles least well, and therefore the one it
+ * poses most of. Low safety scores mean high risk, so this is named for the
+ * risk rather than for the score behind it.
+ */
+export function highestRisk(models: readonly ModelEntry[]): HighestRisk | undefined {
   const rows = RISKS.map((risk) => ({
     risk,
     worstMean: fieldMean(models, risk, "worst"),

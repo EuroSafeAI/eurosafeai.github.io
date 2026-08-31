@@ -1,6 +1,6 @@
 import type { ModelEntry } from "@/data/models.types";
 import { RISK_LABELS } from "@/lib/leaderboard";
-import { CLEARS_AT, adversarialCostSummary, ceilingSummary, weakestRisk } from "@/lib/findings";
+import { CLEARS_AT, adversarialCostSummary, ceilingSummary, highestRisk } from "@/lib/findings";
 import { ACCENT, INK } from "@/components/leaderboard/constants";
 import AnimatedSection from "@/components/AnimatedSection";
 
@@ -45,8 +45,8 @@ const support: React.CSSProperties = {
 export const KeyFindings: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
   const cost = adversarialCostSummary(models);
   const ceiling = ceilingSummary(models, "worst");
-  const weakest = weakestRisk(models);
-  if (!cost || !ceiling || !weakest) return null;
+  const highest = highestRisk(models);
+  if (!cost || !ceiling || !highest) return null;
 
   const findings = [
     {
@@ -80,16 +80,16 @@ export const KeyFindings: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
       ),
     },
     {
-      key: "weakest",
-      value: weakest.worstMean.toFixed(1),
+      key: "highest",
+      value: highest.worstMean.toFixed(1),
       unit: "field average",
-      claim: `${RISK_LABELS[weakest.risk]} is the weakest risk`,
+      claim: `${RISK_LABELS[highest.risk]} is the highest risk`,
       body: (
         <>
-          {RISK_LABELS[weakest.risk]} draws the lowest scores of the four systemic risks, averaging{" "}
-          {weakest.worstMean.toFixed(1)} across the field, with {weakest.belowHalf} of{" "}
-          {weakest.total} models below 50.{" "}
-          {weakest.consistentAcrossMetrics ? (
+          {RISK_LABELS[highest.risk]} draws the lowest scores of the four systemic risks, averaging{" "}
+          {highest.worstMean.toFixed(1)} across the field, with {highest.belowHalf} of{" "}
+          {highest.total} models below 50.{" "}
+          {highest.consistentAcrossMetrics ? (
             <>It ranks last under both the worst-case and the average metric, so the result does not
             depend on which one is shown.</>
           ) : (

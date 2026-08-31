@@ -4,9 +4,11 @@ import {
   PUBLISHED_CAPABILITY_WEIGHT,
   adjustedSafety,
   attainableFrontier,
+  capabilityCost,
   capabilityScore,
   indexDomain,
   planeMedians,
+  spreadLabels,
   safetyCapabilityCorrelation,
   scatterPoint,
 } from "@/lib/capability-adjusted-safety";
@@ -230,5 +232,97 @@ describe("attainableFrontier", () => {
 
   it("is empty for an empty roster", () => {
     expect(attainableFrontier([])).toEqual([]);
+  });
+});
+
+describe("spreadLabels", () => {
+  const gap = 11;
+
+  it("leaves labels alone when nothing overlaps", () => {
+    const boxes = [
+      { x: 0, y: 0, width: 40 },
+      { x: 0, y: 50, width: 40 },
+    ];
+    expect(spreadLabels(boxes, gap)).toEqual([0, 50]);
+  });
+
+  it("does not move labels that are far apart horizontally", () => {
+    // Same height, but nowhere near each other across the plot.
+    const boxes = [
+      { x: 0, y: 20, width: 40 },
+      { x: 300, y: 20, width: 40 },
+    ];
+    expect(spreadLabels(boxes, gap)).toEqual([20, 20]);
+  });
+
+  it("steps overlapping labels apart", () => {
+    const boxes = [
+      { x: 0, y: 20, width: 60 },
+      { x: 10, y: 24, width: 60 },
+    ];
+    const [first, second] = spreadLabels(boxes, gap);
+    expect(Math.abs(second - first)).toBeGreaterThanOrEqual(gap);
+  });
+
+  it("separates a whole cluster, not just the first pair", () => {
+    const boxes = [0, 2, 4, 6].map((y) => ({ x: 0, y, width: 60 }));
+    const placed = spreadLabels(boxes, gap);
+    const sorted = [...placed].sort((a, b) => a - b);
+    for (let i = 1; i < sorted.length; i += 1) {
+      expect(sorted[i] - sorted[i - 1]).toBeGreaterThanOrEqual(gap);
+    }
+  });
+
+  it("returns one position per label, in the order given", () => {
+    const boxes = [
+      { x: 0, y: 30, width: 50 },
+      { x: 5, y: 32, width: 50 },
+      { x: 400, y: 31, width: 50 },
+    ];
+    const placed = spreadLabels(boxes, gap);
+    expect(placed).toHaveLength(3);
+    expect(placed[2]).toBe(31);
+  });
+
+  it("resolves every collision on the real roster", () => {
+    const domain = indexDomain(MODELS);
+    const box = { width: 820, height: 430, pad: 48 };
+    const boxes = MODELS.map((m) => {
+      const point = scatterPoint(m.aa_intelligence_index, m.aggregate.worst!, box, domain);
+      return { x: point.x + 9, y: point.y + 4, width: m.name.length * 5 };
+    });
+    const placed = spreadLabels(boxes, gap);
+    for (let a = 0; a < boxes.length; a += 1) {
+      for (let b = a + 1; b < boxes.length; b += 1) {
+        const overlapX = boxes[a].x < boxes[b].x + boxes[b].width && boxes[a].x + boxes[a].width > boxes[b].x;
+        if (overlapX) expect(Math.abs(placed[a] - placed[b])).toBeGreaterThanOrEqual(gap);
+      }
+    }
+  });
+});
+
+describe("capabilityCost", () => {
+  it("reports a near-zero gap when high capability costs no safety", () => {
+    const cost = capabilityCost(MODELS)!;
+    expect(cost.gap).toBeCloseTo(cost.bestOverall - cost.bestAtHighCapability, 10);
+    expect(cost.gap).toBeLessThan(5);
+    expect(cost.forcesATradeoff).toBe(false);
+  });
+
+  it("reports a tradeoff when the capable half really is less safe", () => {
+    // The branch the real roster never exercises. Without this the flag could
+    // be hardcoded false and every other test would still pass.
+    const roster = MODELS.slice(0, 4).map((m, i) => ({
+      ...m,
+      aa_intelligence_index: i < 2 ? 10 : 90,
+      aggregate: { ...m.aggregate, worst: i < 2 ? 95 : 20 },
+    }));
+    const cost = capabilityCost(roster)!;
+    expect(cost.forcesATradeoff).toBe(true);
+    expect(cost.gap).toBeGreaterThan(50);
+  });
+
+  it("is undefined when there is nothing to compare", () => {
+    expect(capabilityCost([])).toBeUndefined();
   });
 });

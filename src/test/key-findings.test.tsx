@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { KeyFindings } from "@/components/KeyFindings";
-import { adversarialCostSummary, ceilingSummary, weakestRisk } from "@/lib/findings";
+import { adversarialCostSummary, ceilingSummary, highestRisk } from "@/lib/findings";
 import { RISK_LABELS } from "@/lib/leaderboard";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -20,7 +20,7 @@ describe("KeyFindings", () => {
     expect(container.querySelectorAll("p").length).toBeGreaterThanOrEqual(6);
     expect(screen.getByText(/lost to adversarial pressure/i)).toBeInTheDocument();
     expect(screen.getByText(/best score in the field/i)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(`${RISK_LABELS[weakestRisk(MODELS)!.risk]} is the weakest risk`, "i"))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${RISK_LABELS[highestRisk(MODELS)!.risk]} is the highest risk`, "i"))).toBeInTheDocument();
   });
 
   it("shows figures derived from the roster, not typed", () => {
@@ -38,16 +38,16 @@ describe("KeyFindings", () => {
     expect(cardFor(/best score in the field/i).textContent).toMatch(/worst-case/i);
   });
 
-  it("names the weakest risk from the data rather than hardcoding it", () => {
+  it("names the highest risk from the data rather than hardcoding it", () => {
     render(<KeyFindings models={MODELS} />);
-    const finding = weakestRisk(MODELS)!;
-    expect(cardFor(/is the weakest risk/i).textContent).toContain(RISK_LABELS[finding.risk]);
+    const finding = highestRisk(MODELS)!;
+    expect(cardFor(/is the highest risk/i).textContent).toContain(RISK_LABELS[finding.risk]);
   });
 
   it("only claims cross-metric agreement when the data supports it", () => {
     render(<KeyFindings models={MODELS} />);
-    const text = cardFor(/is the weakest risk/i).textContent!;
-    if (weakestRisk(MODELS)!.consistentAcrossMetrics) {
+    const text = cardFor(/is the highest risk/i).textContent!;
+    if (highestRisk(MODELS)!.consistentAcrossMetrics) {
       expect(text).toMatch(/under both/i);
     } else {
       expect(text).toMatch(/depends on which/i);
