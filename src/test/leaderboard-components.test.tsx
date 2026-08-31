@@ -14,6 +14,7 @@ import {
   LABEL_WIDTH,
   CELL_MIN,
   CELL_MAX,
+  LABEL_GUTTER,
   COVERAGE_FLAG,
 } from "@/components/leaderboard/constants";
 import modelsData from "@/data/models.json";
@@ -536,5 +537,42 @@ describe("the grid fills its container", () => {
     document.body.dataset.testWidth = "1800";
     render(<Leaderboard models={MODELS} />);
     expect(gridWidth()).toBeGreaterThan(1800 * 0.9);
+  });
+});
+
+describe("the grid reads as page content, not an embedded widget", () => {
+  it("gives the header row no fill of its own", () => {
+    // A grey band across the top is the clearest "this is a table component"
+    // signal. The rule beneath it carries the separation instead.
+    render(<Leaderboard models={MODELS} />);
+    const header = screen.getAllByRole("row")[0];
+    expect(header.style.background).toBe("");
+  });
+
+  it("draws no vertical rule down the label column", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const header of screen.getAllByRole("rowheader")) {
+      expect(header.style.borderRight).toBe("");
+    }
+  });
+
+  it("keeps the sticky label column opaque so columns cannot show through it", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const header of screen.getAllByRole("rowheader")) {
+      expect(header.style.background).not.toBe("");
+      expect(header.style.background).not.toContain("transparent");
+    }
+  });
+
+  it("holds the labels off the window edge now that the grid is full bleed", () => {
+    render(<Leaderboard models={MODELS} />);
+    const headers = screen.getAllByRole("rowheader");
+    expect(headers.length).toBeGreaterThan(0);
+    for (const header of headers) {
+      // An expandable row puts the content layout on its inner button; a
+      // static one merges it into the header itself.
+      const padded = (header.querySelector("button") ?? header) as HTMLElement;
+      expect(parseInt(padded.style.paddingLeft, 10)).toBeGreaterThanOrEqual(LABEL_GUTTER);
+    }
   });
 });

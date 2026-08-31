@@ -17,6 +17,13 @@ export const ROW_HEIGHT = { risk: 64, bench: 76, judge: 42 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
+
+/**
+ * Space before the row labels. The grid runs edge to edge and the label column
+ * is sticky at the viewport's left, so this is the only thing keeping the text
+ * off the window edge.
+ */
+export const LABEL_GUTTER = 26;
 export const CELL_MIN = 88;
 /**
  * The widest a cell grows. 180 lets the grid fill a laptop, desktop and large

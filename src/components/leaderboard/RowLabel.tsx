@@ -5,7 +5,7 @@ import {
   rowLabel,
   type Row,
 } from "@/lib/leaderboard";
-import { ACCENT, DIAGNOSTIC_NOTE, FLOOR_NOTE, INDENT, INK, ROW_HEIGHT } from "./constants";
+import { ACCENT, DIAGNOSTIC_NOTE, FLOOR_NOTE, INDENT, INK, LABEL_GUTTER, ROW_HEIGHT } from "./constants";
 import { Chevron } from "./Chevron";
 
 const isExpandable = (row: Row) => row.level === "risk" || row.level === "bench";
@@ -73,7 +73,6 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
     flex: `0 0 ${labelWidth}px`,
     height,
     background: row.level === "risk" ? "#ffffff" : "#fbfcfe",
-    borderRight: "1px solid rgba(10,31,77,0.08)",
     textAlign: "left",
     minWidth: 0,
   };
@@ -83,7 +82,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
     display: "flex",
     alignItems: "center",
     gap: 7,
-    paddingLeft: 10 + INDENT[row.level],
+    paddingLeft: LABEL_GUTTER + INDENT[row.level],
     paddingRight: 8,
   };
 

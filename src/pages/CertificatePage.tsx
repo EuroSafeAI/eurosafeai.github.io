@@ -150,14 +150,17 @@ const CertificatePage = () => {
 
       {/* Leaderboard */}
       <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        {/* Heading keeps a gutter so it does not touch the window edge; the
+            grid itself runs edge to edge, so it reads as part of the page
+            rather than a panel sitting on it. */}
         <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
             Every provider graded on each systemic risk. Each grade opens down to the benchmarks
             behind it, and down to the individual judges behind each benchmark.
           </p>
-          <Leaderboard models={MODELS} />
         </div>
+        <Leaderboard models={MODELS} />
       </section>
 
       {/* About / Methodology */}

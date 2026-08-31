@@ -35,12 +35,8 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
   );
 
   return (
-    // Two columns so the plot can use the leaderboard's full width and the
-    // explanation sits beside it rather than pushing the grid down the page.
-    // flexWrap with a basis rather than a JS breakpoint: the columns stack on
-    // their own once there is no room for both.
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "flex-start" }}>
-      <div style={{ flex: "1 1 620px", minWidth: 0 }}>
+    <div>
+      <div>
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
@@ -88,7 +84,9 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       </div>
       </div>
 
-      <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 520 }}>
+      {/* Prose width, not the plot's: a line of text spanning the page is
+          unreadable however much room there is. */}
+      <div style={{ maxWidth: 760, marginTop: "2rem" }}>
       <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginTop: 0 }}>
         A safety score measures how often a model refuses a harmful request. It does not measure
         what happens when it complies. A model that rarely refuses but cannot produce anything

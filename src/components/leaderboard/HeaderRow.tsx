@@ -8,6 +8,7 @@ import {
   HEADER_LOGO,
   HEADER_NAME_LINES,
   HEADER_NAME_LINE_HEIGHT,
+  LABEL_GUTTER,
   HEADER_SCORE_HEIGHT,
   INK,
   OVERALL_NOTE,
@@ -186,8 +187,9 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
     role="row"
     style={{
       display: "flex",
-      background: "#f9fafb",
-      borderBottom: "1px solid rgba(10,31,77,0.08)",
+      // No fill: a grey band across the top is what makes a grid read as a
+      // widget dropped on the page. The rule alone carries the separation.
+      borderBottom: "1px solid rgba(10,31,77,0.12)",
     }}
   >
     <div
@@ -197,11 +199,17 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         left: 0,
         zIndex: 3,
         flex: `0 0 ${labelWidth}px`,
-        background: "#f9fafb",
-        borderRight: "1px solid rgba(10,31,77,0.08)",
+        // Opaque, because this cell is sticky and columns must not show
+        // through it when the grid is scrolled sideways.
+        background: "#ffffff",
         display: "flex",
         alignItems: "flex-end",
-        padding: "0.6rem 0.7rem",
+        paddingTop: "0.6rem",
+        paddingBottom: "0.6rem",
+        paddingRight: "0.7rem",
+        // Matches the row labels below it: this cell is sticky at the
+        // viewport's left edge too, now the grid is full bleed.
+        paddingLeft: LABEL_GUTTER,
         fontSize: "0.66rem",
         fontWeight: 700,
         color: "#9ca3af",
