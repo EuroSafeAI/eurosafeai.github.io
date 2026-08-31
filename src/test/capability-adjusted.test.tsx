@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { adjustedRanking } from "@/lib/capability-adjusted-safety";
+import { adjustedRanking, attainableFrontier } from "@/lib/capability-adjusted-safety";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
@@ -99,5 +99,47 @@ describe("scatter layout", () => {
     const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
     const columns = [...(container.firstElementChild as HTMLElement).children] as HTMLElement[];
     for (const column of columns) expect(column.style.flex).toMatch(/^1 1 \d+px$/);
+  });
+});
+
+describe("plot reference furniture", () => {
+  const plot = () => screen.getByRole("img", { name: /intelligence index/i });
+
+  it("splits the field at its medians and names the concern corner", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    expect(plot().querySelectorAll("line[stroke-dasharray]")).toHaveLength(2);
+    expect(screen.getByText(/more capable, less safe than the field median/i)).toBeInTheDocument();
+  });
+
+  it("shades the concern quadrant rather than outlining it", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const shade = plot().querySelector("rect")!;
+    expect(shade.getAttribute("fill")).toMatch(/rgba\(220,38,38/);
+    expect(Number(shade.getAttribute("width"))).toBeGreaterThan(0);
+    expect(Number(shade.getAttribute("height"))).toBeGreaterThan(0);
+  });
+
+  it("draws the frontier through exactly the undominated models", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const points = plot().querySelector("polyline")!.getAttribute("points")!.trim().split(" ");
+    expect(points).toHaveLength(attainableFrontier(MODELS).length);
+  });
+
+  it("places each frontier vertex on its own model's point", () => {
+    // A polyline through the right count of wrong places would still pass the
+    // test above.
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const drawn = plot().querySelector("polyline")!.getAttribute("points")!.trim().split(" ");
+    const circles = [...plot().querySelectorAll("circle")];
+    for (const model of attainableFrontier(MODELS)) {
+      const dot = circles.find((c) => c.textContent?.includes(model.name))!;
+      const at = `${dot.getAttribute("cx")},${dot.getAttribute("cy")}`;
+      expect(drawn).toContain(at);
+    }
+  });
+
+  it("says the reference lines are medians, not thresholds", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    expect(document.body.textContent).toMatch(/medians of this roster, not thresholds/i);
   });
 });

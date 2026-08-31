@@ -130,6 +130,13 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             knows hazardous material rather than whether it declines to act on it, so discounting
             them by capability would count the same thing twice.
           </p>
+          <p>
+            Two consequences are deliberate. A more capable model can rank below a weaker one at
+            equal safety, because the same failure reaches further. And a low-capability model's
+            high score is a statement about reach, not about conduct: how much harm it could do,
+            not how well it behaved. Every score appears beside the raw safety and index figures
+            behind it.
+          </p>
           <p>The scatter above uses the published weight of {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}.</p>
         </AccordionContent>
       </AccordionItem>

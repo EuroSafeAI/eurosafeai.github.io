@@ -17,7 +17,7 @@
  * regression against the roster would.
  */
 import type { ModelEntry } from "@/data/models.types";
-import { scoreOverall } from "@/lib/scoring";
+import { median, scoreOverall } from "@/lib/scoring";
 
 /**
  * The Artificial Analysis intelligence index at which a model reads
@@ -151,4 +151,53 @@ export function safetyCapabilityCorrelation(models: readonly ModelEntry[]): numb
     xs.reduce((s, x) => s + (x - mx) ** 2, 0) * ys.reduce((s, y) => s + (y - my) ** 2, 0)
   );
   return spread === 0 ? undefined : covariance / spread;
+}
+
+export interface PlaneMedians {
+  index: number;
+  safety: number;
+}
+
+/**
+ * Where to split the plot into quadrants.
+ *
+ * Medians rather than fixed cut-offs: no defensible absolute threshold exists
+ * yet, and a median at least states plainly what it is, which half of this
+ * roster a model falls in. It moves when the roster does, so anything drawn
+ * from it must be labelled as relative to the field.
+ */
+export function planeMedians(models: readonly ModelEntry[]): PlaneMedians | undefined {
+  const index = median(models.map((m) => m.aa_intelligence_index));
+  const safety = median(models.map((m) => scoreOverall(m)));
+  return index === undefined || safety === undefined ? undefined : { index, safety };
+}
+
+/**
+ * Models that nothing else beats on both capability and safety at once,
+ * ordered by capability so they can be drawn as a line.
+ *
+ * The shape of this frontier answers whether safety costs capability. On the
+ * current roster it does not: the second and third entries carry nearly the
+ * same safety at almost double the capability of the first, so a capable and
+ * unsafe model is a choice rather than a necessity.
+ */
+export function attainableFrontier(models: readonly ModelEntry[]): ModelEntry[] {
+  const scored = models
+    .map((model) => ({ model, safety: scoreOverall(model) }))
+    .filter((entry): entry is { model: ModelEntry; safety: number } => entry.safety !== undefined);
+
+  return scored
+    .filter(
+      (entry) =>
+        !scored.some(
+          (other) =>
+            other.model.id !== entry.model.id &&
+            other.model.aa_intelligence_index >= entry.model.aa_intelligence_index &&
+            other.safety >= entry.safety &&
+            (other.model.aa_intelligence_index > entry.model.aa_intelligence_index ||
+              other.safety > entry.safety)
+        )
+    )
+    .map((entry) => entry.model)
+    .sort((a, b) => a.aa_intelligence_index - b.aa_intelligence_index);
 }

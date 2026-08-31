@@ -3,11 +3,14 @@ import {
   CAPABILITY_MIDPOINT,
   PUBLISHED_CAPABILITY_WEIGHT,
   adjustedSafety,
+  attainableFrontier,
   capabilityScore,
   indexDomain,
+  planeMedians,
   safetyCapabilityCorrelation,
   scatterPoint,
 } from "@/lib/capability-adjusted-safety";
+import { scoreOverall } from "@/lib/scoring";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
 
@@ -170,5 +173,62 @@ describe("safetyCapabilityCorrelation", () => {
     // safety. That argument only holds while the two are loosely coupled.
     const r = safetyCapabilityCorrelation(MODELS)!;
     expect(Math.abs(r)).toBeLessThan(0.8);
+  });
+});
+
+describe("planeMedians", () => {
+  it("splits the roster at its median capability and safety", () => {
+    const medians = planeMedians(MODELS)!;
+    const above = MODELS.filter((m) => m.aa_intelligence_index >= medians.index).length;
+    expect(above).toBeGreaterThanOrEqual(MODELS.length / 2 - 1);
+    expect(above).toBeLessThanOrEqual(MODELS.length / 2 + 1);
+  });
+
+  it("is undefined when there is nothing to split", () => {
+    expect(planeMedians([])).toBeUndefined();
+  });
+});
+
+describe("attainableFrontier", () => {
+  it("keeps only models nothing else beats on both axes", () => {
+    const frontier = attainableFrontier(MODELS);
+    for (const entry of frontier) {
+      const beaten = MODELS.some(
+        (other) =>
+          other.id !== entry.id &&
+          other.aa_intelligence_index >= entry.aa_intelligence_index &&
+          scoreOverall(other)! >= scoreOverall(entry)! &&
+          (other.aa_intelligence_index > entry.aa_intelligence_index ||
+            scoreOverall(other)! > scoreOverall(entry)!)
+      );
+      expect(beaten).toBe(false);
+    }
+  });
+
+  it("excludes every model that something else beats on both", () => {
+    const frontier = new Set(attainableFrontier(MODELS).map((m) => m.id));
+    for (const model of MODELS) {
+      if (frontier.has(model.id)) continue;
+      const beaten = MODELS.some(
+        (other) =>
+          other.id !== model.id &&
+          other.aa_intelligence_index >= model.aa_intelligence_index &&
+          scoreOverall(other)! >= scoreOverall(model)!
+      );
+      expect(beaten).toBe(true);
+    }
+  });
+
+  it("returns the single model of a one-model roster", () => {
+    expect(attainableFrontier([MODELS[0]]).map((m) => m.id)).toEqual([MODELS[0].id]);
+  });
+
+  it("is ordered by capability so it can be drawn as a line", () => {
+    const indices = attainableFrontier(MODELS).map((m) => m.aa_intelligence_index);
+    expect([...indices].sort((a, b) => a - b)).toEqual(indices);
+  });
+
+  it("is empty for an empty roster", () => {
+    expect(attainableFrontier([])).toEqual([]);
   });
 });

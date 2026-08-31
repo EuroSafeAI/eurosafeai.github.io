@@ -1,15 +1,16 @@
 import { useMemo } from "react";
 import type { ModelEntry } from "@/data/models.types";
+import { scoreOverall } from "@/lib/scoring";
 import {
   PUBLISHED_CAPABILITY_WEIGHT,
-  CAPABILITY_MIDPOINT,
   adjustedRanking,
+  attainableFrontier,
   indexDomain,
+  planeMedians,
   scatterPoint,
   type ScatterBox,
 } from "@/lib/capability-adjusted-safety";
 
-const INK = "#0a1f4d";
 
 /**
  * Where a model was built. An independent dimension: unlike the adjusted
@@ -29,6 +30,8 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
   // interactive weight, and this stays the fixed reference it is cited as.
   const ranking = useMemo(() => adjustedRanking(models, PUBLISHED_CAPABILITY_WEIGHT), [models]);
   const domain = useMemo(() => indexDomain(models), [models]);
+  const medians = useMemo(() => planeMedians(models), [models]);
+  const frontier = useMemo(() => attainableFrontier(models), [models]);
   const regions = useMemo(
     () => [...new Set(models.map((m) => m.region))].filter((r) => r in REGION_COLOUR),
     [models]
@@ -58,6 +61,59 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
         <text x={BOX.pad} y={BOX.pad - 16} fontSize={11} fill="#6b7280">
           raw safety
         </text>
+        {medians && (
+          <g>
+            {/* The concern region: more capable than half the field, less safe
+                than half of it. Shaded rather than outlined so it reads as
+                context behind the models, not as another datum. */}
+            <rect
+              x={scatterPoint(medians.index, 0, BOX, domain).x}
+              y={scatterPoint(0, medians.safety, BOX, domain).y}
+              width={BOX.width - BOX.pad - scatterPoint(medians.index, 0, BOX, domain).x}
+              height={BOX.height - BOX.pad - scatterPoint(0, medians.safety, BOX, domain).y}
+              fill="rgba(220,38,38,0.05)"
+            />
+            <line
+              x1={scatterPoint(medians.index, 0, BOX, domain).x}
+              y1={BOX.pad}
+              x2={scatterPoint(medians.index, 0, BOX, domain).x}
+              y2={BOX.height - BOX.pad}
+              stroke="rgba(10,31,77,0.12)"
+              strokeDasharray="4 4"
+            />
+            <line
+              x1={BOX.pad}
+              y1={scatterPoint(0, medians.safety, BOX, domain).y}
+              x2={BOX.width - BOX.pad}
+              y2={scatterPoint(0, medians.safety, BOX, domain).y}
+              stroke="rgba(10,31,77,0.12)"
+              strokeDasharray="4 4"
+            />
+            <text
+              x={BOX.width - BOX.pad - 6}
+              y={BOX.height - BOX.pad - 8}
+              textAnchor="end"
+              fontSize={10.5}
+              fill="#b91c1c"
+            >
+              more capable, less safe than the field median
+            </text>
+          </g>
+        )}
+        {frontier.length > 1 && (
+          <polyline
+            points={frontier
+              .map((m) => {
+                const point = scatterPoint(m.aa_intelligence_index, scoreOverall(m)!, BOX, domain);
+                return `${point.x},${point.y}`;
+              })
+              .join(" ")}
+            fill="none"
+            stroke="rgba(10,31,77,0.3)"
+            strokeWidth={1.5}
+            strokeDasharray="6 3"
+          />
+        )}
         {ranking.map((entry) => {
           const { x, y } = scatterPoint(entry.index, entry.safety, BOX, domain);
           const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
@@ -88,47 +144,25 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
       </div>
       </div>
 
-      <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 520 }}>
-      <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginTop: 0 }}>
-        A safety score measures how often a model refuses a harmful request. It does not measure
-        what happens when it complies. A model that rarely refuses but cannot produce anything
-        usable is a nuisance; one that almost always refuses, then writes working attack code on
-        the exception, is a systemic risk. The EU AI Act draws the same line, presuming systemic
-        risk from high-impact capabilities rather than from behaviour alone.
-      </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-        So capability has to be measured and combined in, not inferred from how a model behaves.
-        This score does that, weighing how safely a model acted against how little it can reach:
-      </p>
-      <p
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: INK,
-          margin: "0 0 0.75rem",
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        safety<sup>{(1 - PUBLISHED_CAPABILITY_WEIGHT).toFixed(2)}</sup> ×  (100 −
-        capability)<sup>{PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)}</sup>
-      </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-        Capability rescales the Artificial Analysis intelligence index onto 0 to 100, as
-        100·index / (index + {CAPABILITY_MIDPOINT}). Both terms mean higher is better, so the
-        result does too, on the same scale as the table below.
-      </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-        {PUBLISHED_CAPABILITY_WEIGHT.toFixed(2)} is the published weight. The slider below the
-        table changes it without changing what is published: at 0 the score is measured safety
-        alone, at 1 it is capability alone.
-      </p>
-      <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
-        Two consequences are deliberate. A more capable model can rank below a weaker one at
-        equal safety, because the same failure reaches further. And a low-capability model's high
-        score is a statement about reach, not about conduct: how much harm it could do, not how
-        well it behaved. Every score appears beside the raw safety and capability figures behind
-        it.
-      </p>
+      <div style={{ flex: "1 1 320px", minWidth: 0, maxWidth: 460 }}>
+        <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
+          A safety score measures how often a model refuses a harmful request. It does not measure
+          what happens when it complies, and the EU AI Act presumes systemic risk from
+          high-impact capabilities rather than from behaviour alone. Reach and conduct are
+          separate axes, so they are drawn separately here.
+        </p>
+        <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
+          The shaded corner holds the models that are more capable and less safe than half the
+          field. The dashed line traces those nothing else beats on both counts: it stays close to
+          flat, so the safest model at high capability gives up almost nothing against the safest
+          at low capability. A capable model scoring badly here is a choice, not a cost of being
+          capable.
+        </p>
+        <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
+          Both reference lines are medians of this roster, not thresholds, so they move as models
+          are added. Combining the two axes into one capability-adjusted grade is explained under
+          Methodology.
+        </p>
       </div>
     </div>
   );
