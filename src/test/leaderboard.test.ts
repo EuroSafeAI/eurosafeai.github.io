@@ -23,7 +23,7 @@ import {
   type Row,
 } from "@/lib/leaderboard";
 import { coverageFraction, mean } from "@/lib/scoring";
-import { adjustedSafety } from "@/lib/risk-index";
+import { adjustedSafety } from "@/lib/capability-adjusted-safety";
 import { RISKS, type BenchmarkResult, type ModelEntry, type Risk } from "@/data/models.types";
 import modelsData from "@/data/models.json";
 
@@ -641,13 +641,13 @@ describe("capability-adjusted cell scores", () => {
     aa_intelligence_index: index,
   });
 
-  it("returns the measured score for every roster cell at alpha = 1", () => {
+  it("returns the measured score for every roster cell at zero capability weight", () => {
     const models = modelsData as unknown as ModelEntry[];
     for (const risk of RISKS) {
       const row: Row = { key: risk, level: "risk", risk };
       for (const m of models) {
         for (const how of ["worst", "mean"] as const) {
-          expect(adjustedCellScore(m, row, how, 1)).toBe(modelScore(m, row, how));
+          expect(adjustedCellScore(m, row, how, 0)).toBe(modelScore(m, row, how));
         }
       }
     }
@@ -662,10 +662,10 @@ describe("capability-adjusted cell scores", () => {
     expect(weakAdjusted).toBeGreaterThan(40);
   });
 
-  it("leaves diagnostic rows raw at every alpha", () => {
+  it("leaves diagnostic rows raw at every capability weight", () => {
     const m = withIndex(model("d", "A", { wmdp: benchmark(40, {}, true) }), 10);
-    for (const alpha of [0, 0.25, 0.5, 0.75, 1]) {
-      expect(adjustedCellScore(m, diagRow, "worst", alpha)).toBe(modelScore(m, diagRow, "worst"));
+    for (const weight of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(adjustedCellScore(m, diagRow, "worst", weight)).toBe(modelScore(m, diagRow, "worst"));
     }
   });
 
@@ -691,18 +691,18 @@ describe("capability-adjusted cell scores", () => {
 });
 
 describe("buildColumns under capability adjustment", () => {
-  it("orders identically to the raw table at alpha = 1", () => {
+  it("orders identically to the raw table at zero capability weight", () => {
     const models = modelsData as unknown as ModelEntry[];
-    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(
+    expect(buildColumns(models, "worst", 0).map((c) => c.provider)).toEqual(
       buildColumns(models, "worst").map((c) => c.provider)
     );
   });
 
-  it("promotes a weak-but-safe provider as alpha falls", () => {
+  it("promotes a weak-but-safe provider as capability weight rises", () => {
     const strongUnsafe = { ...model("s", "Frontier", {}, 40), aa_intelligence_index: 55 };
     const weakUnsafe = { ...model("w", "Small", {}, 38), aa_intelligence_index: 8 };
     const models = [strongUnsafe, weakUnsafe];
-    expect(buildColumns(models, "worst", 1).map((c) => c.provider)).toEqual(["Frontier", "Small"]);
+    expect(buildColumns(models, "worst", 0).map((c) => c.provider)).toEqual(["Frontier", "Small"]);
     expect(buildColumns(models, "worst", 0.5).map((c) => c.provider)).toEqual(["Small", "Frontier"]);
   });
 });
@@ -715,27 +715,27 @@ describe("buildColumns grouping", () => {
   });
 
   it("emits one column per model when grouping by model", () => {
-    const columns = buildColumns(roster, "worst", 1, "model");
+    const columns = buildColumns(roster, "worst", 0, "model");
     expect(columns).toHaveLength(roster.length);
     for (const column of columns) expect(column.models).toHaveLength(1);
     expect(new Set(columns.map((c) => c.provider)).size).toBe(roster.length);
   });
 
   it("ranks model columns by adjusted score, so the capability slider re-ranks them", () => {
-    const raw = buildColumns(roster, "worst", 1, "model").map((c) => c.provider);
+    const raw = buildColumns(roster, "worst", 0, "model").map((c) => c.provider);
     const adjusted = buildColumns(roster, "worst", 0.4, "model").map((c) => c.provider);
     expect(new Set(adjusted)).toEqual(new Set(raw));
     expect(adjusted).not.toEqual(raw);
   });
 
-  it("orders model columns by descending score at alpha = 1", () => {
-    const columns = buildColumns(roster, "worst", 1, "model");
+  it("orders model columns by descending score at zero capability weight", () => {
+    const columns = buildColumns(roster, "worst", 0, "model");
     const scores = columns.map((c) => c.models[0].aggregate.worst ?? -1);
     expect([...scores].sort((a, b) => b - a)).toEqual(scores);
   });
 
   it("names a model column for the model, not its company", () => {
-    const columns = buildColumns(roster, "worst", 1, "model");
+    const columns = buildColumns(roster, "worst", 0, "model");
     const names = new Set(columns.map((c) => c.provider));
     for (const m of roster) expect(names.has(m.name)).toBe(true);
   });

@@ -3,6 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import CertificatePage from "@/pages/CertificatePage";
 import { HelmetProvider } from "react-helmet-async";
 import { Methodology } from "@/components/Methodology";
+import modelsData from "@/data/models.json";
+import type { ModelEntry } from "@/data/models.types";
+
+const MODELS = modelsData as unknown as ModelEntry[];
 import { COVERAGE_FLAG } from "@/components/leaderboard/constants";
 
 /**
@@ -31,6 +35,23 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   /a safeguard that only holds when it is unprovoked/i,
   /a statement about reach, not about conduct/i,
   /a more capable model can rank below a weaker one/i,
+  // Why capability is in a systemic-risk measure at all. Without these the
+  // page shows an adjustment it never justifies, and a reader is entitled to
+  // ask why a safety leaderboard is weighted by something other than safety.
+  /does not measure what happens when it complies/i,
+  /high-impact capabilities/i,
+  /drops that side of the estimate/i,
+  // The findings band. Card 2's metric qualifier is the whole mitigation for
+  // the fact that the ceiling finding inverts under the average metric, so it
+  // matters more than the numbers beside it.
+  /under worst-case grading/i,
+  /lost to adversarial pressure/i,
+  /highest risk/i,
+  // How a number becomes a grade. Without these the methodology explains what
+  // was measured but never how the figure on screen was arrived at.
+  /the mean of its four risk scores/i,
+  /the minimum across those runs/i,
+  /absolute, not a curve/i,
 ];
 
 const renderPage = () =>
@@ -84,14 +105,14 @@ const TOPICS = [
 
 describe("Methodology", () => {
   it("offers every topic", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     for (const topic of TOPICS) {
       expect(screen.getByRole("button", { name: topic })).toBeInTheDocument();
     }
   });
 
   it("starts with every topic collapsed", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     for (const topic of TOPICS) {
       expect(screen.getByRole("button", { name: topic })).toHaveAttribute(
         "aria-expanded",
@@ -101,7 +122,7 @@ describe("Methodology", () => {
   });
 
   it("opens a topic when its trigger is clicked", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     const trigger = screen.getByRole("button", { name: TOPICS[0] });
 
     // "CBRN misuse" appears nowhere else in the component, so its presence
@@ -114,7 +135,7 @@ describe("Methodology", () => {
   });
 
   it("scales the coverage fraction into a percentage", () => {
-    render(<Methodology />);
+    render(<Methodology models={MODELS} />);
     fireEvent.click(screen.getByRole("button", { name: /coverage/i }));
     expect(document.body.textContent).toContain(`${Math.round(COVERAGE_FLAG * 100)}%`);
     expect(document.body.textContent).not.toContain("0.95%");
@@ -124,7 +145,7 @@ describe("Methodology", () => {
 describe("page order", () => {
   it("puts the scatter above the grid", () => {
     renderPage();
-    const scatter = screen.getByRole("img", { name: /capability/i });
+    const scatter = screen.getByRole("img", { name: /intelligence index/i });
     const grid = screen.getByRole("grid");
     // Node.compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING === 4.
     expect(scatter.compareDocumentPosition(grid) & 4).toBeTruthy();
@@ -141,5 +162,32 @@ describe("page order", () => {
   it("keeps the preliminary-data warning visible without opening anything", () => {
     renderPage();
     expect(screen.getByText(/preliminary data/i)).toBeInTheDocument();
+  });
+});
+
+describe("the plot mirrors the grid", () => {
+  const openModels = () =>
+    [...document.querySelectorAll('g[data-model][data-open="true"]')].length;
+
+  const hoverColumn = (name: string) => {
+    const header = screen
+      .getAllByRole("columnheader")
+      .find((h) => h.textContent?.includes(name))!;
+    return header.closest('[role="presentation"]')!;
+  };
+
+  it("opens a provider's models on the plot when its column is hovered", () => {
+    renderPage();
+    expect(openModels()).toBe(0);
+    fireEvent.mouseEnter(hoverColumn("Anthropic"));
+    expect(openModels()).toBeGreaterThan(0);
+  });
+
+  it("closes them again when the pointer leaves", () => {
+    renderPage();
+    const group = hoverColumn("Anthropic");
+    fireEvent.mouseEnter(group);
+    fireEvent.mouseLeave(group);
+    expect(openModels()).toBe(0);
   });
 });

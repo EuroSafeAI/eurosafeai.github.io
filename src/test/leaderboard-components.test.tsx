@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { RowLabel } from "@/components/leaderboard/RowLabel";
 import { Legend } from "@/components/leaderboard/Legend";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
@@ -14,6 +14,7 @@ import {
   LABEL_WIDTH,
   CELL_MIN,
   CELL_MAX,
+  LABEL_GUTTER,
   COVERAGE_FLAG,
 } from "@/components/leaderboard/constants";
 import modelsData from "@/data/models.json";
@@ -106,7 +107,8 @@ describe("the legend after the cut", () => {
 });
 
 describe("deriveCellWidth", () => {
-  const unclamped = [8, 9, 10, 11];
+  // At the design width the clamp binds outside 6..11 providers.
+  const unclamped = [6, 7, 8, 9, 10, 11];
 
   it("fills the container across the unclamped range", () => {
     for (const n of unclamped) {
@@ -118,7 +120,7 @@ describe("deriveCellWidth", () => {
 
   it("pins to the maximum when there are few providers", () => {
     expect(deriveCellWidth(1)).toBe(CELL_MAX);
-    expect(deriveCellWidth(7)).toBe(CELL_MAX);
+    expect(deriveCellWidth(5)).toBe(CELL_MAX);
   });
 
   it("pins to the minimum when there are many, and overflows", () => {
@@ -240,11 +242,11 @@ describe("capability slider", () => {
   it("rests at measured safety, showing no adjustment by default", () => {
     render(<Leaderboard models={MODELS} />);
     const slider = screen.getByRole("slider", { name: /capability weight/i });
-    expect(slider).toHaveValue("1");
+    expect(slider).toHaveValue("0");
     expect(screen.getByText("measured")).toBeInTheDocument();
   });
 
-  it("leaves every cell untouched while the slider is at 1", () => {
+  it("leaves every cell untouched while the slider is at rest", () => {
     // The guard that matters: the default table must be the evaluation
     // results, not a derived quantity someone could screenshot as one.
     const { unmount } = render(<Leaderboard models={MODELS} />);
@@ -254,7 +256,7 @@ describe("capability slider", () => {
     render(<Leaderboard models={MODELS} />);
     const slider = screen.getByRole("slider", { name: /capability weight/i });
     fireEvent.change(slider, { target: { value: "0.5" } });
-    fireEvent.change(slider, { target: { value: "1" } });
+    fireEvent.change(slider, { target: { value: "0" } });
     expect(cellText()).toEqual(before);
   });
 
@@ -282,18 +284,18 @@ describe("capability slider", () => {
     const slider = screen.getByRole("slider", { name: /capability weight/i });
     fireEvent.change(slider, { target: { value: "0.4" } });
     fireEvent.click(screen.getByRole("button", { name: /reset to measured/i }));
-    expect(slider).toHaveValue("1");
+    expect(slider).toHaveValue("0");
     expect(cellText()).toEqual(before);
   });
 });
 
 describe("capability slider and the column aggregates", () => {
-  const setAlpha = (value: string) =>
+  const setWeight = (value: string) =>
     fireEvent.change(screen.getByRole("slider", { name: /capability weight/i }), {
       target: { value },
     });
 
-  // Keyed by provider, never positional: lowering alpha also re-orders the
+  // Keyed by provider, never positional: raising the weight also re-orders the
   // columns, so comparing the header list in document order would differ even
   // if every Overall score were left raw.
   const overallByProvider = () => {
@@ -312,7 +314,7 @@ describe("capability slider and the column aggregates", () => {
   it("adjusts each column's Overall score, not just the risk cells", () => {
     render(<Leaderboard models={MODELS} />);
     const measured = overallByProvider();
-    setAlpha("0.5");
+    setWeight("0.5");
     const adjusted = overallByProvider();
     expect(Object.keys(adjusted).sort()).toEqual(Object.keys(measured).sort());
     for (const provider of Object.keys(measured)) {
@@ -320,11 +322,11 @@ describe("capability slider and the column aggregates", () => {
     }
   });
 
-  it("returns the measured Overall scores when reset to 1", () => {
+  it("returns the measured Overall scores when reset", () => {
     render(<Leaderboard models={MODELS} />);
     const measured = overallByProvider();
-    setAlpha("0.35");
-    setAlpha("1");
+    setWeight("0.35");
+    setWeight("0");
     expect(overallByProvider()).toEqual(measured);
   });
 });
@@ -335,7 +337,7 @@ describe("capability slider layout stability", () => {
   // every control to its left, so the slot reserves a fixed width instead.
   it("reserves a fixed-width trailing slot in both states", () => {
     const { rerender } = render(<Leaderboard models={MODELS} />);
-    const slot = () => document.querySelector<HTMLElement>("[data-alpha-status]")!;
+    const slot = () => document.querySelector<HTMLElement>("[data-weight-status]")!;
     const rawWidth = slot().style.width;
     expect(rawWidth).not.toBe("");
 
@@ -483,5 +485,94 @@ describe("column header geometry", () => {
     const contents = [...document.querySelectorAll<HTMLElement>("[data-member-content]")];
     expect(contents.length).toBeGreaterThan(0);
     for (const content of contents) expect(content.style.width).toBe("var(--cell-width)");
+  });
+});
+
+describe("deriveCellWidth against a measured container", () => {
+  it("fills a wide container instead of the fixed design width", () => {
+    // The grid is no longer capped at LEADERBOARD_WIDTH, so cells must size
+    // to the space actually available or the table floats in whitespace.
+    const wide = deriveCellWidth(9, 2400);
+    expect(wide).toBeGreaterThan(deriveCellWidth(9, LEADERBOARD_WIDTH));
+  });
+
+  it("still respects the clamp at both ends", () => {
+    expect(deriveCellWidth(2, 4000)).toBe(CELL_MAX);
+    expect(deriveCellWidth(40, 900)).toBe(CELL_MIN);
+  });
+
+  it("falls back to the design width before the container is measured", () => {
+    expect(deriveCellWidth(9, undefined)).toBe(deriveCellWidth(9, LEADERBOARD_WIDTH));
+  });
+
+  it("ignores a zero or negative measurement rather than collapsing", () => {
+    for (const bogus of [0, -50]) {
+      expect(deriveCellWidth(9, bogus)).toBe(deriveCellWidth(9, LEADERBOARD_WIDTH));
+    }
+  });
+});
+
+describe("the grid fills its container", () => {
+  const gridWidth = () => {
+    const grid = screen.getByRole("grid");
+    return Number((grid.style.minWidth || "0").replace("px", ""));
+  };
+
+  afterEach(() => {
+    delete document.body.dataset.testWidth;
+  });
+
+  it("grows with the measured container rather than a fixed design width", () => {
+    document.body.dataset.testWidth = "2000";
+    render(<Leaderboard models={MODELS} />);
+    const wide = gridWidth();
+    cleanup();
+
+    document.body.dataset.testWidth = "1360";
+    render(<Leaderboard models={MODELS} />);
+    expect(wide).toBeGreaterThan(gridWidth());
+  });
+
+  it("uses most of a wide container instead of floating in it", () => {
+    document.body.dataset.testWidth = "1800";
+    render(<Leaderboard models={MODELS} />);
+    expect(gridWidth()).toBeGreaterThan(1800 * 0.9);
+  });
+});
+
+describe("the grid reads as page content, not an embedded widget", () => {
+  it("gives the header row no fill of its own", () => {
+    // A grey band across the top is the clearest "this is a table component"
+    // signal. The rule beneath it carries the separation instead.
+    render(<Leaderboard models={MODELS} />);
+    const header = screen.getAllByRole("row")[0];
+    expect(header.style.background).toBe("");
+  });
+
+  it("draws no vertical rule down the label column", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const header of screen.getAllByRole("rowheader")) {
+      expect(header.style.borderRight).toBe("");
+    }
+  });
+
+  it("keeps the sticky label column opaque so columns cannot show through it", () => {
+    render(<Leaderboard models={MODELS} />);
+    for (const header of screen.getAllByRole("rowheader")) {
+      expect(header.style.background).not.toBe("");
+      expect(header.style.background).not.toContain("transparent");
+    }
+  });
+
+  it("holds the labels off the window edge now that the grid is full bleed", () => {
+    render(<Leaderboard models={MODELS} />);
+    const headers = screen.getAllByRole("rowheader");
+    expect(headers.length).toBeGreaterThan(0);
+    for (const header of headers) {
+      // An expandable row puts the content layout on its inner button; a
+      // static one merges it into the header itself.
+      const padded = (header.querySelector("button") ?? header) as HTMLElement;
+      expect(parseInt(padded.style.paddingLeft, 10)).toBeGreaterThanOrEqual(LABEL_GUTTER);
+    }
   });
 });

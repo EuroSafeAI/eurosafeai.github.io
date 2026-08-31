@@ -1,23 +1,26 @@
 import { useId } from "react";
-import { ACCENT, INK, RAW_ALPHA } from "./constants";
+import { ACCENT, INK, RAW_CAPABILITY_WEIGHT } from "./constants";
 
 /** Wide enough for "reset to measured", the longer of the slot's two states. */
 const STATUS_SLOT_WIDTH = 104;
 
-export interface AlphaSliderProps {
-  alpha: number;
-  onChange: (alpha: number) => void;
+export interface CapabilityWeightSliderProps {
+  weight: number;
+  onChange: (weight: number) => void;
 }
 
 /**
- * Weights the grid between measured safety and capability-discounted safety.
- * At RAW_ALPHA the adjustment is the identity and the grid shows evaluation
- * results; below it, a model's unsafety is discounted by how much it can
- * actually do, and the columns re-rank accordingly.
+ * Weighs the grid between measured safety and how much each model can
+ * actually do. At RAW_CAPABILITY_WEIGHT the adjustment is the identity and
+ * the grid shows evaluation results; dragging right gives capability more of
+ * the say, and the columns re-rank.
  */
-export const AlphaSlider: React.FC<AlphaSliderProps> = ({ alpha, onChange }) => {
+export const CapabilityWeightSlider: React.FC<CapabilityWeightSliderProps> = ({
+  weight,
+  onChange,
+}) => {
   const id = useId();
-  const isRaw = alpha === RAW_ALPHA;
+  const isRaw = weight === RAW_CAPABILITY_WEIGHT;
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
@@ -30,9 +33,11 @@ export const AlphaSlider: React.FC<AlphaSliderProps> = ({ alpha, onChange }) => 
         min={0}
         max={1}
         step={0.05}
-        value={alpha}
+        value={weight}
         onChange={(event) => onChange(Number(event.target.value))}
-        aria-valuetext={isRaw ? "1.00, measured safety" : `${alpha.toFixed(2)}, capability-adjusted`}
+        aria-valuetext={
+          isRaw ? "0.00, measured safety" : `${weight.toFixed(2)}, capability-adjusted`
+        }
         style={{ width: 132, accentColor: ACCENT, cursor: "pointer" }}
       />
       <span
@@ -44,18 +49,18 @@ export const AlphaSlider: React.FC<AlphaSliderProps> = ({ alpha, onChange }) => 
           minWidth: 30,
         }}
       >
-        {alpha.toFixed(2)}
+        {weight.toFixed(2)}
       </span>
       {/* Fixed width, sized to the wider "reset to measured" label: this slot
           swaps content, and in a right-aligned row an intrinsic width change
-          here would shift the slider itself sideways as you reach 1.00. */}
-      <span style={{ width: STATUS_SLOT_WIDTH, flexShrink: 0 }} data-alpha-status>
+          here would shift the slider itself sideways as you reach the end. */}
+      <span style={{ width: STATUS_SLOT_WIDTH, flexShrink: 0 }} data-weight-status>
         {isRaw ? (
           <span style={{ fontSize: "0.66rem", color: "#9ca3af" }}>measured</span>
         ) : (
           <button
             type="button"
-            onClick={() => onChange(RAW_ALPHA)}
+            onClick={() => onChange(RAW_CAPABILITY_WEIGHT)}
             style={{
               fontSize: "0.66rem",
               fontWeight: 600,

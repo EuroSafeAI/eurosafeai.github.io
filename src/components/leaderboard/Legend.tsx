@@ -1,6 +1,6 @@
 import { GRADES, GRADE_BAND, gpa } from "@/lib/scoring";
 import { heatColor } from "@/lib/heat";
-import { COVERAGE_FLAG } from "./constants";
+import { ACCENT, COVERAGE_FLAG } from "./constants";
 
 /** The grade-chip key and explanatory prose shown beneath the heatmap. */
 export const Legend: React.FC = () => (
@@ -30,16 +30,29 @@ export const Legend: React.FC = () => (
       })}
     </div>
     <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
-      Scores run 0–100, higher is safer, on a fixed scale of {GRADES.length} equal bands from
-      F− to A+ — so a colour means the same thing at every level of the table. Each cell shows
-      the selected metric; the other is in its tooltip. Greyed rows are{" "}
-      <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and excluded from
-      the aggregates above them. The refusal floor row restates its benchmark's score with every
-      unscored sample counted as safe, an optimistic bound against the headline's pessimistic
-      one. A bar under a cell flags{" "}
+      Scores run 0 to 100 and higher is safer, on {GRADES.length} equal bands from F− to A+.
+      A colour means the same thing at every level of the table. Each cell shows the selected
+      metric; the other is in its tooltip.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
+      least one risk evaluation fail: its grade for that risk comes from the samples that did
+      complete, and that row does not open into benchmarks or judges.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
+      excluded from the aggregates above them. The refusal floor row counts every unscored
+      sample as safe, so it reads high by construction. Treat it as an optimistic bound.
+    </p>
+    <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, maxWidth: 760 }}>
+      A bar under a cell flags{" "}
       <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
-      excluded rather than counted as safe, so a flagged grade rests on fewer — and typically
-      less confronting — prompts than an unflagged one.
+      excluded rather than counted as safe, so a flagged grade rests on fewer, and typically
+      easier, prompts than an unflagged one.{" "}
+      <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>
+        How these scores are calculated
+      </a>
+      .
     </p>
   </div>
 );

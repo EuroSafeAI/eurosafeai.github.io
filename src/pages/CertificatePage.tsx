@@ -1,17 +1,19 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
+import { publishedRoster } from "@/lib/roster";
 import { buildColumns } from "@/lib/leaderboard";
+import { capabilityCost as capabilityCostOf } from "@/lib/capability-adjusted-safety";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { CAPABILITY_EXPONENT } from "@/lib/risk-index";
-import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
+import { ACCENT, INK } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
+import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
 
-const MODELS = modelsData as unknown as ModelEntry[];
+const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
 
 const SectionEyebrow = ({
   as: Tag = "div",
@@ -21,14 +23,14 @@ const SectionEyebrow = ({
   children: React.ReactNode;
 }) => (
   <Tag style={{ display: "flex", alignItems: "center", gap: "0.9rem", marginBottom: "1.4rem" }}>
-    <span style={{ width: "36px", height: "2px", background: "#0a2a66" }} />
+    <span style={{ width: "36px", height: "2px", background: ACCENT }} />
     <span
       style={{
         fontSize: "0.72rem",
         fontWeight: 700,
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: "#0a2a66",
+        color: ACCENT,
       }}
     >
       {children}
@@ -39,6 +41,11 @@ const SectionEyebrow = ({
 const CertificatePage = () => {
   const isMobile = useIsMobile();
   const providerCount = useMemo(() => buildColumns(MODELS).length, []);
+  // Derived, not asserted: the claim above depends on the frontier staying
+  // flat, which is a property of the roster rather than a law.
+  const capabilityCost = useMemo(() => capabilityCostOf(MODELS), []);
+  // Hovering a column in the grid picks the same models out of the plot above.
+  const [highlight, setHighlight] = useState<string | null>(null);
 
   return (
     <div>
@@ -54,7 +61,7 @@ const CertificatePage = () => {
       <section
         style={{
           background: "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #f5f7fb 100%)",
-          padding: isMobile ? "6rem 0 2.5rem" : "9rem 0 4rem",
+          padding: isMobile ? "6rem 0 2rem" : "8rem 0 3rem",
           borderBottom: "1px solid rgba(10,31,77,0.06)",
         }}
       >
@@ -123,36 +130,77 @@ const CertificatePage = () => {
         </div>
       </section>
 
-      {/* The Field */}
-      <section style={{ background: "#ffffff", borderBottom: "1px solid rgba(10,31,77,0.06)", padding: "2.5rem 0 3rem" }}>
+      {/* Key Findings */}
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+          <SectionEyebrow as="h2">Key Findings</SectionEyebrow>
+          <KeyFindings models={MODELS} />
+        </div>
+      </section>
+
+      {/* The Field */}
+      <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
+          <p style={{
+            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.015em",
+            lineHeight: 1.25,
+            maxWidth: 820,
+            marginBottom: "1.25rem",
+          }}>
+            {capabilityCost && !capabilityCost.forcesATradeoff
+              ? "Safety should not be the price of capability. Most models pay it anyway."
+              : "In this field, capability comes at a cost in safety."}
+          </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Every evaluated model, plotted by what it can do against how safely it does it. Colour
-            is the capability-adjusted grade at the published weight of{" "}
-            {CAPABILITY_EXPONENT.toFixed(2)} — the fixed reference the leaderboard's slider moves
-            around.
+            Each dot is one model, placed by its{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index (left to
+            right) and its measured safety (bottom to top). Colour shows where the model was
+            built. The capability-adjusted score below combines these two axes; here they are
+            shown separately, before any adjustment.
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks
           </p>
-          <CapabilityAdjustedSection models={MODELS} />
+          <CapabilityAdjustedSection models={MODELS} highlight={highlight} />
         </div>
       </section>
 
-      {/* Heatmap */}
-      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 3rem" : "2.5rem 0 4rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
-          <Leaderboard models={MODELS} />
+      {/* Leaderboard */}
+      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        {/* Heading keeps a gutter so it does not touch the window edge; the
+            grid itself runs edge to edge, so it reads as part of the page
+            rather than a panel sitting on it. */}
+        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
+          <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
+          <p style={{
+            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.015em",
+            lineHeight: 1.25,
+            maxWidth: 820,
+            marginBottom: "0.75rem",
+          }}>
+            Every model, every risk, graded under adversarial pressure.
+          </p>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
+            Every provider graded on each systemic risk. Each grade opens down to the benchmarks
+            behind it, and down to the individual judges behind each benchmark.
+          </p>
+          <Leaderboard models={MODELS} onHighlight={setHighlight} />
         </div>
       </section>
 
       {/* About / Methodology */}
-      <section style={{ background: "#ffffff", borderTop: "1px solid rgba(10,31,77,0.06)", padding: "4rem 0" }}>
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "2.5rem 0 3rem" : "3.5rem 0 4rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <div style={{ maxWidth: 760 }}>
+          <div id="methodology" style={{ maxWidth: 760, scrollMarginTop: "2rem" }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
-            <Methodology />
+            <Methodology models={MODELS} />
           </div>
         </div>
       </section>

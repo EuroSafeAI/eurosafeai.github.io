@@ -8,7 +8,7 @@
  */
 
 import { RISKS, type ModelEntry, type Risk } from "@/data/models.types";
-import { adjustedSafety } from "@/lib/risk-index";
+import { adjustedSafety } from "@/lib/capability-adjusted-safety";
 import {
   coverageForBenchmark,
   coverageForRisk,
@@ -221,11 +221,11 @@ export function adjustedCellScore(
   model: ModelEntry,
   row: Row,
   how: Aggregation,
-  alpha: number
+  weight: number
 ): number | undefined {
   const score = modelScore(model, row, how);
   if (score === undefined || isDiagnosticRow(row)) return score;
-  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+  return adjustedSafety(score, model.aa_intelligence_index, weight);
 }
 
 /**
@@ -237,9 +237,9 @@ export function adjustedProviderCellScore(
   models: ModelEntry[],
   row: Row,
   how: Aggregation,
-  alpha: number
+  weight: number
 ): number | undefined {
-  return mean(models.map((m) => adjustedCellScore(m, row, how, alpha)));
+  return mean(models.map((m) => adjustedCellScore(m, row, how, weight)));
 }
 
 /**
@@ -251,12 +251,12 @@ export function adjustedProviderCellScore(
 export function adjustedOverallScore(
   models: ModelEntry[],
   how: Aggregation,
-  alpha: number
+  weight: number
 ): number | undefined {
   return mean(
     models.map((m) => {
       const score = scoreOverall(m, how);
-      return score === undefined ? undefined : adjustedSafety(score, m.aa_intelligence_index, alpha);
+      return score === undefined ? undefined : adjustedSafety(score, m.aa_intelligence_index, weight);
     })
   );
 }
@@ -270,7 +270,7 @@ export type Grouping = "org" | "model";
 export function buildColumns(
   models: ModelEntry[],
   how: Aggregation = "worst",
-  alpha: number = 1,
+  weight: number = 0,
   grouping: Grouping = "org"
 ): Column[] {
   const byProvider = new Map<string, ModelEntry[]>();
@@ -287,24 +287,24 @@ export function buildColumns(
     .map(([provider, group]) => ({
       provider,
       models: [...group].sort(
-        (a, b) => (adjustedAggregate(b, how, alpha) ?? -1) - (adjustedAggregate(a, how, alpha) ?? -1)
+        (a, b) => (adjustedAggregate(b, how, weight) ?? -1) - (adjustedAggregate(a, how, weight) ?? -1)
       ),
     }))
-    .sort((a, b) => providerAggregate(b, how, alpha) - providerAggregate(a, how, alpha));
+    .sort((a, b) => providerAggregate(b, how, weight) - providerAggregate(a, how, weight));
 }
 
 function adjustedAggregate(
   model: ModelEntry,
   how: Aggregation,
-  alpha: number
+  weight: number
 ): number | undefined {
   const score = model.aggregate[how] ?? undefined;
   if (score === undefined) return undefined;
-  return adjustedSafety(score, model.aa_intelligence_index, alpha);
+  return adjustedSafety(score, model.aa_intelligence_index, weight);
 }
 
-function providerAggregate(column: Column, how: Aggregation, alpha: number): number {
-  return mean(column.models.map((m) => adjustedAggregate(m, how, alpha))) ?? -1;
+function providerAggregate(column: Column, how: Aggregation, weight: number): number {
+  return mean(column.models.map((m) => adjustedAggregate(m, how, weight))) ?? -1;
 }
 
 /**

@@ -13,7 +13,7 @@ RETIRED_SCORERS = (
     '"openrouter/google/gemini-3-flash-preview"',
     '"openrouter/openai/gpt-5-mini"',
 )
-UNPUBLISHED_MODEL_IDS = ("muse-spark-1.2",)
+UNPUBLISHED_MODEL_IDS: tuple[str, ...] = ()
 
 
 def drop_unpublished_models(lines):

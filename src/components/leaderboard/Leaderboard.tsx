@@ -6,12 +6,15 @@ import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
 import { MetricToggle } from "./MetricToggle";
-import { AlphaSlider } from "./AlphaSlider";
+import { CapabilityWeightSlider } from "./CapabilityWeightSlider";
 import { GroupingToggle } from "./GroupingToggle";
 import { useLeaderboard } from "./useLeaderboard";
 
 /** The scrollable systemic-risk heatmap, plus the legend explaining it. */
-export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
+export const Leaderboard: React.FC<{
+  models: ModelEntry[];
+  onHighlight?: (provider: string | null) => void;
+}> = ({ models, onHighlight }) => {
   const {
     columns,
     rows,
@@ -27,17 +30,18 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     toggleProvider,
     metric,
     setMetric,
-    alpha,
-    setAlpha,
+    capabilityWeight,
+    setCapabilityWeight,
     grouping,
     setGrouping,
     membersOf,
+    containerRef,
     columnShifts,
     columnShiftsInstant,
   } = useLeaderboard(models);
 
   return (
-    <>
+    <div ref={containerRef}>
       <div
         style={{
           display: "flex",
@@ -48,7 +52,7 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
           marginBottom: "0.6rem",
         }}
       >
-        <AlphaSlider alpha={alpha} onChange={setAlpha} />
+        <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
         <GroupingToggle grouping={grouping} onChange={setGrouping} />
         <MetricToggle metric={metric} onChange={setMetric} />
       </div>
@@ -76,8 +80,9 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
         >
           {/* Provider header */}
           <HeaderRow
-          alpha={alpha}
+          weight={capabilityWeight}
           membersOf={membersOf}
+          onHighlight={onHighlight}
             columns={columns}
             labelWidth={labelWidth}
             cellWidth={cellWidth}
@@ -114,6 +119,6 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
 
       {/* Legend */}
       <Legend />
-    </>
+    </div>
   );
 };

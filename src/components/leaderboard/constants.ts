@@ -17,15 +17,36 @@ export const ROW_HEIGHT = { risk: 64, bench: 76, judge: 42 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
-export const CELL_MIN = 88;
-export const CELL_MAX = 140;
 
 /**
- * Hardcoding a cell width that happens to fill the container at today's nine
- * providers would strand whitespace or overflow the moment a tenth appears.
+ * Space before the row labels. The grid runs edge to edge and the label column
+ * is sticky at the viewport's left, so this is the only thing keeping the text
+ * off the window edge.
  */
-export function deriveCellWidth(providers: number): number {
-  const fitted = Math.floor((LEADERBOARD_WIDTH - LABEL_WIDTH) / providers);
+export const LABEL_GUTTER = 26;
+export const CELL_MIN = 88;
+/**
+ * The widest a cell grows. 180 lets the grid fill a laptop, desktop and large
+ * display completely at nine providers; the previous 140 left between 15 and
+ * 32 per cent of those screens empty, which read as the table floating.
+ */
+export const CELL_MAX = 180;
+
+/**
+ * Cell width fitted to the space the grid actually has.
+ *
+ * `available` is the measured container width. The grid is no longer capped at
+ * LEADERBOARD_WIDTH, so deriving from that constant would leave the table
+ * floating in whitespace on a wide display. LEADERBOARD_WIDTH remains the
+ * fallback for the first paint, before a measurement exists, and for any
+ * environment without ResizeObserver.
+ *
+ * A hardcoded width would also strand whitespace or overflow the moment a
+ * provider is added, which is why this is derived at all.
+ */
+export function deriveCellWidth(providers: number, available?: number): number {
+  const width = available !== undefined && available > 0 ? available : LEADERBOARD_WIDTH;
+  const fitted = Math.floor((width - LABEL_WIDTH) / providers);
   return Math.min(CELL_MAX, Math.max(CELL_MIN, fitted));
 }
 export const INDENT = { risk: 0, bench: 18, judge: 36 } as const;
@@ -94,9 +115,9 @@ export const COMPANY_LOGO: Record<string, string> = {
 export const COVERAGE_FLAG = 0.95;
 
 /**
- * The leaderboard's resting capability weight. Deliberately 1, not the bar
- * chart's published CAPABILITY_EXPONENT: at 1 the adjustment is the identity,
- * so the table loads showing measured evaluation results. Lowering it is an
- * explicit act by the reader, not the default a screenshot would capture.
+ * The leaderboard's resting capability weight: 0, where the adjustment is the
+ * identity and the table shows measured evaluation results. Weighing
+ * capability in is an explicit act by the reader, not the default a
+ * screenshot would capture.
  */
-export const RAW_ALPHA = 1;
+export const RAW_CAPABILITY_WEIGHT = 0;

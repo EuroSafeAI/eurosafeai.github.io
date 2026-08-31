@@ -8,6 +8,7 @@ import {
   HEADER_LOGO,
   HEADER_NAME_LINES,
   HEADER_NAME_LINE_HEIGHT,
+  LABEL_GUTTER,
   HEADER_SCORE_HEIGHT,
   INK,
   OVERALL_NOTE,
@@ -25,7 +26,7 @@ const HeaderCell = ({
   name,
   subject,
   models,
-  alpha,
+  weight,
   emphasis = false,
   open,
   onToggle,
@@ -36,7 +37,7 @@ const HeaderCell = ({
   name: string;
   subject: string;
   models: ModelEntry[];
-  alpha: number;
+  weight: number;
   emphasis?: boolean;
   open?: boolean;
   onToggle?: () => void;
@@ -44,8 +45,8 @@ const HeaderCell = ({
   metric: Aggregation;
 }) => {
   const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
-  const score = adjustedOverallScore(models, metric, alpha);
-  const alternate = adjustedOverallScore(models, alternateMetric, alpha);
+  const score = adjustedOverallScore(models, metric, weight);
+  const alternate = adjustedOverallScore(models, alternateMetric, weight);
   const cov = overallCoverage(models);
   const headline = metric === "worst" ? "worst case" : "average";
   const other = metric === "worst" ? "average" : "worst case";
@@ -157,7 +158,9 @@ const HeaderCell = ({
 };
 
 export interface HeaderRowProps {
-  alpha: number;
+  /** The column under the pointer or keyboard, for views that mirror it. */
+  onHighlight?: (provider: string | null) => void;
+  weight: number;
   membersOf: (column: Column) => ModelEntry[];
   columns: Column[];
   labelWidth: number;
@@ -171,7 +174,8 @@ export interface HeaderRowProps {
 
 /** The sticky provider/model header row above the grid body. */
 export const HeaderRow: React.FC<HeaderRowProps> = ({
-  alpha,
+  weight,
+  onHighlight,
   membersOf,
   columns,
   labelWidth,
@@ -186,8 +190,9 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
     role="row"
     style={{
       display: "flex",
-      background: "#f9fafb",
-      borderBottom: "1px solid rgba(10,31,77,0.08)",
+      // No fill: a grey band across the top is what makes a grid read as a
+      // widget dropped on the page. The rule alone carries the separation.
+      borderBottom: "1px solid rgba(10,31,77,0.12)",
     }}
   >
     <div
@@ -197,11 +202,17 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         left: 0,
         zIndex: 3,
         flex: `0 0 ${labelWidth}px`,
-        background: "#f9fafb",
-        borderRight: "1px solid rgba(10,31,77,0.08)",
+        // Opaque, because this cell is sticky and columns must not show
+        // through it when the grid is scrolled sideways.
+        background: "#ffffff",
         display: "flex",
         alignItems: "flex-end",
-        padding: "0.6rem 0.7rem",
+        paddingTop: "0.6rem",
+        paddingBottom: "0.6rem",
+        paddingRight: "0.7rem",
+        // Matches the row labels below it: this cell is sticky at the
+        // viewport's left edge too, now the grid is full bleed.
+        paddingLeft: LABEL_GUTTER,
         fontSize: "0.66rem",
         fontWeight: 700,
         color: "#9ca3af",
@@ -227,6 +238,12 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         <div
           key={column.provider}
           role="presentation"
+          onMouseEnter={() => onHighlight?.(column.provider)}
+          onMouseLeave={() => onHighlight?.(null)}
+          // Focus as well as hover: the column headings are reachable by
+          // keyboard and the mirroring should not be pointer-only.
+          onFocus={() => onHighlight?.(column.provider)}
+          onBlur={() => onHighlight?.(null)}
           style={{
             ...columnGroupStyle(
               members.length + 1,
@@ -254,13 +271,13 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             }
             subject={column.provider}
             models={column.models}
-            alpha={alpha}
+            weight={weight}
             metric={metric}
           />
           {members.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
               <div data-member-content style={memberContentStyle()}>
-                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} alpha={alpha} />
+                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} weight={weight} />
               </div>
             </div>
           ))}
