@@ -80,22 +80,24 @@ describe("CapabilityAdjustedSection", () => {
 });
 
 describe("scatter layout", () => {
-  it("gives the plot the full width and puts its explanation below", () => {
-    // The two-column arrangement was built when this section was capped at
-    // 1100px. Spanning the page, a narrow text column beside a very wide plot
-    // read as a leftover rather than a pairing.
+  it("puts the plot and its explanation side by side, not stacked", () => {
+    // Stacked, the prose pushed the leaderboard roughly a screen further down
+    // while the right of the page sat empty. jsdom has no layout engine, so
+    // this pins the contract rather than the rendered result.
     const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
-    const root = container.firstElementChild as HTMLElement;
-    expect(root.style.display).not.toBe("flex");
+    const row = container.firstElementChild as HTMLElement;
+    expect(row.style.display).toBe("flex");
+    expect(row.style.flexWrap).toBe("wrap");
 
-    const [plot, prose] = [...root.children] as HTMLElement[];
-    expect(plot.querySelector("svg")).not.toBeNull();
-    expect(prose.textContent).toContain("does not measure what happens when it complies");
+    const columns = [...row.children] as HTMLElement[];
+    expect(columns).toHaveLength(2);
+    expect(columns[0].querySelector("svg")).not.toBeNull();
+    expect(columns[1].textContent).toContain("does not measure what happens when it complies");
   });
 
-  it("keeps the explanation at a readable measure rather than page width", () => {
+  it("lets the columns stack on their own rather than at a scripted breakpoint", () => {
     const { container } = render(<CapabilityAdjustedSection models={MODELS} />);
-    const prose = [...(container.firstElementChild as HTMLElement).children][1] as HTMLElement;
-    expect(Number(prose.style.maxWidth.replace("px", ""))).toBeLessThanOrEqual(800);
+    const columns = [...(container.firstElementChild as HTMLElement).children] as HTMLElement[];
+    for (const column of columns) expect(column.style.flex).toMatch(/^1 1 \d+px$/);
   });
 });
