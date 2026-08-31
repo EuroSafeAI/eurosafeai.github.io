@@ -105,7 +105,7 @@ export const CapabilityAdjustedSection = ({
     // flexWrap with a basis rather than a JS breakpoint: the columns stack on
     // their own once there is no room for both.
     <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "flex-start" }}>
-      <div ref={setColumn} style={{ flex: "1 1 620px", minWidth: 0 }}>
+      <div ref={setColumn} style={{ flex: "1 1 700px", minWidth: 0 }}>
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
@@ -282,7 +282,10 @@ export const CapabilityAdjustedSection = ({
       </div>
       </div>
 
-      <div style={{ flex: "1 1 320px", minWidth: 0, maxWidth: 460 }}>
+      {/* Narrower than the text alone needs: the column ran 144px short of
+          the plot's height, so trading width for height uses space that was
+          already empty and widens the plot with it. */}
+      <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 360 }}>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
           A safety score measures how often a model refuses a harmful request. It does not measure
           what happens when it complies, and the EU AI Act presumes systemic risk from
