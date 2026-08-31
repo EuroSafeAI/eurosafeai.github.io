@@ -9,6 +9,7 @@ import {
   capabilityScore,
   indexDomain,
   planeMedians,
+  safetyBand,
   spreadLabels,
   safetyCapabilityCorrelation,
   scatterPoint,
@@ -359,5 +360,27 @@ describe("axisTicks", () => {
 
   it("copes with a degenerate domain rather than looping", () => {
     expect(axisTicks(5, 5, 5)).toEqual([5]);
+  });
+});
+
+describe("safetyBand", () => {
+  it("spans the best and worst adversarial families", () => {
+    const band = safetyBand(MODELS[0])!;
+    expect(band.high).toBeGreaterThan(band.low);
+    expect(band.families).toBe(6);
+  });
+
+  it("sits at or above the worst-case score for every model", () => {
+    // Worst case takes each sample's minimum across families, so it is at
+    // least as pessimistic as any single family's average. If this inverted,
+    // the band would render below its own point.
+    for (const model of MODELS) {
+      expect(safetyBand(model)!.low).toBeGreaterThanOrEqual(scoreOverall(model)! - 1e-9);
+    }
+  });
+
+  it("is undefined when a model carries no per-family results", () => {
+    const bare = { ...MODELS[0], results: {} as never };
+    expect(safetyBand(bare)).toBeUndefined();
   });
 });

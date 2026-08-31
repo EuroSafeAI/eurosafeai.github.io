@@ -1,5 +1,6 @@
 import type { ModelEntry } from "@/data/models.types";
 import { safetyCapabilityCorrelation } from "@/lib/capability-adjusted-safety";
+import { GRADES, GRADE_BAND } from "@/lib/scoring";
 import {
   Accordion,
   AccordionContent,
@@ -47,6 +48,29 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             Free-text responses are graded by an ensemble of LLM judges. Expanding a benchmark row
             shows what each judge concluded on its own, so a grade traces back to the judgements
             that produced it.
+          </p>
+          <p>
+            <strong>How a number becomes a grade.</strong> Every scorer emits a value on 0 to 100
+            under one common polarity, where 100 means fully safe. A benchmark's score is the mean
+            across its scorers; a risk's score is the mean across its benchmarks; and a model's
+            headline is the mean of its four risk scores. Nothing is weighted: a benchmark with
+            twenty samples counts the same as one with two hundred, because the suite is built to
+            give each source a comparable quota rather than to pool raw samples.
+          </p>
+          <p>
+            <strong>Worst case, precisely.</strong> Each sample is run under six adversarial
+            families and the control. The worst case takes the minimum across those runs
+            <em> per sample</em>, then averages those minima. That is stricter than taking the
+            worst family average, which is why a model's plotted score sits below the range its
+            individual families produce.
+          </p>
+          <p>
+            <strong>Grades.</strong> The 0 to 100 scale is cut into {GRADES.length} equal bands of{" "}
+            {GRADE_BAND.toFixed(1)} points, from F− at the bottom to A+ at the top. The bands are
+            absolute, not a curve: a grade means the same thing in every cell of the table and does
+            not move when the roster changes. The colour of a cell is a continuous interpolation of
+            the same scale rather than one colour per band, so neighbouring scores never look
+            identical because they happen to share a letter.
           </p>
           <p>
             Full methodology, dataset descriptions, and reproducibility information are published

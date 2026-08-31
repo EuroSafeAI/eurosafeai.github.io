@@ -196,3 +196,30 @@ describe("axis decoration", () => {
     expect(group.style.transition).toContain("opacity");
   });
 });
+
+describe("uncertainty bands", () => {
+  const plot = () => screen.getByRole("img", { name: /intelligence index/i });
+
+  it("draws one band per model", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const bands = [...plot().querySelectorAll("line")].filter(
+      (l) => l.getAttribute("x1") === l.getAttribute("x2") && l.getAttribute("stroke-width") === "2"
+    );
+    expect(bands).toHaveLength(MODELS.length);
+  });
+
+  it("spans the model's real family range, not a fixed height", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const heights = [...plot().querySelectorAll("line")]
+      .filter((l) => l.getAttribute("stroke-width") === "2")
+      .map((l) => Math.abs(Number(l.getAttribute("y1")) - Number(l.getAttribute("y2"))));
+    // The roster's family spread runs from about 11 to 42 points, so a
+    // constant-height bar would be a bug rather than a coincidence.
+    expect(new Set(heights.map((h) => h.toFixed(1))).size).toBeGreaterThan(5);
+  });
+
+  it("says capability carries no band, and why", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    expect(document.body.textContent).toMatch(/Capability carries no such bar/i);
+  });
+});

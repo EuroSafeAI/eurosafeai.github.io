@@ -47,6 +47,11 @@ const SUBSTANTIVE_CLAIMS: RegExp[] = [
   /under worst-case grading/i,
   /lost to adversarial pressure/i,
   /highest risk/i,
+  // How a number becomes a grade. Without these the methodology explains what
+  // was measured but never how the figure on screen was arrived at.
+  /the mean of its four risk scores/i,
+  /the minimum across those runs/i,
+  /absolute, not a curve/i,
 ];
 
 const renderPage = () =>

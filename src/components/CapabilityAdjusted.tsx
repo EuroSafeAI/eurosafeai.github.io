@@ -8,6 +8,7 @@ import {
   indexDomain,
   axisTicks,
   planeMedians,
+  safetyBand,
   spreadLabels,
   scatterPoint,
   type ScatterBox,
@@ -151,6 +152,7 @@ export const CapabilityAdjustedSection = ({
           const colour = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
           // The grid groups by organisation or by model, so a highlight can
           // name either. Matching both means one prop serves both modes.
+          const band = safetyBand(entry.model);
           const picked =
             !highlight ||
             entry.model.company === highlight ||
@@ -174,6 +176,21 @@ export const CapabilityAdjustedSection = ({
                   {`${entry.model.name} (${entry.model.region}): adjusted ${entry.adjusted.toFixed(1)}, safety ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                 </title>
               </circle>
+              {/* How far this model's safety moves across the six attack
+                  families. Drawn behind the dot, which sits at or below it
+                  because the worst case takes each sample's minimum. */}
+              {band && (
+                <line
+                  x1={x}
+                  y1={scatterPoint(entry.index, band.low, BOX, domain).y}
+                  x2={x}
+                  y2={scatterPoint(entry.index, band.high, BOX, domain).y}
+                  stroke={colour}
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  opacity={0.35}
+                />
+              )}
               {/* A leader line where the label had to move, so it stays
                   attached to the dot it names. */}
               {Math.abs(textY - (y + 4)) > 1 && (
@@ -214,7 +231,11 @@ export const CapabilityAdjustedSection = ({
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
           The shaded corner holds the models that are more capable and less safe than half the
-          field.
+          field. Each vertical bar spans how far that model's safety moves across the six
+          adversarial families: a long bar means the score depends heavily on which attack it
+          faces. The dot sits at or below its bar, because the plotted score takes each sample's
+          worst result rather than any single family's average. Capability carries no such bar;
+          it is a single published figure, not a measurement made here.
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
           Both reference lines are medians of this roster, not thresholds, so they move as models

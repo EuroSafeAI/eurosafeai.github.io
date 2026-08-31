@@ -16,7 +16,7 @@
  * purpose — adding a model never moves another model's score, which a
  * regression against the roster would.
  */
-import type { ModelEntry } from "@/data/models.types";
+import { RISKS, type ModelEntry } from "@/data/models.types";
 import { median, scoreOverall } from "@/lib/scoring";
 
 /**
@@ -314,4 +314,40 @@ export function axisTicks(min: number, max: number, target: number): number[] {
     }
   }
   return best;
+}
+
+export interface SafetyBand {
+  low: number;
+  high: number;
+  families: number;
+}
+
+/**
+ * How much a model's safety depends on which attack it faces.
+ *
+ * Each of the six adversarial families is averaged across the four risks, and
+ * the band spans the weakest and strongest of those. It is the closest thing
+ * to an uncertainty interval the evaluation produces: not sampling error, but
+ * the spread of outcomes across the kinds of pressure applied.
+ *
+ * The band sits at or above the plotted worst-case score, because that score
+ * takes each sample's minimum across families and is therefore more
+ * pessimistic than any single family's average.
+ */
+export function safetyBand(model: ModelEntry): SafetyBand | undefined {
+  const risks = RISKS.map((risk) => model.results[risk]?.by_family).filter(Boolean);
+  if (risks.length === 0) return undefined;
+
+  const families = [...new Set(risks.flatMap((byFamily) => Object.keys(byFamily!)))];
+  const perFamily = families
+    .map((family) => {
+      const scores = risks
+        .map((byFamily) => byFamily![family])
+        .filter((value): value is number => typeof value === "number");
+      return scores.length === 0 ? undefined : scores.reduce((a, b) => a + b, 0) / scores.length;
+    })
+    .filter((value): value is number => value !== undefined);
+  if (perFamily.length === 0) return undefined;
+
+  return { low: Math.min(...perFamily), high: Math.max(...perFamily), families: perFamily.length };
 }
