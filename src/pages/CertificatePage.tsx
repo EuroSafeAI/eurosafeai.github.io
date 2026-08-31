@@ -6,7 +6,7 @@ import modelsData from "@/data/models.json";
 import { buildColumns } from "@/lib/leaderboard";
 import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
-import { ACCENT, INK, LEADERBOARD_WIDTH } from "@/components/leaderboard/constants";
+import { ACCENT, INK } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
@@ -54,7 +54,7 @@ const CertificatePage = () => {
       <section
         style={{
           background: "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #f5f7fb 100%)",
-          padding: isMobile ? "6rem 0 2.5rem" : "9rem 0 4rem",
+          padding: isMobile ? "6rem 0 2rem" : "8rem 0 3rem",
           borderBottom: "1px solid rgba(10,31,77,0.06)",
         }}
       >
@@ -124,7 +124,7 @@ const CertificatePage = () => {
       </section>
 
       {/* Key Findings */}
-      <section style={{ background: "#f5f7fb", padding: isMobile ? "3rem 0 3.5rem" : "5rem 0 6rem" }}>
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <SectionEyebrow as="h2">Key Findings</SectionEyebrow>
           <KeyFindings models={MODELS} />
@@ -132,8 +132,8 @@ const CertificatePage = () => {
       </section>
 
       {/* The Field */}
-      <section style={{ background: "#ffffff", padding: isMobile ? "3rem 0 3.5rem" : "5rem 0 6rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
+      <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
             Each dot is one model, placed by its Artificial Analysis intelligence index (left to
@@ -149,8 +149,8 @@ const CertificatePage = () => {
       </section>
 
       {/* Leaderboard */}
-      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 3rem" : "5rem 0 6rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: LEADERBOARD_WIDTH }}>
+      <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
             Every provider graded on each systemic risk. Each grade opens down to the benchmarks
@@ -161,7 +161,7 @@ const CertificatePage = () => {
       </section>
 
       {/* About / Methodology */}
-      <section style={{ background: "#f5f7fb", padding: isMobile ? "3.5rem 0 4rem" : "6rem 0 7rem" }}>
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "2.5rem 0 3rem" : "3.5rem 0 4rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <div style={{ maxWidth: 760 }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>

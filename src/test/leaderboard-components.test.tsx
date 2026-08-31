@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { RowLabel } from "@/components/leaderboard/RowLabel";
 import { Legend } from "@/components/leaderboard/Legend";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
@@ -106,7 +106,8 @@ describe("the legend after the cut", () => {
 });
 
 describe("deriveCellWidth", () => {
-  const unclamped = [8, 9, 10, 11];
+  // At the design width the clamp binds outside 6..11 providers.
+  const unclamped = [6, 7, 8, 9, 10, 11];
 
   it("fills the container across the unclamped range", () => {
     for (const n of unclamped) {
@@ -118,7 +119,7 @@ describe("deriveCellWidth", () => {
 
   it("pins to the maximum when there are few providers", () => {
     expect(deriveCellWidth(1)).toBe(CELL_MAX);
-    expect(deriveCellWidth(7)).toBe(CELL_MAX);
+    expect(deriveCellWidth(5)).toBe(CELL_MAX);
   });
 
   it("pins to the minimum when there are many, and overflows", () => {
@@ -483,5 +484,57 @@ describe("column header geometry", () => {
     const contents = [...document.querySelectorAll<HTMLElement>("[data-member-content]")];
     expect(contents.length).toBeGreaterThan(0);
     for (const content of contents) expect(content.style.width).toBe("var(--cell-width)");
+  });
+});
+
+describe("deriveCellWidth against a measured container", () => {
+  it("fills a wide container instead of the fixed design width", () => {
+    // The grid is no longer capped at LEADERBOARD_WIDTH, so cells must size
+    // to the space actually available or the table floats in whitespace.
+    const wide = deriveCellWidth(9, 2400);
+    expect(wide).toBeGreaterThan(deriveCellWidth(9, LEADERBOARD_WIDTH));
+  });
+
+  it("still respects the clamp at both ends", () => {
+    expect(deriveCellWidth(2, 4000)).toBe(CELL_MAX);
+    expect(deriveCellWidth(40, 900)).toBe(CELL_MIN);
+  });
+
+  it("falls back to the design width before the container is measured", () => {
+    expect(deriveCellWidth(9, undefined)).toBe(deriveCellWidth(9, LEADERBOARD_WIDTH));
+  });
+
+  it("ignores a zero or negative measurement rather than collapsing", () => {
+    for (const bogus of [0, -50]) {
+      expect(deriveCellWidth(9, bogus)).toBe(deriveCellWidth(9, LEADERBOARD_WIDTH));
+    }
+  });
+});
+
+describe("the grid fills its container", () => {
+  const gridWidth = () => {
+    const grid = screen.getByRole("grid");
+    return Number((grid.style.minWidth || "0").replace("px", ""));
+  };
+
+  afterEach(() => {
+    delete document.body.dataset.testWidth;
+  });
+
+  it("grows with the measured container rather than a fixed design width", () => {
+    document.body.dataset.testWidth = "2000";
+    render(<Leaderboard models={MODELS} />);
+    const wide = gridWidth();
+    cleanup();
+
+    document.body.dataset.testWidth = "1360";
+    render(<Leaderboard models={MODELS} />);
+    expect(wide).toBeGreaterThan(gridWidth());
+  });
+
+  it("uses most of a wide container instead of floating in it", () => {
+    document.body.dataset.testWidth = "1800";
+    render(<Leaderboard models={MODELS} />);
+    expect(gridWidth()).toBeGreaterThan(1800 * 0.9);
   });
 });

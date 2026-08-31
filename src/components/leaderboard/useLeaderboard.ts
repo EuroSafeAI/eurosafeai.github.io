@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useElementWidth } from "@/hooks/use-element-width";
 import { useReducedMotion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { ModelEntry } from "@/data/models.types";
@@ -39,6 +40,8 @@ export interface LeaderboardState {
   setGrouping: (grouping: Grouping) => void;
   /** What a column expands into: its models by organisation, nothing by model. */
   membersOf: (column: Column) => ModelEntry[];
+  /** Attach to the element whose width the grid should fill. */
+  containerRef: (element: HTMLElement | null) => void;
   columnShifts: Record<string, number>;
   /** True for the one frame the shift is an un-transitioned FLIP invert. */
   columnShiftsInstant: boolean;
@@ -56,6 +59,8 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
   const [metric, setMetric] = useState<Aggregation>("worst");
   const [capabilityWeight, setCapabilityWeight] = useState(RAW_CAPABILITY_WEIGHT);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+  const availableWidth = useElementWidth(container);
   const [grouping, setGrouping] = useState<Grouping>("org");
   const reduced = useReducedMotion() ?? false;
   const isMobile = useIsMobile();
@@ -105,7 +110,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   }, [rows, columns, metric, capabilityWeight]);
 
   const labelWidth = isMobile ? 168 : LABEL_WIDTH;
-  const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length);
+  const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length, availableWidth);
   // An expanded provider keeps its own pooled column and grows its models to the
   // right of it, so nothing shifts under the cursor and a provider can be read
   // against its own members.
@@ -194,6 +199,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     grouping,
     setGrouping,
     membersOf,
+    containerRef: setContainer,
     columnShifts: shifts,
     columnShiftsInstant: shiftsInstant,
   };

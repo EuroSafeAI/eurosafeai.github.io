@@ -40,12 +40,14 @@ export const CapabilityAdjustedSection = ({ models }: { models: ModelEntry[] }) 
     // flexWrap with a basis rather than a JS breakpoint: the columns stack on
     // their own once there is no room for both.
     <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", alignItems: "flex-start" }}>
-      <div style={{ flex: "1 1 560px", minWidth: 0 }}>
+      <div style={{ flex: "1 1 620px", minWidth: 0 }}>
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
         aria-label="Raw safety against the Artificial Analysis intelligence index, one point per model, coloured by region"
-        style={{ width: "100%", maxWidth: BOX.width, height: "auto" }}
+        // No maxWidth: the viewBox is a coordinate system, not a size cap, and
+        // capping it left the plot floating in its column.
+        style={{ width: "100%", height: "auto" }}
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />

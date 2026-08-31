@@ -45,3 +45,30 @@ class ImmediateIntersectionObserver implements IntersectionObserver {
 
 window.IntersectionObserver = ImmediateIntersectionObserver;
 globalThis.IntersectionObserver = ImmediateIntersectionObserver;
+
+/**
+ * jsdom has no ResizeObserver, and the leaderboard measures its container to
+ * size cells to the space actually available. Tests that need a specific width
+ * can set `document.body.dataset.testWidth`; otherwise nothing is reported and
+ * the grid keeps its design-width fallback.
+ */
+class TestResizeObserver implements ResizeObserver {
+  private readonly callback: ResizeObserverCallback;
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+  observe(target: Element) {
+    const width = Number(document.body.dataset.testWidth ?? 0);
+    if (width > 0) {
+      this.callback(
+        [{ target, contentRect: { width } } as unknown as ResizeObserverEntry],
+        this
+      );
+    }
+  }
+  unobserve() {}
+  disconnect() {}
+}
+
+window.ResizeObserver = TestResizeObserver;
+globalThis.ResizeObserver = TestResizeObserver;

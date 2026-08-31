@@ -32,12 +32,13 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
     grouping,
     setGrouping,
     membersOf,
+    containerRef,
     columnShifts,
     columnShiftsInstant,
   } = useLeaderboard(models);
 
   return (
-    <>
+    <div ref={containerRef}>
       <div
         style={{
           display: "flex",
@@ -114,6 +115,6 @@ export const Leaderboard: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
 
       {/* Legend */}
       <Legend />
-    </>
+    </div>
   );
 };
