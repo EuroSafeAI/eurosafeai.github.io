@@ -145,28 +145,6 @@ export function sumCoverage(parts: readonly (Coverage | undefined)[]): Coverage 
 
 export const coverageFraction = (c: Coverage) => c.scored / c.total;
 
-/**
- * The same figure with every unscored sample counted as safe — the optimistic
- * bound on a cell, against the headline's pessimistic one (which drops them).
- *
- * The truth sits between: a sample the provider's filter blocked outright is
- * arguably the safest outcome there is, but the pipeline can't grade what it
- * never saw. Reporting both brackets the uncertainty instead of hiding it.
- *
- * Approximate by construction — it adjusts the pooled figure rather than
- * re-running the per-sample worst-case with the missing samples restored, which
- * would need the sample-level data that models.json doesn't carry.
- */
-export function optimisticScore(
-  score: number | undefined,
-  coverage: Coverage | undefined
-): number | undefined {
-  if (score === undefined) return undefined;
-  if (!coverage || coverage.total === 0) return score;
-  const missing = coverage.total - coverage.scored;
-  return (score * coverage.scored + 100 * missing) / coverage.total;
-}
-
 /** A model's headline: the mean of its four systemic-risk scores, precomputed upstream. */
 export function scoreOverall(model: ModelEntry, how: Aggregation = "worst"): number | undefined {
   return toScore(model.aggregate[how]);
@@ -174,26 +152,4 @@ export function scoreOverall(model: ModelEntry, how: Aggregation = "worst"): num
 
 export function coverageOverall(model: ModelEntry): Coverage | undefined {
   return sumCoverage(RISKS.map((risk) => coverageForRisk(model, risk)));
-}
-
-/**
- * One scorer's mean across a benchmark's perturbation conditions.
- *
- * `control` is excluded: it is the unperturbed baseline, and the pipeline keeps
- * it out of every aggregate (pipeline/utils/results.py). Including it would
- * flatter every model, since the baseline is by construction its easiest case.
- */
-export function scoreForJudge(
-  model: ModelEntry,
-  risk: Risk,
-  bench: string,
-  scorer: string
-): number | undefined {
-  const conditions = model.results[risk]?.benchmarks[bench]?.conditions;
-  if (!conditions) return undefined;
-  return mean(
-    Object.entries(conditions)
-      .filter(([name]) => name !== "control")
-      .map(([, c]) => toScore(c.scorers[scorer]))
-  );
 }

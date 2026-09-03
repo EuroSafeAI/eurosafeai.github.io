@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import modelsData from "@/data/models.json";
-import { publishedRoster } from "@/lib/roster";
 import { buildColumns } from "@/lib/leaderboard";
 import { capabilityCost as capabilityCostOf } from "@/lib/capability-adjusted-safety";
 import type { ModelEntry } from "@/data/models.types";
@@ -13,7 +12,7 @@ import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
 
-const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
+const MODELS = modelsData as unknown as ModelEntry[];
 
 const SectionEyebrow = ({
   as: Tag = "div",
@@ -98,8 +97,18 @@ const CertificatePage = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
             We grade frontier language models against the four systemic risks named in the EU AI
-            Act Code of Practice: CBRN misuse, offensive cyber, loss of control, and manipulation.
-            Every grade opens down to the benchmarks and the individual judges behind it.
+            Act's{" "}
+            <a
+              href="https://code-of-practice.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              General-Purpose AI Code of Practice
+            </a>{" "}
+            (Safety and Security Chapter, Appendix 1.4, “Specified systemic risks”): CBRN misuse,
+            offensive cyber, loss of control, and manipulation. Every grade opens down to the
+            benchmarks behind it.
           </motion.p>
           <motion.div
             style={{
@@ -189,7 +198,7 @@ const CertificatePage = () => {
           </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "1.5rem", maxWidth: 760 }}>
             Every provider graded on each systemic risk. Each grade opens down to the benchmarks
-            behind it, and down to the individual judges behind each benchmark.
+            behind it.
           </p>
           <Leaderboard models={MODELS} onHighlight={setHighlight} />
         </div>

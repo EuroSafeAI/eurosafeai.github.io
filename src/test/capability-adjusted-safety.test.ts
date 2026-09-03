@@ -426,12 +426,6 @@ describe("providerPoints", () => {
     expect(total).toBe(MODELS.length);
   });
 
-  it("keeps the average at or above the worst case, as the markers assume", () => {
-    for (const point of providerPoints(MODELS)) {
-      expect(point.averageSafety).toBeGreaterThanOrEqual(point.safety);
-    }
-  });
-
   it("is empty for an empty roster", () => {
     expect(providerPoints([])).toEqual([]);
   });

@@ -1,14 +1,14 @@
 import {
   BENCHMARK_DESCRIPTIONS,
   RISK_DESCRIPTIONS,
-  judgeRowKind,
+  emphasisSegments,
   rowLabel,
   type Row,
 } from "@/lib/leaderboard";
-import { ACCENT, DIAGNOSTIC_NOTE, FLOOR_NOTE, INDENT, INK, LABEL_GUTTER, ROW_HEIGHT } from "./constants";
+import { ACCENT, DIAGNOSTIC_NOTE, INDENT, INK, LABEL_GUTTER, ROW_HEIGHT } from "./constants";
 import { Chevron } from "./Chevron";
 
-const isExpandable = (row: Row) => row.level === "risk" || row.level === "bench";
+const isExpandable = (row: Row) => row.level === "risk";
 
 export interface RowLabelProps {
   row: Row;
@@ -18,7 +18,7 @@ export interface RowLabelProps {
   onToggle: (row: Row) => void;
 }
 
-/** The sticky left-hand cell naming a row: a risk, benchmark, or judge. */
+/** The sticky left-hand cell naming a row: a risk or a benchmark. */
 export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, open, onToggle }) => {
   const height = ROW_HEIGHT[row.level];
   const diagnostic = row.level === "bench" && row.diagnostic;
@@ -29,9 +29,9 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
         <span
           style={{
             display: "block",
-            fontSize: row.level === "risk" ? 14 : row.level === "bench" ? 12.5 : 12,
-            fontWeight: row.level === "risk" ? 800 : row.level === "bench" ? 600 : 500,
-            color: row.level === "judge" ? "#6b7280" : INK,
+            fontSize: row.level === "risk" ? 14 : 12.5,
+            fontWeight: row.level === "risk" ? 800 : 600,
+            color: INK,
             lineHeight: 1.25,
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -52,12 +52,24 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
         )}
         {row.level === "bench" && !isMobile && (
           <span style={{ display: "block", fontSize: 10.5, color: "rgba(10,31,77,0.5)", lineHeight: 1.3, marginTop: 2 }}>
-            {BENCHMARK_DESCRIPTIONS[row.bench]}
-          </span>
-        )}
-        {row.level === "judge" && !isMobile && (
-          <span style={{ display: "block", fontSize: 9.5, color: row.floor ? "#c08a3e" : "#b0b7c3", lineHeight: 1.2, marginTop: 1 }}>
-            {judgeRowKind(row)}
+            {emphasisSegments(BENCHMARK_DESCRIPTIONS[row.bench] ?? "").map((seg, i) =>
+              seg.mark ? (
+                // Underlined, a touch darker than the gloss: the one technical
+                // criterion that decides harm, picked out without shouting.
+                <span
+                  key={i}
+                  style={{
+                    color: "rgba(10,31,77,0.72)",
+                    textDecoration: "underline",
+                    textUnderlineOffset: 2,
+                  }}
+                >
+                  {seg.text}
+                </span>
+              ) : (
+                <span key={i}>{seg.text}</span>
+              )
+            )}
           </span>
         )}
       </span>
@@ -87,9 +99,8 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
   };
 
   if (!isExpandable(row)) {
-    const note = row.level === "judge" && row.floor ? FLOOR_NOTE : row.level === "judge" ? row.scorer : undefined;
     return (
-      <div role="rowheader" style={{ ...base, ...layout }} title={note}>
+      <div role="rowheader" style={{ ...base, ...layout }} title={diagnostic ? DIAGNOSTIC_NOTE : undefined}>
         {content}
       </div>
     );

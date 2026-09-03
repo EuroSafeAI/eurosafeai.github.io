@@ -2,18 +2,19 @@ export const ACCENT = "#003399";
 export const INK = "#0a1f4d";
 
 /**
- * `bench` must fit the row-label button's two lines of text: the name (one
- * line, ellipsized) plus the gloss (wraps). The gloss column is LABEL_WIDTH
- * (320) minus the button's horizontal chrome — paddingLeft 10 + INDENT.bench
- * 18, paddingRight 8, the chevron 11, and its 7px gap — leaving ~266px at
- * fontSize 10.5 / lineHeight 1.3. At roughly 50 characters per line that's
- * ~53 characters short of the longest gloss (160 chars, human_rights_persona_gap
- * in src/lib/leaderboard.ts), which needs up to 4 wrapped lines once word
- * boundaries are accounted for (three 50-char lines only fit 150).
- * Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px marginTop
- * + 4 gloss lines (10.5 * 1.3 = 13.65 each) = 72.225, rounded up for margin.
+ * `bench` must fit the row label's two blocks of text: the name (one line,
+ * ellipsized) plus the gloss (wraps). The gloss column is LABEL_WIDTH (320)
+ * minus the label's horizontal chrome — paddingLeft 10 + INDENT.bench 18,
+ * paddingRight 8, the chevron's 11px slot, and its 7px gap — leaving ~266px at
+ * fontSize 10.5 / lineHeight 1.3, roughly 50 characters per line. The longest
+ * BENCHMARK_DESCRIPTIONS gloss (src/lib/leaderboard.ts) now runs to ~219
+ * characters, which needs up to 5 wrapped lines once word boundaries are
+ * accounted for. Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px
+ * marginTop + 5 gloss lines (10.5 * 1.3 = 13.65 each) = 86.375, rounded up for
+ * margin. Overflow is clipped by the row (DataRow's `overflow: clip`), so a
+ * longer gloss loses its tail rather than bleeding into the next row.
  */
-export const ROW_HEIGHT = { risk: 64, bench: 76, judge: 42 } as const;
+export const ROW_HEIGHT = { risk: 64, bench: 90 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
@@ -49,7 +50,7 @@ export function deriveCellWidth(providers: number, available?: number): number {
   const fitted = Math.floor((width - LABEL_WIDTH) / providers);
   return Math.min(CELL_MAX, Math.max(CELL_MIN, fitted));
 }
-export const INDENT = { risk: 0, bench: 18, judge: 36 } as const;
+export const INDENT = { risk: 0, bench: 18 } as const;
 export const HEADER_SCORE_HEIGHT = 40;
 export const HEADER_LOGO = 20;
 
@@ -75,9 +76,6 @@ export const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 export const DIAGNOSTIC_NOTE =
   "Diagnostic benchmark: reported for transparency but excluded from the aggregates above, because its score does not mean what a safety score means.";
-
-export const FLOOR_NOTE =
-  "Optimistic bound: this benchmark's score recomputed with every unscored sample counted as safe. The headline above drops those samples instead. The two bracket the truth — a response the provider's filter blocked outright is arguably the safest outcome, but the pipeline cannot grade what it never saw.";
 
 export const OVERALL_NOTE =
   "Overall: the mean of the four systemic-risk scores below, as the evaluation pipeline computes it.";

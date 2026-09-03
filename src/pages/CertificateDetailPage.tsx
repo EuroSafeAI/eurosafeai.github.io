@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import modelsData from "@/data/models.json";
-import { publishedRoster } from "@/lib/roster";
 import type { ModelEntry } from "@/data/models.types";
 
 const ACCENT = "#003399";
@@ -10,7 +9,7 @@ const INK = "#0a1f4d";
 
 // Unrouted since the PDF certificates were retired — see scripts/CERT-CONTRACT.md.
 // Kept compiling only so it stays a usable starting point if certs come back.
-const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
+const MODELS = modelsData as unknown as ModelEntry[];
 
 const CertificateDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();

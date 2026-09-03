@@ -6,7 +6,6 @@
  */
 import { describe, it, expect } from "vitest";
 import modelsData from "@/data/models.json";
-import { publishedRoster } from "@/lib/roster";
 import { CONDITIONS, RISKS, type ModelEntry, type Risk } from "@/data/models.types";
 import {
   BENCHMARK_LABELS,
@@ -16,17 +15,19 @@ import {
   scorerLabel,
 } from "@/lib/leaderboard";
 
-// The promoted roster, because that is what the site publishes. Checking the
-// raw export instead would pass over a model whose scores the site fills in.
 /**
  * Model/risk pairs whose evaluation actually produced results. A risk whose
- * run failed carries no baseline, conditions or benchmarks, so asserting the
- * full shape over it would fail for a reason that is not a defect.
+ * run failed on a total outage carries no baseline, conditions or benchmarks,
+ * so asserting the full shape over it would fail for a reason that is not a
+ * defect. A partial run (some samples refused) does carry them, at reduced
+ * coverage, and is validated like any other.
  */
 const evaluated = (m: ModelEntry, risk: Risk) =>
   Object.keys(m.results[risk]?.benchmarks ?? {}).length > 0;
 
-const MODELS = publishedRoster(modelsData as unknown as ModelEntry[]);
+// The export verbatim: the pipeline now publishes partial runs self-describing
+// (results + status + coverage), so there is nothing for the site to fill in.
+const MODELS = modelsData as unknown as ModelEntry[];
 
 /** Scorer keys the pipeline is known to emit. A new one is a schema change. */
 const KNOWN_DETECTORS = [
