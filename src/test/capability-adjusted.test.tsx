@@ -74,10 +74,16 @@ describe("CapabilityAdjustedSection", () => {
 
   it("labels both axes with their direction and units", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const yAxis = screen.getByText(/safer, score out of 100/i);
-    expect(yAxis.textContent).toMatch(/worst case/i);
-    expect(yAxis.textContent).toMatch(/average/i);
+    const yAxis = screen.getByText(/safer, worst-case score out of 100/i);
+    expect(yAxis).toBeInTheDocument();
     expect(screen.getByText(/more capable, by Artificial Analysis intelligence index/i)).toBeInTheDocument();
+  });
+
+  it("reports only the worst case — the plot names no average", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    // The axis note and legend live inside the plot; the explanatory prose
+    // beside it may still contrast against the average in words.
+    expect(plot().textContent).not.toMatch(/average/i);
   });
 
   it("puts readable values on both axes", () => {
@@ -108,7 +114,7 @@ describe("CapabilityAdjustedSection", () => {
   });
 });
 
-describe("provider markers and the model cross", () => {
+describe("provider and model markers", () => {
   it("marks each provider with its logo", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
     const logos = [...plot().querySelectorAll("image")].map((i) => i.getAttribute("href"));
@@ -127,25 +133,14 @@ describe("provider markers and the model cross", () => {
     for (const ring of rings) expect(ring.getAttribute("stroke")).not.toBe("#ffffff");
   });
 
-  it("gives every opened model an average cross, not just a dot", () => {
-    // The line ran up to the average with nothing drawn at the end of it.
+  it("draws each opened model as a single worst-case dot, with no average cross", () => {
     render(<CapabilityAdjustedSection models={MODELS} highlight="Anthropic" />);
     for (const id of MODELS.filter((m) => m.company === "Anthropic").map((m) => m.id)) {
       const group = plot().querySelector(`g[data-model="${id}"]`)!;
-      // The cross is its own <g>; stroke-width sits on that group rather than
-      // on the lines, and the connector's parent is the model group, which is
-      // also a <g>, so a plain "g line" query catches it too.
-      const cross = group.querySelector('g[stroke-width="1.75"]')!;
-      expect(cross.querySelectorAll("line")).toHaveLength(2);
+      expect(group.querySelectorAll("circle")).toHaveLength(1);
+      // The average cross was its own stroked <g>; nothing should draw one now.
+      expect(group.querySelector('g[stroke-width="1.75"]')).toBeNull();
+      expect(group.querySelector("line")).toBeNull();
     }
-  });
-
-  it("puts each model's cross at its own average, not the provider's", () => {
-    render(<CapabilityAdjustedSection models={MODELS} highlight="Anthropic" />);
-    const ys = MODELS.filter((m) => m.company === "Anthropic").map((m) => {
-      const cross = plot().querySelector(`g[data-model="${m.id}"] g[stroke-width="1.75"] line`)!;
-      return cross.getAttribute("y1");
-    });
-    expect(new Set(ys).size).toBe(ys.length);
   });
 });

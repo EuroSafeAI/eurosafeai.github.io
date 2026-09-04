@@ -30,9 +30,18 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
         <AccordionTrigger style={titleStyle}>How these scores are made</AccordionTrigger>
         <AccordionContent style={bodyStyle}>
           <p>
-            The four rows are the systemic risks the EU AI Act's Code of Practice requires
-            providers of general-purpose AI to assess: CBRN misuse, offensive cyber capability,
-            loss of control, and manipulation.
+            The four rows are the systemic risks the EU AI Act's{" "}
+            <a
+              href="https://code-of-practice.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              General-Purpose AI Code of Practice
+            </a>{" "}
+            requires providers of general-purpose AI to assess — its Safety and Security Chapter,
+            Appendix 1.4 (“Specified systemic risks”), names CBRN misuse, offensive cyber
+            capability, loss of control, and manipulation.
           </p>
           <p>
             Each is evaluated by a merged suite of public benchmarks, re-scored under one common

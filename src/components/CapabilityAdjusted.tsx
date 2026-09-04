@@ -40,7 +40,6 @@ const FALLBACK_WIDTH = 820;
 const LABEL_LINE_HEIGHT = 12;
 const DOT_RADIUS = 6;
 const LABEL_OFFSET = 11;
-const CROSS_RADIUS = 5;
 const LOGO_SIZE = 15;
 const LOGO_RADIUS = 11;
 
@@ -84,17 +83,7 @@ export const CapabilityAdjustedSection = ({
       y: point.y + 4,
       width: widths[i],
     }));
-    // Both markers are obstacles. Avoiding only the worst-case dots left
-    // labels struck through by the crosses, which sit above them in the
-    // crowded upper half of the plot.
-    const obstacles = [
-      ...points.map((p) => ({ ...p, r: DOT_RADIUS })),
-      ...providers.map((p) => ({
-        x: scatterPoint(p.index, p.averageSafety, BOX, domain).x,
-        y: scatterPoint(p.index, p.averageSafety, BOX, domain).y,
-        r: CROSS_RADIUS,
-      })),
-    ];
+    const obstacles = points.map((p) => ({ ...p, r: DOT_RADIUS }));
     const y = spreadLabels(boxes, LABEL_LINE_HEIGHT, obstacles);
     return providers.map((_, i) => ({ y: y[i], onLeft: onLeft[i] }));
   }, [providers, domain, BOX]);
@@ -149,7 +138,7 @@ export const CapabilityAdjustedSection = ({
           more capable, by Artificial Analysis intelligence index
         </text>
         <text x={BOX.pad - 9} y={BOX.pad - 14} textAnchor="start" fontSize={11} fontWeight={600} fill="#6b7280">
-          safer, score out of 100 (worst case ● and average ✕)
+          safer, worst-case score out of 100
         </text>
         {medians && (
           <g>
@@ -193,7 +182,6 @@ export const CapabilityAdjustedSection = ({
         {providers.map((point, i) => {
           const isOpen = open === point.provider;
           const { x, y } = scatterPoint(point.index, point.safety, BOX, domain);
-          const averageY = scatterPoint(point.index, point.averageSafety, BOX, domain).y;
           const { y: textY, onLeft } = labels[i];
           const colour = REGION_COLOUR[point.models[0].model.region] ?? REGION_FALLBACK;
           const dim = open !== null && !isOpen;
@@ -207,16 +195,15 @@ export const CapabilityAdjustedSection = ({
               onMouseEnter={() => setHovered(point.provider)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* The provider's own marker pair, hidden while its models are
-                  out so the two do not read as separate observations. */}
+              {/* The provider's own marker, hidden while its models are out so
+                  the two do not read as separate observations. */}
               <g opacity={isOpen ? 0 : 1} style={{ transition: reduced ? undefined : "opacity 0.25s ease" }}>
-                <line x1={x} y1={y} x2={x} y2={averageY} stroke={colour} strokeWidth={1.25} opacity={0.4} />
                 {/* The logo carries identity better than a dot plus a label,
                     and the ring keeps the region readable now that fill is
                     no longer available to say it. */}
                 <circle cx={x} cy={y} r={LOGO_RADIUS} fill="#ffffff" stroke={colour} strokeWidth={2}>
                   <title>
-                    {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, worst case ${point.safety.toFixed(1)}, average ${point.averageSafety.toFixed(1)}, intelligence index ${point.index.toFixed(1)}`}
+                    {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, worst case ${point.safety.toFixed(1)}, intelligence index ${point.index.toFixed(1)}`}
                   </title>
                 </circle>
                 {COMPANY_LOGO[point.provider] && (
@@ -230,10 +217,6 @@ export const CapabilityAdjustedSection = ({
                     pointerEvents="none"
                   />
                 )}
-                <g stroke={colour} strokeWidth={1.75} opacity={0.85}>
-                  <line x1={x - 4} y1={averageY - 4} x2={x + 4} y2={averageY + 4} />
-                  <line x1={x - 4} y1={averageY + 4} x2={x + 4} y2={averageY - 4} />
-                </g>
               </g>
 
               {/* Its models, parked on the provider's marker until it opens.
@@ -241,7 +224,6 @@ export const CapabilityAdjustedSection = ({
                   mount, which cannot be animated. */}
               {point.models.map((entry) => {
                 const at = scatterPoint(entry.index, entry.safety, BOX, domain);
-                const atAvg = scatterPoint(entry.index, entry.averageSafety, BOX, domain);
                 const mc = REGION_COLOUR[entry.model.region] ?? REGION_FALLBACK;
                 return (
                   <g
@@ -251,34 +233,6 @@ export const CapabilityAdjustedSection = ({
                     data-model={entry.model.id}
                     data-open={isOpen}
                   >
-                    <line
-                      x1={isOpen ? at.x : x}
-                      y1={isOpen ? at.y : y}
-                      x2={isOpen ? at.x : x}
-                      y2={isOpen ? atAvg.y : averageY}
-                      stroke={mc}
-                      strokeWidth={1.25}
-                      opacity={0.4}
-                      style={{ transition: ease }}
-                    />
-                    {/* The average marker. Its absence left each opened model
-                        with a line running up to nothing. */}
-                    <g stroke={mc} strokeWidth={1.75} opacity={0.85} style={{ transition: ease }}>
-                      <line
-                        x1={(isOpen ? at.x : x) - 4}
-                        y1={(isOpen ? atAvg.y : averageY) - 4}
-                        x2={(isOpen ? at.x : x) + 4}
-                        y2={(isOpen ? atAvg.y : averageY) + 4}
-                        style={{ transition: ease }}
-                      />
-                      <line
-                        x1={(isOpen ? at.x : x) - 4}
-                        y1={(isOpen ? atAvg.y : averageY) + 4}
-                        x2={(isOpen ? at.x : x) + 4}
-                        y2={(isOpen ? atAvg.y : averageY) - 4}
-                        style={{ transition: ease }}
-                      />
-                    </g>
                     <circle
                       cx={isOpen ? at.x : x}
                       cy={isOpen ? at.y : y}
@@ -289,7 +243,7 @@ export const CapabilityAdjustedSection = ({
                       style={{ transition: ease }}
                     >
                       <title>
-                        {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, average ${entry.averageSafety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
+                        {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
                       </title>
                     </circle>
                     <text
@@ -335,16 +289,7 @@ export const CapabilityAdjustedSection = ({
           <svg width={14} height={12} aria-hidden>
             <circle cx={6} cy={6} r={5} fill="#6b7280" />
           </svg>
-          worst case
-        </span>
-        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
-          <svg width={14} height={12} aria-hidden>
-            <g stroke="#6b7280" strokeWidth={1.75}>
-              <line x1={2} y1={2} x2={10} y2={10} />
-              <line x1={2} y1={10} x2={10} y2={2} />
-            </g>
-          </svg>
-          average
+          worst-case safety
         </span>
         {/* The shaded corner is the one mark a reader cannot infer from the
             axes, so it is named here rather than only in the prose. */}
@@ -376,11 +321,10 @@ export const CapabilityAdjustedSection = ({
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
           The shaded corner holds the models that are more capable and less safe than half the
-          field. Each model is marked twice: a filled dot at its worst case, and a cross at its
-          average. The gap between them is what adversarial pressure costs that model, and the
-          dot can never sit above the cross, because the worst case takes each sample's lowest
-          result. Capability is marked once; it is a single published figure, not a measurement
-          made here.
+          field. Safety is plotted as each model's worst case — the lowest result across the
+          adversarial conditions, not the average of them — so a point is where a model lands
+          under the pressure it handles least well. Capability is a single published figure, not
+          a measurement made here.
         </p>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
           Both reference lines are medians of this roster, not thresholds, so they move as models

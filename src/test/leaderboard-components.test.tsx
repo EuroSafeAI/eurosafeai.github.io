@@ -65,6 +65,14 @@ describe("RowLabel", () => {
     expect(screen.getByRole("rowheader").textContent).toContain("weaponisation knowledge");
   });
 
+  it("renders the gloss as plain text, with no underline", () => {
+    render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    const underlined = [...screen.getByRole("rowheader").querySelectorAll("span")].filter(
+      (el) => el.style.textDecoration.includes("underline")
+    );
+    expect(underlined).toHaveLength(0);
+  });
+
   it("hides the benchmark gloss on mobile", () => {
     render(<RowLabel row={benchRow} labelWidth={168} isMobile open={false} onToggle={() => {}} />);
     expect(screen.getByRole("rowheader").textContent).not.toContain("weaponisation knowledge");

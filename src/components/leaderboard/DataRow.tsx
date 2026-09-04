@@ -19,8 +19,7 @@ export interface RowValues {
 }
 
 /** Diagnostic rows are greyed: their numbers aren't safety grades. */
-const isMutedRow = (row: Row) =>
-  (row.level === "bench" || row.level === "judge") && row.diagnostic;
+const isMutedRow = (row: Row) => row.level === "bench" && row.diagnostic;
 
 const cellLabel = (
   row: Row,
@@ -35,14 +34,8 @@ const cellLabel = (
 
   const headline = metric === "worst" ? "worst case" : "average";
   const other = metric === "worst" ? "average" : "worst case";
-  const parts: string[] = [];
-  if (row.level === "judge" && row.floor) {
-    parts.push(`${grade(score)}, ${score.toFixed(1)} out of 100 with unscored samples counted safe`);
-    if (alternate !== undefined) parts.push(`${other} ${alternate.toFixed(1)}`);
-  } else {
-    parts.push(`${grade(score)}, ${headline} ${score.toFixed(1)} out of 100`);
-    if (alternate !== undefined) parts.push(`${other} ${alternate.toFixed(1)}`);
-  }
+  const parts: string[] = [`${grade(score)}, ${headline} ${score.toFixed(1)} out of 100`];
+  if (alternate !== undefined) parts.push(`${other} ${alternate.toFixed(1)}`);
   if (coverage && coverage.total > 0) {
     parts.push(
       `coverage ${Math.round(100 * coverageFraction(coverage))}% (${coverage.scored} of ${coverage.total} samples scored)`

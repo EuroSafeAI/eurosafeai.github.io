@@ -57,8 +57,6 @@ export interface AdjustedEntry {
   adjusted: number;
   /** Worst case: each sample's minimum across conditions, then averaged. */
   safety: number;
-  /** The same samples pooled without that per-sample minimum. */
-  averageSafety: number;
   index: number;
 }
 
@@ -73,7 +71,6 @@ export function adjustedRanking(
     entries.push({
       model,
       safety,
-      averageSafety: scoreOverall(model, "mean") ?? safety,
       index: model.aa_intelligence_index,
       adjusted: adjustedSafety(safety, model.aa_intelligence_index, weight),
     });
@@ -352,7 +349,6 @@ export interface ProviderPoint {
   provider: string;
   index: number;
   safety: number;
-  averageSafety: number;
   models: AdjustedEntry[];
 }
 
@@ -379,7 +375,6 @@ export function providerPoints(
     provider,
     index: mean(entries.map((e) => e.index)),
     safety: mean(entries.map((e) => e.safety)),
-    averageSafety: mean(entries.map((e) => e.averageSafety)),
     models: entries,
   }));
 }

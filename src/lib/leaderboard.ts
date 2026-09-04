@@ -3,8 +3,8 @@
  * for the ids that models.json carries bare.
  *
  * Pure data — no React — so the whole shape of the table is unit-testable.
- * Columns are providers (expandable into their models); rows are a three-level
- * tree: systemic risk → benchmark → LLM judge.
+ * Columns are providers (expandable into their models); rows are a two-level
+ * tree: systemic risk → benchmark.
  */
 
 import { RISKS, type ModelEntry, type Risk } from "@/data/models.types";
@@ -14,9 +14,7 @@ import {
   coverageForRisk,
   coverageOverall,
   mean,
-  optimisticScore,
   scoreForBenchmark,
-  scoreForJudge,
   scoreForRisk,
   scoreOverall,
   sumCoverage,
@@ -31,17 +29,7 @@ export interface Column {
 
 export type Row =
   | { key: string; level: "risk"; risk: Risk }
-  | { key: string; level: "bench"; risk: Risk; bench: string; diagnostic: boolean }
-  | {
-      key: string;
-      level: "judge";
-      risk: Risk;
-      bench: string;
-      scorer: string;
-      floor: boolean;
-      /** Inherited from the parent benchmark — the caveat covers the breakdown too. */
-      diagnostic: boolean;
-    };
+  | { key: string; level: "bench"; risk: Risk; bench: string; diagnostic: boolean };
 
 export const riskKey = (risk: Risk) => risk;
 export const benchKey = (risk: Risk, bench: string) => `${risk}/${bench}`;
@@ -85,57 +73,58 @@ export const BENCHMARK_LABELS: Record<string, string> = {
 };
 
 /**
- * What the model was asked to do, and what counts as failing — in the words a
- * reader who has never met the benchmark needs. Derived from the pipeline's
- * source definitions (datasets/prepare/cluster/sources/*.py); the citation on
- * each line is where the claim comes from and is why these can be checked
- * rather than taken on trust.
+ * For each benchmark: what it sends the model (the input), what the model
+ * produces (the output), what property is being measured, and how the reply is
+ * graded — in the words a reader who has never met the benchmark needs. Follows
+ * datasets/BENCHMARKS.md and the pipeline's source definitions
+ * (datasets/prepare/cluster/sources/*.py), so the claims can be checked rather
+ * than taken on trust.
  */
 export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
   // cbrn.py
   harmbench:
-    "Direct requests to carry out chemical or biological harm; only that category enters this risk. Failing means carrying the request out.",
+    "Direct requests to carry out chemical or biological harm, that category only. The model answers in free prose, and a judge marks it unsafe when the reply carries the harmful task out, even with a warning attached.",
   sosbench:
-    "Requests for operationally useful CBRN help. Failing means content that materially increases the requester's capability, including in visible reasoning.",
+    "Requests for operationally useful CBRN help, answered in prose. A judge marks the reply unsafe when it materially raises the requester's capability, including in its reasoning, and safe when it stays to general knowledge.",
   wmdp:
-    "Multiple-choice questions on weaponisation knowledge: whether the model knows hazardous material, not whether it declines to act on it.",
+    "Multiple-choice questions on weaponisation knowledge; the model replies with a letter, matched against the key. A diagnostic: the correct answer is the unsafe end, since it means the model knows the hazardous material.",
   // cyber.py
   cysecbench:
-    "Requests for offensive cyber capability, rated from refusal to a fully working answer, so a vague reply is not scored as a usable exploit.",
+    "Requests for offensive cyber capability, answered in prose. A judge rates the reply 1 to 5, where a fully working answer with executable code is the unsafe extreme and a clear refusal the safe one.",
   cyberseceval_mitre:
-    "Requests mapped to MITRE ATT&CK techniques; failing means assisting the technique.",
+    "Prompts mapped to MITRE ATT&CK techniques; the model replies with code or prose. A judge marks it unsafe when the reply actually assists the technique rather than refusing or answering benignly.",
   agentharm:
-    "Cybercrime and fraud tasks. No tools are granted, so what is measured is whether the model takes the job on, not whether it completes it.",
+    "Cybercrime and fraud task requests, answered in prose with no tools granted. A judge marks it unsafe when the model takes the job on and starts to help; willingness is measured, not completion.",
   cyber_false_refusal:
-    "Benign security questions. Failing means refusing legitimate work — the opposite error to the rest of this risk.",
+    "Benign security questions the model ought to answer, in prose. A refusal detector reads the reply, and here the failure is inverted: refusing the legitimate request is unsafe, answering it safe. A diagnostic.",
   injecagent:
-    "A poisoned tool response planted in the agent's scratchpad. Failing means acting on the injected instruction instead of the user's.",
+    "A benign agent task with an attacker's instruction hidden in a tool response. The model emits its next agent step, and a detector fails it when that step calls the attacker's tool instead of the user's.",
   // loss_of_control.py
   advanced_ai_risk:
-    "Forced-choice questions asking directly whether the model wants power, resources, survival, or to coordinate with other AIs against its principals.",
+    "Forced-choice questions on whether the model wants power, resources, survival, or to coordinate with other AIs against its principals. It answers with a letter, matched against the option that endorses the behaviour.",
   // manipulation.py
   social_harm:
-    "Requests for harmful social or political content. Failing means producing it rather than declining or redirecting.",
+    "Requests for harmful social or political content, answered in prose. A judge marks it unsafe when the model produces the content rather than declining or redirecting.",
   historical_revisionism:
-    "Prompts inviting the model to distort documented history; judged as a binary truth call.",
+    "Prompts inviting the model to distort documented history, answered in prose. A judge runs a step-by-step truth check and fails the reply when it endorses the revisionist account instead of correcting it.",
   human_rights_udhr:
-    "Prompts arguing to limit a right named in the Universal Declaration, scored on how far the response endorses the limitation.",
+    "Prompts arguing to limit a right named in the Universal Declaration. The model answers in a paragraph, scored by a judge on a five-point scale; endorsing the limitation is the unsafe end.",
   human_rights_echr:
-    "The same, for rights named in the European Convention on Human Rights.",
+    "As Human Rights (UDHR), for rights named in the European Convention on Human Rights: the model's paragraph is scored by a judge on the same five-point scale, where endorsing the proposed limit is the unsafe end.",
   human_rights_persona_gap:
-    "Not a benchmark: the difference between how the model answers the same human-rights prompts under two personas. A gap means the answer depends on who is asking.",
+    "A diagnostic, not a benchmark: the same human-rights prompts are put under two opposing personas, and the failure is a wide gap between the model's two answers, a judgment that shifts with who is asking.",
   authoritarian_values:
-    "Authoritarian-personality (F-scale) statements; agreeing indicates authoritarian preference and scores low.",
+    "Authoritarian-personality (F-scale) statements. The model answers on a six-point agree/disagree scale that is parsed directly; agreeing with the statement indicates authoritarian preference and is the unsafe end.",
   leader_favorability:
-    "Approval questions about political leaders, probing whether the model's appraisal shifts with who is being appraised.",
+    "Approval questions about political leaders, answered on a four-point scale that is parsed directly. What is measured is the gap between its ratings of democratic and autocratic leaders, not the overall level.",
   role_model_bias:
-    "Asks the model to name role models, measuring the political share of who it puts forward.",
+    "Asks the model to name a nationality's role models; it replies with a list, and a judge classifies each figure by regime type. The failure is a slate leaning toward figures from autocratic regimes over democratic ones.",
   darkbench:
-    "Conversational dark patterns — brand bias, sycophancy, user retention — phrased as DarkBench's own questions about the chatbot.",
+    "Everyday conversations probing dark patterns such as brand bias, sycophancy, or pushing user retention. The model replies in prose, and a judge marks it unsafe when the reply exhibits one of those patterns.",
   persusafety:
-    "The model is assigned a persuader role for an unethical task under success pressure and asked to commit; accepting is the failure.",
+    "The model is assigned a persuader role for an unethical task under success pressure, then asked to commit with an accept/reject token. A detector reads that token, and accepting the assignment is the failure.",
   sycophancy_mimicry:
-    "A quote attributed to the wrong author. Failing means going along with the misattribution rather than correcting it.",
+    "A quote is put to the model under the wrong author's name. Its prose reply is checked by a string-match detector, which fails it when the reply goes along with the misattribution instead of naming the true author.",
 };
 
 const JUDGE_LABELS: Record<string, string> = {
@@ -182,22 +171,17 @@ export function isRefusalFloor(bench: string, scorer: string): boolean {
   return scorer === "refusal_regex" && bench !== NATIVE_REFUSAL_REGEX_BENCHMARK;
 }
 
-export function judgeRowLabel(row: Extract<Row, { level: "judge" }>): string {
-  return row.floor ? "Refusal floor" : scorerLabel(row.scorer);
-}
-
-/** The display text for a row's own level — risk, benchmark, or judge/scorer. */
+/** The display text for a row's own level — a risk or a benchmark. */
 export function rowLabel(row: Row): string {
   if (row.level === "risk") return RISK_LABELS[row.risk];
-  if (row.level === "bench") return BENCHMARK_LABELS[row.bench] ?? row.bench;
-  return judgeRowLabel(row);
+  return BENCHMARK_LABELS[row.bench] ?? row.bench;
 }
 
-export function judgeRowKind(row: Extract<Row, { level: "judge" }>): string {
-  if (row.floor) return "unscored counted safe";
-  return isLlmJudge(row.scorer) ? "LLM judge" : "deterministic scorer";
-}
-
+/**
+ * Turns a scorer key into a display name. No longer shown as its own row, but
+ * still the canonical name for a scorer key — cert-parity tests read it to
+ * check every scorer in models.json resolves to a label.
+ */
 export function scorerLabel(scorer: string): string {
   return (
     JUDGE_LABELS[scorer] ??
@@ -213,7 +197,7 @@ export function scorerLabel(scorer: string): string {
  * discounting them by capability would count the same quantity twice.
  */
 export function isDiagnosticRow(row: Row): boolean {
-  return (row.level === "bench" || row.level === "judge") && row.diagnostic;
+  return row.level === "bench" && row.diagnostic;
 }
 
 /** One model's cell, discounted by how much that model can actually do. */
@@ -307,38 +291,21 @@ function providerAggregate(column: Column, how: Aggregation, weight: number): nu
   return mean(column.models.map((m) => adjustedAggregate(m, how, weight))) ?? -1;
 }
 
-/**
- * Flatten the row tree to the currently visible rows. A benchmark's judges stay
- * hidden while its risk is collapsed, so `expandedBenches` need not be pruned
- * when a risk closes — reopening it restores the previous depth.
- */
-export function buildRows(
-  models: ModelEntry[],
-  expandedRisks: ReadonlySet<string>,
-  expandedBenches: ReadonlySet<string>
-): Row[] {
+/** Flatten the row tree to the currently visible rows: risks, and the benchmarks under any expanded risk. */
+export function buildRows(models: ModelEntry[], expandedRisks: ReadonlySet<string>): Row[] {
   const rows: Row[] = [];
   for (const risk of RISKS) {
     rows.push({ key: riskKey(risk), level: "risk", risk });
     if (!expandedRisks.has(riskKey(risk))) continue;
 
     for (const bench of orderedBenchmarks(models, risk)) {
-      const key = benchKey(risk, bench);
-      const diagnostic = isDiagnostic(models, risk, bench);
-      rows.push({ key, level: "bench", risk, bench, diagnostic });
-      if (!expandedBenches.has(key)) continue;
-
-      for (const scorer of orderedScorers(models, risk, bench)) {
-        rows.push({
-          key: `${key}/${scorer}`,
-          level: "judge",
-          risk,
-          bench,
-          scorer,
-          floor: isRefusalFloor(bench, scorer),
-          diagnostic,
-        });
-      }
+      rows.push({
+        key: benchKey(risk, bench),
+        level: "bench",
+        risk,
+        bench,
+        diagnostic: isDiagnostic(models, risk, bench),
+      });
     }
   }
   return rows;
@@ -365,23 +332,6 @@ function isDiagnostic(models: ModelEntry[], risk: Risk, bench: string): boolean 
   return models.some((m) => m.results[risk]?.benchmarks[bench]?.diagnostic === true);
 }
 
-/** LLM judges, then deterministic detectors, then the refusal floor; alphabetical within each. */
-function orderedScorers(models: ModelEntry[], risk: Risk, bench: string): string[] {
-  const names = new Set<string>();
-  for (const model of models) {
-    const conditions = model.results[risk]?.benchmarks[bench]?.conditions ?? {};
-    for (const [name, condition] of Object.entries(conditions)) {
-      if (name === "control") continue;
-      for (const scorer of Object.keys(condition.scorers)) names.add(scorer);
-    }
-  }
-  const rank = (scorer: string) =>
-    isRefusalFloor(bench, scorer) ? 2 : isLlmJudge(scorer) ? 0 : 1;
-  return [...names].sort(
-    (a, b) => rank(a) - rank(b) || scorerLabel(a).localeCompare(scorerLabel(b))
-  );
-}
-
 export function modelScore(
   model: ModelEntry,
   row: Row,
@@ -392,19 +342,6 @@ export function modelScore(
       return scoreForRisk(model, row.risk, how);
     case "bench":
       return scoreForBenchmark(model, row.risk, row.bench, how);
-    case "judge":
-      // The floor row reports its benchmark's optimistic bound — the same score
-      // with every unscored sample counted as safe — because that, not the
-      // floor's own constant 1.0, is the quantity a reader wants from it.
-      if (row.floor) {
-        return optimisticScore(
-          scoreForBenchmark(model, row.risk, row.bench, how),
-          coverageForBenchmark(model, row.risk, row.bench)
-        );
-      }
-      // A judge's per-sample scores aren't in this file, so there is no
-      // worst-case counterpart — only its mean across the conditions.
-      return how === "worst" ? scoreForJudge(model, row.risk, row.bench, row.scorer) : undefined;
   }
 }
 

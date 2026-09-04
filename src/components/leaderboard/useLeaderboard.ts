@@ -55,7 +55,6 @@ const toggle = (set: ReadonlySet<string>, key: string): ReadonlySet<string> => {
 
 export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   const [expandedRisks, setExpandedRisks] = useState<ReadonlySet<string>>(new Set());
-  const [expandedBenches, setExpandedBenches] = useState<ReadonlySet<string>>(new Set());
   const [expandedProviders, setExpandedProviders] = useState<ReadonlySet<string>>(new Set());
   const [metric, setMetric] = useState<Aggregation>("worst");
   const [capabilityWeight, setCapabilityWeight] = useState(RAW_CAPABILITY_WEIGHT);
@@ -75,10 +74,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   // currently open — the leaf count fed to columnGroupStyle must stay constant
   // while a column expands, or the group snaps shut in a single frame.
   const membersOf = (column: Column) => (grouping === "org" ? column.models : []);
-  const rows = useMemo(
-    () => buildRows(models, expandedRisks, expandedBenches),
-    [models, expandedRisks, expandedBenches]
-  );
+  const rows = useMemo(() => buildRows(models, expandedRisks), [models, expandedRisks]);
 
   // Scores don't depend on which provider is expanded, only on the row/column
   // set, so this must not key off expandedProviders: keying off it would
@@ -168,12 +164,11 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order.join(), reduced]);
 
-  const isRowOpen = (row: Row) =>
-    row.level === "risk" ? expandedRisks.has(row.key) : expandedBenches.has(row.key);
+  // Only risks expand now; a benchmark is a leaf.
+  const isRowOpen = (row: Row) => row.level === "risk" && expandedRisks.has(row.key);
 
   const toggleRow = (row: Row) => {
     if (row.level === "risk") setExpandedRisks((s) => toggle(s, row.key));
-    else if (row.level === "bench") setExpandedBenches((s) => toggle(s, row.key));
   };
 
   const toggleProvider = (provider: string) =>

@@ -10,8 +10,6 @@ import {
   buildRows,
   isLlmJudge,
   isRefusalFloor,
-  judgeRowKind,
-  judgeRowLabel,
   modelCoverage,
   modelScore,
   overallCoverage,
@@ -144,13 +142,13 @@ describe("buildRows", () => {
   ];
 
   it("shows only the four risks when nothing is expanded", () => {
-    const rows = buildRows(models, new Set(), new Set());
+    const rows = buildRows(models, new Set());
     expect(rows).toHaveLength(RISKS.length);
     expect(rows.every((r) => r.level === "risk")).toBe(true);
   });
 
   it("inserts a risk's benchmarks directly beneath it when expanded", () => {
-    const rows = buildRows(models, new Set(["cbrn"]), new Set());
+    const rows = buildRows(models, new Set(["cbrn"]));
     expect(rows[0]).toMatchObject({ level: "risk", risk: "cbrn" });
     expect(rows.slice(1, 4).map((r) => (r as { bench: string }).bench)).toEqual([
       "harmbench",
@@ -168,7 +166,7 @@ describe("buildRows", () => {
         harmbench: benchmark(90, {}),
       }),
     ];
-    const rows = buildRows(shuffled, new Set(["cbrn"]), new Set());
+    const rows = buildRows(shuffled, new Set(["cbrn"]));
     expect(rows.slice(1, 4).map((r) => (r as { bench: string }).bench)).toEqual([
       "harmbench",
       "sosbench",
@@ -177,81 +175,21 @@ describe("buildRows", () => {
     expect(rows[3]).toMatchObject({ diagnostic: true });
   });
 
-  it("inserts judge rows beneath an expanded benchmark, LLM judges before detectors", () => {
-    const mixed = [
-      model("a1", "Anthropic", {
-        harmbench: benchmark(90, { paraphrase: { refusal_regex: 80, [JUDGE]: 90 } }),
-      }),
-    ];
-    const rows = buildRows(mixed, new Set(["cbrn"]), new Set(["cbrn/harmbench"]));
-    expect(rows.slice(2, 4).map((r) => (r as { scorer: string }).scorer)).toEqual([
-      JUDGE,
-      "refusal_regex",
-    ]);
+  it("does not open a benchmark into anything — it is a leaf now", () => {
+    const rows = buildRows(models, new Set(["cbrn"]));
+    expect(rows.every((r) => r.level === "risk" || r.level === "bench")).toBe(true);
   });
 
-  it("sorts the refusal floor last, after real deterministic scorers", () => {
-    const mixed = [
-      model("a1", "Anthropic", {
-        harmbench: benchmark(90, { paraphrase: { refusal_regex: 100, exact_match: 80, [JUDGE]: 90 } }),
-      }),
-    ];
-    const rows = buildRows(mixed, new Set(["cbrn"]), new Set(["cbrn/harmbench"]));
-    expect(rows.slice(2, 5).map((r) => (r as { scorer: string }).scorer)).toEqual([
-      JUDGE,
-      "exact_match",
-      "refusal_regex",
-    ]);
-  });
-
-  it("flags refusal_regex rows as the floor, except on cyber_false_refusal", () => {
-    const floored = [
-      model("a1", "Anthropic", {
-        harmbench: benchmark(90, { paraphrase: { refusal_regex: 100 } }),
-      }),
-    ];
-    const rows = buildRows(floored, new Set(["cbrn"]), new Set(["cbrn/harmbench"]));
-    expect(rows[2]).toMatchObject({ level: "judge", scorer: "refusal_regex", floor: true });
-
-    const native = [
-      model(
-        "a1",
-        "Anthropic",
-        { cyber_false_refusal: benchmark(90, { paraphrase: { refusal_regex: 77 } }) },
-        50,
-        "cyber"
-      ),
-    ];
-    const nativeRows = buildRows(native, new Set(["cyber"]), new Set(["cyber/cyber_false_refusal"]));
-    const judgeRow = nativeRows.find((r) => r.level === "judge");
-    expect(judgeRow).toMatchObject({ scorer: "refusal_regex", floor: false });
-  });
-
-  it("propagates the diagnostic flag from a benchmark down to its judge rows", () => {
-    const rows = buildRows(models, new Set(["cbrn"]), new Set(["cbrn/wmdp", "cbrn/harmbench"]));
-    const judges = rows.filter((r) => r.level === "judge") as { bench: string; diagnostic: boolean }[];
-    expect(judges.length).toBeGreaterThan(0);
-    for (const row of judges) {
+  it("marks a diagnostic benchmark, and only that one", () => {
+    const rows = buildRows(models, new Set(["cbrn"]));
+    const benches = rows.filter((r) => r.level === "bench") as { bench: string; diagnostic: boolean }[];
+    for (const row of benches) {
       expect(row.diagnostic, row.bench).toBe(row.bench === "wmdp");
     }
   });
 
-  it("never flags an LLM judge as the floor", () => {
-    const rows = buildRows(models, new Set(["cbrn"]), new Set(["cbrn/harmbench"]));
-    for (const row of rows.filter((r) => r.level === "judge")) {
-      if ((row as { scorer: string }).scorer !== "refusal_regex") {
-        expect(row).toMatchObject({ floor: false });
-      }
-    }
-  });
-
-  it("keeps a benchmark's judge rows hidden while its risk is collapsed", () => {
-    const rows = buildRows(models, new Set(), new Set(["cbrn/harmbench"]));
-    expect(rows).toHaveLength(RISKS.length);
-  });
-
   it("gives every row a unique key", () => {
-    const rows = buildRows(models, new Set(["cbrn"]), new Set(["cbrn/harmbench"]));
+    const rows = buildRows(models, new Set(["cbrn"]));
     expect(new Set(rows.map((r) => r.key)).size).toBe(rows.length);
   });
 });
@@ -267,15 +205,6 @@ describe("modelScore", () => {
 
   const riskRow: Row = { key: "cbrn", level: "risk", risk: "cbrn" };
   const benchRow: Row = { key: "k", level: "bench", risk: "cbrn", bench: "harmbench", diagnostic: false };
-  const judgeRow: Row = {
-    key: "k",
-    level: "judge",
-    risk: "cbrn",
-    bench: "harmbench",
-    scorer: JUDGE,
-    floor: false,
-    diagnostic: false,
-  };
 
   it("reads the risk's worst aggregate", () => {
     expect(modelScore(subject, riskRow)).toBe(50);
@@ -283,18 +212,6 @@ describe("modelScore", () => {
 
   it("reads the benchmark's worst aggregate", () => {
     expect(modelScore(subject, benchRow)).toBe(88);
-  });
-
-  it("means a judge across conditions, excluding the control baseline", () => {
-    // (90 + 70) / 2 — the 100 under `control` must not lift it.
-    expect(modelScore(subject, judgeRow)).toBe(80);
-  });
-
-  it("is undefined when the judge abstained everywhere outside control", () => {
-    const abstained = model("a1", "Anthropic", {
-      harmbench: benchmark(88, { control: { [JUDGE]: 100 }, paraphrase: { refusal_regex: 50 } }),
-    });
-    expect(modelScore(abstained, judgeRow)).toBeUndefined();
   });
 
   it("is undefined for a risk the model never completed", () => {
@@ -309,7 +226,7 @@ describe("modelScore", () => {
 
 describe("overall (the column heading score)", () => {
   it("is not a row — the grid holds only the four risks", () => {
-    const rows = buildRows([model("a1", "Anthropic", {})], new Set(), new Set());
+    const rows = buildRows([model("a1", "Anthropic", {})], new Set());
     expect(rows).toHaveLength(RISKS.length);
     expect(rows.every((r) => r.level === "risk")).toBe(true);
   });
@@ -348,54 +265,8 @@ describe("overall (the column heading score)", () => {
   });
 });
 
-describe("refusal floor as an optimistic bound", () => {
-  const floorRow: Row = {
-    key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
-    scorer: "refusal_regex", floor: true, diagnostic: false,
-  };
-
-  const subject = () => {
-    const b = benchmark(60, { paraphrase: { refusal_regex: 100 } });
-    b.conditions.paraphrase!.scored = 25;
-    b.conditions.paraphrase!.total = 100;
-    return model("a1", "Anthropic", { harmbench: b });
-  };
-
-  it("restates the benchmark score with unscored samples counted safe", () => {
-    // 60 over the 25 scored, 100 over the 75 unscored → 90
-    expect(modelScore(subject(), floorRow)).toBe(90);
-  });
-
-  it("never reports below the benchmark's own score", () => {
-    const score = modelScore(subject(), floorRow)!;
-    expect(score).toBeGreaterThanOrEqual(60);
-  });
-
-  it("equals the benchmark score exactly at full coverage", () => {
-    const b = benchmark(60, { paraphrase: { refusal_regex: 100 } });
-    b.conditions.paraphrase!.scored = 100;
-    b.conditions.paraphrase!.total = 100;
-    expect(modelScore(model("a1", "Anthropic", { harmbench: b }), floorRow)).toBe(60);
-  });
-
-  it("adjusts the mean aggregate too, so the cell can show both", () => {
-    const s = subject();
-    s.results.cbrn.benchmarks.harmbench.aggregate.mean = 80;
-    expect(modelScore(s, floorRow, "mean")).toBe(95); // 80*0.25 + 100*0.75
-  });
-});
-
 describe("mean aggregation", () => {
   const benchRow: Row = { key: "k", level: "bench", risk: "cbrn", bench: "harmbench", diagnostic: false };
-  const judgeRow: Row = {
-    key: "k",
-    level: "judge",
-    risk: "cbrn",
-    bench: "harmbench",
-    scorer: JUDGE,
-    floor: false,
-    diagnostic: false,
-  };
 
   it("reads the other aggregate without touching the worst-case path", () => {
     const subject = model("a1", "Anthropic", { harmbench: benchmark(48, {}) });
@@ -403,14 +274,6 @@ describe("mean aggregation", () => {
     subject.results.cbrn.benchmarks.harmbench.aggregate.mean = 78;
     expect(modelScore(subject, benchRow)).toBe(48);
     expect(modelScore(subject, benchRow, "mean")).toBe(78);
-  });
-
-  it("has no mean counterpart for a judge — the per-sample data isn't in the file", () => {
-    const subject = model("a1", "Anthropic", {
-      harmbench: benchmark(90, { paraphrase: { [JUDGE]: 90 } }),
-    });
-    expect(modelScore(subject, judgeRow)).toBe(90);
-    expect(modelScore(subject, judgeRow, "mean")).toBeUndefined();
   });
 });
 
@@ -443,15 +306,6 @@ describe("coverage", () => {
     };
     const subject = model("a1", "Anthropic", { harmbench: b });
     expect(modelCoverage(subject, benchRow)).toEqual({ scored: 20, total: 56 });
-  });
-
-  it("gives a judge row its benchmark's coverage — counts are per condition, not per judge", () => {
-    const subject = model("a1", "Anthropic", { harmbench: withCoverage(20, 56) });
-    const judgeRow: Row = {
-      key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
-      scorer: JUDGE, floor: false, diagnostic: false,
-    };
-    expect(modelCoverage(subject, judgeRow)).toEqual(modelCoverage(subject, benchRow));
   });
 
   it("excludes diagnostic benchmarks at the risk level, matching the score", () => {
@@ -498,34 +352,14 @@ describe("providerScore", () => {
   });
 });
 
-describe("refusal floor naming", () => {
-  const floorRow = {
-    key: "k",
-    level: "judge" as const,
-    risk: "cbrn" as const,
-    bench: "harmbench",
-    scorer: "refusal_regex",
-    floor: true,
-    diagnostic: false,
-  };
-  const nativeRow = { ...floorRow, bench: "cyber_false_refusal", floor: false };
-
+describe("refusal floor detection", () => {
   it("distinguishes the floor from the native detector", () => {
+    // Still exported for cert-parity's validation of models.json's scorer keys,
+    // though the floor is no longer shown as its own row.
     expect(isRefusalFloor("harmbench", "refusal_regex")).toBe(true);
     expect(isRefusalFloor("cyber_false_refusal", "refusal_regex")).toBe(false);
     expect(isRefusalFloor("harmbench", "exact_match")).toBe(false);
     expect(isRefusalFloor("harmbench", JUDGE)).toBe(false);
-  });
-
-  it("renames the floor so it does not read as a scorer's verdict", () => {
-    expect(judgeRowLabel(floorRow)).toBe("Refusal floor");
-    expect(judgeRowLabel(nativeRow)).toBe("Refusal regex");
-  });
-
-  it("describes what each judge row actually is", () => {
-    expect(judgeRowKind(floorRow)).toBe("unscored counted safe");
-    expect(judgeRowKind(nativeRow)).toBe("deterministic scorer");
-    expect(judgeRowKind({ ...floorRow, scorer: JUDGE, floor: false })).toBe("LLM judge");
   });
 });
 
@@ -582,6 +416,27 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
     const values = Object.values(BENCHMARK_DESCRIPTIONS);
     expect(new Set(values).size).toBe(Object.keys(BENCHMARK_DESCRIPTIONS).length);
   });
+
+  it("carries no leftover emphasis markers", () => {
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(text.includes("**"), key).toBe(false);
+    }
+  });
+
+  it("uses no em dashes", () => {
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(text.includes("—"), key).toBe(false);
+    }
+  });
+
+  it("says how each benchmark is graded", () => {
+    // Every description names how the verdict is reached — a judge, a detector,
+    // an answer-match, a parsed scale, or (for the persona-gap diagnostic) the
+    // gap it scores — so a reader learns not just what is measured but how.
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(/judge|detector|answer-match|matched against|parsed|string-match|scale|gap/i.test(text), key).toBe(true);
+    }
+  });
 });
 
 describe("rowLabel", () => {
@@ -599,21 +454,6 @@ describe("rowLabel", () => {
     expect(
       rowLabel({ key: "k", level: "bench", risk: "cbrn", bench: "some_future_bench", diagnostic: false })
     ).toBe("some_future_bench");
-  });
-
-  it("names a judge row, renaming the refusal floor", () => {
-    expect(
-      rowLabel({
-        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
-        scorer: JUDGE, floor: false, diagnostic: false,
-      })
-    ).toBe("Claude Sonnet 4.5");
-    expect(
-      rowLabel({
-        key: "k", level: "judge", risk: "cbrn", bench: "harmbench",
-        scorer: "refusal_regex", floor: true, diagnostic: false,
-      })
-    ).toBe("Refusal floor");
   });
 });
 
