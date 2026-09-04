@@ -9,7 +9,6 @@ import type { ModelEntry } from "@/data/models.types";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { ACCENT, INK } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
-import { KeyFindings } from "@/components/KeyFindings";
 import { Methodology } from "@/components/Methodology";
 
 const MODELS = modelsData as unknown as ModelEntry[];
@@ -136,14 +135,6 @@ const CertificatePage = () => {
               are indicative and will be revised as evaluations are peer-reviewed.
             </span>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Key Findings */}
-      <section style={{ background: "#f5f7fb", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
-        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <SectionEyebrow as="h2">Key Findings</SectionEyebrow>
-          <KeyFindings models={MODELS} />
         </div>
       </section>
 
