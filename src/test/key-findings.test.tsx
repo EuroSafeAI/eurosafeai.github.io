@@ -18,15 +18,27 @@ describe("KeyFindings", () => {
   it("renders one card per finding", () => {
     const { container } = render(<KeyFindings models={MODELS} />);
     expect(container.querySelectorAll("p").length).toBeGreaterThanOrEqual(6);
-    expect(screen.getByText(/lost to adversarial pressure/i)).toBeInTheDocument();
-    expect(screen.getByText(/best score in the field/i)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(`${RISK_LABELS[highestRisk(MODELS)!.risk]} is the highest risk`, "i"))).toBeInTheDocument();
+    expect(screen.getByText(/pass on paper but fail under pressure/i)).toBeInTheDocument();
+    expect(screen.getByText(/models are reliably safe/i)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`fail on ${RISK_LABELS[highestRisk(MODELS)!.risk]}`, "i"))).toBeInTheDocument();
   });
 
-  it("shows figures derived from the roster, not typed", () => {
-    render(<KeyFindings models={MODELS} />);
-    expect(screen.getByText(adversarialCostSummary(MODELS)!.average.toFixed(1))).toBeInTheDocument();
-    expect(screen.getByText(ceilingSummary(MODELS, "worst")!.best.score.toFixed(1))).toBeInTheDocument();
+  it("headlines each finding as a share of the field", () => {
+    const { container } = render(<KeyFindings models={MODELS} />);
+    const ceiling = ceilingSummary(MODELS, "worst")!;
+    const highest = highestRisk(MODELS)!;
+    // The headline of each card is an "N of total" fraction, derived not typed.
+    // Whitespace-stripped, since the value and unit are adjacent spans.
+    const packed = (container.textContent ?? "").replace(/\s+/g, "");
+    expect(packed).toContain(`${ceiling.clears}of${ceiling.total}`);
+    expect(packed).toContain(`${highest.belowHalf}of${highest.total}`);
+  });
+
+  it("keeps the raw scores in the supporting line", () => {
+    const { container } = render(<KeyFindings models={MODELS} />);
+    const text = container.textContent ?? "";
+    expect(text).toContain(adversarialCostSummary(MODELS)!.average.toFixed(1));
+    expect(text).toContain(ceilingSummary(MODELS, "worst")!.best.score.toFixed(1));
   });
 
   it("qualifies the ceiling claim with its metric IN THAT CARD", () => {
@@ -35,18 +47,18 @@ describe("KeyFindings", () => {
     // ceiling finding inverts under the average metric, so the qualifier has
     // to sit beside the number it qualifies.
     render(<KeyFindings models={MODELS} />);
-    expect(cardFor(/best score in the field/i).textContent).toMatch(/worst-case/i);
+    expect(cardFor(/models are reliably safe/i).textContent).toMatch(/worst-case/i);
   });
 
   it("names the highest risk from the data rather than hardcoding it", () => {
     render(<KeyFindings models={MODELS} />);
     const finding = highestRisk(MODELS)!;
-    expect(cardFor(/is the highest risk/i).textContent).toContain(RISK_LABELS[finding.risk]);
+    expect(cardFor(/fail on/i).textContent).toContain(RISK_LABELS[finding.risk]);
   });
 
   it("only claims cross-metric agreement when the data supports it", () => {
     render(<KeyFindings models={MODELS} />);
-    const text = cardFor(/is the highest risk/i).textContent!;
+    const text = cardFor(/fail on/i).textContent!;
     if (highestRisk(MODELS)!.consistentAcrossMetrics) {
       expect(text).toMatch(/under both/i);
     } else {

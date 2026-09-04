@@ -48,53 +48,54 @@ export const KeyFindings: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
   const highest = highestRisk(models);
   if (!cost || !ceiling || !highest) return null;
 
+  // Every headline is a share of the field — the count a general reader can
+  // read without a scale — with the raw scores kept to the supporting line.
+  const droppedUnderPressure = cost.clearsOnMean - cost.clearsOnWorst;
   const findings = [
     {
       key: "adversarial",
-      value: cost.average.toFixed(1),
-      unit: "points",
-      claim: "lost to adversarial pressure",
+      value: `${droppedUnderPressure}`,
+      unit: `of ${cost.total}`,
+      claim: "pass on paper but fail under pressure",
       body: (
         <>
-          The average model scores {cost.average.toFixed(1)} points lower once its safeguards are
-          provoked rather than taken at face value. {cost.clearsOnMean} of {cost.total} models clear{" "}
-          {CLEARS_AT} on their pooled average; under worst-case grading{" "}
-          {cost.clearsOnWorst === 0 ? "none do" : `only ${cost.clearsOnWorst} do`}. The largest fall
-          is {cost.largest.model.name} at {cost.largest.cost.toFixed(1)} points, the smallest{" "}
-          {cost.smallest.model.name} at {cost.smallest.cost.toFixed(1)}.
+          Taken at face value, {cost.clearsOnMean} of {cost.total} models clear the safety bar; provoke
+          their safeguards and {cost.clearsOnWorst === 0 ? "none do" : `only ${cost.clearsOnWorst} do`}.
+          Safety falls {cost.average.toFixed(1)} points on average, most for {cost.largest.model.name}{" "}
+          ({cost.largest.cost.toFixed(1)}) and least for {cost.smallest.model.name}{" "}
+          ({cost.smallest.cost.toFixed(1)}).
         </>
       ),
     },
     {
       key: "ceiling",
-      value: ceiling.best.score.toFixed(1),
-      unit: "out of 100",
-      claim: `best score in the field`,
+      value: `${ceiling.clears}`,
+      unit: `of ${ceiling.total}`,
+      claim: "models are reliably safe",
       body: (
         <>
-          Under worst-case grading no model clears {CLEARS_AT}. {ceiling.best.model.name} leads at{" "}
-          {ceiling.best.score.toFixed(1)}, the median sits at {ceiling.median.toFixed(1)}, and{" "}
-          {ceiling.belowHalf} of {ceiling.total} score below 50. The lowest is{" "}
-          {ceiling.lowest.model.name} at {ceiling.lowest.score.toFixed(1)}.
+          Under worst-case grading not one model clears {CLEARS_AT} out of 100. The safest,{" "}
+          {ceiling.best.model.name}, reaches {ceiling.best.score.toFixed(1)}; the median is{" "}
+          {ceiling.median.toFixed(1)}, and {ceiling.belowHalf} of {ceiling.total} fall below halfway.
+          The lowest is {ceiling.lowest.model.name} at {ceiling.lowest.score.toFixed(1)}.
         </>
       ),
     },
     {
       key: "highest",
-      value: highest.worstMean.toFixed(1),
-      unit: "field average",
-      claim: `${RISK_LABELS[highest.risk]} is the highest risk`,
+      value: `${highest.belowHalf}`,
+      unit: `of ${highest.total}`,
+      claim: `fail on ${RISK_LABELS[highest.risk]}`,
       body: (
         <>
-          {RISK_LABELS[highest.risk]} draws the lowest scores of the four systemic risks, averaging{" "}
-          {highest.worstMean.toFixed(1)} across the field, with {highest.belowHalf} of{" "}
-          {highest.total} models below 50.{" "}
+          {RISK_LABELS[highest.risk]} is the weakest of the four systemic risks, averaging{" "}
+          {highest.worstMean.toFixed(1)} out of 100 across the field.{" "}
           {highest.consistentAcrossMetrics ? (
-            <>It ranks last under both the worst-case and the average metric, so the result does not
-            depend on which one is shown.</>
+            <>It ranks weakest under both the worst-case and the average metric, so the result does
+            not depend on which one is shown.</>
           ) : (
-            <>That ranking holds under worst-case grading; a different risk ranks last on the
-            average metric, so this one depends on which is shown.</>
+            <>That ranking holds under worst-case grading; a different risk is weakest on the average
+            metric, so this one depends on which is shown.</>
           )}
         </>
       ),
