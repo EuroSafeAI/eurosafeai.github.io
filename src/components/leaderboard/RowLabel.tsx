@@ -1,7 +1,6 @@
 import {
   BENCHMARK_DESCRIPTIONS,
   RISK_DESCRIPTIONS,
-  emphasisSegments,
   rowLabel,
   type Row,
 } from "@/lib/leaderboard";
@@ -52,24 +51,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
         )}
         {row.level === "bench" && !isMobile && (
           <span style={{ display: "block", fontSize: 10.5, color: "rgba(10,31,77,0.5)", lineHeight: 1.3, marginTop: 2 }}>
-            {emphasisSegments(BENCHMARK_DESCRIPTIONS[row.bench] ?? "").map((seg, i) =>
-              seg.mark ? (
-                // Underlined, a touch darker than the gloss: the one technical
-                // criterion that decides harm, picked out without shouting.
-                <span
-                  key={i}
-                  style={{
-                    color: "rgba(10,31,77,0.72)",
-                    textDecoration: "underline",
-                    textUnderlineOffset: 2,
-                  }}
-                >
-                  {seg.text}
-                </span>
-              ) : (
-                <span key={i}>{seg.text}</span>
-              )
-            )}
+            {BENCHMARK_DESCRIPTIONS[row.bench]}
           </span>
         )}
       </span>

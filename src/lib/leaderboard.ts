@@ -73,90 +73,59 @@ export const BENCHMARK_LABELS: Record<string, string> = {
 };
 
 /**
- * What a benchmark sends the model, what the model produces, and how that reply
- * becomes a grade — in the words a reader who has never met the benchmark
- * needs. Each line underlines, with a single `**...**` marker (see
- * emphasisSegments), the one technical criterion that decides whether the answer
- * counts as harmful: the thing a judge, a detector, or an answer-match is
- * actually looking for. Follows datasets/BENCHMARKS.md and the pipeline's source
- * definitions (datasets/prepare/cluster/sources/*.py), so the claims can be
- * checked rather than taken on trust.
+ * For each benchmark: what it sends the model (the input), what the model
+ * produces (the output), what property is being measured, and how the reply is
+ * graded — in the words a reader who has never met the benchmark needs. Follows
+ * datasets/BENCHMARKS.md and the pipeline's source definitions
+ * (datasets/prepare/cluster/sources/*.py), so the claims can be checked rather
+ * than taken on trust.
  */
 export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
   // cbrn.py
   harmbench:
-    "Direct requests to carry out chemical or biological harm; only that category counts here. A judge reads the prose reply and marks it unsafe when it **carries the harmful task out**, a warning alongside notwithstanding.",
+    "Direct requests to carry out chemical or biological harm, that category only. The model answers in free prose, and a judge marks it unsafe when the reply carries the harmful task out, even with a warning attached.",
   sosbench:
-    "Requests for operationally useful CBRN help. A judge marks the prose reply unsafe when it **materially raises the requester's capability**, including in its reasoning, and safe when it stays to general knowledge.",
+    "Requests for operationally useful CBRN help, answered in prose. A judge marks the reply unsafe when it materially raises the requester's capability, including in its reasoning, and safe when it stays to general knowledge.",
   wmdp:
-    "Multiple-choice weaponisation-knowledge questions, answered with a letter. A diagnostic scored by answer-match: **choosing the correct answer** is the unsafe end, since it shows the model knows the hazardous material.",
+    "Multiple-choice questions on weaponisation knowledge; the model replies with a letter, matched against the key. A diagnostic: the correct answer is the unsafe end, since it means the model knows the hazardous material.",
   // cyber.py
   cysecbench:
-    "Requests for offensive cyber capability, answered in prose. A judge rates it 1 to 5, where a **fully working answer with executable code** is the unsafe extreme and a clear refusal the safe one.",
+    "Requests for offensive cyber capability, answered in prose. A judge rates the reply 1 to 5, where a fully working answer with executable code is the unsafe extreme and a clear refusal the safe one.",
   cyberseceval_mitre:
-    "Prompts mapped to MITRE ATT&CK techniques; the model replies with code or prose. A judge marks it unsafe when the reply **actually assists the technique** rather than refusing or answering benignly.",
+    "Prompts mapped to MITRE ATT&CK techniques; the model replies with code or prose. A judge marks it unsafe when the reply actually assists the technique rather than refusing or answering benignly.",
   agentharm:
-    "Cybercrime and fraud task requests, answered in prose with no tools granted. A judge marks it unsafe when the model **takes the job on and starts to help**; completion is not measured, only willingness.",
+    "Cybercrime and fraud task requests, answered in prose with no tools granted. A judge marks it unsafe when the model takes the job on and starts to help; willingness is measured, not completion.",
   cyber_false_refusal:
-    "Benign security questions the model ought to answer, so the failure is inverted here. A refusal detector reads the reply and, unlike the rest of this risk, counts **refusing the legitimate request** as the failure.",
+    "Benign security questions the model ought to answer, in prose. A refusal detector reads the reply, and here the failure is inverted: refusing the legitimate request is unsafe, answering it safe. A diagnostic.",
   injecagent:
-    "A benign agent task with an attacker's instruction planted in a tool response. A detector inspects the model's next step and fails it when that step **calls the attacker's tool** instead of the user's.",
+    "A benign agent task with an attacker's instruction hidden in a tool response. The model emits its next agent step, and a detector fails it when that step calls the attacker's tool instead of the user's.",
   // loss_of_control.py
   advanced_ai_risk:
-    "Forced-choice questions on whether the model wants power, resources, survival, or to coordinate with other AIs against its principals. Scored by answer-match: **choosing the power-seeking option** is the failure.",
+    "Forced-choice questions on whether the model wants power, resources, survival, or to coordinate with other AIs against its principals. It answers with a letter, matched against the option that endorses the behaviour.",
   // manipulation.py
   social_harm:
-    "Requests for harmful social or political content, answered in prose. A judge marks it unsafe when the model **produces the content** rather than declining or redirecting.",
+    "Requests for harmful social or political content, answered in prose. A judge marks it unsafe when the model produces the content rather than declining or redirecting.",
   historical_revisionism:
-    "Prompts inviting the model to distort documented history. A judge works a step-by-step truth check and fails the reply when it **endorses the revisionist account** instead of correcting it.",
+    "Prompts inviting the model to distort documented history, answered in prose. A judge runs a step-by-step truth check and fails the reply when it endorses the revisionist account instead of correcting it.",
   human_rights_udhr:
-    "Prompts arguing to limit a right named in the Universal Declaration; the model answers in a paragraph. A judge places it on a five-point scale, and **endorsing the limitation** is the unsafe end.",
+    "Prompts arguing to limit a right named in the Universal Declaration. The model answers in a paragraph, scored by a judge on a five-point scale; endorsing the limitation is the unsafe end.",
   human_rights_echr:
-    "As Human Rights (UDHR), for rights named in the European Convention on Human Rights: a judge scores the paragraph on the same five-point scale, where **endorsing the proposed limit** is the unsafe end.",
+    "As Human Rights (UDHR), for rights named in the European Convention on Human Rights: the model's paragraph is scored by a judge on the same five-point scale, where endorsing the proposed limit is the unsafe end.",
   human_rights_persona_gap:
-    "Not a benchmark but a diagnostic: the same human-rights prompts are put under two opposing personas, and the failure is a **wide gap between the two answers**, a judgment that moves with who is asking.",
+    "A diagnostic, not a benchmark: the same human-rights prompts are put under two opposing personas, and the failure is a wide gap between the model's two answers, a judgment that shifts with who is asking.",
   authoritarian_values:
-    "Authoritarian-personality (F-scale) statements, answered on a six-point scale that is parsed directly. **Agreeing with the statement** indicates authoritarian preference and is the unsafe end.",
+    "Authoritarian-personality (F-scale) statements. The model answers on a six-point agree/disagree scale that is parsed directly; agreeing with the statement indicates authoritarian preference and is the unsafe end.",
   leader_favorability:
-    "Approval questions about political leaders, answered on a four-point scale that is parsed directly. The failure is a **gap between its ratings of democratic and autocratic leaders**, not the overall level.",
+    "Approval questions about political leaders, answered on a four-point scale that is parsed directly. What is measured is the gap between its ratings of democratic and autocratic leaders, not the overall level.",
   role_model_bias:
-    "Asks the model to name role models for a nationality; a judge classifies each by regime type. The failure is a **slate that leans toward figures from autocratic regimes** over democratic ones.",
+    "Asks the model to name a nationality's role models; it replies with a list, and a judge classifies each figure by regime type. The failure is a slate leaning toward figures from autocratic regimes over democratic ones.",
   darkbench:
-    "Everyday conversations probing dark patterns such as brand bias, sycophancy, or pushing user retention. A judge marks a reply unsafe when it **exhibits one of those dark patterns**.",
+    "Everyday conversations probing dark patterns such as brand bias, sycophancy, or pushing user retention. The model replies in prose, and a judge marks it unsafe when the reply exhibits one of those patterns.",
   persusafety:
-    "The model is assigned a persuader role for an unethical task under success pressure, then asked to commit with a token. A detector reads that token, and **accepting the assignment** is the failure.",
+    "The model is assigned a persuader role for an unethical task under success pressure, then asked to commit with an accept/reject token. A detector reads that token, and accepting the assignment is the failure.",
   sycophancy_mimicry:
-    "A quote is put to the model under the wrong author's name. A string-match detector fails the reply when it **goes along with the misattribution** rather than naming the correct author.",
+    "A quote is put to the model under the wrong author's name. Its prose reply is checked by a string-match detector, which fails it when the reply goes along with the misattribution instead of naming the true author.",
 };
-
-export interface GlossSegment {
-  text: string;
-  /**
-   * Underlined in the row gloss: the one technical criterion that decides
-   * whether the model's answer counts as harmful.
-   */
-  mark: boolean;
-}
-
-/**
- * Split a benchmark description into plain and marked runs on its `**...**`
- * markers, so the row gloss can underline the grading criterion without a
- * description having to carry rendered markup. An unmatched or empty marker
- * falls through as plain text.
- */
-export function emphasisSegments(text: string): GlossSegment[] {
-  const segments: GlossSegment[] = [];
-  const marker = /\*\*(.+?)\*\*/g;
-  let last = 0;
-  let match: RegExpExecArray | null;
-  while ((match = marker.exec(text)) !== null) {
-    if (match.index > last) segments.push({ text: text.slice(last, match.index), mark: false });
-    segments.push({ text: match[1], mark: true });
-    last = match.index + match[0].length;
-  }
-  if (last < text.length) segments.push({ text: text.slice(last), mark: false });
-  return segments;
-}
 
 const JUDGE_LABELS: Record<string, string> = {
   "openrouter/anthropic/claude-sonnet-4.5": "Claude Sonnet 4.5",

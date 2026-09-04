@@ -62,17 +62,15 @@ describe("RowLabel", () => {
 
   it("renders the benchmark gloss under the benchmark name", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    expect(screen.getByRole("rowheader").textContent).toContain("weaponisation-knowledge questions");
+    expect(screen.getByRole("rowheader").textContent).toContain("weaponisation knowledge");
   });
 
-  it("underlines the one harm criterion in the gloss", () => {
+  it("renders the gloss as plain text, with no underline", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
     const underlined = [...screen.getByRole("rowheader").querySelectorAll("span")].filter(
       (el) => el.style.textDecoration.includes("underline")
     );
-    expect(underlined).toHaveLength(1);
-    // wmdp's decision criterion, a substring of the gloss rather than a copy.
-    expect(underlined[0].textContent).toBe("choosing the correct answer");
+    expect(underlined).toHaveLength(0);
   });
 
   it("hides the benchmark gloss on mobile", () => {

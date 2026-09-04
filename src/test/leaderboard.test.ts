@@ -8,7 +8,6 @@ import {
   RISK_LABELS,
   buildColumns,
   buildRows,
-  emphasisSegments,
   isLlmJudge,
   isRefusalFloor,
   modelCoverage,
@@ -418,12 +417,9 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
     expect(new Set(values).size).toBe(Object.keys(BENCHMARK_DESCRIPTIONS).length);
   });
 
-  it("underlines exactly one criterion in every description", () => {
+  it("carries no leftover emphasis markers", () => {
     for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
-      const marked = emphasisSegments(text).filter((s) => s.mark);
-      // One marked run: the single technical criterion that decides harm.
-      expect(marked.length, key).toBe(1);
-      expect(marked[0].text.trim().length, key).toBeGreaterThan(0);
+      expect(text.includes("**"), key).toBe(false);
     }
   });
 
@@ -433,38 +429,13 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
     }
   });
 
-  it("leaves no raw ** markers once the segments are reassembled", () => {
-    for (const text of Object.values(BENCHMARK_DESCRIPTIONS)) {
-      const rendered = emphasisSegments(text).map((s) => s.text).join("");
-      expect(rendered).not.toContain("**");
-      expect(rendered).toBe(text.replace(/\*\*/g, ""));
+  it("says how each benchmark is graded", () => {
+    // Every description names how the verdict is reached — a judge, a detector,
+    // an answer-match, a parsed scale, or (for the persona-gap diagnostic) the
+    // gap it scores — so a reader learns not just what is measured but how.
+    for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
+      expect(/judge|detector|answer-match|matched against|parsed|string-match|scale|gap/i.test(text), key).toBe(true);
     }
-  });
-});
-
-describe("emphasisSegments", () => {
-  it("splits a string into plain and marked runs on ** markers", () => {
-    expect(emphasisSegments("a **b** c")).toEqual([
-      { text: "a ", mark: false },
-      { text: "b", mark: true },
-      { text: " c", mark: false },
-    ]);
-  });
-
-  it("returns one plain segment when there are no markers", () => {
-    expect(emphasisSegments("plain text")).toEqual([{ text: "plain text", mark: false }]);
-  });
-
-  it("handles a marker at each edge without emitting empty runs", () => {
-    expect(emphasisSegments("**x** and **y**")).toEqual([
-      { text: "x", mark: true },
-      { text: " and ", mark: false },
-      { text: "y", mark: true },
-    ]);
-  });
-
-  it("leaves an unterminated marker as plain text", () => {
-    expect(emphasisSegments("a **b")).toEqual([{ text: "a **b", mark: false }]);
   });
 });
 
