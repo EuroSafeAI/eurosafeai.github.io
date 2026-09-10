@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import logoIcon from "@/assets/logos/eurosafeai_icon.png";
 
 const researchFocuses = [
+  { label: "Frontier AI Safety", path: "/frontier-ai-safety" },
   { label: "Multi-Agent Safety", path: "/multi-agent-safety" },
   { label: "Democracy Defense", path: "/democracy-defense" },
-  { label: "Frontier AI Safety", path: "/frontier-ai-safety" },
 ];
 
 const navItems = [
