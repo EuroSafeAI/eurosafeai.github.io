@@ -492,7 +492,7 @@ const HomePage = () => {
     <div>
       <Helmet>
         <title>EuroSafeAI — Making AI Safe for Humanity</title>
-        <meta name="description" content="EuroSafeAI is a nonprofit research organization led by Prof. Zhijing Jin, advancing AI safety research on misuse, misalignment, and risks to democracy." />
+        <meta name="description" content="EuroSafeAI is a nonprofit AI safety organization led by Prof. Zhijing Jin, working on misuse, misalignment, and risks to democracy." />
       </Helmet>
       {/* Hero */}
       <section
@@ -557,7 +557,7 @@ const HomePage = () => {
                 marginBottom: "1.8rem",
               }}
             >
-              A nonprofit research organization led by Prof. Zhijing Jin, advancing AI safety research on misuse, misalignment, and risks to democracy.
+              A nonprofit AI safety organization led by Prof. Zhijing Jin, working on misuse, misalignment, and risks to democracy.
             </p>
             <div
               style={{

@@ -1,6 +1,6 @@
 # EuroSafeAI Website
 
-The public website for **EuroSafeAI**, a Swiss nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies.
+The public website for **EuroSafeAI**, a Swiss nonprofit AI safety organization working on misuse, misalignment, and risks to democracy.
 
 Production: <https://safe.eu>
 

@@ -39,7 +39,7 @@ const Footer = () => {
             EuroSafeAI
           </Link>
           <span style={{ fontSize: "0.85rem", color: "rgba(10,31,77,0.55)" }}>
-            Swiss nonprofit advancing AI safety research.
+            Swiss nonprofit working on AI safety.
           </span>
         </div>
 

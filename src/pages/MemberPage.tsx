@@ -36,7 +36,7 @@ const MemberPage = () => {
     <div>
       <Helmet>
         <title>{member.name} — EuroSafeAI Team</title>
-        <meta name="description" content={`${member.name} is ${member.role} at EuroSafeAI, a nonprofit research organization advancing AI safety.`} />
+        <meta name="description" content={`${member.name} is ${member.role} at EuroSafeAI, a nonprofit AI safety organization.`} />
       </Helmet>
       {/* Header */}
       <section style={{ background: "#ffffff", padding: "7rem 0 3rem" }}>
