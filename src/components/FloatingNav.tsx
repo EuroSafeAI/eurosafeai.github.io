@@ -245,15 +245,30 @@ const FloatingNav = () => {
                 );
               }
               return (
-                <button
-                  key={item.label}
-                  onClick={() => handleNav(item)}
-                  className={`text-2xl font-display font-semibold transition-colors ${
-                    active ? "text-primary" : "text-foreground hover:text-primary"
-                  }`}
-                >
-                  {item.label}
-                </button>
+                <div key={item.label} className="flex flex-col items-center gap-3">
+                  <button
+                    onClick={() => handleNav(item)}
+                    className={`text-2xl font-display font-semibold transition-colors ${
+                      active ? "text-primary" : "text-foreground hover:text-primary"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                  {item.path === "/research" &&
+                    researchFocuses.map((focus) => (
+                      <button
+                        key={focus.path}
+                        onClick={() => { navigate(focus.path); window.scrollTo({ top: 0 }); setOpen(false); }}
+                        className={`text-base font-display transition-colors ${
+                          location.pathname === focus.path
+                            ? "text-primary"
+                            : "text-muted-foreground hover:text-primary"
+                        }`}
+                      >
+                        {focus.label}
+                      </button>
+                    ))}
+                </div>
               );
             })}
           </motion.div>

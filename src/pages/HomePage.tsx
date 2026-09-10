@@ -229,8 +229,13 @@ const HiringCallout = ({ isMobile }: { isMobile: boolean }) => (
             padding: isMobile ? "1.4rem" : "1.5rem 2rem",
           }}
         >
-          <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0a1f4d" }}>
-            Sound interesting? <span style={{ color: ACCENT }}>Join us.</span>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0a1f4d" }}>
+              Sound interesting? <span style={{ color: ACCENT }}>Join us.</span>
+            </div>
+            <div style={{ fontSize: "0.9rem", color: "rgba(10,31,77,0.6)", marginTop: "0.3rem" }}>
+              Open roles and student positions.
+            </div>
           </div>
           <Link
             to="/careers"
@@ -239,6 +244,8 @@ const HiringCallout = ({ isMobile }: { isMobile: boolean }) => (
               flexShrink: 0,
               display: "inline-flex",
               alignItems: "center",
+              justifyContent: "center",
+              width: isMobile ? "100%" : undefined,
               gap: "0.5em",
               padding: "0.7rem 1.5rem",
               background: ACCENT,
@@ -254,7 +261,7 @@ const HiringCallout = ({ isMobile }: { isMobile: boolean }) => (
             onMouseEnter={(e) => { e.currentTarget.style.background = "#002277"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; }}
           >
-            Open roles and student positions <span aria-hidden>&rsaquo;</span>
+            See openings <span aria-hidden>&rsaquo;</span>
           </Link>
         </div>
       </AnimatedSection>
