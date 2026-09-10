@@ -25,230 +25,196 @@ const collaborators = [
 ];
 
 const pillars = [
-  { title: "Multi-Agent Safety", desc: "Ensuring groups of agents can safely interact with the real world and each other without unintended consequences.", href: "/multi-agent-safety" },
-  { title: "Democracy Defense", desc: "Studying how AI systems can impact current models of government and developing protective measures.", href: "/democracy-defense" },
   { title: "Frontier AI Safety Research", desc: "Safeguarding and post-training LLMs against harmful use cases, interpreting model behavior via internal states, and detecting model misalignment tendencies.", href: "/frontier-ai-safety" },
+  { title: "Multi-Agent Safety", desc: "Studying how AI agents cooperate, deceive, and collude, and building mechanisms that make their commitments verifiable.", href: "/multi-agent-safety" },
+  { title: "Democracy Defense", desc: "Examining the impact of AI systems on current models of government, and developing protective measures.", href: "/democracy-defense" },
 ];
 
 const missionBlocks = [
   {
-    label: "WHY IT MATTERS",
-    title: "AI systems are rapidly becoming central to economic infrastructure and high-stakes decision-making.",
-    body: "As multi-agent systems interact across markets, supply chains, and critical services, they create complex emergent dynamics that are difficult to predict or control.",
+    label: "MISUSE",
+    title: "The capabilities that make models useful make them useful to attackers.",
+    body: "We test where safeguards fail under adversarial pressure, and what capability a model gives up when they hold.",
   },
   {
-    label: "OUR FOCUS",
-    title: "Risk assessments and mitigation strategies for advanced AI systems.",
-    body: "We target scenarios where AI systems may act contrary to developer intent — studying the systemic risks that emerge when these systems operate at scale.",
+    label: "MISALIGNMENT",
+    title: "Models do not always do what their developers intended.",
+    body: "We build rigorous evaluations for misalignment, both single-agent and multi-agent, and for the cases where surface compliance hides it.",
   },
   {
-    label: "BUILT ON",
-    title: "Curiosity, ethics, and a proactive mindset.",
-    body: "Safety research should be rigorous, open, and always in service of keeping AI aligned with human values.",
+    label: "RISKS TO DEMOCRACY",
+    title: "AI shifts the balance between institutions and those who run them.",
+    body: "We study how democratic checks hold up when the work they rely on is automated, and where models take positions on rights and political questions at scale.",
   },
 ];
 
 const ACCENT = "#003399";
 
-const Sphere3DIllustration = ({ reduced }: { reduced: boolean }) => {
-  const cx = 95;
-  const cy = 80;
-  const R = 56;
+const MisuseIllustration = ({ reduced }: { reduced: boolean }) => {
+  const barrierX = 104;
+  const probes = [42, 64, 86, 108, 130];
+  const breachIndex = 2;
 
-  const nodeCount = 12;
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  const nodes = Array.from({ length: nodeCount }, (_, i) => {
-    const yNorm = 1 - (i / (nodeCount - 1)) * 2;
-    const radial = Math.sqrt(1 - yNorm * yNorm);
-    const theta = golden * i;
-    return {
-      x: cx + R * Math.cos(theta) * radial,
-      y: cy + R * yNorm,
-      z: R * Math.sin(theta) * radial,
-    };
-  });
-
-  const edges: [number, number][] = [];
-  const seen = new Set<string>();
-  for (let i = 0; i < nodes.length; i++) {
-    const nearest = nodes
-      .map((n, j) => ({ j, d: Math.hypot(n.x - nodes[i].x, n.y - nodes[i].y, n.z - nodes[i].z) }))
-      .filter((o) => o.j !== i)
-      .sort((a, b) => a.d - b.d)
-      .slice(0, 2);
-    for (const n of nearest) {
-      const key = i < n.j ? `${i}-${n.j}` : `${n.j}-${i}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        edges.push(i < n.j ? [i, n.j] : [n.j, i]);
-      }
-    }
-  }
-
-  return (
-    <svg viewBox="0 0 190 160" width="100%" height="100%" role="img" aria-hidden="true">
-      <circle cx={cx} cy={cy} r={R} fill="none" stroke={ACCENT} strokeOpacity="0.35" strokeWidth="1" />
-      <ellipse cx={cx} cy={cy} rx={R} ry={R * 0.22} fill="none" stroke={ACCENT} strokeOpacity="0.22" strokeWidth="0.8" />
-      <ellipse cx={cx} cy={cy} rx={R * 0.4} ry={R} fill="none" stroke={ACCENT} strokeOpacity="0.16" strokeWidth="0.8" />
-
-      {edges.map(([a, b], i) => {
-        const na = nodes[a];
-        const nb = nodes[b];
-        const front = (na.z + nb.z) / 2 > -8;
-        return (
-          <line
-            key={`e-${i}`}
-            x1={na.x}
-            y1={na.y}
-            x2={nb.x}
-            y2={nb.y}
-            stroke={ACCENT}
-            strokeOpacity={front ? 0.4 : 0.12}
-            strokeWidth="0.8"
-          />
-        );
-      })}
-
-      {!reduced &&
-        edges.map(([a, b], i) => {
-          const na = nodes[a];
-          const nb = nodes[b];
-          if ((na.z + nb.z) / 2 < 0) return null;
-          return (
-            <circle key={`p-${i}`} r="1.5" fill={ACCENT} opacity="0.85">
-              <animateMotion
-                dur={`${3 + (i % 3) * 0.6}s`}
-                begin={`${(i * 0.4) % 3}s`}
-                repeatCount="indefinite"
-                path={`M${na.x},${na.y} L${nb.x},${nb.y}`}
-              />
-            </circle>
-          );
-        })}
-
-      {nodes.map((n, i) => {
-        const front = n.z > 0;
-        return (
-          <circle
-            key={`n-${i}`}
-            cx={n.x}
-            cy={n.y}
-            r={front ? 3 : 1.8}
-            fill={ACCENT}
-            opacity={front ? 0.9 : 0.3}
-          />
-        );
-      })}
-    </svg>
-  );
-};
-
-const BarChartIllustration = ({ reduced }: { reduced: boolean }) => {
-  const axisY = 145;
-  const thresholdY = 72;
-  const bars = [
-    { x: 22, h: 42 },
-    { x: 52, h: 58 },
-    { x: 82, h: 44 },
-    { x: 112, h: 102, spike: true },
-    { x: 142, h: 66 },
-  ];
   return (
     <svg viewBox="0 0 180 160" width="100%" height="100%" role="img" aria-hidden="true">
-      <line x1="10" y1={axisY} x2="170" y2={axisY} stroke={ACCENT} strokeOpacity="0.3" strokeWidth="1" />
-      {bars.map((b, i) => {
-        const y = axisY - b.h;
-        return (
-          <rect
-            key={i}
-            x={b.x}
-            y={y}
-            width="20"
-            height={b.h}
-            rx="2"
-            fill={ACCENT}
-            opacity={b.spike ? 0.95 : 0.55}
-            className={reduced ? undefined : "mission-bar"}
-            style={reduced ? undefined : { animationDelay: `${i * 0.35}s` }}
-          />
-        );
-      })}
       <line
-        x1="10"
-        y1={thresholdY}
-        x2="170"
-        y2={thresholdY}
+        x1={barrierX}
+        y1="22"
+        x2={barrierX}
+        y2="138"
         stroke={ACCENT}
-        strokeOpacity="0.4"
-        strokeWidth="1.3"
-        strokeDasharray="5 3"
-        className={reduced ? undefined : "mission-threshold"}
+        strokeOpacity="0.45"
+        strokeWidth="1.6"
+        strokeDasharray="6 4"
+        strokeLinecap="round"
       />
+
+      {probes.map((y, i) => {
+        const breach = i === breachIndex;
+        const tip = breach ? 152 : barrierX - 12;
+        return (
+          <g key={`probe-${i}`}>
+            <line
+              x1="16"
+              y1={y}
+              x2={tip}
+              y2={y}
+              stroke={ACCENT}
+              strokeOpacity={breach ? 0.95 : 0.3}
+              strokeWidth={breach ? 1.9 : 1}
+              strokeLinecap="round"
+            />
+            <polygon
+              points={`${tip},${y - 4} ${tip + 8},${y} ${tip},${y + 4}`}
+              fill={ACCENT}
+              opacity={breach ? 0.95 : 0.3}
+            />
+            {!breach && (
+              <line
+                x1={barrierX - 5}
+                y1={y - 6}
+                x2={barrierX + 5}
+                y2={y + 6}
+                stroke={ACCENT}
+                strokeOpacity="0.28"
+                strokeWidth="1"
+                strokeLinecap="round"
+              />
+            )}
+          </g>
+        );
+      })}
+
+      <circle
+        cx={barrierX}
+        cy={probes[breachIndex]}
+        r="4"
+        fill="none"
+        stroke={ACCENT}
+        strokeOpacity="0.6"
+        strokeWidth="1.2"
+      >
+        {!reduced && <animate attributeName="r" values="3;10;3" dur="3.2s" repeatCount="indefinite" />}
+        {!reduced && (
+          <animate attributeName="stroke-opacity" values="0.7;0;0.7" dur="3.2s" repeatCount="indefinite" />
+        )}
+      </circle>
     </svg>
   );
 };
 
-const ConstellationIllustration = ({ reduced }: { reduced: boolean }) => {
-  const cx = 90;
-  const cy = 84;
-  const vertices = [
-    { x: cx, y: cy - 44 },
-    { x: cx - 44, y: cy + 28 },
-    { x: cx + 44, y: cy + 28 },
+const MisalignmentIllustration = ({ reduced }: { reduced: boolean }) => {
+  const ox = 24;
+  const oy = 74;
+
+  return (
+    <svg viewBox="0 0 180 160" width="100%" height="100%" role="img" aria-hidden="true">
+      <line
+        x1={ox}
+        y1={oy}
+        x2="146"
+        y2={oy}
+        stroke={ACCENT}
+        strokeOpacity="0.28"
+        strokeWidth="1.2"
+        strokeDasharray="5 4"
+        strokeLinecap="round"
+      />
+      <circle cx="156" cy={oy} r="7" fill="none" stroke={ACCENT} strokeOpacity="0.3" strokeWidth="1.2" />
+      <circle cx="156" cy={oy} r="2.2" fill={ACCENT} opacity="0.3" />
+
+      <path
+        d={`M${ox} ${oy} C 68 ${oy} 92 ${oy + 20} 144 ${oy + 46}`}
+        fill="none"
+        stroke={ACCENT}
+        strokeOpacity="0.9"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+      <polygon points={`154,${oy + 52} 143,${oy + 51} 147,${oy + 42}`} fill={ACCENT} opacity="0.9" />
+
+      <circle cx={ox} cy={oy} r="4.5" fill={ACCENT} opacity="0.95" />
+
+      <path
+        d={`M112 ${oy} A 34 34 0 0 1 106 ${oy + 26}`}
+        fill="none"
+        stroke={ACCENT}
+        strokeOpacity="0.28"
+        strokeWidth="1"
+        strokeDasharray="3 3"
+      >
+        {!reduced && (
+          <animate attributeName="stroke-opacity" values="0.14;0.45;0.14" dur="3.6s" repeatCount="indefinite" />
+        )}
+      </path>
+    </svg>
+  );
+};
+
+const ConcentrationIllustration = ({ reduced }: { reduced: boolean }) => {
+  const hub = { x: 134, y: 80 };
+  const nodes = [
+    { x: 26, y: 32 },
+    { x: 18, y: 66 },
+    { x: 24, y: 100 },
+    { x: 42, y: 130 },
+    { x: 66, y: 24 },
+    { x: 70, y: 136 },
   ];
 
   return (
     <svg viewBox="0 0 180 160" width="100%" height="100%" role="img" aria-hidden="true">
-      {vertices.map((a, i) => {
-        const b = vertices[(i + 1) % 3];
-        return (
-          <line
-            key={`edge-${i}`}
-            x1={a.x}
-            y1={a.y}
-            x2={b.x}
-            y2={b.y}
-            stroke={ACCENT}
-            strokeOpacity="0.5"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-          />
-        );
-      })}
-
-      {vertices.map((v, i) => (
+      {nodes.map((n, i) => (
         <line
-          key={`spoke-${i}`}
-          x1={cx}
-          y1={cy}
-          x2={v.x}
-          y2={v.y}
+          key={`edge-${i}`}
+          x1={n.x}
+          y1={n.y}
+          x2={hub.x}
+          y2={hub.y}
           stroke={ACCENT}
-          strokeOpacity="0.18"
-          strokeWidth="0.8"
+          strokeOpacity="0.2"
+          strokeWidth="0.9"
         />
       ))}
 
-      {vertices.map((v, i) => (
-        <circle key={`v-${i}`} cx={v.x} cy={v.y} r="4" fill={ACCENT} opacity="0.95" />
+      {nodes.map((n, i) => (
+        <circle key={`node-${i}`} cx={n.x} cy={n.y} r="3.2" fill={ACCENT} opacity="0.42" />
       ))}
 
-      <circle cx={cx} cy={cy} r="6" fill="none" stroke={ACCENT} strokeOpacity="0.4" strokeWidth="1">
+      <circle cx={hub.x} cy={hub.y} r="13" fill={ACCENT} opacity="0.9" />
+      <circle cx={hub.x} cy={hub.y} r="19" fill="none" stroke={ACCENT} strokeOpacity="0.35" strokeWidth="1.2">
+        {!reduced && <animate attributeName="r" values="16;25;16" dur="3.8s" repeatCount="indefinite" />}
         {!reduced && (
-          <animate attributeName="r" values="5;10;5" dur="3.2s" repeatCount="indefinite" />
-        )}
-        {!reduced && (
-          <animate attributeName="stroke-opacity" values="0.5;0;0.5" dur="3.2s" repeatCount="indefinite" />
+          <animate attributeName="stroke-opacity" values="0.45;0;0.45" dur="3.8s" repeatCount="indefinite" />
         )}
       </circle>
-      <circle cx={cx} cy={cy} r="3" fill={ACCENT} />
     </svg>
   );
 };
 
-const missionIllustrations = [Sphere3DIllustration, BarChartIllustration, ConstellationIllustration];
+const missionIllustrations = [MisuseIllustration, MisalignmentIllustration, ConcentrationIllustration];
 
-const pillarIllustrations = [PillarNetwork, PillarBallot, PillarLLM];
+const pillarIllustrations = [PillarLLM, PillarNetwork, PillarBallot];
 
 const PillarCard = ({
   pillar,
@@ -468,8 +434,8 @@ const HomePage = () => {
   return (
     <div>
       <Helmet>
-        <title>EuroSafeAI — Multi-Agent AI Safety for Democracy</title>
-        <meta name="description" content="EuroSafeAI is a nonprofit research organization advancing AI safety and security through rigorous research, threat assessment, and mitigation strategies." />
+        <title>EuroSafeAI — Making AI Safe for Humanity</title>
+        <meta name="description" content="EuroSafeAI is a nonprofit research organization led by Prof. Zhijing Jin, advancing AI safety research on misuse, misalignment, and risks to democracy." />
       </Helmet>
       {/* Hero */}
       <section
@@ -510,9 +476,9 @@ const HomePage = () => {
                 marginBottom: 0,
               }}
             >
-              <span className="block">Multi-Agent</span>
-              <span className="block">AI Safety</span>
-              <span className="block" style={{ color: "#003399", fontWeight: 700 }}>for Democracy</span>
+              <span className="block">Making AI</span>
+              <span className="block">Safe for</span>
+              <span className="block" style={{ color: "#003399", fontWeight: 700 }}>Humanity</span>
             </h1>
             <div
               style={{
@@ -534,7 +500,7 @@ const HomePage = () => {
                 marginBottom: "1.8rem",
               }}
             >
-              A nonprofit research organization led by Prof. Zhijing Jin, aiming to advance AI safety and security through rigorous research, threat assessment, and mitigation strategies.
+              A nonprofit research organization led by Prof. Zhijing Jin, advancing AI safety research on misuse, misalignment, and risks to democracy.
             </p>
             <div
               style={{
@@ -733,7 +699,7 @@ const HomePage = () => {
                   color: "#003399",
                 }}
               >
-                Research Focus
+                Research Lines
               </span>
             </div>
             <h2
@@ -747,7 +713,7 @@ const HomePage = () => {
                 marginBottom: "5.5rem",
               }}
             >
-              Our <span style={{ color: "#003399" }}>three pillars</span> of AI safety research.
+              Our <span style={{ color: "#003399" }}>three research lines</span>.
             </h2>
           </AnimatedSection>
           <div

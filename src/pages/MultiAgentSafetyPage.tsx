@@ -43,7 +43,7 @@ const MultiAgentSafetyPage = () => {
     <div>
       <Helmet>
         <title>Multi-Agent Safety — EuroSafeAI</title>
-        <meta name="description" content="EuroSafeAI's research on ensuring groups of AI agents interact safely without unintended consequences in real-world deployments." />
+        <meta name="description" content="EuroSafeAI's research on what happens when AI agents interact: cooperation in social dilemmas, verifiable commitments, and collusion that defeats oversight." />
       </Helmet>
       {/* Hero */}
       <section
@@ -91,7 +91,7 @@ const MultiAgentSafetyPage = () => {
                     marginRight: isMobile ? "auto" : undefined,
                   }}
                 >
-                  Testing LLM cooperation and safety in multi-agent simulation settings — from game-theoretic benchmarks to society-scale social dilemmas.
+                  Studying what happens when AI agents interact with each other, from cooperation in social dilemmas to collusion that defeats oversight.
                 </p>
                 <p
                   style={{
@@ -104,7 +104,7 @@ const MultiAgentSafetyPage = () => {
                     marginRight: isMobile ? "auto" : undefined,
                   }}
                 >
-                  As AI agents increasingly interact with each other, the real world, and humans, single-agent safety evaluations are no longer sufficient. We study emergent risks in collective action problems, zero-sum competitions, and public goods games.
+                  Single-agent evaluations cannot see behavior that only appears between agents. Whether cooperation is desirable depends on who it serves: the same capacity that sustains a shared resource lets agents collude against the people supervising them. We benchmark when models cooperate and when they defect, formalize mechanisms that make their commitments verifiable, and study what emerges once agents can reach each other, from deception to the gaming of evaluations.
                 </p>
                 <Link
                   to="/research"
@@ -174,7 +174,7 @@ const MultiAgentSafetyPage = () => {
                 marginBottom: "3rem",
               }}
             >
-              Published work and ongoing research agenda on testing cooperation in multi-agent LLM systems.
+              Published work and ongoing research on how LLM agents cooperate, deceive, and coordinate, from game-theoretic benchmarks to machine-checked guarantees.
             </p>
           </AnimatedSection>
           <div
