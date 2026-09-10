@@ -12,9 +12,9 @@ const researchFocuses = [
 
 const navItems = [
   { label: "Research", path: "/research", icon: BookOpen },
-  { label: "Safety Index", path: "/certificate", icon: BarChart3 },
   { label: "Team", path: "/team", icon: Users },
   { label: "Careers", path: "/careers", icon: Briefcase },
+  { label: "Safety Index", path: "/certificate", icon: BarChart3 },
   { label: "Contact", path: "mailto:hello@safe.eu", icon: Mail, external: true },
 ];
 
