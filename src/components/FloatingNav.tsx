@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookOpen, Users, Briefcase, Mail, Menu, X, ChevronDown } from "lucide-react";
+import { BookOpen, BarChart3, Users, Briefcase, Mail, Menu, X, ChevronDown } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import logoIcon from "@/assets/logos/eurosafeai_icon.png";
@@ -8,11 +8,11 @@ const researchFocuses = [
   { label: "Multi-Agent Safety", path: "/multi-agent-safety" },
   { label: "Democracy Defense", path: "/democracy-defense" },
   { label: "Frontier AI Safety", path: "/frontier-ai-safety" },
-  { label: "EU AI Safety Index", path: "/certificate" },
 ];
 
 const navItems = [
   { label: "Research", path: "/research", icon: BookOpen },
+  { label: "Safety Index", path: "/certificate", icon: BarChart3 },
   { label: "Team", path: "/team", icon: Users },
   { label: "Careers", path: "/careers", icon: Briefcase },
   { label: "Contact", path: "mailto:hello@safe.eu", icon: Mail, external: true },
