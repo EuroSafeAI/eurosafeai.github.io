@@ -34,7 +34,7 @@ const missionBlocks = [
   {
     label: "MISUSE",
     title: "The capabilities that make models useful make them useful to attackers.",
-    body: "We test where safeguards fail under adversarial pressure, and what capability a model gives up when they hold.",
+    body: "We work on adversarial robustness, especially tamper resistance in open-weight models.",
   },
   {
     label: "MISALIGNMENT",

@@ -110,6 +110,17 @@ export const papers: Paper[] = [
 
   /* ── Safety ───────────────────────────────────────────────────── */
   {
+    slug: "training-with-honeypots",
+    title: "Training with Honeypots: Reshaping How LLMs Fail Under Adversarial Attacks",
+    summary:
+      "Automated red-teaming reports attack success rates, assuming that a judge flagging an output as harmful corresponds to actionable risk. Safety judges are imperfect, and outputs that satisfy automated criteria for harm vary widely in their operational usefulness. Borrowing honeypots from computer security, we construct responses that automated judges frequently flag as harmful but which carry limited real-world value, and treat them as hard negatives in the safety training pipeline. Reshaping how a model fails under attack reduces both the impact and the frequency of harmful failures, and complements attack-success-rate evaluation rather than replacing it.",
+    authors: ["Samuel Simko", "Punya Syon Pandey", "Zhijing Jin", "Bernhard Schölkopf"],
+    venue: "ICML 2026",
+    tags: ["adversarial robustness", "red-teaming", "jailbreaks", "safety training", "evaluation"],
+    paperUrl: "https://openreview.net/forum?id=SaSbv33Mem",
+    categories: ["safety"],
+  },
+  {
     slug: "tamperbench",
     title: "TamperBench: Systematically Stress-Testing LLM Safety Under Fine-Tuning and Tampering",
     summary:
