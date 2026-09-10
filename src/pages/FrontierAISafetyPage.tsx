@@ -49,7 +49,7 @@ const FrontierAISafetyPage = () => {
       <section
         style={{
           background: "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #f5f7fb 100%)",
-          padding: isMobile ? "6rem 0 3.5rem" : "9rem 0 6rem",
+          padding: isMobile ? "6rem 0 2rem" : "9rem 0 3rem",
         }}
       >
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
@@ -80,32 +80,6 @@ const FrontierAISafetyPage = () => {
                 >
                   Frontier <span style={{ color: ACCENT }}>AI Safety</span> Research
                 </h1>
-                <p
-                  style={{
-                    fontSize: "1.1rem",
-                    lineHeight: 1.6,
-                    color: "rgba(10,31,77,0.8)",
-                    maxWidth: "720px",
-                    marginBottom: "1.1rem",
-                    marginLeft: isMobile ? "auto" : undefined,
-                    marginRight: isMobile ? "auto" : undefined,
-                  }}
-                >
-                  Safeguarding and post-training LLMs against harmful use cases, interpreting model behavior via internal states, and detecting model misalignment tendencies.
-                </p>
-                <p
-                  style={{
-                    fontSize: "0.98rem",
-                    lineHeight: 1.7,
-                    color: "rgba(10,31,77,0.6)",
-                    maxWidth: "720px",
-                    marginBottom: "2rem",
-                    marginLeft: isMobile ? "auto" : undefined,
-                    marginRight: isMobile ? "auto" : undefined,
-                  }}
-                >
-                  Our broader agenda spans dataset curation, fine-tuning safety, interpretability, and the systemic risks AI introduces to society as it scales — from accidental misalignment in seemingly benign training data to socio-political risks at the institutional level.
-                </p>
                 <Link
                   to="/research"
                   onClick={() => window.scrollTo({ top: 0 })}
@@ -144,6 +118,79 @@ const FrontierAISafetyPage = () => {
               </div>
             </div>
           </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Misuse / Misalignment */}
+      <section style={{ background: "#f5f7fb", padding: isMobile ? "1.5rem 0 1rem" : "2rem 0 1rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+          <AnimatedSection>
+            <SectionEyebrow>Two Problems</SectionEyebrow>
+          </AnimatedSection>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "minmax(0,1fr)" : "repeat(2, minmax(0,1fr))",
+              gap: isMobile ? "1.25rem" : "1.75rem",
+              alignItems: "start",
+            }}
+          >
+            {[
+              {
+                label: "Misuse",
+                title: "Once weights are public, safety has to live in the weights.",
+                body:
+                  "A closed model can be defended at the API: constitutional classifiers screening inputs and outputs, monitoring, rate limits, the option to withdraw it. An open-weight model can be none of those things. Whatever safety it carries has to survive being downloaded, fine-tuned and deliberately attacked, because after release there is no second line of defense and no recall. That makes tamper resistance the load-bearing property for open release, and it does not hold today: alignment-stage defenses largely fail once an attacker is allowed to tune the attack. We work on defenses that survive that, and on reshaping how models fail so that a defeated safeguard yields something less useful than it otherwise would.",
+              },
+              {
+                label: "Misalignment",
+                title: "Models can satisfy a safety evaluation without being safe.",
+                body:
+                  "We stay method-agnostic about how to catch that. Our two largest streams are evaluations and interpretability: multi-axis benchmarks spanning sycophancy, sandbagging, goal-guarding, selective disclosure and corrigibility, and work that reads a model's internal states rather than trusting its outputs. We also study the instrument, because models detect when they are being tested, and the most effective prompt-based mitigations suppress the visible behavior while the strategic reasoning stays intact. Alongside both, we are beginning to explore causal fine-tuning as a route into the science of generalization.",
+              },
+            ].map((b, i) => (
+              <AnimatedSection key={b.label} delay={i * 0.12}>
+                <div
+                  style={{
+                    height: "100%",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,51,153,0.12)",
+                    borderRadius: "16px",
+                    padding: isMobile ? "1.5rem 1.4rem" : "2rem 1.9rem",
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontSize: isMobile ? "1.35rem" : "1.6rem",
+                      fontWeight: 800,
+                      lineHeight: 1.15,
+                      color: ACCENT,
+                      letterSpacing: "-0.02em",
+                      marginBottom: "0.6rem",
+                    }}
+                  >
+                    {b.label}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "1.02rem",
+                      fontWeight: 600,
+                      lineHeight: 1.4,
+                      color: INK,
+                      letterSpacing: "-0.01em",
+                      marginTop: 0,
+                      marginBottom: "0.9rem",
+                    }}
+                  >
+                    {b.title}
+                  </p>
+                  <p style={{ fontSize: "0.95rem", lineHeight: 1.7, color: "rgba(10,31,77,0.7)", margin: 0 }}>
+                    {b.body}
+                  </p>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -82,43 +82,16 @@ const DemocracyDefensePage = () => {
                 </h1>
                 <p
                   style={{
-                    fontSize: "1.15rem",
-                    lineHeight: 1.55,
-                    color: INK,
-                    fontWeight: 600,
+                    fontSize: "1.1rem",
+                    lineHeight: 1.6,
+                    color: "rgba(10,31,77,0.8)",
                     maxWidth: "720px",
                     marginBottom: "1.1rem",
                     marginLeft: isMobile ? "auto" : undefined,
                     marginRight: isMobile ? "auto" : undefined,
                   }}
                 >
-                  Avoiding AI that passes the redline of Europe or humanity.
-                </p>
-                <p
-                  style={{
-                    fontSize: "1rem",
-                    lineHeight: 1.7,
-                    color: "rgba(10,31,77,0.75)",
-                    maxWidth: "720px",
-                    marginBottom: "1.1rem",
-                    marginLeft: isMobile ? "auto" : undefined,
-                    marginRight: isMobile ? "auto" : undefined,
-                  }}
-                >
-                  Research on detecting democracy-threatening tendencies of AI, especially the emergent risks exposed by Large Language Models (LLMs).
-                </p>
-                <p
-                  style={{
-                    fontSize: "0.95rem",
-                    lineHeight: 1.7,
-                    color: "rgba(10,31,77,0.6)",
-                    maxWidth: "720px",
-                    marginBottom: "2rem",
-                    marginLeft: isMobile ? "auto" : undefined,
-                    marginRight: isMobile ? "auto" : undefined,
-                  }}
-                >
-                  EuroSafeAI conducts rigorous, public-interest evaluations of AI systems for democratic societies. Our audits assess conformity with the EU AI Act, democratic integrity, historical accuracy, and adherence to human rights standards.
+                  Research on how AI affects democracy, and what protects it.
                 </p>
                 <Link
                   to="/research"
@@ -188,7 +161,7 @@ const DemocracyDefensePage = () => {
                 marginBottom: "2rem",
               }}
             >
-              The <strong style={{ color: INK }}>EuroSafeAI Alignment Index</strong> is a public leaderboard that evaluates frontier AI models across four dimensions derived directly from our democracy defense research.
+              The <strong style={{ color: INK }}>EuroSafeAI Alignment Index</strong> is a public leaderboard that grades frontier AI models against the four systemic risks named in the EU AI Act's General-Purpose AI Code of Practice: CBRN misuse, offensive cyber, loss of control, and manipulation.
             </p>
             <Link
               to="/certificate"

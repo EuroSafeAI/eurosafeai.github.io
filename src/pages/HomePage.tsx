@@ -44,7 +44,7 @@ const missionBlocks = [
   {
     label: "RISKS TO DEMOCRACY",
     title: "AI shifts the balance between institutions and those who run them.",
-    body: "We study how democratic checks hold up when the work they rely on is automated, and where models take positions on rights and political questions at scale.",
+    body: "We study how democratic checks hold up as AI weakens the dependence on people those checks rest on, and where models take positions on rights and political questions at scale.",
   },
 ];
 
