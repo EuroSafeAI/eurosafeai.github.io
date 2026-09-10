@@ -34,7 +34,7 @@ const missionBlocks = [
   {
     label: "MISUSE",
     title: "The capabilities that make models useful make them useful to attackers.",
-    body: "We work on adversarial robustness, especially tamper resistance in open-weight models.",
+    body: "We work on adversarial robustness, especially tamper resistance in open-weight models, tested against adversaries allowed to tune their attacks rather than try once.",
   },
   {
     label: "MISALIGNMENT",
@@ -43,7 +43,7 @@ const missionBlocks = [
   },
   {
     label: "RISKS TO DEMOCRACY",
-    title: "AI shifts the balance between institutions and those who run them.",
+    title: "AI is changing how democracies work.",
     body: "We study how democratic checks hold up as AI weakens the dependence on people those checks rest on, and where models take positions on rights and political questions at scale.",
   },
 ];
