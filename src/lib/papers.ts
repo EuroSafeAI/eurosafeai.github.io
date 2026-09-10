@@ -11,6 +11,8 @@ export interface Paper {
   blogSlug?: string;
   categories: Category[];
   highlight?: boolean;
+  /** Display order among highlighted papers on /research. Lower is earlier. */
+  highlightRank?: number;
   comingSoon?: boolean;
 }
 
@@ -48,6 +50,8 @@ export const papers: Paper[] = [
     tags: ["open source game theory", "program equilibrium", "Lean 4", "formal verification", "LLM proof automation"],
     paperUrl: "https://openreview.net/forum?id=Wc5TAIUC8k",
     categories: ["multi-agent-safety"],
+    highlight: true,
+    highlightRank: 4,
   },
   {
     slug: "gt-harmbench",
@@ -59,7 +63,6 @@ export const papers: Paper[] = [
     tags: ["multi-agent safety", "game theory", "benchmarking", "LLM cooperation", "mechanism design"],
     paperUrl: "https://arxiv.org/abs/2602.12316",
     categories: ["multi-agent-safety"],
-    highlight: true,
   },
   {
     slug: "cooperate-or-collapse",
@@ -72,7 +75,6 @@ export const papers: Paper[] = [
     paperUrl: "https://arxiv.org/abs/2404.16698",
     blogSlug: "cooperate-or-collapse",
     categories: ["multi-agent-safety"],
-    highlight: true,
   },
   {
     slug: "moralsim",
@@ -119,6 +121,8 @@ export const papers: Paper[] = [
     tags: ["adversarial robustness", "red-teaming", "jailbreaks", "safety training", "evaluation"],
     paperUrl: "https://openreview.net/forum?id=SaSbv33Mem",
     categories: ["safety"],
+    highlight: true,
+    highlightRank: 2,
   },
   {
     slug: "tamperbench",
@@ -152,6 +156,8 @@ export const papers: Paper[] = [
     tags: ["alignment faking", "sycophancy", "sandbagging", "corrigibility", "evaluation"],
     paperUrl: "https://openreview.net/forum?id=vFqn3kCuYV",
     categories: ["safety"],
+    highlight: true,
+    highlightRank: 3,
   },
   {
     slug: "sycophancy-to-deception",
@@ -175,7 +181,6 @@ export const papers: Paper[] = [
     paperUrl: "https://arxiv.org/abs/2505.16789",
     blogSlug: "accidental-misalignment",
     categories: ["safety"],
-    highlight: true,
   },
 
   /* ── Democracy Defense ────────────────────────────────────────── */
@@ -226,7 +231,6 @@ export const papers: Paper[] = [
     venue: "ICLR 2026",
     blogSlug: "socialharmbench-llm-vulnerabilities",
     categories: ["democracy-defense"],
-    highlight: true,
   },
   {
     slug: "cross-country-content-moderation",
@@ -245,7 +249,7 @@ export const papers: Paper[] = [
     slug: "socio-political-risks",
     title: "AI Poses Risks to Democratic and Social Systems",
     summary:
-      "A report examining how AI systems can amplify or reshape socio-political risks, identifying seven failure modes — from belief homogenization and epistemic floods to power concentration and normative centralization — and outlining governance and technical approaches to mitigate these harms.",
+      "A report examining how AI systems can amplify or reshape socio-political risks, identifying seven failure modes, from belief homogenization and epistemic floods to power concentration and normative centralization, and outlining governance and technical approaches to mitigate these harms. This expanded version builds on the ICML 2026 position paper \"Safe Models Do Not Guarantee Safe Societies: The Case for Sociopolitical Risk\".",
     authors: [
       "David Guzman Piedrahita",
       "Dave Banerjee",
@@ -276,12 +280,24 @@ export const papers: Paper[] = [
       "Audrey Tang",
       "Zhijing Jin",
     ],
-    venue: "Pre-Print 2026",
+    venue: "Preprint 2026",
     tags: ["societal impact", "governance", "socio-political risks", "AI policy", "failure modes"],
     paperUrl: "https://zhijing-jin.com/d/2026-ai-risk.pdf",
     categories: ["democracy-defense"],
+    highlight: true,
+    highlightRank: 1,
   },
 ];
+
+/** Highlighted papers for /research, in their configured display order. */
+export function getHighlightedPapers(): Paper[] {
+  return papers
+    .filter((p) => p.highlight)
+    .sort(
+      (a, b) =>
+        (a.highlightRank ?? Number.MAX_SAFE_INTEGER) - (b.highlightRank ?? Number.MAX_SAFE_INTEGER),
+    );
+}
 
 export function getPapersByCategory(category: Category): Paper[] {
   return papers.filter((p) => p.categories.includes(category));

@@ -2,7 +2,7 @@ import { Fragment, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
-import { papers, type Category, type Paper } from "@/lib/papers";
+import { papers, getHighlightedPapers, type Category, type Paper } from "@/lib/papers";
 import { findMemberByAuthorName } from "@/lib/team";
 import { ExternalLink } from "lucide-react";
 
@@ -440,7 +440,7 @@ const PaperCard = ({ paper }: { paper: Paper }) => {
 const ResearchPage = () => {
   const [filter, setFilter] = useState<FilterKey>("all");
 
-  const highlighted = useMemo(() => papers.filter((p) => p.highlight), []);
+  const highlighted = useMemo(() => getHighlightedPapers(), []);
 
   const filtered = useMemo(() => {
     if (filter === "all") return papers;
