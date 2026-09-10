@@ -212,6 +212,56 @@ const ConcentrationIllustration = ({ reduced }: { reduced: boolean }) => {
   );
 };
 
+const HiringCallout = ({ isMobile }: { isMobile: boolean }) => (
+  <section style={{ background: "#fff", padding: isMobile ? "0 0 3.5rem" : "0 0 6rem" }}>
+    <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
+      <AnimatedSection>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1.25rem",
+            background: "rgba(0,51,153,0.05)",
+            border: "1px solid rgba(0,51,153,0.15)",
+            borderRadius: "16px",
+            padding: isMobile ? "1.4rem" : "1.5rem 2rem",
+          }}
+        >
+          <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "#0a1f4d" }}>
+            Sound interesting? <span style={{ color: ACCENT }}>Join us.</span>
+          </div>
+          <Link
+            to="/careers"
+            onClick={() => window.scrollTo({ top: 0 })}
+            style={{
+              flexShrink: 0,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5em",
+              padding: "0.7rem 1.5rem",
+              background: ACCENT,
+              color: "#ffffff",
+              borderRadius: "999px",
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              transition: "background 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#002277"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = ACCENT; }}
+          >
+            Open roles and student positions <span aria-hidden>&rsaquo;</span>
+          </Link>
+        </div>
+      </AnimatedSection>
+    </div>
+  </section>
+);
+
 const missionIllustrations = [MisuseIllustration, MisalignmentIllustration, ConcentrationIllustration];
 
 const pillarIllustrations = [PillarLLM, PillarNetwork, PillarBallot];
@@ -678,7 +728,7 @@ const HomePage = () => {
       </section>
 
       {/* Three Pillars */}
-      <section style={{ background: "#fff", padding: "7rem 0 9rem" }}>
+      <section style={{ background: "#fff", padding: "7rem 0 5rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <AnimatedSection>
             <div
@@ -735,6 +785,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      <HiringCallout isMobile={isMobile} />
 
       {/* Featured Publication */}
       <section style={{ background: "linear-gradient(180deg, #eef2fa 0%, #e7edf8 100%)", padding: "6rem 0 7rem" }}>

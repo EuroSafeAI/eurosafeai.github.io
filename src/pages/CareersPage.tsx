@@ -478,6 +478,56 @@ const CareersPage = () => (
       <OpenPositions />
     </Section>
 
+    {/* Student researchers / expressions of interest */}
+    <Section id="student-researchers">
+      <AnimatedSection>
+        <SectionHeading eyebrow="Beyond open roles" lead="Student" rest="researchers" />
+      </AnimatedSection>
+      <AnimatedSection>
+        <div
+          style={{
+            border: `1px solid ${BORDER}`,
+            borderRadius: "16px",
+            padding: "1.75rem 2rem",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1.5rem",
+          }}
+        >
+          <p style={{ lineHeight: 1.7, color: "rgba(10,31,77,0.7)", margin: 0, maxWidth: "640px" }}>
+            We also work with students and visiting researchers outside the roles listed above,
+            on placements running from six months to two years, in Zurich, Toronto or remotely.
+            If none of the open positions fit but the research does, register your interest and
+            tell us what you want to work on.
+          </p>
+          <a
+            href="https://zhijing-jin.com/home/index.php/openings/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              flexShrink: 0,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5em",
+              padding: "0.75rem 1.6rem",
+              background: ACCENT,
+              color: "#ffffff",
+              borderRadius: "999px",
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              letterSpacing: "0.16em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+            }}
+          >
+            Register interest <span aria-hidden>&rsaquo;</span>
+          </a>
+        </div>
+      </AnimatedSection>
+    </Section>
+
     {/* The case for the work */}
     <Section id="why-us">
       <AnimatedSection>
