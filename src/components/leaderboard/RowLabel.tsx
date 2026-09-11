@@ -4,7 +4,7 @@ import {
   rowLabel,
   type Row,
 } from "@/lib/leaderboard";
-import { ACCENT, DIAGNOSTIC_NOTE, INDENT, INK, LABEL_GUTTER, ROW_HEIGHT } from "./constants";
+import { ACCENT, DIAGNOSTIC_NOTE, INDENT, INK, LABEL_GUTTER, LABEL_GUTTER_MOBILE, ROW_HEIGHT } from "./constants";
 import { Chevron } from "./Chevron";
 
 const isExpandable = (row: Row) => row.level === "risk";
@@ -79,7 +79,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
     display: "flex",
     alignItems: "center",
     gap: 7,
-    paddingLeft: LABEL_GUTTER + INDENT[row.level],
+    paddingLeft: (isMobile ? LABEL_GUTTER_MOBILE : LABEL_GUTTER) + INDENT[row.level],
     paddingRight: 8,
   };
 

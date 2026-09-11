@@ -25,6 +25,12 @@ export const LABEL_WIDTH = 320;
  * off the window edge.
  */
 export const LABEL_GUTTER = 26;
+/**
+ * The same job on a phone, where 26 plus the section's own padding put 42px
+ * of nothing between the window edge and the first chevron, on a screen with
+ * 390 to spend.
+ */
+export const LABEL_GUTTER_MOBILE = 10;
 export const CELL_MIN = 88;
 /**
  * The widest a cell grows. 180 lets the grid fill a laptop, desktop and large

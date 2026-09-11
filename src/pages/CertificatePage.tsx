@@ -140,7 +140,7 @@ const CertificatePage = () => {
         {/* Heading keeps a gutter so it does not touch the window edge; the
             grid itself runs edge to edge, so it reads as part of the page
             rather than a panel sitting on it. */}
-        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
+        <div style={{ padding: isMobile ? "0 0.75rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Leaderboard</SectionEyebrow>
           <p style={{
             fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
@@ -163,7 +163,7 @@ const CertificatePage = () => {
 
       {/* The Field */}
       <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
-        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
+        <div style={{ padding: isMobile ? "0 0.75rem" : "0 2.5rem" }}>
           <SectionEyebrow as="h2">The Field</SectionEyebrow>
           <p style={{
             fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",

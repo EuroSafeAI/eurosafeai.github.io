@@ -109,7 +109,7 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
   // position, not just the first. At 168 it took 47% of a 390px screen and
   // left room for two and a half of nine providers; at 104 with 58px cells a
   // reader sees four at a time.
-  const labelWidth = isMobile ? 130 : LABEL_WIDTH;
+  const labelWidth = isMobile ? 114 : LABEL_WIDTH;
   const cellWidth = isMobile ? 64 : deriveCellWidth(columns.length, availableWidth);
   // An expanded provider keeps its own pooled column and grows its models to the
   // right of it, so nothing shifts under the cursor and a provider can be read

@@ -9,6 +9,7 @@ import {
   HEADER_NAME_LINES,
   HEADER_NAME_LINE_HEIGHT,
   LABEL_GUTTER,
+  LABEL_GUTTER_MOBILE,
   HEADER_SCORE_HEIGHT,
   INK,
   OVERALL_NOTE,
@@ -215,7 +216,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         paddingRight: "0.7rem",
         // Matches the row labels below it: this cell is sticky at the
         // viewport's left edge too, now the grid is full bleed.
-        paddingLeft: LABEL_GUTTER,
+        paddingLeft: cellWidth < 80 ? LABEL_GUTTER_MOBILE : LABEL_GUTTER,
         fontSize: "0.66rem",
         fontWeight: 700,
         color: "#9ca3af",
