@@ -64,7 +64,6 @@ const CertificatePage = () => {
         }}
       >
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
-          <SectionEyebrow>Research Output</SectionEyebrow>
           <motion.h1
             style={{
               fontSize: "clamp(1.9rem, 5vw, 4rem)",

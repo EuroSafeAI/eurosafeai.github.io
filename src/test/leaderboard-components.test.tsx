@@ -87,21 +87,45 @@ describe("Legend", () => {
     for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
   });
 
-  it("explains the coverage bar", () => {
+  it("hides the marker glosses until asked", () => {
     render(<Legend />);
+    // The point of the disclosure: a reader who has not hit a marked cell is
+    // not made to read about markers first.
+    expect(document.body.textContent).not.toContain("coverage");
+    expect(screen.getByRole("button", { name: /reading the markers/i })).toHaveAttribute(
+      "aria-expanded",
+      "false"
+    );
+  });
+
+  it("explains the coverage bar once the disclosure is opened", () => {
+    render(<Legend />);
+    fireEvent.click(screen.getByRole("button", { name: /reading the markers/i }));
     expect(document.body.textContent).toContain("coverage");
   });
 });
 
 describe("the legend after the cut", () => {
-  it("keeps the grade key and the scale", () => {
+  it("keeps the grade key and the direction of the scale on screen", () => {
     render(<Leaderboard models={MODELS} />);
+    // The chips stay visible: they are the legend, and the empty top bands
+    // are themselves a finding. "Higher is safer" stays because a reader
+    // cannot assume which way a number runs on a safety leaderboard.
     for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
+    expect(document.body.textContent).toContain("higher is safer");
+  });
+
+  it("moves the band detail into the disclosure, where the chips already show it", () => {
+    render(<Leaderboard models={MODELS} />);
+    expect(document.body.textContent).not.toContain(`${GRADES.length} equal bands`);
+    fireEvent.click(screen.getByRole("button", { name: /reading the markers/i }));
     expect(document.body.textContent).toContain(`${GRADES.length} equal bands`);
   });
 
   it("keeps the coverage flag, scaled to a percentage", () => {
     render(<Leaderboard models={MODELS} />);
+    // Reachable rather than visible: the glosses moved behind a disclosure.
+    fireEvent.click(screen.getByRole("button", { name: /reading the markers/i }));
     expect(document.body.textContent).toContain(`${Math.round(COVERAGE_FLAG * 100)}%`);
   });
 
