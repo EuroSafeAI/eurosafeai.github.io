@@ -106,9 +106,6 @@ const CertificatePage = () => {
               General-Purpose AI Code of Practice
             </a>: CBRN misuse, offensive cyber, loss of control, and manipulation.
           </motion.p>
-          {/* Attached to the sentence that first uses the terms, rather than
-              waiting until the grid two sections down. */}
-          {isMobile && <RiskDefinitions />}
           <motion.div
             style={{
               display: "inline-flex",
@@ -136,6 +133,11 @@ const CertificatePage = () => {
               are indicative and will be revised as evaluations are peer-reviewed.
             </span>
           </motion.div>
+          {/* Under the hero, whose closing sentence is where "CBRN" first
+              appears. Below the preliminary-data notice rather than above it:
+              that notice qualifies every number on the page and should not be
+              pushed down by an optional aside. */}
+          {isMobile && <RiskDefinitions />}
         </div>
       </section>
 
