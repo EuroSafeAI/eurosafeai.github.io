@@ -175,7 +175,7 @@ const CertificatePage = () => {
             marginBottom: "1.25rem",
           }}>
             {capabilityCost && !capabilityCost.forcesATradeoff
-              ? "Capability does not force a tradeoff with safety. Most of this field still scores poorly."
+              ? "Every provider, plotted on capability and safety."
               : "In this field, capability comes at a cost in safety."}
           </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
