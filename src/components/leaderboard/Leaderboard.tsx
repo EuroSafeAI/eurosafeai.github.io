@@ -6,7 +6,6 @@ import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
 import { MobileBoard } from "./MobileBoard";
-import { RiskDefinitions } from "./RiskDefinitions";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ACCENT } from "./constants";
 import { MetricToggle } from "./MetricToggle";
@@ -81,10 +80,7 @@ export const Leaderboard: React.FC<{
         </div>
       )}
       {isMobile ? (
-        <>
-          <RiskDefinitions />
-          <MobileBoard models={models} metric={metric} weight={capabilityWeight} grouping={grouping} />
-        </>
+        <MobileBoard models={models} metric={metric} weight={capabilityWeight} grouping={grouping} />
       ) : (
         <>
       {/* The grid is far wider than a phone, and a clipped cell at the edge was

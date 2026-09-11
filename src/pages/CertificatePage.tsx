@@ -10,6 +10,7 @@ import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { ACCENT, INK } from "@/components/leaderboard/constants";
 import { Leaderboard } from "@/components/leaderboard/Leaderboard";
 import { Methodology } from "@/components/Methodology";
+import { RiskDefinitions } from "@/components/leaderboard/RiskDefinitions";
 
 const MODELS = modelsData as unknown as ModelEntry[];
 
@@ -105,6 +106,9 @@ const CertificatePage = () => {
               General-Purpose AI Code of Practice
             </a>: CBRN misuse, offensive cyber, loss of control, and manipulation.
           </motion.p>
+          {/* Attached to the sentence that first uses the terms, rather than
+              waiting until the grid two sections down. */}
+          {isMobile && <RiskDefinitions />}
           <motion.div
             style={{
               display: "inline-flex",

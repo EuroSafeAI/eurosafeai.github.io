@@ -13,10 +13,11 @@ const note: React.CSSProperties = {
 /**
  * What the four risks are, on mobile only.
  *
- * Sits above the board rather than below it: the question arrives when a
- * reader meets the column headings, and on a phone those are abbreviated to
- * CBRN, CYBER, CONTROL and MANIP. Answering afterwards is answering late.
- * Everything about reading the cells stays underneath, where it belongs.
+ * Sits in the hero, under the sentence that first names the four risks. That
+ * is where a reader meets "CBRN", so it is where the question arrives; by the
+ * board two sections down they have either worked it out or given up. The
+ * board's headings are abbreviated further still, to CBRN, CYBER, CONTROL and
+ * MANIP., which this also covers.
  */
 export const RiskDefinitions: React.FC = () => (
   <div style={{ marginBottom: "0.5rem" }}>
