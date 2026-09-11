@@ -137,12 +137,16 @@ describe("Methodology", () => {
 });
 
 describe("page order", () => {
-  it("puts the scatter above the grid", () => {
+  it("puts the grid above the scatter", () => {
+    // The page is the index: the grades are what a reader came for, and they
+    // need no setup, where the scatter needs two axes and a third-party
+    // capability figure explained first. Reversed deliberately from the
+    // earlier order; the directional copy in both sections follows it.
     renderPage();
     const scatter = screen.getByRole("img", { name: /intelligence index/i });
     const grid = screen.getByRole("grid");
     // Node.compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING === 4.
-    expect(scatter.compareDocumentPosition(grid) & 4).toBeTruthy();
+    expect(grid.compareDocumentPosition(scatter) & 4).toBeTruthy();
   });
 
   it("states the counts exactly once", () => {

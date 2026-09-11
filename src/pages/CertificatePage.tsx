@@ -42,7 +42,7 @@ const CertificatePage = () => {
   // Derived, not asserted: the claim above depends on the frontier staying
   // flat, which is a property of the roster rather than a law.
   const capabilityCost = useMemo(() => capabilityCostOf(MODELS), []);
-  // Hovering a column in the grid picks the same models out of the plot above.
+  // Hovering a column in the grid picks the same models out of the plot below.
   const [highlight, setHighlight] = useState<string | null>(null);
 
   return (
@@ -104,10 +104,7 @@ const CertificatePage = () => {
               style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}
             >
               General-Purpose AI Code of Practice
-            </a>{" "}
-            (Safety and Security Chapter, Appendix 1.4, “Specified systemic risks”): CBRN misuse,
-            offensive cyber, loss of control, and manipulation. Every grade opens down to the
-            benchmarks behind it.
+            </a>: CBRN misuse, offensive cyber, loss of control, and manipulation.
           </motion.p>
           <motion.div
             style={{
@@ -138,37 +135,6 @@ const CertificatePage = () => {
         </div>
       </section>
 
-      {/* The Field */}
-      <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
-        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
-          <SectionEyebrow as="h2">The Field</SectionEyebrow>
-          <p style={{
-            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
-            fontWeight: 700,
-            color: INK,
-            letterSpacing: "-0.015em",
-            lineHeight: 1.25,
-            maxWidth: 820,
-            marginBottom: "1.25rem",
-          }}>
-            {capabilityCost && !capabilityCost.forcesATradeoff
-              ? "Safety should not be the price of capability. Most models pay it anyway."
-              : "In this field, capability comes at a cost in safety."}
-          </p>
-          <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Each dot is one model, placed by its{" "}
-            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index (left to
-            right) and its measured safety (bottom to top). Colour shows where the model was
-            built. The capability-adjusted score below combines these two axes; here they are
-            shown separately, before any adjustment.
-          </p>
-          <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
-            {MODELS.length} models · {providerCount} providers · 4 systemic risks
-          </p>
-          <CapabilityAdjustedSection models={MODELS} highlight={highlight} />
-        </div>
-      </section>
-
       {/* Leaderboard */}
       <section style={{ background: "#ffffff", padding: isMobile ? "1.25rem 0 2.25rem" : "3rem 0 3.25rem" }}>
         {/* Heading keeps a gutter so it does not touch the window edge; the
@@ -192,6 +158,37 @@ const CertificatePage = () => {
             behind it.
           </p>
           <Leaderboard models={MODELS} onHighlight={setHighlight} />
+        </div>
+      </section>
+
+      {/* The Field */}
+      <section style={{ background: "#ffffff", padding: isMobile ? "2rem 0 2.25rem" : "3rem 0 3.25rem" }}>
+        <div style={{ padding: isMobile ? "0 1rem" : "0 2.5rem" }}>
+          <SectionEyebrow as="h2">The Field</SectionEyebrow>
+          <p style={{
+            fontSize: "clamp(1.15rem, 2.2vw, 1.6rem)",
+            fontWeight: 700,
+            color: INK,
+            letterSpacing: "-0.015em",
+            lineHeight: 1.25,
+            maxWidth: 820,
+            marginBottom: "1.25rem",
+          }}>
+            {capabilityCost && !capabilityCost.forcesATradeoff
+              ? "Safety should not be the price of capability. Most models pay it anyway."
+              : "In this field, capability comes at a cost in safety."}
+          </p>
+          <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
+            Each dot is one model, placed by its{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index (left to
+            right) and its measured safety (bottom to top). Colour shows where the model was
+            built. The capability-adjusted score above combines these two axes; here they are
+            shown separately, before any adjustment.
+          </p>
+          <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
+            {MODELS.length} models · {providerCount} providers · 4 systemic risks
+          </p>
+          <CapabilityAdjustedSection models={MODELS} highlight={highlight} />
         </div>
       </section>
 

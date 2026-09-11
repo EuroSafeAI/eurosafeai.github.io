@@ -48,7 +48,7 @@ export const CapabilityAdjustedSection = ({
   highlight,
 }: {
   models: ModelEntry[];
-  /** A provider or model name to pick out, mirroring the grid below. */
+  /** A provider or model name to pick out, mirroring the grid above. */
   highlight?: string | null;
 }) => {
   const reduced = useReducedMotion() ?? false;
@@ -58,7 +58,7 @@ export const CapabilityAdjustedSection = ({
     () => ({ width: Math.max(FALLBACK_WIDTH, measured ?? FALLBACK_WIDTH), height: PLOT_HEIGHT, pad: PLOT_PAD }),
     [measured]
   );
-  // Plotted at the published exponent: the leaderboard below carries the
+  // Plotted at the published exponent: the leaderboard above carries the
   const domain = useMemo(() => indexDomain(models), [models]);
   const providers = useMemo(() => providerPoints(models), [models]);
   const [hovered, setHovered] = useState<string | null>(null);
