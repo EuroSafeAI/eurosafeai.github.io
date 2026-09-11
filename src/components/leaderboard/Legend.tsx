@@ -1,5 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { GRADES, GRADE_BAND, gpa } from "@/lib/scoring";
+import { RISK_DESCRIPTIONS_PLAIN, RISK_LABELS } from "@/lib/leaderboard";
+import { RISKS } from "@/data/models.types";
 import { heatColor } from "@/lib/heat";
 import { ACCENT, COVERAGE_FLAG } from "./constants";
 
@@ -20,11 +22,32 @@ const note: React.CSSProperties = {
  * What stays visible is the one thing a reader cannot assume on a safety
  * leaderboard, which way the scale runs.
  */
-export const Legend: React.FC = () => (
+export const Legend: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
     <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
 
       <p style={note}>Scores run 0 to 100 and higher is safer.</p>
 
+      {/* The inline glosses are hidden at this width, so "CBRN" would otherwise
+          go undefined for the reader least likely to know it. */}
+      {isMobile && (
+        <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
+          <AccordionItem value="risks">
+            <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+              What these risks mean
+            </AccordionTrigger>
+            <AccordionContent>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem", paddingBottom: "0.3rem" }}>
+                {RISKS.map((risk) => (
+                  <p key={risk} style={note}>
+                    <span style={{ fontWeight: 700, color: "#374151" }}>{RISK_LABELS[risk]}</span>{" "}
+                    {RISK_DESCRIPTIONS_PLAIN[risk]}
+                  </p>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
       <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
         <AccordionItem value="markers">
           <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.6rem", paddingBottom: "0.6rem" }}>

@@ -49,6 +49,22 @@ export const RISK_DESCRIPTIONS: Record<Risk, string> = {
   manipulation: "Dark patterns, unethical influence, political manipulation",
 };
 
+/**
+ * The same four risks in public-facing language, shown only on mobile.
+ *
+ * The glosses above are written for a reader who already knows the field.
+ * RISK_DESCRIPTIONS is hidden at phone widths because the label column has no
+ * room for it, which left "CBRN" undefined for exactly the reader least
+ * likely to know it. These sit under the grid instead.
+ */
+export const RISK_DESCRIPTIONS_PLAIN: Record<Risk, string> = {
+  cbrn: "Chemical, biological, radiological and nuclear weapons: whether a model assists in making them.",
+  cyber: "Offensive hacking capability, and whether a model refuses legitimate security work.",
+  loss_of_control:
+    "Whether a model stays supervisable: that it can be corrected and shut down, and does not work around the oversight placed on it.",
+  manipulation: "Deceptive design, undue influence, and political manipulation.",
+};
+
 export const BENCHMARK_LABELS: Record<string, string> = {
   harmbench: "HarmBench",
   sosbench: "SOSBench",

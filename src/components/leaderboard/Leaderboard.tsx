@@ -148,7 +148,7 @@ export const Leaderboard: React.FC<{
       </div>
 
       {/* Legend */}
-      <Legend />
+      <Legend isMobile={isMobile} />
     </div>
   );
 };
