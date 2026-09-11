@@ -33,7 +33,7 @@ export const Legend: React.FC<{ isMobile: boolean }> = ({ isMobile }) => (
         <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
           <AccordionItem value="risks">
             <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
-              What does CBRN mean?
+              What does CBRN, or Loss of Control, mean?
             </AccordionTrigger>
             <AccordionContent>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem", paddingBottom: "0.3rem" }}>
