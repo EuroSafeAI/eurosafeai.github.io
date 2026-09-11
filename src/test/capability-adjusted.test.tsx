@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { CapabilityAdjustedSection } from "@/components/CapabilityAdjusted";
 import { COMPANY_LOGO } from "@/components/leaderboard/constants";
 import modelsData from "@/data/models.json";
@@ -94,7 +94,17 @@ describe("CapabilityAdjustedSection", () => {
 
   it("links to the methodology and to Artificial Analysis", () => {
     render(<CapabilityAdjustedSection models={MODELS} />);
+    // The qualifying prose sits behind Learn more now: reachable, not gone.
+    fireEvent.click(screen.getByRole("button", { name: /learn more/i }));
     expect(screen.getByRole("link", { name: /methodology/i })).toHaveAttribute("href", "#methodology");
+  });
+
+  it("labels the disclosure by what the next click does", () => {
+    render(<CapabilityAdjustedSection models={MODELS} />);
+    const toggle = screen.getByRole("button", { name: /learn more/i });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(toggle);
+    expect(screen.getByRole("button", { name: /collapse/i })).toHaveAttribute("aria-expanded", "true");
   });
 
   it("draws no line between models", () => {

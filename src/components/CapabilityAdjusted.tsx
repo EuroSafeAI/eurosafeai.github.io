@@ -3,6 +3,7 @@ import { useReducedMotion } from "framer-motion";
 import { useElementWidth } from "@/hooks/use-element-width";
 import type { ModelEntry } from "@/data/models.types";
 import { ACCENT, COMPANY_LOGO } from "@/components/leaderboard/constants";
+import { LearnMore } from "@/components/LearnMore";
 import {
   indexDomain,
   axisTicks,
@@ -335,18 +336,20 @@ export const CapabilityAdjustedSection = ({
           high-impact capabilities rather than from behaviour alone. Reach and conduct are
           separate axes, so they are drawn separately here.
         </p>
-        <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-          The shaded corner holds the models that are more capable and less safe than half the
-          field. Safety is plotted as each model's worst case — the lowest result across the
-          adversarial conditions, not the average of them — so a point is where a model lands
-          under the pressure it handles least well. Capability is a single published figure, not
-          a measurement made here.
-        </p>
-        <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
-          Both reference lines are medians of this roster, not thresholds, so they move as models
-          are added. Combining the two axes into one capability-adjusted grade is explained under{" "}
-          <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Methodology</a>.
-        </p>
+        <LearnMore>
+          <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
+            The shaded corner holds the models that are more capable and less safe than half the
+            field. Safety is plotted as each model's worst case — the lowest result across the
+            adversarial conditions, not the average of them — so a point is where a model lands
+            under the pressure it handles least well. Capability is a single published figure, not
+            a measurement made here.
+          </p>
+          <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
+            Both reference lines are medians of this roster, not thresholds, so they move as models
+            are added. Combining the two axes into one capability-adjusted grade is explained under{" "}
+            <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Methodology</a>.
+          </p>
+        </LearnMore>
       </div>
     </div>
   );
