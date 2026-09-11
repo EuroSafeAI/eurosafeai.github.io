@@ -100,7 +100,7 @@ const CertificatePage = () => {
               href="https://code-of-practice.ai/"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}
             >
               General-Purpose AI Code of Practice
             </a>: CBRN misuse, offensive cyber, loss of control, and manipulation.
@@ -110,12 +110,13 @@ const CertificatePage = () => {
               display: "inline-flex",
               alignItems: "flex-start",
               gap: "0.65rem",
-              background: "#fffbeb",
-              border: "1px solid #fde68a",
+              background: "#f7f8fb",
+              border: "1px solid rgba(10,31,77,0.10)",
+              borderLeft: "3px solid #c9922b",
               borderRadius: 8,
               padding: "0.75rem 1rem",
               fontSize: "0.85rem",
-              color: "#92400e",
+              color: "rgba(10,31,77,0.66)",
               maxWidth: 580,
               lineHeight: 1.5,
             }}
@@ -123,11 +124,11 @@ const CertificatePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.25 }}
           >
-            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ marginTop: 2, flexShrink: 0 }}>
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ marginTop: 2, flexShrink: 0, color: "#c9922b" }}>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <span>
-              <strong style={{ fontWeight: 700 }}>Preliminary data.</strong> Scores and methodology
+              <strong style={{ fontWeight: 700, color: INK }}>Preliminary data.</strong> Scores and methodology
               are indicative and will be revised as evaluations are peer-reviewed.
             </span>
           </motion.div>
