@@ -1,4 +1,4 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { LearnMore } from "@/components/LearnMore";
 import { GRADES, GRADE_BAND, gpa } from "@/lib/scoring";
 import { heatColor } from "@/lib/heat";
 import { ACCENT, COVERAGE_FLAG } from "./constants";
@@ -25,13 +25,8 @@ export const Legend: React.FC = () => (
 
       <p style={note}>Scores run 0 to 100 and higher is safer.</p>
 
-      <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
-        <AccordionItem value="markers">
-          <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.6rem", paddingBottom: "0.6rem" }}>
-            Reading the markers
-          </AccordionTrigger>
-          <AccordionContent>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      <LearnMore label="Reading the markers" swapLabel={false}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" }}>
               <span style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginRight: 4 }}>Grade:</span>
               {GRADES.map((g, i) => {
@@ -81,9 +76,7 @@ export const Legend: React.FC = () => (
                 </a>
               </p>
             </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      </LearnMore>
 
     </div>
 );

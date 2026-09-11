@@ -1,7 +1,6 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { LearnMore } from "@/components/LearnMore";
 import { RISK_DESCRIPTIONS_PLAIN, RISK_LABELS } from "@/lib/leaderboard";
 import { RISKS } from "@/data/models.types";
-import { ACCENT } from "./constants";
 
 const note: React.CSSProperties = {
   fontSize: 12,
@@ -23,13 +22,8 @@ export const RiskDefinitions: React.FC = () => (
   <div style={{ marginBottom: "0.5rem" }}>
     {/* The inline glosses are hidden at this width, so "CBRN" would otherwise
         go undefined for the reader least likely to know it. */}
-      <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
-        <AccordionItem value="risks">
-          <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
-            What does CBRN, or Loss of Control, mean?
-          </AccordionTrigger>
-          <AccordionContent>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem", paddingBottom: "0.3rem" }}>
+      <LearnMore label="What does CBRN, or Loss of Control, mean?" swapLabel={false}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem", paddingBottom: "0.3rem" }}>
               {RISKS.map((risk) => (
                 <p key={risk} style={note}>
                   <span style={{ fontWeight: 700, color: "#374151" }}>{RISK_LABELS[risk]}</span>{" "}
@@ -37,8 +31,6 @@ export const RiskDefinitions: React.FC = () => (
                 </p>
               ))}
             </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      </LearnMore>
   </div>
 );

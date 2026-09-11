@@ -12,10 +12,16 @@ import { ACCENT } from "@/components/leaderboard/constants";
  * state carries no suggestion that something is missing. Used where the prose
  * qualifies a figure a reader can already see rather than explaining it.
  */
-export const LearnMore: React.FC<{ children: React.ReactNode; label?: string }> = ({
-  children,
-  label = "Learn more",
-}) => {
+export const LearnMore: React.FC<{
+  children: React.ReactNode;
+  label?: string;
+  /**
+   * Swap the label for "Collapse" when open. Right for a generic "Learn more",
+   * wrong for a label that names what is inside: a reader who opened "What does
+   * CBRN mean?" should still see what they opened.
+   */
+  swapLabel?: boolean;
+}> = ({ children, label = "Learn more", swapLabel = true }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,7 +40,7 @@ export const LearnMore: React.FC<{ children: React.ReactNode; label?: string }> 
           cursor: "pointer",
         }}
       >
-        {open ? "Collapse" : label}
+        {open && swapLabel ? "Collapse" : label}
         <ChevronDown
           size={14}
           aria-hidden
