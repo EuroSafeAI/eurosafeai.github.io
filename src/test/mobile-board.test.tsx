@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MobileBoard } from "@/components/leaderboard/MobileBoard";
 import { adjustedOverallScore, adjustedProviderCellScore, buildColumns, riskKey } from "@/lib/leaderboard";
 import { grade } from "@/lib/scoring";
@@ -74,5 +74,37 @@ describe("MobileBoard", () => {
     // this assertion is the wrong way to prove the toggle is wired up.
     expect(mean).not.toBeCloseTo(worst, 1);
     expect(screen.getByText(mean.toFixed(1))).toBeInTheDocument();
+  });
+
+  it("opens the benchmarks behind a grade when its cell is tapped", () => {
+    board();
+    const column = buildColumns(MODELS, "worst", 0, "org")[0];
+    const cell = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
+    expect(cell).toHaveAttribute("aria-expanded", "false");
+    fireEvent.click(cell);
+    expect(cell).toHaveAttribute("aria-expanded", "true");
+    // The evidence is the point: a grade the reader cannot open is a number
+    // they have to take on trust.
+    expect(document.body.textContent).toMatch(/benchmarks/i);
+  });
+
+  it("closes it again on a second tap", () => {
+    board();
+    const column = buildColumns(MODELS, "worst", 0, "org")[0];
+    const cell = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
+    fireEvent.click(cell);
+    fireEvent.click(cell);
+    expect(cell).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("keeps only one panel open, since each one is full width", () => {
+    board();
+    const column = buildColumns(MODELS, "worst", 0, "org")[0];
+    const cbrn = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
+    const cyber = screen.getByTitle(new RegExp(`^${column.provider} — Cyber`));
+    fireEvent.click(cbrn);
+    fireEvent.click(cyber);
+    expect(cbrn).toHaveAttribute("aria-expanded", "false");
+    expect(cyber).toHaveAttribute("aria-expanded", "true");
   });
 });
