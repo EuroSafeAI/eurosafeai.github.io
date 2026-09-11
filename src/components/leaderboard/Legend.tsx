@@ -76,7 +76,7 @@ export const Legend: React.FC = () => (
                 easier, prompts than an unflagged one.
               </p>
               <p style={note}>
-                <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>
+                <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>
                   How these scores are calculated
                 </a>
               </p>

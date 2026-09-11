@@ -330,7 +330,7 @@ export const CapabilityAdjustedSection = ({
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
           Both reference lines are medians of this roster, not thresholds, so they move as models
           are added. Combining the two axes into one capability-adjusted grade is explained under{" "}
-          <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Methodology</a>.
+          <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Methodology</a>.
         </p>
       </div>
     </div>

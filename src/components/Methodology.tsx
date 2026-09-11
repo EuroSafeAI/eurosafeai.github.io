@@ -35,7 +35,7 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
               href="https://code-of-practice.ai/"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}
+              style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}
             >
               General-Purpose AI Code of Practice
             </a>{" "}
@@ -151,7 +151,7 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             1.00 would mean they rise and fall together. Knowing how safely a model behaves says
             little about how far its failures reach. The slider above the table weighs the two together,
             using the{" "}
-            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index.
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Artificial Analysis</a> intelligence index.
           </p>
           <p>
             At 0.00, where the table loads, capability carries no weight and the grid shows the
