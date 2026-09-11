@@ -5,6 +5,7 @@ import { EXPAND_DURATION, EXPAND_CSS_EASE } from "./constants";
 import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
+import { MobileBoard } from "./MobileBoard";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ACCENT } from "./constants";
 import { MetricToggle } from "./MetricToggle";
@@ -78,6 +79,10 @@ export const Leaderboard: React.FC<{
           <MetricToggle metric={metric} onChange={setMetric} />
         </div>
       )}
+      {isMobile ? (
+        <MobileBoard models={models} metric={metric} weight={capabilityWeight} grouping={grouping} />
+      ) : (
+        <>
       {/* The grid is far wider than a phone, and a clipped cell at the edge was
           the only hint that six more providers existed. The fade says so. */}
       <div
@@ -148,6 +153,8 @@ export const Leaderboard: React.FC<{
       </div>
 
       {/* Legend */}
+        </>
+      )}
       <Legend isMobile={isMobile} />
     </div>
   );
