@@ -285,12 +285,6 @@ export const CapabilityAdjustedSection = ({
         })}
       </svg>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem", alignItems: "center" }}>
-        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
-          <svg width={14} height={12} aria-hidden>
-            <circle cx={6} cy={6} r={5} fill="#6b7280" />
-          </svg>
-          worst-case safety
-        </span>
         {/* The shaded corner is the one mark a reader cannot infer from the
             axes, so it is named here rather than only in the prose. */}
         <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
