@@ -80,10 +80,12 @@ describe("RowLabel", () => {
 });
 
 describe("Legend", () => {
-  it("shows every grade band", () => {
+  it("shows every grade band once the disclosure is opened", () => {
     render(<Legend />);
+    // The chips are reference material now, not the first thing on screen.
     // The explanatory prose also names F- and A+, so a single-match query
     // would throw for a reason that has nothing to do with the chips.
+    fireEvent.click(screen.getByRole("button", { name: /reading the markers/i }));
     for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
   });
 
@@ -106,20 +108,21 @@ describe("Legend", () => {
 });
 
 describe("the legend after the cut", () => {
-  it("keeps the grade key and the direction of the scale on screen", () => {
+  it("keeps the direction of the scale on screen", () => {
     render(<Leaderboard models={MODELS} />);
-    // The chips stay visible: they are the legend, and the empty top bands
-    // are themselves a finding. "Higher is safer" stays because a reader
-    // cannot assume which way a number runs on a safety leaderboard.
-    for (const g of GRADES) expect(screen.getAllByText(g).length).toBeGreaterThan(0);
+    // A over B over C needs no key. Which way the numbers run does, on a
+    // leaderboard about safety, so that one line stays out of the disclosure.
     expect(document.body.textContent).toContain("higher is safer");
   });
 
-  it("moves the band detail into the disclosure, where the chips already show it", () => {
+  it("keeps the grade key behind the disclosure", () => {
     render(<Leaderboard models={MODELS} />);
-    expect(document.body.textContent).not.toContain(`${GRADES.length} equal bands`);
+    // "A+" appears nowhere in the grid's own cells at this roster, so its
+    // absence is proof the chip row is not mounted rather than a coincidence.
+    expect(screen.queryByText("A+")).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /reading the markers/i }));
-    expect(document.body.textContent).toContain(`${GRADES.length} equal bands`);
+    expect(screen.getAllByText("A+").length).toBeGreaterThan(0);
+    expect(document.body.textContent).toContain(`${GRADES.length} bands are equal width`);
   });
 
   it("keeps the coverage flag, scaled to a percentage", () => {

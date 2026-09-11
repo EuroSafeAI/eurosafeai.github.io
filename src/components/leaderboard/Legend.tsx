@@ -12,39 +12,16 @@ const note: React.CSSProperties = {
 };
 
 /**
- * The grade-chip key, and the marker glosses behind a disclosure.
+ * One line on how to read a score, and the marker glosses behind a disclosure.
  *
- * What stays visible is what you need to read a cell at all: the colour bands
- * and which way is better. The rest explains markers that appear on some cells
- * and not others, so it is noise until you hit one, and it was pushing the
- * grid's own caveats to four stacked paragraphs of small grey text.
+ * The grade chips moved inside it. A over B over C is a convention every
+ * reader already has, and the grid prints a number beside every letter, so
+ * the full scale is reference material rather than something to lead with.
+ * What stays visible is the one thing a reader cannot assume on a safety
+ * leaderboard, which way the scale runs.
  */
 export const Legend: React.FC = () => (
     <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" }}>
-        <span style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginRight: 4 }}>Grade:</span>
-        {GRADES.map((g, i) => {
-          const midpoint = (i + 0.5) * GRADE_BAND;
-          const heat = heatColor(midpoint);
-          return (
-            <span
-              key={g}
-              title={`${g} — ${(i * GRADE_BAND).toFixed(1)}–${((i + 1) * GRADE_BAND).toFixed(1)} · GPA ${gpa(midpoint).toFixed(1)}`}
-              style={{
-                background: heat.background,
-                color: heat.color,
-                fontSize: 11,
-                fontWeight: 700,
-                padding: "0.2rem 0.45rem",
-                borderRadius: 4,
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              {g}
-            </span>
-          );
-        })}
-      </div>
 
       <p style={note}>Scores run 0 to 100 and higher is safer.</p>
 
@@ -55,10 +32,33 @@ export const Legend: React.FC = () => (
           </AccordionTrigger>
           <AccordionContent>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginRight: 4 }}>Grade:</span>
+              {GRADES.map((g, i) => {
+                const midpoint = (i + 0.5) * GRADE_BAND;
+                const heat = heatColor(midpoint);
+                return (
+                  <span
+                    key={g}
+                    title={`${g} — ${(i * GRADE_BAND).toFixed(1)}–${((i + 1) * GRADE_BAND).toFixed(1)} · GPA ${gpa(midpoint).toFixed(1)}`}
+                    style={{
+                      background: heat.background,
+                      color: heat.color,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      padding: "0.2rem 0.45rem",
+                      borderRadius: 4,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {g}
+                  </span>
+                );
+              })}
+            </div>
               <p style={note}>
-                The chips above are {GRADES.length} equal bands from F− to A+, and a colour means the
-                same thing at every level of the table. Each cell shows the selected metric; the other
-                is in its tooltip.
+                The {GRADES.length} bands are equal width, and a colour means the same thing at every
+                level of the table. Each cell shows the selected metric; the other is in its tooltip.
               </p>
               <p style={note}>
                 A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
