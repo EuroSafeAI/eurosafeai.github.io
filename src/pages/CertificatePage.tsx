@@ -182,9 +182,7 @@ const CertificatePage = () => {
             Each dot is one provider, averaged across its models, placed by{" "}
             <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Artificial Analysis</a> intelligence index (left to
             right) against measured safety (bottom to top).{" "}
-            {!isMobile && "Hover a dot to open it into the models behind it. "}
-            The capability-adjusted score above combines these two axes; here they are shown
-            separately, before any adjustment.
+            {!isMobile && "Hover a dot to open it into the models behind it."}
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks
