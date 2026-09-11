@@ -20,7 +20,7 @@ const note: React.CSSProperties = {
  * MANIP., which this also covers.
  */
 export const RiskDefinitions: React.FC = () => (
-  <div style={{ marginBottom: "0.5rem" }}>
+  <div style={{ marginTop: "1.1rem", marginBottom: "0.5rem" }}>
     {/* The inline glosses are hidden at this width, so "CBRN" would otherwise
         go undefined for the reader least likely to know it. */}
       <LearnMore label="What does CBRN, or Loss of Control, mean?" swapLabel={false}>

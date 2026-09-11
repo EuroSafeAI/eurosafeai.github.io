@@ -6,7 +6,9 @@ import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
 import { MobileBoard } from "./MobileBoard";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ACCENT } from "./constants";
 import { MetricToggle } from "./MetricToggle";
 import { CapabilityWeightSlider } from "./CapabilityWeightSlider";
@@ -43,26 +45,56 @@ export const Leaderboard: React.FC<{
     columnShiftsInstant,
   } = useLeaderboard(models);
 
+  const [optionsOpen, setOptionsOpen] = useState(false);
+
   return (
     <div ref={containerRef}>
       {/* On a phone these three stacked into roughly a screen of height before
           any data appeared, so they fold away. On desktop they sit in a row as
           before, where there is room for them. */}
       {isMobile ? (
-        <Accordion type="single" collapsible style={{ marginBottom: "0.6rem" }}>
-          <AccordionItem value="options">
-            <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
-              Options
-            </AccordionTrigger>
-            <AccordionContent>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem", paddingBottom: "0.4rem" }}>
-                <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
-                <GroupingToggle grouping={grouping} onChange={setGrouping} />
-                <MetricToggle metric={metric} onChange={setMetric} />
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        // A control, not a section: a bordered button with a sliders icon reads
+        // as something you press to change the table, where a full-width row
+        // with a chevron read as a heading you had not opened.
+        <Collapsible open={optionsOpen} onOpenChange={setOptionsOpen} style={{ marginBottom: "0.7rem" }}>
+          <CollapsibleTrigger
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.45em",
+              padding: "0.42rem 0.85rem",
+              borderRadius: 999,
+              border: `1px solid ${optionsOpen ? ACCENT : "rgba(0,51,153,0.28)"}`,
+              background: optionsOpen ? "rgba(0,51,153,0.07)" : "#ffffff",
+              color: ACCENT,
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "background 0.15s, border-color 0.15s",
+            }}
+          >
+            <SlidersHorizontal size={13} aria-hidden />
+            Options
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.9rem",
+                padding: "0.9rem",
+                marginTop: "0.6rem",
+                border: "1px solid rgba(10,31,77,0.10)",
+                borderRadius: 10,
+                background: "#f7f8fb",
+              }}
+            >
+              <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
+              <GroupingToggle grouping={grouping} onChange={setGrouping} />
+              <MetricToggle metric={metric} onChange={setMetric} />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       ) : (
         <div
           style={{
