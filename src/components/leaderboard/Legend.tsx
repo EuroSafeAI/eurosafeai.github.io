@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { GRADES, GRADE_BAND, gpa } from "@/lib/scoring";
 import { heatColor } from "@/lib/heat";
 import { ACCENT, COVERAGE_FLAG } from "./constants";
@@ -21,10 +19,7 @@ const note: React.CSSProperties = {
  * and not others, so it is noise until you hit one, and it was pushing the
  * grid's own caveats to four stacked paragraphs of small grey text.
  */
-export const Legend: React.FC = () => {
-  const [open, setOpen] = useState(false);
-
-  return (
+export const Legend: React.FC = () => (
     <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" }}>
         <span style={{ fontSize: 12, fontWeight: 600, color: "#4b5563", marginRight: 4 }}>Grade:</span>
@@ -53,59 +48,42 @@ export const Legend: React.FC = () => {
 
       <p style={note}>Scores run 0 to 100 and higher is safer.</p>
 
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.35em",
-            background: "none",
-            border: "none",
-            padding: 0,
-            fontSize: 12,
-            fontWeight: 600,
-            color: ACCENT,
-            cursor: "pointer",
-          }}
-        >
-          Reading the markers
-          <ChevronDown
-            size={14}
-            style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : undefined }}
-            aria-hidden
-          />
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", paddingTop: "0.75rem" }}>
-            <p style={note}>
-              The chips above are {GRADES.length} equal bands from F− to A+, and a colour means the
-              same thing at every level of the table. Each cell shows the selected metric; the other
-              is in its tooltip.
-            </p>
-            <p style={note}>
-              A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
-              least one risk evaluation fail: its grade for that risk comes from the samples that did
-              complete, and that row does not open into benchmarks.
-            </p>
-            <p style={note}>
-              Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
-              excluded from the aggregates above them.
-            </p>
-            <p style={note}>
-              A bar under a cell flags{" "}
-              <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
-              excluded rather than counted as safe, so a flagged grade rests on fewer, and typically
-              easier, prompts than an unflagged one.
-            </p>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+      <Accordion type="single" collapsible style={{ maxWidth: 760 }}>
+        <AccordionItem value="markers">
+          <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.6rem", paddingBottom: "0.6rem" }}>
+            Reading the markers
+          </AccordionTrigger>
+          <AccordionContent>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <p style={note}>
+                The chips above are {GRADES.length} equal bands from F− to A+, and a colour means the
+                same thing at every level of the table. Each cell shows the selected metric; the other
+                is in its tooltip.
+              </p>
+              <p style={note}>
+                A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
+                least one risk evaluation fail: its grade for that risk comes from the samples that did
+                complete, and that row does not open into benchmarks.
+              </p>
+              <p style={note}>
+                Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
+                excluded from the aggregates above them.
+              </p>
+              <p style={note}>
+                A bar under a cell flags{" "}
+                <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
+                excluded rather than counted as safe, so a flagged grade rests on fewer, and typically
+                easier, prompts than an unflagged one.
+              </p>
+              <p style={note}>
+                <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>
+                  How these scores are calculated
+                </a>
+              </p>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
-      <p style={note}>
-        <a href="#methodology" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>
-          How these scores are calculated
-        </a>
-      </p>
     </div>
-  );
-};
+);
