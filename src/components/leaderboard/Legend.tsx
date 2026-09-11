@@ -77,7 +77,7 @@ export const Legend: React.FC = () => (
               </p>
               <p style={note}>
                 <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>
-                  How these scores are calculated
+                  Methodology
                 </a>
               </p>
             </div>
