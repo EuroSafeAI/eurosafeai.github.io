@@ -105,8 +105,12 @@ export function useLeaderboard(models: ModelEntry[]): LeaderboardState {
     return byRow;
   }, [rows, columns, metric, capabilityWeight]);
 
-  const labelWidth = isMobile ? 168 : LABEL_WIDTH;
-  const cellWidth = isMobile ? 74 : deriveCellWidth(columns.length, availableWidth);
+  // The label column is sticky, so its width is a tax at every scroll
+  // position, not just the first. At 168 it took 47% of a 390px screen and
+  // left room for two and a half of nine providers; at 104 with 58px cells a
+  // reader sees four at a time.
+  const labelWidth = isMobile ? 130 : LABEL_WIDTH;
+  const cellWidth = isMobile ? 64 : deriveCellWidth(columns.length, availableWidth);
   // An expanded provider keeps its own pooled column and grows its models to the
   // right of it, so nothing shifts under the cursor and a provider can be read
   // against its own members.

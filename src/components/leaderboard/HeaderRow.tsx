@@ -32,6 +32,7 @@ const HeaderCell = ({
   onToggle,
   toggleTitle,
   metric,
+  cellWidth,
 }: {
   logo?: string;
   name: string;
@@ -43,6 +44,8 @@ const HeaderCell = ({
   onToggle?: () => void;
   toggleTitle?: string;
   metric: Aggregation;
+  /** The column's width, so the name can shrink when the column does. */
+  cellWidth: number;
 }) => {
   const alternateMetric: Aggregation = metric === "worst" ? "mean" : "worst";
   const score = adjustedOverallScore(models, metric, weight);
@@ -68,7 +71,7 @@ const HeaderCell = ({
           justifyContent: "center",
           gap: 3,
           width: "100%",
-          fontSize: emphasis ? 12 : 10,
+          fontSize: emphasis ? (cellWidth < 80 ? 10 : 12) : (cellWidth < 80 ? 9 : 10),
           fontWeight: emphasis ? 700 : 500,
           lineHeight: HEADER_NAME_LINE_HEIGHT,
           color: emphasis ? INK : "#6b7280",
@@ -273,11 +276,12 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
             models={column.models}
             weight={weight}
             metric={metric}
+            cellWidth={cellWidth}
           />
           {members.map((model) => (
             <div key={model.id} role="presentation" aria-hidden={!open} style={memberColumnStyle()}>
               <div data-member-content style={memberContentStyle()}>
-                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} weight={weight} />
+                <HeaderCell name={model.name} subject={model.name} models={[model]} metric={metric} weight={weight} cellWidth={cellWidth} />
               </div>
             </div>
           ))}

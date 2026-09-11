@@ -5,6 +5,8 @@ import { EXPAND_DURATION, EXPAND_CSS_EASE } from "./constants";
 import { HeaderRow } from "./HeaderRow";
 import { DataRow } from "./DataRow";
 import { Legend } from "./Legend";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ACCENT } from "./constants";
 import { MetricToggle } from "./MetricToggle";
 import { CapabilityWeightSlider } from "./CapabilityWeightSlider";
 import { GroupingToggle } from "./GroupingToggle";
@@ -42,24 +44,52 @@ export const Leaderboard: React.FC<{
 
   return (
     <div ref={containerRef}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          gap: "1.25rem",
-          flexWrap: "wrap",
-          marginBottom: "0.6rem",
-        }}
-      >
-        <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
-        <GroupingToggle grouping={grouping} onChange={setGrouping} />
-        <MetricToggle metric={metric} onChange={setMetric} />
-      </div>
+      {/* On a phone these three stacked into roughly a screen of height before
+          any data appeared, so they fold away. On desktop they sit in a row as
+          before, where there is room for them. */}
+      {isMobile ? (
+        <Accordion type="single" collapsible style={{ marginBottom: "0.6rem" }}>
+          <AccordionItem value="options">
+            <AccordionTrigger style={{ fontSize: 12, color: ACCENT, paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+              Options
+            </AccordionTrigger>
+            <AccordionContent>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.9rem", paddingBottom: "0.4rem" }}>
+                <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
+                <GroupingToggle grouping={grouping} onChange={setGrouping} />
+                <MetricToggle metric={metric} onChange={setMetric} />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            gap: "1.25rem",
+            flexWrap: "wrap",
+            marginBottom: "0.6rem",
+          }}
+        >
+          <CapabilityWeightSlider weight={capabilityWeight} onChange={setCapabilityWeight} />
+          <GroupingToggle grouping={grouping} onChange={setGrouping} />
+          <MetricToggle metric={metric} onChange={setMetric} />
+        </div>
+      )}
+      {/* The grid is far wider than a phone, and a clipped cell at the edge was
+          the only hint that six more providers existed. The fade says so. */}
       <div
         style={{
           overflowX: "auto",
           WebkitOverflowScrolling: "touch",
+          WebkitMaskImage: isMobile
+            ? "linear-gradient(to right, #000 calc(100% - 28px), transparent 100%)"
+            : undefined,
+          maskImage: isMobile
+            ? "linear-gradient(to right, #000 calc(100% - 28px), transparent 100%)"
+            : undefined,
           background: "#ffffff",
         }}
       >

@@ -28,13 +28,16 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
         <span
           style={{
             display: "block",
-            fontSize: row.level === "risk" ? 14 : 12.5,
+            fontSize: row.level === "risk" ? (isMobile ? 12.5 : 14) : 12.5,
             fontWeight: row.level === "risk" ? 800 : 600,
             color: INK,
             lineHeight: 1.25,
             overflow: "hidden",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            // The label column is narrow on a phone and the gloss is hidden
+            // there, so a risk name wraps to the free line rather than
+            // ellipsizing into "Loss ..." and "Mani...".
+            whiteSpace: isMobile && row.level === "risk" ? "normal" : "nowrap",
           }}
         >
           {rowLabel(row)}
