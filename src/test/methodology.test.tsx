@@ -91,7 +91,7 @@ describe("the page's substantive claims", () => {
 });
 
 const TOPICS = [
-  /how these scores are made/i,
+  /^scoring$/i,
   /reading the grid/i,
   /coverage and what's missing/i,
   /capability adjustment/i,

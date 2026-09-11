@@ -27,7 +27,7 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
   <div style={{ maxWidth: 760 }}>
     <Accordion type="multiple">
       <AccordionItem value="how-these-scores-are-made">
-        <AccordionTrigger style={titleStyle}>How these scores are made</AccordionTrigger>
+        <AccordionTrigger style={titleStyle}>Scoring</AccordionTrigger>
         <AccordionContent style={bodyStyle}>
           <p>
             The four rows are the systemic risks the EU AI Act's{" "}

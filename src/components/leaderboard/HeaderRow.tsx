@@ -223,7 +223,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
       <span title={OVERALL_NOTE}>
         Systemic risk
         <span style={{ display: "block", textTransform: "none", letterSpacing: 0, fontWeight: 500, fontSize: "0.62rem", color: "#b0b7c3", marginTop: 2 }}>
-          {metric === "worst" ? "Worst case" : "Average"} · mean of the four
+          mean of the four
         </span>
       </span>
     </div>
