@@ -64,7 +64,7 @@ const CertificatePage = () => {
           borderBottom: "1px solid rgba(10,31,77,0.06)",
         }}
       >
-        <div style={{ padding: isMobile ? "0 0.75rem" : "0 2.5rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <motion.h1
             style={{
               fontSize: "clamp(1.9rem, 5vw, 4rem)",
@@ -199,7 +199,7 @@ const CertificatePage = () => {
 
       {/* About / Methodology */}
       <section style={{ background: "#f5f7fb", padding: isMobile ? "2.5rem 0 3rem" : "3.5rem 0 4rem" }}>
-        <div style={{ padding: isMobile ? "0 0.75rem" : "0 2.5rem" }}>
+        <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <div id="methodology" style={{ maxWidth: 760, scrollMarginTop: "2rem" }}>
             <SectionEyebrow as="h2">Methodology</SectionEyebrow>
             <Methodology models={MODELS} />
