@@ -56,19 +56,13 @@ export const Legend: React.FC = () => (
                 level of the table. Each cell shows the selected metric; the other is in its tooltip.
               </p>
               <p style={note}>
-                A provider marked <span style={{ color: "#b45309", fontWeight: 700 }}>partial</span> had at
-                least one risk evaluation fail: its grade for that risk comes from the samples that did
-                complete, and that row does not open into benchmarks.
-              </p>
-              <p style={note}>
                 Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
                 excluded from the aggregates above them.
               </p>
               <p style={note}>
                 A bar under a cell flags{" "}
-                <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Dropped samples are
-                excluded rather than counted as safe, so a flagged grade rests on fewer, and typically
-                easier, prompts than an unflagged one.
+                <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>: fewer samples yielded a
+                gradeable result, so that grade rests on less evidence than an unflagged one.
               </p>
               <p style={note}>
                 <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>
