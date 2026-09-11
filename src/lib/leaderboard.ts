@@ -44,7 +44,7 @@ export const RISK_LABELS: Record<Risk, string> = {
 
 export const RISK_DESCRIPTIONS: Record<Risk, string> = {
   cbrn: "Chemical, biological, radiological and nuclear misuse",
-  cyber: "Offensive cyber capability, and refusal of benign security work",
+  cyber: "Offensive capability, and refusal of benign security work",
   loss_of_control: "Scheming, instrumental convergence, oversight subversion",
   manipulation: "Dark patterns, unethical influence, political manipulation",
 };

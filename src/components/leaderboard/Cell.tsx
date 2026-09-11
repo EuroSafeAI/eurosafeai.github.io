@@ -12,7 +12,7 @@ const CoverageBar = ({ fraction, onDark }: { fraction: number; onDark: boolean }
       bottom: 3,
       height: 2,
       borderRadius: 2,
-      background: onDark ? "rgba(255,255,255,0.25)" : "rgba(10,31,77,0.15)",
+      background: onDark ? "rgba(255,255,255,0.18)" : "rgba(10,31,77,0.10)",
       overflow: "hidden",
     }}
   >
@@ -22,7 +22,7 @@ const CoverageBar = ({ fraction, onDark }: { fraction: number; onDark: boolean }
         width: `${Math.max(2, fraction * 100)}%`,
         height: "100%",
         borderRadius: 2,
-        background: onDark ? "rgba(255,255,255,0.85)" : "rgba(10,31,77,0.55)",
+        background: onDark ? "rgba(255,255,255,0.55)" : "rgba(10,31,77,0.32)",
       }}
     />
   </span>
