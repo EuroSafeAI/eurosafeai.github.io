@@ -35,6 +35,10 @@ const REGION_FALLBACK = "#6b7280";
  * instead, and stops the labels scaling up with it.
  */
 const PLOT_HEIGHT = 420;
+/** A phone column is portrait enough without a 420px plot on top of it. */
+const NARROW_HEIGHT = 300;
+const NARROW_PAD = 38;
+const NARROW_FLOOR = 280;
 const PLOT_PAD = 48;
 const FALLBACK_WIDTH = 820;
 const LABEL_LINE_HEIGHT = 12;
@@ -55,12 +59,26 @@ export const CapabilityAdjustedSection = ({
   const [column, setColumn] = useState<HTMLElement | null>(null);
   const measured = useElementWidth(column);
   const BOX: ScatterBox = useMemo(
-    () => ({ width: Math.max(FALLBACK_WIDTH, measured ?? FALLBACK_WIDTH), height: PLOT_HEIGHT, pad: PLOT_PAD }),
+    () => {
+      // Floored at 820 for years, which was invisible on a desktop column and
+      // ruinous on a phone: a 358px column still got an 820-wide viewBox, so
+      // the SVG scaled to 44% and drew a 358x183 plot inside a 420px box.
+      // That was the tiny plot, the unreadable labels and the dead space above
+      // and below it, all from one Math.max.
+      const width = Math.max(NARROW_FLOOR, measured ?? FALLBACK_WIDTH);
+      const narrow = width < 520;
+      return {
+        width,
+        height: narrow ? NARROW_HEIGHT : PLOT_HEIGHT,
+        pad: narrow ? NARROW_PAD : PLOT_PAD,
+      };
+    },
     [measured]
   );
   // Plotted at the published exponent: the leaderboard above carries the
   const domain = useMemo(() => indexDomain(models), [models]);
   const providers = useMemo(() => providerPoints(models), [models]);
+  const narrow = BOX.width < 520;
   const [hovered, setHovered] = useState<string | null>(null);
   // The grid's hover opens the same provider, so the two views agree about
   // what is currently being looked at.
@@ -105,7 +123,7 @@ export const CapabilityAdjustedSection = ({
         aria-label="Raw safety against the Artificial Analysis intelligence index, one point per model, coloured by region"
         // No maxWidth: the viewBox is a coordinate system, not a size cap, and
         // capping it left the plot floating in its column.
-        style={{ width: "100%", height: PLOT_HEIGHT }}
+        style={{ width: "100%", height: BOX.height }}
       >
         <line x1={BOX.pad} y1={BOX.height - BOX.pad} x2={BOX.width - BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
         <line x1={BOX.pad} y1={BOX.pad} x2={BOX.pad} y2={BOX.height - BOX.pad} stroke="rgba(10,31,77,0.2)" />
@@ -259,7 +277,7 @@ export const CapabilityAdjustedSection = ({
                 );
               })}
 
-              {Math.abs(textY - (y + 4)) > 1 && !isOpen && (
+              {!narrow && Math.abs(textY - (y + 4)) > 1 && !isOpen && (
                 <line
                   x1={onLeft ? x - 6 : x + 6}
                   y1={y}
@@ -268,6 +286,8 @@ export const CapabilityAdjustedSection = ({
                   stroke="rgba(10,31,77,0.25)"
                 />
               )}
+
+              {!narrow && (
               <text
                 x={onLeft ? x - LABEL_OFFSET : x + LABEL_OFFSET}
                 y={textY}
@@ -280,6 +300,7 @@ export const CapabilityAdjustedSection = ({
               >
                 {point.provider}
               </text>
+              )}
             </g>
           );
         })}
