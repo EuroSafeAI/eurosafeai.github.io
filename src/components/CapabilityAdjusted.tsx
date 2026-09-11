@@ -314,8 +314,9 @@ export const CapabilityAdjustedSection = ({
           already empty and widens the plot with it. */}
       <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 360 }}>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-          A safety score measures how often a model refuses a harmful request. It does not measure
-          what happens when it complies, and the EU AI Act presumes systemic risk from
+          A safety score measures conduct: how a model behaves when it is tested, from refusing
+          harmful requests to avoiding manipulation and not working around oversight. It does not
+          measure what happens when it complies, and the EU AI Act presumes systemic risk from
           high-impact capabilities rather than from behaviour alone. Reach and conduct are
           separate axes, so they are drawn separately here.
         </p>

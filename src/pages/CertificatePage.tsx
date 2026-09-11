@@ -179,10 +179,10 @@ const CertificatePage = () => {
               : "In this field, capability comes at a cost in safety."}
           </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Each dot is one model, placed by its{" "}
-            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline", textUnderlineOffset: 2 }}>Artificial Analysis</a> intelligence index (left to
-            right) and its measured safety (bottom to top). Colour shows where the model was
-            built. The capability-adjusted score above combines these two axes; here they are
+            Each dot is one provider, averaged across its models, placed by{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Artificial Analysis</a> intelligence index (left to
+            right) against measured safety (bottom to top). Hover a dot to open it into the models
+            behind it. The capability-adjusted score above combines these two axes; here they are
             shown separately, before any adjustment.
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
