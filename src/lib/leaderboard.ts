@@ -116,6 +116,44 @@ export const BENCHMARK_LABELS: Record<string, string> = {
  * (datasets/prepare/cluster/sources/*.py), so the claims can be checked rather
  * than taken on trust.
  */
+/**
+ * Where each benchmark comes from: the paper that defines it, or the
+ * repository that publishes it. Partial on purpose — a benchmark with no
+ * entry here renders as plain text rather than a guessed link, because a
+ * wrong citation is worse than none.
+ */
+export const BENCHMARK_SOURCES: Record<string, string> = {
+  harmbench: "https://arxiv.org/abs/2402.04249",
+  sosbench: "https://arxiv.org/abs/2505.21605",
+  wmdp: "https://arxiv.org/abs/2403.03218",
+  agentharm: "https://arxiv.org/abs/2410.09024",
+  cysecbench: "https://arxiv.org/abs/2501.01335",
+  // Both the MITRE ATT&CK helpfulness tests and the false-refusal tests built
+  // on top of them are defined in CyberSecEval 2.
+  cyberseceval_mitre: "https://arxiv.org/abs/2404.13161",
+  cyber_false_refusal: "https://arxiv.org/abs/2404.13161",
+  injecagent: "https://arxiv.org/abs/2403.02691",
+  advanced_ai_risk: "https://arxiv.org/abs/2212.09251",
+  social_harm: "https://arxiv.org/abs/2510.04891",
+  darkbench: "https://arxiv.org/abs/2503.10728",
+  persusafety: "https://arxiv.org/abs/2504.10430",
+  // "Towards Understanding Sycophancy in Language Models": the mimicry eval,
+  // where a poem is put to the model under the wrong poet's name.
+  sycophancy_mimicry: "https://arxiv.org/abs/2310.13548",
+  // "Democratic or Authoritarian?" contributes three of the four political
+  // evals: the F-scale, FavScore, and role-model probing.
+  authoritarian_values: "https://arxiv.org/abs/2506.12758",
+  leader_favorability: "https://arxiv.org/abs/2506.12758",
+  role_model_bias: "https://arxiv.org/abs/2506.12758",
+  // "When Do Language Models Endorse Limitations on Human Rights Principles?"
+  // The ECHR scenarios are its Appendix D.1; the persona gap is its
+  // steerability score between the two opposing persona framings.
+  human_rights_udhr: "https://arxiv.org/abs/2603.04217",
+  human_rights_echr: "https://arxiv.org/abs/2603.04217",
+  human_rights_persona_gap: "https://arxiv.org/abs/2603.04217",
+  historical_revisionism: "https://arxiv.org/abs/2602.17433",
+};
+
 export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
   // cbrn.py
   harmbench:

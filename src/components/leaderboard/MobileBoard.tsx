@@ -5,16 +5,17 @@ import {
   adjustedOverallScore,
   buildRows,
   isDiagnosticRow,
-  rowLabel,
   adjustedProviderCellScore,
   buildColumns,
   riskKey,
   type Grouping,
+  type Row,
 } from "@/lib/leaderboard";
 import type { Aggregation } from "@/lib/scoring";
 import type { ModelEntry } from "@/data/models.types";
 import { RISKS } from "@/data/models.types";
 import { INK } from "./constants";
+import { BenchmarkName } from "./BenchmarkName";
 
 /**
  * The leaderboard transposed for a phone: providers down, risks across.
@@ -202,7 +203,7 @@ export const MobileBoard: React.FC<{
           {RISKS.map((risk) => {
             if (open !== `${column.provider}/${risk}`) return null;
             const benches = buildRows(column.models, new Set([riskKey(risk)])).filter(
-              (r) => r.level === "bench" && r.risk === risk
+              (r): r is Extract<Row, { level: "bench" }> => r.level === "bench" && r.risk === risk
             );
             return (
               <div
@@ -229,7 +230,7 @@ export const MobileBoard: React.FC<{
                       style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, padding: "2px 0" }}
                     >
                       <span style={{ fontSize: 11.5, color: isDiagnosticRow(benchRow) ? "#9ca3af" : INK, minWidth: 0 }}>
-                        {rowLabel(benchRow)}
+                        <BenchmarkName row={benchRow} />
                         {isDiagnosticRow(benchRow) && (
                           <span style={{ marginLeft: 5, fontSize: 9.5, fontWeight: 700, color: "#b45309" }}>diagnostic</span>
                         )}

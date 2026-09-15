@@ -4,6 +4,7 @@ import {
   adjustedProviderCellScore,
   BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
+  BENCHMARK_SOURCES,
   RISK_DESCRIPTIONS,
   RISK_LABELS,
   buildColumns,
@@ -392,6 +393,13 @@ describe("label coverage", () => {
     for (const risk of RISKS) {
       expect(RISK_LABELS[risk], risk).toBeTruthy();
       expect(RISK_DESCRIPTIONS[risk], risk).toBeTruthy();
+    }
+  });
+
+  it("sources only benchmarks it actually has, over https", () => {
+    for (const [bench, url] of Object.entries(BENCHMARK_SOURCES)) {
+      expect(BENCHMARK_LABELS[bench], bench).toBeTruthy();
+      expect(url, bench).toMatch(/^https:\/\//);
     }
   });
 

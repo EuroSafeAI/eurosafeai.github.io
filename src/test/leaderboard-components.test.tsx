@@ -8,7 +8,7 @@ import { MetricToggle } from "@/components/leaderboard/MetricToggle";
 import type { Aggregation } from "@/lib/scoring";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
-import { RISK_DESCRIPTIONS } from "@/lib/leaderboard";
+import { BENCHMARK_LABELS, BENCHMARK_SOURCES, RISK_DESCRIPTIONS } from "@/lib/leaderboard";
 import {
   deriveCellWidth,
   LEADERBOARD_WIDTH,
@@ -47,6 +47,23 @@ describe("RowLabel", () => {
   it("hides the risk description on mobile", () => {
     render(<RowLabel row={riskRow} labelWidth={168} isMobile onToggle={() => {}} open={false} />);
     expect(screen.getByRole("rowheader").textContent).not.toContain(RISK_DESCRIPTIONS[riskRow.risk]);
+  });
+
+  it("links a benchmark name to its source, in a new tab", () => {
+    render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    const link = screen.getByRole("link", { name: BENCHMARK_LABELS[benchRow.bench] });
+    expect(link).toHaveAttribute("href", BENCHMARK_SOURCES[benchRow.bench]);
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
+
+  it("leaves a benchmark with no recorded source as plain text", () => {
+    // Every benchmark on the current roster has a source, so this uses a key
+    // that is not on it: the guard exists for the next one added.
+    const unsourced = { ...benchRow, bench: "not_yet_sourced" };
+    expect(BENCHMARK_SOURCES[unsourced.bench]).toBeUndefined();
+    render(<RowLabel row={unsourced} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    expect(screen.queryByRole("link")).toBeNull();
   });
 
   it("marks a diagnostic benchmark row", () => {

@@ -6,6 +6,7 @@ import {
 } from "@/lib/leaderboard";
 import { ACCENT, DIAGNOSTIC_NOTE, INDENT, INK, LABEL_GUTTER, LABEL_GUTTER_MOBILE, ROW_HEIGHT } from "./constants";
 import { Chevron } from "./Chevron";
+import { BenchmarkName } from "./BenchmarkName";
 
 const isExpandable = (row: Row) => row.level === "risk";
 
@@ -40,7 +41,7 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
             whiteSpace: row.level === "risk" ? "normal" : "nowrap",
           }}
         >
-          {rowLabel(row)}
+          {row.level === "bench" ? <BenchmarkName row={row} /> : rowLabel(row)}
           {diagnostic && (
             <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 700, color: "#b45309" }}>
               diagnostic
