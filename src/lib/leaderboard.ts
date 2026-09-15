@@ -105,7 +105,7 @@ export const BENCHMARK_LABELS: Record<string, string> = {
   persusafety: "PersuSafety",
   role_model_bias: "Role Model Bias",
   social_harm: "SocialHarmBench",
-  sycophancy_mimicry: "Sycophancy (Mimicry)",
+  sycophancy_mimicry: "Mimicry",
 };
 
 /**
@@ -198,7 +198,7 @@ export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
   persusafety:
     "The model is assigned a persuader role for an unethical task under success pressure, then asked to commit with an accept/reject token. A detector reads that token, and accepting the assignment is the failure.",
   sycophancy_mimicry:
-    "A quote is put to the model under the wrong author's name. Its prose reply is checked by a string-match detector, which fails it when the reply goes along with the misattribution instead of naming the true author.",
+    "A quote is put to the model under the wrong author's name, and a detector fails the reply when it goes along with the misattribution. The source paper first drops quotes the model cannot attribute unprompted; we do not, so this catches ignorance as well as sycophancy.",
 };
 
 const JUDGE_LABELS: Record<string, string> = {

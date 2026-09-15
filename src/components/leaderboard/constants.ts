@@ -7,11 +7,10 @@ export const INK = "#0a1f4d";
  * minus the label's horizontal chrome — paddingLeft 10 + INDENT.bench 18,
  * paddingRight 8, the chevron's 11px slot, and its 7px gap — leaving ~266px at
  * fontSize 10.5 / lineHeight 1.3, roughly 50 characters per line. The longest
- * BENCHMARK_DESCRIPTIONS gloss (src/lib/leaderboard.ts) now runs to ~219
- * characters, which needs up to 5 wrapped lines once word boundaries are
- * accounted for. Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px
- * marginTop + 5 gloss lines (10.5 * 1.3 = 13.65 each) = 86.375, rounded up for
- * margin. Overflow is clipped by the row (DataRow's `overflow: clip`), so a
+ * BENCHMARK_DESCRIPTIONS gloss (src/lib/leaderboard.ts) is Mimicry's, which
+ * carries a caveat about a screening step we do not reproduce and wraps to 6
+ * lines. Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px marginTop +
+ * 6 gloss lines (10.5 * 1.3 = 13.65 each) = 99.525, rounded up for margin. Overflow is clipped by the row (DataRow's `overflow: clip`), so a
  * longer gloss loses its tail rather than bleeding into the next row.
  *
  * `risk` is sized the same way. The Code of Practice names wrap to two lines
@@ -19,7 +18,7 @@ export const INK = "#0a1f4d";
  * ~34 per line at fontSize 14), and the risk gloss runs to three: 2 * 17.5 +
  * 2 + 3 * 13.65 = 78, rounded to 82.
  */
-export const ROW_HEIGHT = { risk: 82, bench: 90 } as const;
+export const ROW_HEIGHT = { risk: 82, bench: 100 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
