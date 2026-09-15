@@ -2,23 +2,22 @@ export const ACCENT = "#003399";
 export const INK = "#0a1f4d";
 
 /**
- * `bench` must fit the row label's two blocks of text: the name (one line,
- * ellipsized) plus the gloss (wraps). The gloss column is LABEL_WIDTH (320)
- * minus the label's horizontal chrome — paddingLeft 10 + INDENT.bench 18,
- * paddingRight 8, the chevron's 11px slot, and its 7px gap — leaving ~266px at
- * fontSize 10.5 / lineHeight 1.3, roughly 50 characters per line. The longest
- * BENCHMARK_DESCRIPTIONS gloss (src/lib/leaderboard.ts) is Mimicry's, which
- * carries a caveat about a screening step we do not reproduce and wraps to 6
- * lines. Height = name line (12.5 * 1.25 = 15.625) + gloss's 2px marginTop +
- * 6 gloss lines (10.5 * 1.3 = 13.65 each) = 99.525, rounded up for margin. Overflow is clipped by the row (DataRow's `overflow: clip`), so a
- * longer gloss loses its tail rather than bleeding into the next row.
+ * Each row must fit its label's two blocks of text: the name plus the gloss
+ * that wraps under it. The gloss column is LABEL_WIDTH (320) minus the label's
+ * horizontal chrome (paddingLeft 10 + INDENT.bench 18, paddingRight 8, the
+ * chevron's 11px slot and its 7px gap), leaving 250px.
  *
- * `risk` is sized the same way. The Code of Practice names wrap to two lines
- * ("Chemical, biological, radiological and nuclear" is 45 characters against
- * ~34 per line at fontSize 14), and the risk gloss runs to three: 2 * 17.5 +
- * 2 + 3 * 13.65 = 78, rounded to 82.
+ * Measured against that width rather than estimated from character counts:
+ *   bench  name 15.625 + 2 + 4 gloss lines at 13.65 = 72.2. Four benchmarks
+ *          reach that; none needs five.
+ *   risk   CBRN's name takes 2 lines at 17.5 (the Code of Practice names are
+ *          long) + 2 + its 2 gloss lines = 64.3; the other three fit one name
+ *          line and three gloss lines, which is less.
+ *
+ * Overflow is clipped by the row (DataRow's `overflow: clip`), so a longer
+ * gloss loses its tail rather than bleeding into the next row.
  */
-export const ROW_HEIGHT = { risk: 82, bench: 100 } as const;
+export const ROW_HEIGHT = { risk: 68, bench: 76 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;
@@ -85,10 +84,9 @@ export const EXPAND_DURATION = 0.32;
 export const EXPAND_CSS_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 export const DIAGNOSTIC_NOTE =
-  "Diagnostic benchmark: reported for transparency but excluded from the aggregates above, because its score does not mean what a safety score means.";
+  "Diagnostic: shown but kept out of the scores above, because it does not measure what the others measure.";
 
-export const OVERALL_NOTE =
-  "Overall: the mean of the four systemic-risk scores below, as the evaluation pipeline computes it.";
+export const OVERALL_NOTE = "The four risk scores below, averaged.";
 
 /**
  * Keyed on the `company` string the pipeline writes. Spellings have shifted

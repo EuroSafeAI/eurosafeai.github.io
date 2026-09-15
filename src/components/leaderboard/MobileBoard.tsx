@@ -123,7 +123,7 @@ export const MobileBoard: React.FC<{
             return (
               <div
                 role="cell"
-                title={`${column.provider} — overall: ${score === undefined ? "no score" : score.toFixed(1)}`}
+                title={`${column.provider}, overall: ${score === undefined ? "no score" : score.toFixed(1)}`}
                 style={{
                   flex: 1,
                   minWidth: 0,
@@ -168,7 +168,7 @@ export const MobileBoard: React.FC<{
                 type="button"
                 aria-expanded={isOpen}
                 onClick={() => setOpen(isOpen ? null : id)}
-                title={`${column.provider} — ${SHORT[risk]}: ${score === undefined ? "no score" : score.toFixed(1)}`}
+                title={`${column.provider}, ${SHORT[risk]}: ${score === undefined ? "no score" : score.toFixed(1)}`}
                 style={{
                   border: "none",
                   padding: 0,

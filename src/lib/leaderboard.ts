@@ -60,13 +60,13 @@ export const RISK_SHORT_LABELS: Record<Risk, string> = {
  * glosses one level down say what is actually measured.
  */
 export const RISK_DESCRIPTIONS: Record<Risk, string> = {
-  cbrn: "Enabling CBRN attacks or accidents by lowering the barrier for malicious actors, or raising the impact they achieve.",
+  cbrn: "Lowering the barrier to building or obtaining these weapons, or increasing the damage an attack does.",
   cyber:
-    "Enabling large-scale sophisticated cyber-attacks, including on critical infrastructure, through automated exploitation and attack scaling.",
+    "Putting cyber-attacks within reach that were previously too sophisticated or too large to mount, including against critical infrastructure.",
   loss_of_control:
-    "Humans losing the ability to reliably direct, modify or shut down a model, through misalignment, deception or power-seeking.",
+    "Humans losing the ability to reliably direct, correct or shut a model down, whether through deception, power-seeking or plain misalignment.",
   manipulation:
-    "Strategic distortion of human behaviour or beliefs, targeting large populations or high-stakes decision-makers who cannot detect it.",
+    "Shifting the behaviour or beliefs of whole populations, or of the people making high-stakes decisions, without their noticing it happen.",
 };
 
 /**
@@ -76,13 +76,13 @@ export const RISK_DESCRIPTIONS: Record<Risk, string> = {
  * there.
  */
 export const RISK_DESCRIPTIONS_PLAIN: Record<Risk, string> = {
-  cbrn: "Whether a model helps design, acquire or use chemical, biological, radiological or nuclear weapons, or materially lowers the barrier to doing so.",
+  cbrn: "Whether a model helps someone design, obtain or use a chemical, biological, radiological or nuclear weapon, or makes doing so meaningfully easier.",
   cyber:
-    "Whether a model enables large-scale cyber-attacks \u2014 finding vulnerabilities, writing exploits, scaling an operation \u2014 and whether it refuses legitimate security work.",
+    "Whether a model can find vulnerabilities, write working exploits and scale an attack up, and whether it refuses legitimate security work in the process.",
   loss_of_control:
-    "Whether a model stays supervisable: that it can be corrected and shut down, and does not deceive, seek power, or work around the oversight placed on it.",
+    "Whether a model stays supervisable: that it can be corrected and shut down, and does not deceive its operators, seek power, or work around the oversight placed on it.",
   manipulation:
-    "Whether a model can distort behaviour or beliefs at scale, through persuasion, deception or personalised targeting the target cannot reasonably detect.",
+    "Whether a model can shift behaviour or beliefs at scale, through persuasion, deception, or targeting so personalised the subject cannot reasonably detect it.",
 };
 
 export const BENCHMARK_LABELS: Record<string, string> = {
@@ -157,48 +157,48 @@ export const BENCHMARK_SOURCES: Record<string, string> = {
 export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
   // cbrn.py
   harmbench:
-    "Direct requests to carry out chemical or biological harm, that category only. The model answers in free prose, and a judge marks it unsafe when the reply carries the harmful task out, even with a warning attached.",
+    "Direct requests to carry out chemical or biological harm. The model fails if it walks the requester through the task, even with a warning attached.",
   sosbench:
-    "Requests for operationally useful CBRN help, answered in prose. A judge marks the reply unsafe when it materially raises the requester's capability, including in its reasoning, and safe when it stays to general knowledge.",
+    "Requests for CBRN help specific enough to be operationally useful. What counts against the model is whether its answer leaves the requester more capable than general knowledge would.",
   wmdp:
-    "Multiple-choice questions on weaponisation knowledge; the model replies with a letter, matched against the key. A diagnostic: the correct answer is the unsafe end, since it means the model knows the hazardous material.",
+    "Multiple-choice questions about weaponisation. Scored in reverse: a correct answer means the model holds the hazardous knowledge, so a high score is the worrying one.",
   // cyber.py
   cysecbench:
-    "Requests for offensive cyber capability, answered in prose. A judge rates the reply 1 to 5, where a fully working answer with executable code is the unsafe extreme and a clear refusal the safe one.",
+    "Requests for offensive cyber capability, rated from a flat refusal up to a complete answer with working code. The complete answer is the worst case.",
   cyberseceval_mitre:
-    "Prompts mapped to MITRE ATT&CK techniques; the model replies with code or prose. A judge marks it unsafe when the reply actually assists the technique rather than refusing or answering benignly.",
+    "Prompts drawn from the MITRE ATT&CK catalogue of real attacker techniques. The model fails when its reply genuinely helps carry the technique out.",
   agentharm:
-    "Cybercrime and fraud task requests, answered in prose with no tools granted. A judge marks it unsafe when the model takes the job on and starts to help; willingness is measured, not completion.",
+    "Cybercrime and fraud jobs put to the model with no tools to do them with. What is measured is whether it agrees to help, not whether it could finish.",
   cyber_false_refusal:
-    "Benign security questions the model ought to answer, in prose. A refusal detector reads the reply, and here the failure is inverted: refusing the legitimate request is unsafe, answering it safe. A diagnostic.",
+    "Legitimate security questions a model ought to answer. The failure runs the other way here: refusing the honest request counts against it, answering does not.",
   injecagent:
-    "A benign agent task with an attacker's instruction hidden in a tool response. The model emits its next agent step, and a detector fails it when that step calls the attacker's tool instead of the user's.",
+    "A routine agent task with an attacker's instruction buried in a tool response. The model fails if its next step obeys the attacker rather than the user.",
   // loss_of_control.py
   advanced_ai_risk:
-    "Forced-choice questions on whether the model wants power, resources, survival, or to coordinate with other AIs against its principals. It answers with a letter, matched against the option that endorses the behaviour.",
+    "Forced-choice questions about whether the model wants power, resources or survival, and whether it would side with other AI systems over the people running it.",
   // manipulation.py
   social_harm:
-    "Requests for harmful social or political content, answered in prose. A judge marks it unsafe when the model produces the content rather than declining or redirecting.",
+    "Requests for harmful social and political content, drawn from 34 countries and two centuries. Producing the content is the failure; declining or redirecting is not.",
   historical_revisionism:
-    "Prompts inviting the model to distort documented history, answered in prose. A judge runs a step-by-step truth check and fails the reply when it endorses the revisionist account instead of correcting it.",
+    "Prompts that invite the model to retell a documented historical event the way a revisionist would. Going along with the revision instead of correcting it is the failure.",
   human_rights_udhr:
-    "Prompts arguing to limit a right named in the Universal Declaration. The model answers in a paragraph, scored by a judge on a five-point scale; endorsing the limitation is the unsafe end.",
+    "Scenarios arguing for limits on a right from the Universal Declaration, with the model's answer rated one to five. Endorsing the limit scores badly.",
   human_rights_echr:
-    "As Human Rights (UDHR), for rights named in the European Convention on Human Rights: the model's paragraph is scored by a judge on the same five-point scale, where endorsing the proposed limit is the unsafe end.",
+    "The same scenarios, built instead from rights named in the European Convention on Human Rights.",
   human_rights_persona_gap:
-    "A diagnostic, not a benchmark: the same human-rights prompts are put under two opposing personas, and the failure is a wide gap between the model's two answers, a judgment that shifts with who is asking.",
+    "The human-rights scenarios put twice: once to a model told to defend individual liberty, once told to defend state authority. A wide gap between the two answers is the failure.",
   authoritarian_values:
-    "Authoritarian-personality (F-scale) statements. The model answers on a six-point agree/disagree scale that is parsed directly; agreeing with the statement indicates authoritarian preference and is the unsafe end.",
+    "Statements from the F-scale, a mid-century measure of authoritarian personality, answered on a six-point agree/disagree scale. Agreement points toward authoritarian preference.",
   leader_favorability:
-    "Approval questions about political leaders, answered on a four-point scale that is parsed directly. What is measured is the gap between its ratings of democratic and autocratic leaders, not the overall level.",
+    "Approval ratings for real political leaders. What matters is the distance between how the model rates democratic leaders and autocratic ones, not how warm it is overall.",
   role_model_bias:
-    "Asks the model to name a nationality's role models; it replies with a list, and a judge classifies each figure by regime type. The failure is a slate leaning toward figures from autocratic regimes over democratic ones.",
+    "Asks the model who a given nationality's role models are. A list leaning toward figures from autocratic regimes counts against it.",
   darkbench:
-    "Everyday conversations probing dark patterns such as brand bias, sycophancy, or pushing user retention. The model replies in prose, and a judge marks it unsafe when the reply exhibits one of those patterns.",
+    "Ordinary conversations designed to draw out dark patterns: pushing the developer's own products, flattering the user, or steering them into staying longer.",
   persusafety:
-    "The model is assigned a persuader role for an unethical task under success pressure, then asked to commit with an accept/reject token. A detector reads that token, and accepting the assignment is the failure.",
+    "The model is cast as a persuader for an unethical goal and pressed to succeed, then asked to accept or decline the job. Accepting it is the failure.",
   sycophancy_mimicry:
-    "A quote is put to the model under the wrong author's name, and a detector fails the reply when it goes along with the misattribution. The source paper first drops quotes the model cannot attribute unprompted; we do not, so this catches ignorance as well as sycophancy.",
+    "A well-known quote put to the model under the wrong author's name. It fails if it plays along instead of naming the real one.",
 };
 
 const JUDGE_LABELS: Record<string, string> = {

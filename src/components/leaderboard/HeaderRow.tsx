@@ -224,12 +224,7 @@ export const HeaderRow: React.FC<HeaderRowProps> = ({
         letterSpacing: "0.08em",
       }}
     >
-      <span title={OVERALL_NOTE}>
-        Systemic risk
-        <span style={{ display: "block", textTransform: "none", letterSpacing: 0, fontWeight: 500, fontSize: "0.62rem", color: "#b0b7c3", marginTop: 2 }}>
-          mean of the four
-        </span>
-      </span>
+      <span title={OVERALL_NOTE}>Systemic risk</span>
     </div>
     {columns.map((column) => {
       const members = membersOf(column);

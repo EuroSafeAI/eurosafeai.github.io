@@ -35,7 +35,7 @@ export const Legend: React.FC = () => (
                 return (
                   <span
                     key={g}
-                    title={`${g} — ${(i * GRADE_BAND).toFixed(1)}–${((i + 1) * GRADE_BAND).toFixed(1)} · GPA ${gpa(midpoint).toFixed(1)}`}
+                    title={`${g}: ${(i * GRADE_BAND).toFixed(1)}–${((i + 1) * GRADE_BAND).toFixed(1)} · GPA ${gpa(midpoint).toFixed(1)}`}
                     style={{
                       background: heat.background,
                       color: heat.color,
@@ -52,17 +52,18 @@ export const Legend: React.FC = () => (
               })}
             </div>
               <p style={note}>
-                The {GRADES.length} bands are equal width, and a colour means the same thing at every
-                level of the table. Each cell shows the selected metric; the other is in its tooltip.
+                The {GRADES.length} bands are equal width, and a colour means the same thing
+                everywhere in the table. Each cell shows the selected metric, the other is in its
+                tooltip.
               </p>
               <p style={note}>
                 Greyed rows are <span style={{ color: "#b45309", fontWeight: 700 }}>diagnostic</span> and
-                excluded from the aggregates above them.
+                do not count toward the scores above them.
               </p>
               <p style={note}>
                 A bar under a cell flags{" "}
-                <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>: fewer samples yielded a
-                gradeable result, so that grade rests on less evidence than an unflagged one.
+                <strong>coverage below {Math.round(COVERAGE_FLAG * 100)}%</strong>. Fewer samples were
+                gradeable, so that grade rests on less evidence.
               </p>
               <p style={note}>
                 <a href="#methodology" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>

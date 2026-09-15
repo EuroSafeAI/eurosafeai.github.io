@@ -339,10 +339,9 @@ export const CapabilityAdjustedSection = ({
         <LearnMore>
           <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
             The shaded corner holds the models that are more capable and less safe than half the
-            field. Safety is plotted as each model's worst case — the lowest result across the
-            adversarial conditions, not the average of them — so a point is where a model lands
-            under the pressure it handles least well. Capability is a single published figure, not
-            a measurement made here.
+            field. Safety is each model's worst case, the lowest result across the adversarial
+            conditions rather than the average, so a point shows where a model lands under the
+            pressure it handles least well. Capability is a published figure, not measured here.
           </p>
           <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7 }}>
             Both reference lines are medians of this roster, not thresholds, so they move as models
