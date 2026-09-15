@@ -1,5 +1,5 @@
 import type { ModelEntry } from "@/data/models.types";
-import { RISK_LABELS } from "@/lib/leaderboard";
+import { RISK_LABELS, RISK_SHORT_LABELS } from "@/lib/leaderboard";
 import { CLEARS_AT, adversarialCostSummary, ceilingSummary, highestRisk } from "@/lib/findings";
 import { ACCENT, INK } from "@/components/leaderboard/constants";
 import AnimatedSection from "@/components/AnimatedSection";
@@ -85,7 +85,7 @@ export const KeyFindings: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
       key: "highest",
       value: `${highest.belowHalf}`,
       unit: `of ${highest.total}`,
-      claim: `fail on ${RISK_LABELS[highest.risk]}`,
+      claim: `fail on ${RISK_SHORT_LABELS[highest.risk]}`,
       body: (
         <>
           {RISK_LABELS[highest.risk]} is the weakest of the four systemic risks, averaging{" "}

@@ -31,7 +31,12 @@ import { INK } from "./constants";
  * this layout does not have, and they are all still there on a larger screen.
  */
 
-/** Short enough for a 62px column; the full names are in the definitions panel. */
+/**
+ * Fitted to the ~55px risk column at 9.5px uppercase, which is tighter than
+ * RISK_SHORT_LABELS in src/lib/leaderboard.ts: that one is for running prose
+ * and keeps "Manipulation" whole. The full Code of Practice names are in the
+ * definitions panel above the board.
+ */
 const SHORT: Record<(typeof RISKS)[number], string> = {
   cbrn: "CBRN",
   cyber: "Cyber",

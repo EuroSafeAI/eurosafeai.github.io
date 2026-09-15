@@ -34,35 +34,55 @@ export type Row =
 export const riskKey = (risk: Risk) => risk;
 export const benchKey = (risk: Risk, bench: string) => `${risk}/${bench}`;
 
-/** Verbatim from the pipeline's evals/clusters.py, which defines the taxonomy. */
+/**
+ * The four specified systemic risks, named as the GPAI Code of Practice names
+ * them (Appendix 1, Measure 2.1). The pipeline's evals/clusters.py keys are
+ * unchanged; only the public-facing wording follows the Code.
+ */
 export const RISK_LABELS: Record<Risk, string> = {
+  cbrn: "Chemical, biological, radiological and nuclear",
+  cyber: "Cyber offence",
+  loss_of_control: "Loss of control",
+  manipulation: "Harmful manipulation",
+};
+
+/** The risks named short enough for a headline or a sentence. */
+export const RISK_SHORT_LABELS: Record<Risk, string> = {
   cbrn: "CBRN",
   cyber: "Cyber",
-  loss_of_control: "Loss of Control",
+  loss_of_control: "Control",
   manipulation: "Manipulation",
 };
 
+/**
+ * What each systemic risk *is*, compressed from the Code of Practice's own
+ * definitions. These describe the risk, not the benchmarks: the benchmark
+ * glosses one level down say what is actually measured.
+ */
 export const RISK_DESCRIPTIONS: Record<Risk, string> = {
-  cbrn: "Chemical, biological, radiological and nuclear misuse",
-  cyber: "Offensive capability, and refusal of benign security work",
-  loss_of_control: "Scheming, instrumental convergence, oversight subversion",
-  manipulation: "Dark patterns, unethical influence, political manipulation",
+  cbrn: "Enabling CBRN attacks or accidents by lowering the barrier for malicious actors, or raising the impact they achieve.",
+  cyber:
+    "Enabling large-scale sophisticated cyber-attacks, including on critical infrastructure, through automated exploitation and attack scaling.",
+  loss_of_control:
+    "Humans losing the ability to reliably direct, modify or shut down a model, through misalignment, deception or power-seeking.",
+  manipulation:
+    "Strategic distortion of human behaviour or beliefs, targeting large populations or high-stakes decision-makers who cannot detect it.",
 };
 
 /**
- * The same four risks in public-facing language, shown only on mobile.
- *
- * The glosses above are written for a reader who already knows the field.
- * RISK_DESCRIPTIONS is hidden at phone widths because the label column has no
- * room for it, which left "CBRN" undefined for exactly the reader least
- * likely to know it. These sit under the grid instead.
+ * The same four risks at a length the phone layout has room for, shown under
+ * the hero where a reader first meets "CBRN". The row glosses above are
+ * hidden at phone widths, so this is the only place the terms get defined
+ * there.
  */
 export const RISK_DESCRIPTIONS_PLAIN: Record<Risk, string> = {
-  cbrn: "Chemical, biological, radiological and nuclear weapons: whether a model assists in making them.",
-  cyber: "Offensive hacking capability, and whether a model refuses legitimate security work.",
+  cbrn: "Whether a model helps design, acquire or use chemical, biological, radiological or nuclear weapons, or materially lowers the barrier to doing so.",
+  cyber:
+    "Whether a model enables large-scale cyber-attacks \u2014 finding vulnerabilities, writing exploits, scaling an operation \u2014 and whether it refuses legitimate security work.",
   loss_of_control:
-    "Whether a model stays supervisable: that it can be corrected and shut down, and does not work around the oversight placed on it.",
-  manipulation: "Deceptive design, undue influence, and political manipulation.",
+    "Whether a model stays supervisable: that it can be corrected and shut down, and does not deceive, seek power, or work around the oversight placed on it.",
+  manipulation:
+    "Whether a model can distort behaviour or beliefs at scale, through persuasion, deception or personalised targeting the target cannot reasonably detect.",
 };
 
 export const BENCHMARK_LABELS: Record<string, string> = {
