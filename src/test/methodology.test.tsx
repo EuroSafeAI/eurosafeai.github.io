@@ -143,7 +143,7 @@ describe("page order", () => {
     // capability figure explained first. Reversed deliberately from the
     // earlier order; the directional copy in both sections follows it.
     renderPage();
-    const scatter = screen.getByRole("img", { name: /intelligence index/i });
+    const scatter = screen.getByRole("img", { name: /one point per provider/i });
     const grid = screen.getByRole("grid");
     // Node.compareDocumentPosition: DOCUMENT_POSITION_FOLLOWING === 4.
     expect(grid.compareDocumentPosition(scatter) & 4).toBeTruthy();

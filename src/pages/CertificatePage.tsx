@@ -185,10 +185,11 @@ const CertificatePage = () => {
               : "In this field, capability comes at a cost in safety."}
           </p>
           <p style={{ fontSize: "0.9rem", lineHeight: 1.7, color: "rgba(10,31,77,0.55)", marginBottom: "0.5rem", maxWidth: 760 }}>
-            Each dot is one provider, averaged across its models, placed by{" "}
-            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Artificial Analysis</a> intelligence index (left to
-            right) against measured safety (bottom to top).{" "}
-            {!isMobile && "Hover a dot to open it into the models behind it."}
+            Each dot is one provider, averaged across its models. Capability runs left to right,
+            taken from the{" "}
+            <a href="https://artificialanalysis.ai" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "none", fontWeight: 600 }}>Artificial Analysis</a> intelligence index;
+            measured safety runs bottom to top.{" "}
+            {!isMobile && "Hover a dot to see the models behind it."}
           </p>
           <p style={{ fontSize: "0.75rem", color: "rgba(10,31,77,0.5)", marginBottom: "1.25rem" }}>
             {MODELS.length} models · {providerCount} providers · 4 systemic risks

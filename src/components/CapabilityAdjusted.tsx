@@ -121,7 +121,7 @@ export const CapabilityAdjustedSection = ({
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         role="img"
-        aria-label="Raw safety against the Artificial Analysis intelligence index, one point per model, coloured by region"
+        aria-label="Safety against capability, one point per provider, coloured by region"
         // No maxWidth: the viewBox is a coordinate system, not a size cap, and
         // capping it left the plot floating in its column.
         style={{ width: "100%", height: BOX.height }}
@@ -154,10 +154,10 @@ export const CapabilityAdjustedSection = ({
           );
         })}
         <text x={BOX.width - BOX.pad} y={BOX.height - BOX.pad + 34} textAnchor="end" fontSize={11} fontWeight={600} fill="#6b7280">
-          more capable, by Artificial Analysis intelligence index
+          more capable
         </text>
         <text x={BOX.pad - 9} y={BOX.pad - 14} textAnchor="start" fontSize={11} fontWeight={600} fill="#6b7280">
-          safer, worst-case score out of 100
+          safer
         </text>
         {medians && (
           <g>
@@ -222,7 +222,7 @@ export const CapabilityAdjustedSection = ({
                     no longer available to say it. */}
                 <circle cx={x} cy={y} r={LOGO_RADIUS} fill="#ffffff" stroke={colour} strokeWidth={2}>
                   <title>
-                    {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, worst case ${point.safety.toFixed(1)}, intelligence index ${point.index.toFixed(1)}`}
+                    {`${point.provider}: ${point.models.length} model${point.models.length === 1 ? "" : "s"}, safety ${point.safety.toFixed(1)}, capability ${point.index.toFixed(1)}`}
                   </title>
                 </circle>
                 {COMPANY_LOGO[point.provider] && (
@@ -262,7 +262,7 @@ export const CapabilityAdjustedSection = ({
                       style={{ transition: ease }}
                     >
                       <title>
-                        {`${entry.model.name} (${entry.model.region}): worst case ${entry.safety.toFixed(1)}, intelligence index ${entry.index.toFixed(1)}`}
+                        {`${entry.model.name} (${entry.model.region}): safety ${entry.safety.toFixed(1)}, capability ${entry.index.toFixed(1)}`}
                       </title>
                     </circle>
                     <text
@@ -307,12 +307,6 @@ export const CapabilityAdjustedSection = ({
         })}
       </svg>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginTop: "0.5rem", alignItems: "center" }}>
-        {/* The shaded corner is the one mark a reader cannot infer from the
-            axes, so it is named here rather than only in the prose. */}
-        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
-          <span aria-hidden style={{ width: 14, height: 10, background: "rgba(220,38,38,0.12)", borderRadius: 2 }} />
-          more capable, less safe than the median
-        </span>
         {regions.map((region) => (
           <span key={region} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "#6b7280" }}>
             <span
@@ -330,11 +324,11 @@ export const CapabilityAdjustedSection = ({
           already empty and widens the plot with it. */}
       <div style={{ flex: "1 1 340px", minWidth: 0, maxWidth: 360 }}>
         <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
-          A safety score measures conduct: how a model behaves when it is tested, from refusing
-          harmful requests to avoiding manipulation and not working around oversight. It does not
-          measure what happens when it complies, and the EU AI Act presumes systemic risk from
-          high-impact capabilities rather than from behaviour alone. Reach and conduct are
-          separate axes, so they are drawn separately here.
+          A safety score says how a model behaves when it is tested: whether it refuses harmful
+          requests, avoids manipulating the user, and leaves oversight in place. It does not
+          measure what happens when it complies. The EU AI Act presumes systemic risk from
+          high-impact capabilities, not from behaviour alone, so capability is plotted here
+          alongside conduct.
         </p>
         <LearnMore>
           <p style={{ fontSize: 12.5, color: "#6b7280", lineHeight: 1.7, marginBottom: "0.75rem" }}>
