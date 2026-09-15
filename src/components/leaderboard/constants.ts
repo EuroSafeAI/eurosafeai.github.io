@@ -13,8 +13,13 @@ export const INK = "#0a1f4d";
  * marginTop + 5 gloss lines (10.5 * 1.3 = 13.65 each) = 86.375, rounded up for
  * margin. Overflow is clipped by the row (DataRow's `overflow: clip`), so a
  * longer gloss loses its tail rather than bleeding into the next row.
+ *
+ * `risk` is sized the same way. The Code of Practice names wrap to two lines
+ * ("Chemical, biological, radiological and nuclear" is 45 characters against
+ * ~34 per line at fontSize 14), and the risk gloss runs to three: 2 * 17.5 +
+ * 2 + 3 * 13.65 = 78, rounded to 82.
  */
-export const ROW_HEIGHT = { risk: 64, bench: 90 } as const;
+export const ROW_HEIGHT = { risk: 82, bench: 90 } as const;
 
 export const LEADERBOARD_WIDTH = 1360;
 export const LABEL_WIDTH = 320;

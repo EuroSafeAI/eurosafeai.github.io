@@ -34,10 +34,10 @@ export const RowLabel: React.FC<RowLabelProps> = ({ row, labelWidth, isMobile, o
             lineHeight: 1.25,
             overflow: "hidden",
             textOverflow: "ellipsis",
-            // The label column is narrow on a phone and the gloss is hidden
-            // there, so a risk name wraps to the free line rather than
-            // ellipsizing into "Loss ..." and "Mani...".
-            whiteSpace: isMobile && row.level === "risk" ? "normal" : "nowrap",
+            // Risk names are the Code of Practice's, long enough to need two
+            // lines at every width; ROW_HEIGHT.risk reserves them. Benchmark
+            // names are short and stay on one, ellipsized if a new one is not.
+            whiteSpace: row.level === "risk" ? "normal" : "nowrap",
           }}
         >
           {rowLabel(row)}

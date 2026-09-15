@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { KeyFindings } from "@/components/KeyFindings";
 import { adversarialCostSummary, ceilingSummary, highestRisk } from "@/lib/findings";
-import { RISK_LABELS } from "@/lib/leaderboard";
+import { RISK_LABELS, RISK_SHORT_LABELS } from "@/lib/leaderboard";
 import modelsData from "@/data/models.json";
 import type { ModelEntry } from "@/data/models.types";
 
@@ -20,7 +20,7 @@ describe("KeyFindings", () => {
     expect(container.querySelectorAll("p").length).toBeGreaterThanOrEqual(6);
     expect(screen.getByText(/pass on paper but fail under pressure/i)).toBeInTheDocument();
     expect(screen.getByText(/models are reliably safe/i)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(`fail on ${RISK_LABELS[highestRisk(MODELS)!.risk]}`, "i"))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`fail on ${RISK_SHORT_LABELS[highestRisk(MODELS)!.risk]}`, "i"))).toBeInTheDocument();
   });
 
   it("headlines each finding as a share of the field", () => {

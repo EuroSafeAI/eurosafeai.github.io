@@ -8,6 +8,7 @@ import { MetricToggle } from "@/components/leaderboard/MetricToggle";
 import type { Aggregation } from "@/lib/scoring";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
+import { RISK_DESCRIPTIONS } from "@/lib/leaderboard";
 import {
   deriveCellWidth,
   LEADERBOARD_WIDTH,
@@ -45,7 +46,7 @@ describe("RowLabel", () => {
 
   it("hides the risk description on mobile", () => {
     render(<RowLabel row={riskRow} labelWidth={168} isMobile onToggle={() => {}} open={false} />);
-    expect(screen.getByRole("rowheader").textContent).not.toContain("Chemical, biological");
+    expect(screen.getByRole("rowheader").textContent).not.toContain(RISK_DESCRIPTIONS[riskRow.risk]);
   });
 
   it("marks a diagnostic benchmark row", () => {
