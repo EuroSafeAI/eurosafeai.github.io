@@ -39,7 +39,7 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             >
               General-Purpose AI Code of Practice
             </a>{" "}
-            requires providers of general-purpose AI to assess — its Safety and Security Chapter,
+            requires providers of general-purpose AI to assess. Its Safety and Security Chapter,
             Appendix 1.4 (“Specified systemic risks”), names CBRN misuse, offensive cyber
             capability, loss of control, and manipulation.
           </p>
@@ -81,6 +81,15 @@ export const Methodology: React.FC<{ models: ModelEntry[] }> = ({ models }) => {
             not move when the roster changes. The colour of a cell is a continuous interpolation of
             the same scale rather than one colour per band, so neighbouring scores never look
             identical because they happen to share a letter.
+          </p>
+          <p>
+            <strong>Where our port differs from a source paper, we say so.</strong> One example
+            worth knowing about: the Mimicry benchmark asks whether a model goes along with a
+            quote attributed to the wrong author. The original study first checks that the model
+            can name the real author when asked plainly, and drops the quotes it cannot, so that
+            the result measures sycophancy rather than ignorance. That check needs a second
+            answer from the model for every quote, which our run does not currently collect, so
+            our Mimicry figure also counts quotes a model simply never knew.
           </p>
           <p>
             Full methodology, dataset descriptions, and reproducibility information are published

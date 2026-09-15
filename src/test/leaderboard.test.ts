@@ -4,6 +4,7 @@ import {
   adjustedProviderCellScore,
   BENCHMARK_DESCRIPTIONS,
   BENCHMARK_LABELS,
+  BENCHMARK_SOURCES,
   RISK_DESCRIPTIONS,
   RISK_LABELS,
   buildColumns,
@@ -395,6 +396,13 @@ describe("label coverage", () => {
     }
   });
 
+  it("sources only benchmarks it actually has, over https", () => {
+    for (const [bench, url] of Object.entries(BENCHMARK_SOURCES)) {
+      expect(BENCHMARK_LABELS[bench], bench).toBeTruthy();
+      expect(url, bench).toMatch(/^https:\/\//);
+    }
+  });
+
   it("exports benchmark labels as a non-empty table", () => {
     expect(Object.keys(BENCHMARK_LABELS).length).toBeGreaterThan(0);
   });
@@ -429,12 +437,21 @@ describe("BENCHMARK_DESCRIPTIONS", () => {
     }
   });
 
-  it("says how each benchmark is graded", () => {
-    // Every description names how the verdict is reached — a judge, a detector,
-    // an answer-match, a parsed scale, or (for the persona-gap diagnostic) the
-    // gap it scores — so a reader learns not just what is measured but how.
+  it("keeps every description within the row it has to fit", () => {
+    // These sit in a 250px column under the benchmark name; ROW_HEIGHT.bench
+    // is sized to the longest of them, so one that outgrows the cap loses its
+    // tail to the row's overflow clip rather than pushing the row taller.
     for (const [key, text] of Object.entries(BENCHMARK_DESCRIPTIONS)) {
-      expect(/judge|detector|answer-match|matched against|parsed|string-match|scale|gap/i.test(text), key).toBe(true);
+      expect(text.length, key).toBeLessThanOrEqual(235);
+      expect(text, key).not.toContain("\u2014");
+    }
+  });
+
+  it("does not let a risk gloss restate the risk's own name", () => {
+    for (const risk of RISKS) {
+      const name = RISK_LABELS[risk].toLowerCase();
+      expect(RISK_DESCRIPTIONS[risk].toLowerCase(), risk).not.toContain(name);
+      expect(RISK_DESCRIPTIONS[risk], risk).not.toContain("\u2014");
     }
   });
 });

@@ -8,7 +8,13 @@ import { MetricToggle } from "@/components/leaderboard/MetricToggle";
 import type { Aggregation } from "@/lib/scoring";
 import { GRADES } from "@/lib/scoring";
 import type { Row } from "@/lib/leaderboard";
-import { RISK_DESCRIPTIONS } from "@/lib/leaderboard";
+import {
+  BENCHMARK_DESCRIPTIONS,
+  BENCHMARK_LABELS,
+  BENCHMARK_SOURCES,
+  RISK_DESCRIPTIONS,
+  RISK_LABELS,
+} from "@/lib/leaderboard";
 import {
   deriveCellWidth,
   LEADERBOARD_WIDTH,
@@ -31,8 +37,8 @@ describe("RowLabel", () => {
     render(<RowLabel row={riskRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("aria-expanded", "false");
-    expect(button.textContent).toContain("CBRN");
-    expect(button.textContent).toContain("Chemical, biological");
+    expect(button.textContent).toContain(RISK_LABELS[riskRow.risk]);
+    expect(button.textContent).toContain(RISK_DESCRIPTIONS[riskRow.risk]);
   });
 
   it("wraps the toggle button in a rowheader cell without overriding its role", () => {
@@ -49,6 +55,23 @@ describe("RowLabel", () => {
     expect(screen.getByRole("rowheader").textContent).not.toContain(RISK_DESCRIPTIONS[riskRow.risk]);
   });
 
+  it("links a benchmark name to its source, in a new tab", () => {
+    render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    const link = screen.getByRole("link", { name: BENCHMARK_LABELS[benchRow.bench] });
+    expect(link).toHaveAttribute("href", BENCHMARK_SOURCES[benchRow.bench]);
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
+
+  it("leaves a benchmark with no recorded source as plain text", () => {
+    // Every benchmark on the current roster has a source, so this uses a key
+    // that is not on it: the guard exists for the next one added.
+    const unsourced = { ...benchRow, bench: "not_yet_sourced" };
+    expect(BENCHMARK_SOURCES[unsourced.bench]).toBeUndefined();
+    render(<RowLabel row={unsourced} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
+    expect(screen.queryByRole("link")).toBeNull();
+  });
+
   it("marks a diagnostic benchmark row", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
     expect(screen.getByRole("rowheader").textContent).toContain("diagnostic");
@@ -63,7 +86,7 @@ describe("RowLabel", () => {
 
   it("renders the benchmark gloss under the benchmark name", () => {
     render(<RowLabel row={benchRow} labelWidth={250} isMobile={false} open={false} onToggle={() => {}} />);
-    expect(screen.getByRole("rowheader").textContent).toContain("weaponisation knowledge");
+    expect(screen.getByRole("rowheader").textContent).toContain(BENCHMARK_DESCRIPTIONS[benchRow.bench]);
   });
 
   it("renders the gloss as plain text, with no underline", () => {
@@ -199,7 +222,7 @@ describe("metric toggle", () => {
 describe("grid role structure", () => {
   it("gives the row label and the corner cell a header role", () => {
     render(<Leaderboard models={MODELS} />);
-    expect(screen.getByRole("rowheader", { name: /CBRN/ })).toBeTruthy();
+    expect(screen.getByRole("rowheader", { name: new RegExp(RISK_LABELS.cbrn) })).toBeTruthy();
     expect(screen.getByRole("columnheader", { name: /Systemic risk/ })).toBeTruthy();
   });
 });

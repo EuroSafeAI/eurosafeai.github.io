@@ -8,7 +8,7 @@ import type { ModelEntry } from "@/data/models.types";
 const MODELS = modelsData as unknown as ModelEntry[];
 
 const PROVIDERS = [...new Set(MODELS.map((m) => m.company))];
-const plot = () => screen.getByRole("img", { name: /intelligence index/i });
+const plot = () => screen.getByRole("img", { name: /one point per provider/i });
 
 describe("CapabilityAdjustedSection", () => {
   it("plots one point per provider, not per model", () => {
@@ -72,11 +72,12 @@ describe("CapabilityAdjustedSection", () => {
     expect(screen.queryByRole("slider")).not.toBeInTheDocument();
   });
 
-  it("labels both axes with their direction and units", () => {
+  it("labels both axes with the direction that is better", () => {
+    // Direction is the one thing a reader cannot infer: the tick values give
+    // the scale, and the prose beside the plot gives the index and its source.
     render(<CapabilityAdjustedSection models={MODELS} />);
-    const yAxis = screen.getByText(/safer, worst-case score out of 100/i);
-    expect(yAxis).toBeInTheDocument();
-    expect(screen.getByText(/more capable, by Artificial Analysis intelligence index/i)).toBeInTheDocument();
+    expect(screen.getByText(/^safer$/i)).toBeInTheDocument();
+    expect(screen.getByText(/^more capable$/i)).toBeInTheDocument();
   });
 
   it("reports only the worst case — the plot names no average", () => {
@@ -120,7 +121,7 @@ describe("CapabilityAdjustedSection", () => {
 
   it("plots nothing for an empty roster", () => {
     render(<CapabilityAdjustedSection models={[]} />);
-    expect(screen.getByRole("img", { name: /intelligence index/i }).querySelectorAll("circle")).toHaveLength(0);
+    expect(plot().querySelectorAll("circle")).toHaveLength(0);
   });
 });
 

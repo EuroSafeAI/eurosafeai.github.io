@@ -43,7 +43,7 @@ describe("MobileBoard", () => {
     const column = buildColumns(MODELS, "worst", 0, "org")[0];
     const overall = adjustedOverallScore(column.models, "worst", 0);
     expect(overall).toBeDefined();
-    const cell = screen.getByTitle(new RegExp(`^${column.provider} — overall`));
+    const cell = screen.getByTitle(new RegExp(`^${column.provider}, overall`));
     expect(cell.textContent).toContain(grade(overall as number));
     expect(cell.textContent).toContain((overall as number).toFixed(1));
   });
@@ -59,7 +59,7 @@ describe("MobileBoard", () => {
         0
       );
       if (score === undefined) continue;
-      const cells = screen.getAllByTitle(new RegExp(`^${column.provider} — `));
+      const cells = screen.getAllByTitle(new RegExp(`^${column.provider}, `));
       expect(cells.some((c) => c.textContent?.includes(score.toFixed(1)))).toBe(true);
     }
   });
@@ -79,7 +79,7 @@ describe("MobileBoard", () => {
   it("opens the benchmarks behind a grade when its cell is tapped", () => {
     board();
     const column = buildColumns(MODELS, "worst", 0, "org")[0];
-    const cell = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
+    const cell = screen.getByTitle(new RegExp(`^${column.provider}, CBRN`));
     expect(cell).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(cell);
     expect(cell).toHaveAttribute("aria-expanded", "true");
@@ -91,7 +91,7 @@ describe("MobileBoard", () => {
   it("closes it again on a second tap", () => {
     board();
     const column = buildColumns(MODELS, "worst", 0, "org")[0];
-    const cell = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
+    const cell = screen.getByTitle(new RegExp(`^${column.provider}, CBRN`));
     fireEvent.click(cell);
     fireEvent.click(cell);
     expect(cell).toHaveAttribute("aria-expanded", "false");
@@ -100,8 +100,8 @@ describe("MobileBoard", () => {
   it("keeps only one panel open, since each one is full width", () => {
     board();
     const column = buildColumns(MODELS, "worst", 0, "org")[0];
-    const cbrn = screen.getByTitle(new RegExp(`^${column.provider} — CBRN`));
-    const cyber = screen.getByTitle(new RegExp(`^${column.provider} — Cyber`));
+    const cbrn = screen.getByTitle(new RegExp(`^${column.provider}, CBRN`));
+    const cyber = screen.getByTitle(new RegExp(`^${column.provider}, Cyber`));
     fireEvent.click(cbrn);
     fireEvent.click(cyber);
     expect(cbrn).toHaveAttribute("aria-expanded", "false");
