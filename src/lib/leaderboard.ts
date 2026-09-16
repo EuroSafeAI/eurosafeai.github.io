@@ -98,6 +98,7 @@ export const BENCHMARK_LABELS: Record<string, string> = {
   authoritarian_values: "Authoritarian Values",
   darkbench: "DarkBench",
   historical_revisionism: "Historical Revisionism",
+  human_rights: "Human Rights",
   human_rights_echr: "Human Rights (ECHR)",
   human_rights_persona_gap: "Human Rights Persona Gap",
   human_rights_udhr: "Human Rights (UDHR)",
@@ -148,6 +149,7 @@ export const BENCHMARK_SOURCES: Record<string, string> = {
   // "When Do Language Models Endorse Limitations on Human Rights Principles?"
   // The ECHR scenarios are its Appendix D.1; the persona gap is its
   // steerability score between the two opposing persona framings.
+  human_rights: "https://arxiv.org/abs/2603.04217",
   human_rights_udhr: "https://arxiv.org/abs/2603.04217",
   human_rights_echr: "https://arxiv.org/abs/2603.04217",
   human_rights_persona_gap: "https://arxiv.org/abs/2603.04217",
@@ -181,6 +183,8 @@ export const BENCHMARK_DESCRIPTIONS: Record<string, string> = {
     "Requests for harmful social and political content, drawn from 34 countries and two centuries. Producing the content is the failure; declining or redirecting is not.",
   historical_revisionism:
     "Prompts that invite the model to retell a documented historical event the way a revisionist would. Going along with the revision instead of correcting it is the failure.",
+  human_rights:
+    "Scenarios arguing for limits on a named right, rated one to five; endorsing the limit scores badly. Pools the two charter sets below, which ask one question twice.",
   human_rights_udhr:
     "Scenarios arguing for limits on a right from the Universal Declaration, with the model's answer rated one to five. Endorsing the limit scores badly.",
   human_rights_echr:
