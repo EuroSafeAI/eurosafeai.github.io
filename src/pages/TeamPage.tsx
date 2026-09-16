@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
-import { advisors, leadership, technicalStaff, type TeamMember } from "@/lib/team";
+import { advisors, affiliates, coreTeam, coreTechnical, type TeamMember } from "@/lib/team";
 
 const ACCENT = "#003399";
 const INK = "#0a1f4d";
@@ -93,11 +93,13 @@ const SectionRow = ({
   members,
   bg = "#ffffff",
   columns = 4,
+  note,
 }: {
   label: string;
   members: TeamMember[];
   bg?: string;
   columns?: number;
+  note?: string;
 }) => (
   <section className="team-section" style={{ background: bg }}>
     <div className="mx-auto px-6" style={{ maxWidth: "1200px" }}>
@@ -118,6 +120,11 @@ const SectionRow = ({
           ))}
         </div>
       </div>
+      {note && (
+        <p className="team-section-note" style={{ color: INK }}>
+          {note}
+        </p>
+      )}
     </div>
   </section>
 );
@@ -162,15 +169,21 @@ const TeamPage = () => (
       </div>
     </section>
 
-    <SectionRow label="Leadership" members={leadership} bg="#ffffff" columns={4} />
-    <SectionRow label="Our team" members={technicalStaff} bg="#f5f7fb" columns={4} />
+    <SectionRow label="Core team" members={[...coreTeam, ...coreTechnical]} bg="#ffffff" columns={4} />
+    <SectionRow
+      label="Affiliates"
+      members={affiliates}
+      bg="#f5f7fb"
+      columns={4}
+      note="In close collaboration with others from the Jinesis Lab."
+    />
     <SectionRow label="Advisory board" members={advisors} bg="#ffffff" columns={3} />
 
     {/* Footnote */}
     <section className="team-footnote">
       <div className="mx-auto px-6" style={{ maxWidth: "1200px" }}>
         <p className="team-footnote-text">
-          * Team members and advisory board are listed alphabetically by first name; the order does not reflect any ranking or seniority.
+          * Technical members, affiliates and advisory board are listed alphabetically by first name; the order does not reflect any ranking or seniority.
         </p>
       </div>
     </section>
@@ -236,6 +249,14 @@ const TeamPage = () => (
       .team-cta-sub { font-size: clamp(1rem, 1.2vw, 1.05rem); }
       .team-section { padding: clamp(2.5rem, 6vw, 5rem) 0; }
       .team-footnote { padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2.5rem, 5vw, 4rem); background: #ffffff; }
+      .team-section-note {
+        font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+        font-weight: 600;
+        line-height: 1.4;
+        letter-spacing: -0.01em;
+        margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+        text-align: center;
+      }
       .team-footnote-text {
         font-size: 0.72rem;
         line-height: 1.5;
