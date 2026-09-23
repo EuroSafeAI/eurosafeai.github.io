@@ -160,7 +160,7 @@ export function renderCertificateV1(doc, model, computed, env, stampBase64) {
   doc.setFontSize(7.5)
   setText(BRAND.midGray)
   doc.text('Evaluation Period: Q1 2026', W - 20, headerY, { align: 'right' })
-  doc.text('safe.eu/certificate/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
+  doc.text('safe.eu/index/' + model.id, W - 20, headerY + 4.5, { align: 'right' })
 
   // ── Thin separator ────────────────────────────────────────────────────
   setDraw(BRAND.lightGray)

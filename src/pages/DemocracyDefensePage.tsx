@@ -134,11 +134,11 @@ const DemocracyDefensePage = () => {
         </div>
       </section>
 
-      {/* EU AI Safety Index */}
+      {/* Systemic Risk Index */}
       <section style={{ background: "#ffffff", padding: "5rem 0 6rem" }}>
         <div className="mx-auto px-6" style={{ maxWidth: "1100px" }}>
           <AnimatedSection>
-            <SectionEyebrow>EU AI Safety Index</SectionEyebrow>
+            <SectionEyebrow>Systemic Risk Index</SectionEyebrow>
             <h2
               style={{
                 fontSize: "clamp(1.75rem, 3vw, 2.4rem)",
@@ -150,7 +150,7 @@ const DemocracyDefensePage = () => {
                 maxWidth: "820px",
               }}
             >
-              The <span style={{ color: ACCENT }}>EU AI Safety Index</span>
+              The <span style={{ color: ACCENT }}>Systemic Risk Index</span>
             </h2>
             <p
               style={{
@@ -161,10 +161,10 @@ const DemocracyDefensePage = () => {
                 marginBottom: "2rem",
               }}
             >
-              The <strong style={{ color: INK }}>EU AI Safety Index</strong> is a public leaderboard that grades frontier AI models against the four systemic risks named in the EU AI Act's General-Purpose AI Code of Practice: CBRN misuse, offensive cyber, loss of control, and manipulation.
+              The <strong style={{ color: INK }}>Systemic Risk Index</strong> is a public leaderboard that grades frontier AI models against the four systemic risks named in the EU AI Act's General-Purpose AI Code of Practice: CBRN misuse, offensive cyber, loss of control, and manipulation.
             </p>
             <Link
-              to="/certificate"
+              to="/index"
               onClick={() => window.scrollTo({ top: 0 })}
               style={{
                 display: "inline-flex",

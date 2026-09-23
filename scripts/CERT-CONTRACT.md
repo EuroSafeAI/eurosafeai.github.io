@@ -9,7 +9,7 @@
 > reads. Rather than port the renderer to a schema that is still settling, the
 > PDFs were dropped: `npm run certs`, the `certs` CI step, the `stamp.png` hash
 > tripwire, the `CERT_SECRET` secret, and the `/certificate/:slug` route are all
-> gone, and `/certificate` now serves the systemic-risk heatmap only.
+> gone, and `/index` (with `/certificate` redirecting to it) now serves the systemic-risk heatmap only.
 >
 > Everything below describes the retired v1 pipeline. It is kept because the
 > determinism work (pinned `/ID` and `/CreationDate`, the stamp tripwire, the
