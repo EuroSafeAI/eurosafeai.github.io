@@ -36,8 +36,8 @@ const App = () => (
                 <Route path="/multi-agent-safety" element={<ErrorBoundary><MultiAgentSafetyPage /></ErrorBoundary>} />
                 <Route path="/democracy-defense" element={<ErrorBoundary><DemocracyDefensePage /></ErrorBoundary>} />
                 <Route path="/frontier-ai-safety" element={<ErrorBoundary><FrontierAISafetyPage /></ErrorBoundary>} />
-                <Route path="/certificate" element={<ErrorBoundary><CertificatePage /></ErrorBoundary>} />
-                <Route path="/certificates" element={<ErrorBoundary><CertificatePage /></ErrorBoundary>} />
+                <Route path="/index" element={<ErrorBoundary><CertificatePage /></ErrorBoundary>} />
+                <Route path="/certificate" element={<Navigate to="/index" replace />} />
                 <Route path="/team" element={<ErrorBoundary><TeamPage /></ErrorBoundary>} />
                 <Route path="/team/:slug" element={<ErrorBoundary><MemberPage /></ErrorBoundary>} />
                 <Route path="/careers" element={<ErrorBoundary><CareersPage /></ErrorBoundary>} />

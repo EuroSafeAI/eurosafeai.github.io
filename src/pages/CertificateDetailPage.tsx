@@ -105,7 +105,7 @@ const CertificateDetailPage = () => {
 
         <p style={{ marginTop: "2rem", fontSize: "0.78rem", color: "rgba(10,31,77,0.45)" }}>
           <Link
-            to="/certificate"
+            to="/index"
             onClick={() => window.scrollTo({ top: 0 })}
             style={{ color: "inherit", textDecoration: "underline" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT)}

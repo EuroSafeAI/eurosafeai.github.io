@@ -57,8 +57,8 @@ npm run dev          # local dev server on http://localhost:8080
 | `/careers` | `src/pages/CareersPage.tsx` |
 | `/careers/:slug` | `src/pages/CareersJobPage.tsx` |
 | `/blog`, `/blog/:slug` | `src/pages/BlogPage.tsx`, `src/pages/BlogPostPage.tsx` |
-| `/certificate`, `/certificate/:slug` | `src/pages/CertificatePage.tsx`, `src/pages/CertificateDetailPage.tsx` |
-| `/certificates`, `/certificates/:slug` | Aliases that resolve to the `/certificate*` pages |
+| `/index` | `src/pages/CertificatePage.tsx` (Systemic Risk Index) |
+| `/certificate` | Redirects to `/index` |
 | `/contact` | `src/pages/ContactPage.tsx` |
 | `*` | `src/pages/NotFound.tsx` |
 
@@ -103,7 +103,7 @@ public/                  Static files copied verbatim to dist/
 
 ## Certificate generation
 
-The leaderboard at `/certificate` and the downloadable PDFs are driven by a single source of truth — `src/data/models.json` — and a deterministic build pipeline. The contract is documented in `scripts/CERT-CONTRACT.md`. Highlights:
+The leaderboard at `/index` and the downloadable PDFs are driven by a single source of truth — `src/data/models.json` — and a deterministic build pipeline. The contract is documented in `scripts/CERT-CONTRACT.md`. Highlights:
 
 - **Math lives in `src/lib/scoring.ts`** (`calcAgg`, `calcGrade`) and is mirrored in `scripts/generate-certificates.mjs`. If you change a formula or threshold, update both files and bump the contract version.
 - **PDFs are byte-deterministic** given a fixed `CERT_SECRET`, identical `models.json`, identical `public/images/stamp.png`, and the pinned `jspdf@4.2.0`. CI fails the build if `stamp.png` is re-exported (SHA-256 tripwire).
