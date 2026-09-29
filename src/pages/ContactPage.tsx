@@ -18,7 +18,7 @@ const team = [
   {
     name: "Zhijing Jin",
     role: "Founder & Head",
-    email: "zjin.admin@cs.toronto.edu",
+    email: "zhijing@safe.eu",
     website: "https://zhijing-jin.com/home/",
     social: [
       { label: "X / Twitter", href: "https://x.com/ZhijingJin" },
@@ -29,7 +29,7 @@ const team = [
   {
     name: "Pepijn Cobben",
     role: "Co-founder",
-    email: "pcobben@ethz.ch",
+    email: "pepijn@safe.eu",
     social: [
       { label: "LinkedIn", href: "https://www.linkedin.com/in/pepijn-cobben" },
     ],

@@ -7,14 +7,14 @@ const contacts = [
   {
     name: "Zhijing Jin",
     role: "Founder & Head, EuroSafeAI",
-    email: "zjin.admin@cs.toronto.edu",
+    email: "zhijing@safe.eu",
     profile: "https://zhijing-jin.com/home/",
     image: "/images/team/zhijing-jin.webp",
   },
   {
     name: "Pepijn Cobben",
     role: "Cofounder, EuroSafeAI",
-    email: "pcobben@ethz.ch",
+    email: "pepijn@safe.eu",
     profile: "https://www.linkedin.com/in/pepijn-cobben?originalSubdomain=ch",
     image: "/images/team/pepijn-cobben.webp",
   },
