@@ -104,7 +104,16 @@ const MultiAgentSafetyPage = () => {
                     marginRight: isMobile ? "auto" : undefined,
                   }}
                 >
-                  Single-agent evaluations cannot see behavior that only appears between agents. Whether cooperation is desirable depends on who it serves: the same capacity that sustains a shared resource lets agents collude against the people supervising them. We benchmark when models cooperate and when they defect, formalize mechanisms that make their commitments verifiable, and study what emerges once agents can reach each other, from deception to the gaming of evaluations.
+                  Single-agent evaluations cannot see behavior that only appears between agents. Whether cooperation is desirable depends on who it serves: the same capacity that sustains a shared resource lets agents collude against the people supervising them. We benchmark when models cooperate and when they defect, formalize mechanisms that make their commitments verifiable, and study what emerges once agents can reach each other, from deception to the gaming of evaluations. Today our work concentrates on{" "}
+                  <a
+                    href="https://www.lesswrong.com/posts/XDybLbLbDsnEhnEWi/research-priorities-for-multi-agent-swarms-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: ACCENT, textDecoration: "underline" }}
+                  >
+                    multi-agent swarms
+                  </a>{" "}
+                  and scalable oversight.
                 </p>
                 <Link
                   to="/research"
